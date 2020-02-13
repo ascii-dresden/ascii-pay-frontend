@@ -1,8 +1,17 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+
+import { HttpService } from './services';
 
 @NgModule({
-  declarations: [],
-  imports: []
+  imports: [
+    CommonModule,
+    HttpClientModule,
+  ],
+  providers: [
+    { provide: HttpClient, useClass: HttpService }
+  ]
 })
 export class CoreModule {
 
