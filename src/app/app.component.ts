@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 
+import { environment } from '@env/environment';
+import { Logger } from './core';
+
+const log = new Logger('App');
+
 @Component({
   selector: 'ascii-root',
   templateUrl: './app.component.html',
@@ -7,4 +12,12 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'cashier';
+
+  constructor() {
+    if (environment.production) {
+      Logger.enableProductionMode();
+    }
+
+    log.debug('init');
+  }
 }
