@@ -5,7 +5,12 @@ import { Observable } from 'rxjs';
 
 import { environment } from '@env/environment';
 
-@Injectable()
+/**
+ * Prefixes all requests not starting with `http[s]` with `environment.baseUrl`.
+ */
+@Injectable({
+  providedIn: 'root'
+})
 export class ApiPrefixInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
