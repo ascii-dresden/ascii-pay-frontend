@@ -48,7 +48,7 @@
 
 <section class="col-8">
   <div class="checkout-top transaction d-flex align-items-center">
-    <div id="total" class="col-8 p-4">{{ total | currency }}</div>
+    <div id="total" class="col-8 p-4">{{ (total$ | async) / 100 | currency }}</div>
     <button class="col-4 btn btn-primary">
       <fa-icon [icon]="check"></fa-icon>
     </button>

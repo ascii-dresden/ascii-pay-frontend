@@ -2,6 +2,8 @@ import { Component, HostBinding } from '@angular/core';
 
 import { faUndo } from '@fortawesome/free-solid-svg-icons';
 
+import { CheckoutController } from '../../checkout.controller';
+
 @Component({
   selector: 'ascii-keypad',
   templateUrl: './keypad.component.html',
@@ -9,13 +11,19 @@ import { faUndo } from '@fortawesome/free-solid-svg-icons';
 })
 export class KeypadComponent {
 
-  undoIcon = faUndo;
-
   @HostBinding('class') classes = 'keypad d-block';
 
-  addDigit(): void { }
+  undoIcon = faUndo;
+
+  constructor(private checkoutController: CheckoutController) { }
+
+  addDigit(digit: number): void {
+    this.checkoutController.addDigit(digit);
+  }
 
   negateTotal(): void { }
 
-  clear(): void { }
+  clear(): void {
+    this.checkoutController.clear();
+  }
 }
