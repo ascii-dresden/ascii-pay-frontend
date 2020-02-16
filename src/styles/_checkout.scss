@@ -18,12 +18,13 @@ ascii-checkout {
 .transaction,
 .menu,
 .keypad {
-  button {
+  .btn {
     border-color: $white;
     font-size: $h1-font-size;
   }
 }
 
-.menu button {
+.menu .btn {
+  color: $white;
   font-size: inherit;
 }
