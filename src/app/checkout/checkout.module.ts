@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { CheckoutRoutingModule } from './checkout-routing.module';
 import { CheckoutComponent } from './checkout.component';
 
 @NgModule({
@@ -11,6 +12,7 @@ import { CheckoutComponent } from './checkout.component';
   ],
   imports: [
     CommonModule,
+    CheckoutRoutingModule,
     FontAwesomeModule,
   ],
   exports: [

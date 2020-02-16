@@ -1,9 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { CoreModule } from './core';
+import { CoreModule } from '@app/core';
+import { CheckoutModule } from '@app/checkout';
 import { AppComponent } from './app.component';
-import { CheckoutModule } from './checkout';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { CheckoutModule } from './checkout';
   imports: [
     BrowserModule,
     CoreModule,
+    AppRoutingModule,
     CheckoutModule,
   ],
   providers: [],
