@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { CoreModule } from './core';
 import { AppComponent } from './app.component';
+import { CheckoutModule } from './checkout';
 
 @NgModule({
   declarations: [
@@ -11,6 +12,7 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     CoreModule,
+    CheckoutModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
