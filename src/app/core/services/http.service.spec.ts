@@ -28,7 +28,7 @@ describe('HttpService', () => {
 
     const realRequest = http.request;
     spyOn(HttpService.prototype, 'request').and.callFake(
-      function(this: any, method: string, url: string, options?: any) {
+      function (this: any, method: string, url: string, options?: any) {
         interceptors = this.interceptors;
         return realRequest.call(this, method, url, options);
       }
