@@ -11,7 +11,7 @@ export class KeypadComponent {
 
   undoIcon = faUndo;
 
-  @HostBinding('class') classes = 'keypad';
+  @HostBinding('class') classes = 'keypad d-block';
 
   addDigit(): void { }
 
