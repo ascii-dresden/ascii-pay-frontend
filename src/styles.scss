@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+$enable-rounded:                false;
+$enable-responsive-font-sizes:  true;
+$enable-shadows:                false;
+$enable-gradients:              false;
+$enable-transitions:            false;
+$enable-print-styles:           false;
+
+$font-size-base: 1.2rem;
+
+$btn-focus-width: 0;
+
+@import "~bootstrap/scss/bootstrap";
