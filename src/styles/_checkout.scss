@@ -1,0 +1,29 @@
+$h1-font-size: $font-size-base * 1.8;
+$h2-font-size: $font-size-base * 0.75;
+$headings-margin-bottom: $spacer / 4;
+
+ascii-checkout {
+  h2 {
+    font-size: $h2-font-size;
+    font-weight: $font-weight-bold;
+    margin-bottom: $headings-margin-bottom;
+  }
+}
+
+.transaction #total {
+  font-size: $h1-font-size;
+  font-weight: $font-weight-bolder;
+}
+
+.transaction,
+.menu,
+.keypad {
+  button {
+    border-color: $white;
+    font-size: $h1-font-size;
+  }
+}
+
+.menu button {
+  font-size: inherit;
+}

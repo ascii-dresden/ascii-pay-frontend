@@ -1,0 +1,70 @@
+@import "~bootstrap/scss/mixins";
+
+.checkout-top {
+  height: 15vh;
+  min-height: 100px;
+}
+
+.transaction,
+.menu,
+.keypad {
+  button {
+    position: relative;
+    width: 100%;
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+    height: 25%;
+    border-width: 3px;
+    border-style: solid;
+
+    @include hover-focus-active {
+      border-color: inherit;
+    }
+
+    &.active {
+      border-color: inherit;
+    }
+  }
+}
+
+.transaction button {
+  width: 100%;
+  height: 100%;
+  border-top: none;
+  border-right: none;
+  border-bottom-width: 6px;
+}
+
+.keypad {
+  height: 75vh;
+
+  button {
+    &:nth-child(-n + 3) {
+      border-top: none;
+    }
+
+    &:nth-child(3n + 1) {
+      border-left: none;
+    }
+
+    &:nth-child(3n) {
+      border-right: none;
+    }
+  }
+}
+
+.menu {
+  height: 10vh;
+  button {
+    height: 100%;
+    border-bottom: none;
+
+    &:nth-child(3n + 1) {
+      border-left: none;
+    }
+
+    &:nth-child(3n) {
+      border-right: none;
+    }
+  }
+}

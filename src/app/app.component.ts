@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 
 import { environment } from '@env/environment';
-import { Logger } from './core';
+
+import { Logger } from '@app/core';
 
 const log = new Logger('App');
 
@@ -11,7 +12,6 @@ const log = new Logger('App');
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'cashier';
 
   constructor() {
     if (environment.production) {
