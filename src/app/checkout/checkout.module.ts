@@ -5,10 +5,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { CheckoutRoutingModule } from './checkout-routing.module';
 import { CheckoutComponent } from './checkout.component';
+import { KeypadComponent } from './components';
 
 @NgModule({
   declarations: [
     CheckoutComponent,
+    KeypadComponent,
   ],
   imports: [
     CommonModule,

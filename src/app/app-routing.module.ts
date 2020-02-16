@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 /** Application routes */
 const routes: Routes = [
-  { path: '', redirectTo: '/checkout', pathMatch: 'full' },
+  { path: '', redirectTo: '/checkout/keypad', pathMatch: 'full' },
 ];
 
 /**

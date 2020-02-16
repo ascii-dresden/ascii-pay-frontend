@@ -20,10 +20,4 @@ export class CheckoutComponent {
   customer = 'Mathias Stuhlbein';
   credit = 4.20;
   total = 4.20;
-
-  addDigit(): void { }
-
-  negateTotal(): void { }
-
-  clear(): void { }
 }
