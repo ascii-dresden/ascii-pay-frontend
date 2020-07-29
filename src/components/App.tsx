@@ -1,5 +1,5 @@
 import * as React from "react";
-import Cashier from "./Cashier";
+import Cashier from "./cashier/Cashier";
 import Account from "./Account";
 
 import "./App.scss";
@@ -63,16 +63,16 @@ export default class App extends React.Component<AppProps, AppState> {
         }
 
         return <React.Fragment>
-            <div id="sidebar" className={this.state.menuActive && "active"}>
+            <div id="sidebar" className={this.state.menuActive ? "active" : ""}>
                 <div onClick={this.onMenuToggle}>
                     <MdMenu />
                     <span>Menu</span>
                 </div>
-                <div onClick={this.onCashier} className={this.state.mode == Mode.Cashier && "active"}>
+                <div onClick={this.onCashier} className={this.state.mode == Mode.Cashier ? "active" : ""}>
                     <MdPayment />
                     <span>Cashier</span>
                 </div>
-                <div onClick={this.onAccount} className={this.state.mode == Mode.Account && "active"}>
+                <div onClick={this.onAccount} className={this.state.mode == Mode.Account ? "active" : ""}>
                     <MdGroup />
                     <span>Account</span>
                 </div>

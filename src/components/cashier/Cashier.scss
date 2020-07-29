@@ -1,0 +1,21 @@
+#cashier {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top:0;
+    height: 100%;
+}
+#cashier-left {
+    position: absolute;
+    left: 0;
+    width: 40%;
+    top:0;
+    height: 100%;
+}
+#cashier-right {
+    position: absolute;
+    right: 0;
+    left: 40%;
+    top:0;
+    height: 100%;
+}
