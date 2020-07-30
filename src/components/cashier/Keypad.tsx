@@ -5,8 +5,8 @@ import { MdBackspace, MdDone } from "react-icons/md";
 
 
 interface KeyProps { children: any, onPress: () => void; }
-const Key = (props: KeyProps) => <div className="key" onClick={props.onPress}>{props.children}</div>;
-
+const Key = (props: KeyProps) => <div className="keypad-key" onClick={props.onPress}>{props.children}</div>;
+Key.displayName = "Key"
 
 export interface KeypadProps {
     onSubmit: (cents: number) => void
@@ -14,7 +14,8 @@ export interface KeypadProps {
 export interface KeypadState {
     cents: number
 }
-export default class Keypad extends React.Component<KeypadProps, KeypadState> {
+export class Keypad extends React.Component<KeypadProps, KeypadState> {
+    static displayName = "Keypad"
 
     constructor(props: KeypadProps) {
         super(props)

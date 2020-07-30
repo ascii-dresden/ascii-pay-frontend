@@ -5,7 +5,8 @@ import "./Customer.scss";
 export interface CustomerProps {  }
 export interface CustomerState {  }
 
-export default class Customer extends React.Component<CustomerProps, CustomerState> {
+export class Customer extends React.Component<CustomerProps, CustomerState> {
+    static displayName = "Customer"
 
     render() {
         return <div>Customer</div>;

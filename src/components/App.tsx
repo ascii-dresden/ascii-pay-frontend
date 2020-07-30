@@ -1,6 +1,6 @@
 import * as React from "react";
-import Cashier from "./cashier/Cashier";
-import Account from "./Account";
+import { Cashier } from "./cashier/Cashier";
+import { Account } from "./Account";
 
 import "./App.scss";
 
@@ -17,7 +17,8 @@ export interface AppState {
     menuActive: boolean
 }
 
-export default class App extends React.Component<AppProps, AppState> {
+export class App extends React.Component<AppProps, AppState> {
+    static displayName = "App"
 
     constructor(props: AppProps) {
         super(props);

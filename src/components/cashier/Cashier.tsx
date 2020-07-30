@@ -2,14 +2,15 @@ import * as React from "react";
 
 import "./Cashier.scss";
 
-import Barista from "./Barista";
-import Customer from "./Customer";
-import Keypad from "./Keypad";
+import { Barista } from "./Barista";
+import { Customer } from "./Customer";
+import { Keypad } from "./Keypad";
 
-export interface CashierProps {  }
-export interface CashierState {  }
+export interface CashierProps { }
+export interface CashierState { }
 
-export default class Cashier extends React.Component<CashierProps, CashierState> {
+export class Cashier extends React.Component<CashierProps, CashierState> {
+    static displayName = "Cashier"
 
     render() {
         return <div id="cashier">
