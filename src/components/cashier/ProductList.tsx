@@ -7,6 +7,7 @@ import { MdPhoto } from "react-icons/md";
 export interface ProductListProps { }
 export interface ProductListState {
     products: Map<string, Product[]>,
+    loading: boolean,
     error: boolean,
 }
 
@@ -18,6 +19,7 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
 
         this.state = {
             products: new Map(),
+            loading: false,
             error: false
         }
     }
@@ -39,16 +41,21 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
 
             this.setState({
                 products: map,
+                loading: false,
                 error: false
             });
         } catch {
             this.setState({
+                loading: false,
                 error: true
             });
         }
     }
 
     reload() {
+        this.setState({
+            loading: true
+        });
         (async () => {
             this.loadProducts();
         })();
@@ -77,8 +84,14 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
                 <span>Error. Click to retry!</span>
             </div>
         }
+        let loading;
+        if (this.state.loading) {
+            error = <div className="product-list-loading" onClick={() => this.reload()}>
+                <span>Loading</span>
+            </div>
+        }
 
-        return <div className="product-list">{error}{list}</div>;
+    return <div className="product-list">{error}{loading}{list}</div>;
     }
 }
 

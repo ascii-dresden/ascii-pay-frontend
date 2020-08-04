@@ -8,7 +8,7 @@
     overflow-x: hidden;
     padding: 1rem;
 }
-.product-list-error {
+.product-list-error, .product-list-loading {
     position: absolute;
     left: 0;
     top: 0;
@@ -35,9 +35,12 @@
         position: relative;
         z-index: 1;
         padding: 1rem;
-        background: var(--error-color);
-        color: var(--error-text-color);
+        background: var(--primary-background);
     }
+}
+.product-list-error span {
+    background: var(--error-color);
+    color: var(--error-text-color);
 }
 .product-list-entry {
     padding: 0.5rem 0;
