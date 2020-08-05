@@ -35,13 +35,13 @@ export class Keypad extends React.Component<KeypadProps, KeypadState> {
 
     onDigitPressed(digit: number) {
         this.setState((state) => ({
-            cents: state.cents * 10 + digit
+            cents: state.cents * 10 + (Math.sign(state.cents) || 1) * digit
         }))
     }
 
     onBackspace() {
         this.setState((state) => ({
-            cents: Math.floor(state.cents / 10)
+            cents: Math.sign(state.cents) * Math.floor(Math.abs(state.cents / 10))
         }))
     }
 
