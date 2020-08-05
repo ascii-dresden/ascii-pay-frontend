@@ -72,7 +72,7 @@ export class Keypad extends React.Component<KeypadProps, KeypadState> {
                 <Key onPress={() => this.onDigitPressed(1)}>1</Key>
                 <Key onPress={() => this.onDigitPressed(2)}>2</Key>
                 <Key onPress={() => this.onDigitPressed(3)}>3</Key>
-                <Key onPress={() => this.onNegate()}>-</Key>
+                <Key onPress={() => this.onNegate()}>±</Key>
                 <Key onPress={() => this.onDigitPressed(0)}>0</Key>
                 <Key onPress={() => this.onBackspace()}><MdBackspace /></Key>
             </div>

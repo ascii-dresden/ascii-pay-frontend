@@ -86,7 +86,7 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
         }
         let loading;
         if (this.state.loading) {
-            error = <div className="product-list-loading" onClick={() => this.reload()}>
+            loading = <div className="product-list-loading" onClick={() => this.reload()}>
                 <span>Loading</span>
             </div>
         }

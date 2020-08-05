@@ -1,30 +1,10 @@
+@use 'theme/theme-exports';
+
 @mixin prevent-user-select {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-}
-
-:root {
-    --border-color: #d0d0d0;
-    --error-color: #e74c3c;
-    --error-text-color: #ffffff;
-    --primary-background: #fbfbfb;
-    --primary-hover-background: #ffffff;
-    --primary-text-color: #333333;
-    --secondary-background: #eeeeee;
-    --secondary-hover-background: #f5f5f5;
-    --secondary-text-color: #979797;
-    --success-color: #2ecc71;
-    --success-text-color: #ffffff;
-    --tertiary-background: #e0e0e0;
-    --tertiary-hover-background: #e9e9e9;
-    --theme-color: #c0392b;
-    --theme-hover-color: #e74c3c;
-    --theme-primary-text: #ffffff;
-    --theme-secondary-text: #cd6155;
-    --warn-color: #f39c12;
-    --warn-text-color: #ffffff;
 }
 
 body,
