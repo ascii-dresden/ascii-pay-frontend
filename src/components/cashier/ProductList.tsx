@@ -2,6 +2,7 @@ import * as React from "react";
 
 import "./ProductList.scss";
 import { Product, Category } from "../../app/core/models";
+import { listProducts } from "../../app/core/api";
 import { MdPhoto } from "react-icons/md";
 
 export interface ProductListProps { }
@@ -26,8 +27,7 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
 
     async loadProducts() {
         try {
-            let response = await fetch("https://ascii.pixix4.com/api/v1/products");
-            let data = await response.json() as Product[];
+            let data = await listProducts();
 
             let map = new Map<string, Product[]>();
             for (let product of data) {
