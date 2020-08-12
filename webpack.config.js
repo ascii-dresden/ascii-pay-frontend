@@ -50,6 +50,15 @@ module.exports = {
     },
     performance: {
         hints: false
-    }
+    },
+    devServer: {
+        // Enable compression
+        compress: true,
+    
+        // Enable hot reloading
+        hot: true,
+    
+        port: 3000
+      }
 };
 
