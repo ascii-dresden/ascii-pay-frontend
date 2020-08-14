@@ -1,4 +1,7 @@
-const BASE_URL = "https://ascii.pixix4.com/api/v1/"
+export const BASE_URL = "https://ascii.pixix4.com/"
+export const API_PATH = "api/v1/"
+export const API_URL = BASE_URL + API_PATH
+
 
 export enum Method {
     GET, PUT, POST, DELETE
@@ -30,7 +33,7 @@ export async function requestJson<T>(
     if (url.startsWith("/")) {
         requestUrl = url;
     } else {
-        requestUrl = BASE_URL + url
+        requestUrl = API_URL + url
     }
 
     let response = await fetch(requestUrl, params);

@@ -63,7 +63,7 @@ export class App extends React.Component<AppProps, AppState> {
             main = <Account />
         }
 
-        return <React.Fragment>
+        return <>
             <div id="sidebar" className={this.state.menuActive ? "active" : ""}>
                 <div onClick={this.onMenuToggle}>
                     <MdMenu />
@@ -85,6 +85,6 @@ export class App extends React.Component<AppProps, AppState> {
             <div id="main">
                 {main}
             </div>
-        </React.Fragment>;
+        </>;
     }
 }
