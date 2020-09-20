@@ -5,7 +5,9 @@ import { Product, Category } from "../../app/core/models";
 import { listProducts } from "../../app/core/api";
 import { MdPhoto } from "react-icons/md";
 
-export interface ProductListProps { }
+export interface ProductListProps {
+    selectProduct: (product: Product) => void
+}
 export interface ProductListState {
     products: Map<string, Product[]>,
     loading: boolean,
@@ -74,7 +76,7 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
 
         for (let [category, products] of this.state.products) {
             list.push(
-                <ProductListEntry key={products[0].category.id} category={products[0].category} products={products} />
+                <ProductListEntry key={products[0].category.id} category={products[0].category} products={products} selectProduct={(product) => this.props.selectProduct(product)} />
             )
         }
 
@@ -98,7 +100,8 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
 
 interface ProductListEntryProps {
     category: Category,
-    products: Product[]
+    products: Product[],
+    selectProduct: (product: Product) => void
 }
 interface ProductListEntryState { }
 
@@ -106,7 +109,7 @@ class ProductListEntry extends React.Component<ProductListEntryProps, ProductLis
     static displayName = "ProductListEntry"
 
     render() {
-        let list = this.props.products.map(product => <ProductView key={product.id} product={product} />);
+        let list = this.props.products.map(product => <ProductView key={product.id} product={product} selectProduct={() => this.props.selectProduct(product)} />);
         return <div className="product-list-entry">
             <div className="product-list-entry-name">{this.props.category.name}</div>
             <div className="product-list-entry-content">{list}</div>
@@ -118,6 +121,7 @@ class ProductListEntry extends React.Component<ProductListEntryProps, ProductLis
 
 interface ProductViewProps {
     product: Product
+    selectProduct: () => void
 }
 interface ProductViewState { }
 
@@ -134,7 +138,7 @@ class ProductView extends React.Component<ProductViewProps, ProductViewState> {
             image = <div><MdPhoto /></div>;
         }
 
-        return <div className="product-view" key={product.id}>
+        return <div className="product-view" key={product.id} onClick={() => this.props.selectProduct()}>
             <div className="product-view-image">{image}</div>
             <span className="product-view-name"><span>{product.name}</span></span>
             <span className="product-view-price">{product.current_price}</span>
