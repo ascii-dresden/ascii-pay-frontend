@@ -8,7 +8,8 @@ export interface BasketProps {
     freehand: number[],
     products: BasketData[],
     deleteFreehand: (index: number) => void,
-    updateProduct: (product: Product, diff: number) => void
+    updateProduct: (product: Product, diff: number) => void,
+    pay: (amount: number) => void,
 }
 export interface BasketState { }
 
@@ -48,6 +49,7 @@ export class Basket extends React.Component<BasketProps, BasketState> {
             <div className="basket-content">{list}</div>
             <div className="basket-footer">
                 <div className="basket-footer-sum">{(sum / 100).toFixed(2)}€</div>
+                <div className="basket-footer-pay" onClick={() => this.props.pay(sum)}>Pay</div>
             </div>
         </div>;
     }

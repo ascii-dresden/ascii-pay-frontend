@@ -4,12 +4,14 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "./Cashier.scss";
 
 import { Account, Product } from "../../app/core/models";
-import { registerEventHandler, EventHandler, removeEventHandler } from "../../app/core/api";
+import { registerEventHandler, EventHandler, removeEventHandler, requestPaymentToken } from "../../app/core/api";
+import { payment } from "../../app/core/api"
 
 import { Barista } from "./Barista";
 import { Basket, BasketData } from "./Basket";
 import { Customer } from "./Customer";
 import { Keypad } from "./Keypad";
+import { Payment, PaymentStatus, PaymentData } from "./Payment";
 import { ProductList } from "./ProductList";
 
 export interface CashierProps { }
@@ -17,6 +19,7 @@ export interface CashierState {
     account: Account,
     basketProducts: BasketData[],
     basketFreehands: number[],
+    payment: PaymentData
  }
 
 export class Cashier extends React.Component<CashierProps, CashierState> implements EventHandler {
@@ -28,7 +31,8 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
         this.state = {
             account: null,
             basketProducts: [],
-            basketFreehands: []
+            basketFreehands: [],
+            payment: null
         }
     }
 
@@ -90,8 +94,35 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
         })
     }
 
+    pay(amount: number) {
+        if (this.state.payment === null && amount != 0) {
+            this.setState({
+                payment: {
+                    status: PaymentStatus.Waiting,
+                    amount: amount
+                }
+            });
+
+            (async () => {
+                await requestPaymentToken(-amount);
+            })()
+        }
+    }
+
+    cancelPayment() {
+        this.setState({
+            payment: null
+        });
+    }
+
     render() {
+        var payment = null;
+        if (this.state.payment !== null) {
+            payment = <Payment data={this.state.payment} close={() => this.cancelPayment()} />
+        }
+
         return <div id="cashier">
+            {payment}
             <div id="cashier-left">
                 <Barista />
                 <Customer account={this.state.account} removeAccount={() => this.removeAccount()} />
@@ -99,7 +130,8 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
                     products={this.state.basketProducts}
                     freehand={this.state.basketFreehands}
                     updateProduct={(product, diff) => this.updateProduct(product, diff)}
-                    deleteFreehand={(index) => this.removeFreehand(index)} />
+                    deleteFreehand={(index) => this.removeFreehand(index)}
+                    pay={(amount) => this.pay(amount)} />
             </div>
             <div id="cashier-right">
                 <Tabs>
@@ -125,7 +157,51 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
     }
 
     onProductScanned(product: Product) {
-        this.updateProduct(product, 1)
+        if (this.state.payment === null) {
+            this.updateProduct(product, 1)
+        }
+    }
+
+    onPaymentTokenGenerated(token: string) {
+        let p = this.state.payment;
+        if (p !== null) {
+            let products = new Map();
+            for (let entry of this.state.basketProducts) {
+                products.set(entry.product, entry.amount)
+            }
+            (async () => {
+                try {
+                    let response = await payment(-p.amount, token, products);
+                    this.setState({
+                        account: response.account,
+                        basketProducts: [],
+                        basketFreehands: [],
+                        payment: {
+                            status: PaymentStatus.Success,
+                            amount: this.state.payment.amount
+                        }
+                    });
+                } catch(e) {
+                    this.setState({
+                        payment: {
+                            status: PaymentStatus.PaymentError,
+                            amount: this.state.payment.amount
+                        }
+                    });
+                }
+            })()
+        }
+    }
+
+    onTimeout() {
+        if (this.state.payment !== null) {
+            this.setState({
+                payment: {
+                    status: PaymentStatus.Timeout,
+                    amount: this.state.payment.amount
+                }
+            });
+        }
     }
 
     componentDidMount() {

@@ -5,7 +5,6 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 module.exports = {
     mode: "development",
     entry: {
-        vendor: ["react", "react-dom"],
         app: "./src/index.tsx",
     },
     output: {

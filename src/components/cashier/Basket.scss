@@ -26,6 +26,13 @@
     width: 100%;
     padding: 0.6rem;
     border-top: solid 1px var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.basket-footer-pay {
+    padding: 2rem;
 }
 
 .basket-entry {

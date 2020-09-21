@@ -141,7 +141,7 @@ class ProductView extends React.Component<ProductViewProps, ProductViewState> {
         return <div className="product-view" key={product.id} onClick={() => this.props.selectProduct()}>
             <div className="product-view-image">{image}</div>
             <span className="product-view-name"><span>{product.name}</span></span>
-            <span className="product-view-price">{product.current_price}</span>
+            <span className="product-view-price">{(product.current_price / 100).toFixed(2)}€</span>
         </div>
     }
 }

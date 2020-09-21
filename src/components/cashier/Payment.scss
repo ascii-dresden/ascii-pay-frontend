@@ -1,0 +1,71 @@
+.payment {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    z-index: 10;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background-color: black;
+        opacity: 0.5;
+    }
+}
+
+.payment-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20rem;
+    margin-left: -10rem;
+    height: 24rem;
+    margin-top: -12rem;
+    background-color: var(--secondary-background);
+    border: solid 1px var(--border-color);
+    padding: 2rem;
+
+    & > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.payment-header {
+    font-size: 2rem;
+    line-height: 3rem;
+}
+.payment-status {
+    height: 10rem;
+    font-size: 8rem;
+    padding-top: 2rem;
+
+    .payment-success {
+        color: var(--success-color);
+    }
+    .payment-warn {
+        color: var(--warn-color);
+    }
+    .payment-error {
+        color: var(--error-color);
+    }
+}
+.payment-message {
+    margin-top: -0.2rem;
+    margin-bottom: 1rem;
+    height: 0;
+}
+.payment-amount {
+    font-size: 1.5rem;
+    line-height: 3rem;
+}
+.payment-cancel {
+    line-height: 3rem;
+}
