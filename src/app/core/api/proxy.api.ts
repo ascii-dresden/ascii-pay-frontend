@@ -1,4 +1,4 @@
-import { requestJson, Method, BASE_URL } from "./utils";
+import { requestProxyJson, Method, BASE_URL } from "./utils";
 import { Product, Account } from "../models";
 
 export interface EventHandler {
@@ -7,17 +7,17 @@ export interface EventHandler {
 
     onAccountScanned?(account: Account): void;
     onProductScanned?(product: Product): void;
-    onBarCodeScanned?(code: String): void;
-    onNfcCardAdded?(id: String, writeable: boolean): void;
+    onBarCodeScanned?(code: string): void;
+    onNfcCardAdded?(id: string, writeable: boolean): void;
     onNfcCardRemoved?(): void;
-    onPaymentTokenGenerated?(token: String): void;
+    onPaymentTokenGenerated?(token: string): void;
     onTimeout?(): void;
 }
 
 export async function requestPaymentToken(amount: number) {
-    return await requestJson(
+    return await requestProxyJson(
         Method.POST,
-        "/request-payment-token",
+        "proxy/request-payment-token",
         {
             amount
         }
@@ -25,9 +25,16 @@ export async function requestPaymentToken(amount: number) {
 }
 
 export async function reauthenticate() {
-    return await requestJson(
+    return await requestProxyJson(
         Method.GET,
-        "/reauthenticate"
+        "proxy/reauthenticate"
+    )
+}
+
+export async function cancelTokenRequest() {
+    return await requestProxyJson(
+        Method.GET,
+        "proxy/cancel"
     )
 }
 
@@ -64,7 +71,7 @@ function connectEventSource() {
         return;
     }
 
-    evtSource = new EventSource(BASE_URL + "events");
+    evtSource = new EventSource(BASE_URL + "proxy/events");
     evtSource.onmessage = (event) => {
         if (event.data === "connected" || event.data === "ping") {
             return;
@@ -122,14 +129,14 @@ function parseEventMessage(data: any) {
             case "qr-code":
                 for (let handler of eventHandlerList) {
                     if (handler.onBarCodeScanned) {
-                        handler.onBarCodeScanned(data.content.code as String);
+                        handler.onBarCodeScanned(data.content.code as string);
                     }
                 }
                 break;
             case "nfc-card":
                 for (let handler of eventHandlerList) {
                     if (handler.onNfcCardAdded) {
-                        handler.onNfcCardAdded(data.content.id as String, data.content.writeable as boolean);
+                        handler.onNfcCardAdded(data.content.id as string, data.content.writeable as boolean);
                     }
                 }
                 break;
@@ -143,7 +150,7 @@ function parseEventMessage(data: any) {
             case "payment-token":
                 for (let handler of eventHandlerList) {
                     if (handler.onPaymentTokenGenerated) {
-                        handler.onPaymentTokenGenerated(data.content.token as String);
+                        handler.onPaymentTokenGenerated(data.content.token as string);
                     }
                 }
                 break;

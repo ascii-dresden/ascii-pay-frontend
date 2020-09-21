@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Cashier } from "./cashier/Cashier";
-import { Account } from "./Account";
+import { AccountView } from "./account/Account";
 
 import "./App.scss";
 
@@ -60,7 +60,7 @@ export class App extends React.Component<AppProps, AppState> {
         if (this.state.mode == Mode.Cashier) {
             main = <Cashier />
         } else {
-            main = <Account />
+            main = <AccountView />
         }
 
         return <>

@@ -4,7 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "./Cashier.scss";
 
 import { Account, Product } from "../../app/core/models";
-import { registerEventHandler, EventHandler, removeEventHandler, requestPaymentToken } from "../../app/core/api";
+import { registerEventHandler, EventHandler, removeEventHandler, requestPaymentToken, cancelTokenRequest } from "../../app/core/api";
 import { payment } from "../../app/core/api"
 
 import { Barista } from "./Barista";
@@ -113,6 +113,9 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
         this.setState({
             payment: null
         });
+        (async () => {
+            await cancelTokenRequest();
+        })();
     }
 
     render() {
@@ -172,15 +175,24 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
             (async () => {
                 try {
                     let response = await payment(-p.amount, token, products);
-                    this.setState({
-                        account: response.account,
-                        basketProducts: [],
-                        basketFreehands: [],
-                        payment: {
-                            status: PaymentStatus.Success,
-                            amount: this.state.payment.amount
-                        }
-                    });
+                    if (response && response.account) {
+                        this.setState({
+                            account: response.account,
+                            basketProducts: [],
+                            basketFreehands: [],
+                            payment: {
+                                status: PaymentStatus.Success,
+                                amount: this.state.payment.amount
+                            }
+                        });
+                    } else {
+                        this.setState({
+                            payment: {
+                                status: PaymentStatus.PaymentError,
+                                amount: this.state.payment.amount
+                            }
+                        });
+                    }
                 } catch(e) {
                     this.setState({
                         payment: {
@@ -202,6 +214,18 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
                 }
             });
         }
+    }
+    
+    onBarCodeScanned(code: string) {
+        console.log("Bar code", code);
+    }
+
+    onNfcCardAdded(id: string, writeable: boolean) {
+        console.log("Nfc card added", id, writeable);
+    }
+
+    onNfcCardRemoved() {
+        console.log("Nfc card removed");
     }
 
     componentDidMount() {

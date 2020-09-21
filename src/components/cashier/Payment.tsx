@@ -69,10 +69,14 @@ export class Payment extends React.Component<PaymentProps, PaymentState> {
 
     checkTimeout() {
         if (this.timeout === null && this.props.data.status !== PaymentStatus.Waiting) {
+            let t = 5000;
+            if (this.props.data.status === PaymentStatus.Success) {
+                t = 2000;
+            }
             let close = this.props.close;
             this.timeout = setTimeout(() => {
                 close();
-            }, 5000);
+            }, t);
         }
     }
 

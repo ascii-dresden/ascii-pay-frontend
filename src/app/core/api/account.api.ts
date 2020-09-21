@@ -56,7 +56,7 @@ export async function removeAccountBarcode(account: Account) {
 
 export async function addAccountNfcTag(account: Account, nfc: string, writeable: boolean) {
     return await requestJson(
-        Method.POST,
+        Method.PUT,
         "account/" + account.id + "/nfc",
         {
             nfc,

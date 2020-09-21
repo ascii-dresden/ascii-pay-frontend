@@ -1,4 +1,4 @@
-export const BASE_URL = "https://ascii.pixix4.com/"
+export const BASE_URL = "http://localhost:8000/"
 export const API_PATH = "api/v1/"
 export const API_URL = BASE_URL + API_PATH
 
@@ -28,14 +28,31 @@ export async function requestJson<T>(
         };
     }
 
-    let requestUrl;
+    let response = await fetch(API_URL + url, params);
+    return await response.json() as T;
+}
 
-    if (url.startsWith("/")) {
-        requestUrl = url;
-    } else {
-        requestUrl = API_URL + url
+export async function requestProxyJson<T>(
+    method: Method,
+    url: string,
+    body: any = null
+): Promise<T> {
+    var params: RequestInit = {
+        method: Method[method],
+        cache: 'no-cache',
+        headers: {
+            Accept: 'application/json'
+        }
+    };
+
+    if (body) {
+        params.body = JSON.stringify(body);
+        params.headers = {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+        };
     }
 
-    let response = await fetch(requestUrl, params);
+    let response = await fetch(BASE_URL + url, params);
     return await response.json() as T;
 }
