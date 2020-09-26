@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Cashier } from "./cashier/Cashier";
 import { AccountView } from "./account/Account";
+import { ConnectionStatus, Status } from "./ConnectionStatus";
 
 import "./App.scss";
 
@@ -14,6 +15,7 @@ enum Mode {
 export interface AppProps { }
 export interface AppState {
     mode: Mode,
+    connectionStatus: Status
     menuActive: boolean
 }
 
@@ -24,6 +26,7 @@ export class App extends React.Component<AppProps, AppState> {
         super(props);
         this.state = {
             mode: Mode.Cashier,
+            connectionStatus: Status.Ok,
             menuActive: false
         };
 
@@ -63,7 +66,13 @@ export class App extends React.Component<AppProps, AppState> {
             main = <AccountView />
         }
 
+        let connectionStatus;
+        if (this.state.connectionStatus != Status.Ok) {
+            connectionStatus = <ConnectionStatus status={this.state.connectionStatus} />
+        }
+
         return <>
+            {connectionStatus}
             <div id="sidebar" className={this.state.menuActive ? "active" : ""}>
                 <div onClick={this.onMenuToggle}>
                     <MdMenu />

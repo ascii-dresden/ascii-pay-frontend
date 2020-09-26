@@ -56,8 +56,8 @@ export class Payment extends React.Component<PaymentProps, PaymentState> {
                 break;
         }
 
-        return <div className="payment">
-            <div className="payment-content">
+        return <div className="dialog">
+            <div className="dialog-body payment">
                 <div className="payment-header">Payment</div>
                 <div className="payment-status">{status}</div>
                 <div className="payment-message">{message}</div>

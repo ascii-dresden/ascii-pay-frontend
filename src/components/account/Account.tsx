@@ -23,7 +23,7 @@ export class AccountView extends React.Component<AccountProps, AccountState> {
 
         this.state = {
             accountList: [],
-            account: null
+            account: null,
         };
     }
 
@@ -41,7 +41,7 @@ export class AccountView extends React.Component<AccountProps, AccountState> {
         }
         return <div id="account">
             <div id="account-left">
-                <AccountList accountList={this.state.accountList} selectAccount={(account) => this.selectAccount(account)} />
+                <AccountList accountList={this.state.accountList} selectAccount={(account) => this.selectAccount(account)} selectedAccount={this.state.account} />
             </div>
             <div id="account-right">
                 <Tabs>

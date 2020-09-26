@@ -9,6 +9,6 @@ export class Barista extends React.Component<BaristaProps, BaristaState> {
     static displayName = "Barista"
 
     render() {
-        return <div>Barista</div>;
+        return <div className="barista">Barista</div>;
     }
 }

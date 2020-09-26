@@ -1,7 +1,44 @@
 .account-list {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+}
 
+.account-list-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 3rem;
+    width: 100%;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.account-list-search {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3rem;
+    width: 100%;
+    border-top: solid 1px var(--border-color);
+    padding: 0.55rem 1rem !important;
 }
 
 .account-list-entry {
     padding: 1rem;
+
+    &:hover {
+        background-color: var(--secondary-hover-background);
+    }
+
+    &.active {
+        background-color: var(--primary-background);
+
+        &:hover {
+            background-color: var(--primary-hover-background);
+        }
+    }
 }

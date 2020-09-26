@@ -1,0 +1,41 @@
+.connection-status {
+    & > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+.connection-icons {
+    justify-content: space-between !important;
+    padding: 2rem 0;
+
+    & > div:nth-child(1), & > div:nth-child(3), & > div:nth-child(5) {
+        font-size: 6rem;
+    }
+    & > div:nth-child(2), & > div:nth-child(4) {
+        position: relative;
+        padding-bottom: 1rem;
+
+        svg {
+            display: block;
+        }
+        svg:first-child {
+            font-size: 2rem;
+            position: absolute;
+            top: -2rem;
+        }
+        svg:last-child {
+            font-size: 2.5rem;
+        }
+    }
+    .success > svg:first-child {
+        color: var(--success-color);
+    }
+    .error > svg:first-child{
+        color: var(--error-color);
+    }
+
+    .error ~ div ~ div {
+        opacity: 0.2;
+    }
+}
