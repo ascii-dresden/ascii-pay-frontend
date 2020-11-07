@@ -22,10 +22,26 @@ html {
     background: var(--secondary-background);
     font-family: Roboto, sans-serif;
     overscroll-behavior: none;
-    font-size: 14px;
 }
 
 * {
     box-sizing: border-box;
     font-family: Roboto, sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--secondary-background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-text-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-text-color);
 }

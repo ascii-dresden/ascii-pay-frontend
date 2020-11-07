@@ -19,10 +19,12 @@
         border: solid 1px var(--border-color);
         color: var(--primary-text-color);
         padding: 0.4rem 0.8rem;
+        font-size: inherit;
 
         background: var(--primary-background);
         &:hover, &:focus {
             background: var(--primary-hover-background);
+            outline-color: var(--theme-color);
         }
 
         &:read-only {

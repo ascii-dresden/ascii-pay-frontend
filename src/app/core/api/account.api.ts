@@ -1,7 +1,7 @@
 import { Account } from "../models";
 import { requestJson, Method } from "./utils";
 
-export async function listAccounts(search: string = null): Promise<Account[]> {
+export async function listAccounts(search: string|null = null): Promise<Account[]> {
     return await requestJson(
         Method.GET,
         "accounts" + (search ? "?search=" + search : "")

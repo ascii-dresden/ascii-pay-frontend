@@ -1,7 +1,7 @@
 import { Category } from "../models";
 import { requestJson, Method } from "./utils";
 
-export async function listCategorys(search: string = null): Promise<Category[]> {
+export async function listCategorys(search: string|null = null): Promise<Category[]> {
     return await requestJson(
         Method.GET,
         "categories" + (search ? "?search=" + search : "")

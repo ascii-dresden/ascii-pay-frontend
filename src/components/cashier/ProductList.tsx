@@ -9,7 +9,7 @@ export interface ProductListProps {
     selectProduct: (product: Product) => void
 }
 export interface ProductListState {
-    products: Map<string, Product[]>,
+    products: Map<string|null, Product[]>,
     loading: boolean,
     error: boolean,
 }
@@ -31,13 +31,13 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
         try {
             let data = await listProducts();
 
-            let map = new Map<string, Product[]>();
+            let map = new Map<string|null, Product[]>();
             for (let product of data) {
-                let list = map.get(product.category.id);
+                let list = map.get(product.category?.id || null);
                 if (list) {
                     list.push(product);
                 } else {
-                    map.set(product.category.id, [product])
+                    map.set(product.category?.id|| null, [product])
                 }
             }
 
@@ -76,7 +76,7 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
 
         for (let [category, products] of this.state.products) {
             list.push(
-                <ProductListEntry key={products[0].category.id} category={products[0].category} products={products} selectProduct={(product) => this.props.selectProduct(product)} />
+                <ProductListEntry key={products[0].category?.id} category={products[0].category||null} products={products} selectProduct={(product) => this.props.selectProduct(product)} />
             )
         }
 
@@ -99,7 +99,7 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
 
 
 interface ProductListEntryProps {
-    category: Category,
+    category: Category|null,
     products: Product[],
     selectProduct: (product: Product) => void
 }
@@ -111,7 +111,7 @@ class ProductListEntry extends React.Component<ProductListEntryProps, ProductLis
     render() {
         let list = this.props.products.map(product => <ProductView key={product.id} product={product} selectProduct={() => this.props.selectProduct(product)} />);
         return <div className="product-list-entry">
-            <div className="product-list-entry-name">{this.props.category.name}</div>
+            <div className="product-list-entry-name">{this.props.category?.name}</div>
             <div className="product-list-entry-content">{list}</div>
         </div>;
     }
@@ -141,7 +141,7 @@ class ProductView extends React.Component<ProductViewProps, ProductViewState> {
         return <div className="product-view" key={product.id} onClick={() => this.props.selectProduct()}>
             <div className="product-view-image">{image}</div>
             <span className="product-view-name"><span>{product.name}</span></span>
-            <span className="product-view-price">{(product.current_price / 100).toFixed(2)}€</span>
+            <span className="product-view-price">{((product.current_price || 0) / 100).toFixed(2)}€</span>
         </div>
     }
 }

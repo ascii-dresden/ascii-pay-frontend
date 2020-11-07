@@ -65,7 +65,7 @@ export function removeEventHandler(handler: EventHandler) {
     }
 }
 
-let evtSource: EventSource = null;
+let evtSource: EventSource | null = null;
 function connectEventSource() {
     if (evtSource) {
         return;
@@ -108,7 +108,7 @@ function connectEventSource() {
 }
 
 function disconnectEventSource() {
-    evtSource.close();
+    evtSource?.close();
     evtSource = null;
 }
 

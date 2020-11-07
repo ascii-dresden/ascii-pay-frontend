@@ -5,7 +5,7 @@ import { Account } from "../../app/core/models";
 import { MdCancel } from "react-icons/md";
 
 export interface CustomerProps { 
-    account: Account,
+    account: Account|null,
     removeAccount: () => void,
 }
 export interface CustomerState {}

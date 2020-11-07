@@ -1,7 +1,7 @@
 import { Product } from "../models";
 import { requestJson, Method } from "./utils";
 
-export async function listProducts(search: string = null): Promise<Product[]> {
+export async function listProducts(search: string|null = null): Promise<Product[]> {
     return await requestJson(
         Method.GET,
         "products" + (search ? "?search=" + search : "")

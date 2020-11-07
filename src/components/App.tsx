@@ -135,9 +135,17 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
 
     componentDidMount() {
         registerEventHandler(this);
+
+        window.onresize = this.onresize
+        this.onresize();
     }
 
     componentWillUnmount() {
         removeEventHandler(this);
+    }
+
+    onresize() {
+        const scale = Math.min(window.innerWidth  / 800, window.innerHeight / 480);
+        document.documentElement.style.fontSize = Math.round(16 * scale) + "px";
     }
 }

@@ -16,10 +16,10 @@ import { ProductList } from "./ProductList";
 
 export interface CashierProps { }
 export interface CashierState {
-    account: Account,
+    account: Account|null,
     basketProducts: BasketData[],
     basketFreehands: number[],
-    payment: PaymentData
+    payment: PaymentData|null
  }
 
 export class Cashier extends React.Component<CashierProps, CashierState> implements EventHandler {
@@ -43,7 +43,7 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
     }
 
     updateProduct(product: Product, diff: number) {
-        this.setState((state, props) => {
+        this.setState((state) => {
             var found = false;
             var newBasket = state.basketProducts.map((data) => {
                 if (data.product.id === product.id) {
@@ -56,8 +56,8 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
                     }
                 } else return data
             }).filter((data) => {
-                return data != null
-            })
+                return data !== null
+            }) as BasketData[];
 
             if (!found && diff > 0) {
                 newBasket.push({
@@ -182,14 +182,14 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
                             basketFreehands: [],
                             payment: {
                                 status: PaymentStatus.Success,
-                                amount: this.state.payment.amount
+                                amount: this.state.payment?.amount || 0
                             }
                         });
                     } else {
                         this.setState({
                             payment: {
                                 status: PaymentStatus.PaymentError,
-                                amount: this.state.payment.amount
+                                amount: this.state.payment?.amount || 0
                             }
                         });
                     }
@@ -197,7 +197,7 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
                     this.setState({
                         payment: {
                             status: PaymentStatus.PaymentError,
-                            amount: this.state.payment.amount
+                            amount: this.state.payment?.amount || 0
                         }
                     });
                 }

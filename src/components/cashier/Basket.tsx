@@ -35,7 +35,7 @@ export class Basket extends React.Component<BasketProps, BasketState> {
         }
 
         for (let data of this.props.products) {
-            sum += data.product.current_price * data.amount;
+            sum += (data.product.current_price || 0) * data.amount;
             list.push(
                 <BasketEntry
                     key={data.product.id}
@@ -77,7 +77,7 @@ class BasketEntry extends React.Component<BasketEntryProps, BasketEntryState> {
         return <div className="basket-entry">
             <div className="basket-entry-image"><div>{image}</div></div>
             <div className="basket-entry-name">{this.props.product.name}</div>
-            <div className="basket-entry-price">{(this.props.amount * this.props.product.current_price / 100).toFixed(2)}€</div>
+            <div className="basket-entry-price">{(this.props.amount * (this.props.product.current_price || 0) / 100).toFixed(2)}€</div>
             <div className="basket-entry-amount">Amount: {this.props.amount}</div>
         </div>;
     }

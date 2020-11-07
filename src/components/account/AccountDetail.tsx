@@ -11,10 +11,10 @@ export interface AccountDetailProps {
     account: Account
 }
 export interface AccountDetailState {
-    nfc: string|null,
-    nfcWritable: boolean|null,
-    barCode: string|null
- }
+    nfc: string | null,
+    nfcWritable: boolean | null,
+    barCode: string | null
+}
 
 export class AccountDetail extends React.Component<AccountDetailProps, AccountDetailState> implements EventHandler {
     static displayName = "AccountDetail"
@@ -31,9 +31,13 @@ export class AccountDetail extends React.Component<AccountDetailProps, AccountDe
 
     registerNfcTag() {
         (async () => {
-            await addAccountNfcTag(this.props.account, this.state.nfc, this.state.nfcWritable);
-            if (this.state.nfcWritable) {
-                await reauthenticate();
+            let nfc = this.state.nfc;
+            let nfcWritable = this.state.nfcWritable
+            if (nfc !== null && nfcWritable !== null) {
+                await addAccountNfcTag(this.props.account, nfc, nfcWritable);
+                if (this.state.nfcWritable) {
+                    await reauthenticate();
+                }
             }
         })();
     }
@@ -91,7 +95,7 @@ export class AccountDetail extends React.Component<AccountDetailProps, AccountDe
             {newNfcButton}
         </div>;
     }
-        
+
     onBarCodeScanned(code: string) {
         this.setState({
             barCode: code

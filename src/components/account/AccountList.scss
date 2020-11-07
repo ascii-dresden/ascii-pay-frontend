@@ -25,7 +25,10 @@
     height: 3rem;
     width: 100%;
     border-top: solid 1px var(--border-color);
-    padding: 0.55rem 1rem !important;
+    padding: 0 1rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .account-list-entry {
