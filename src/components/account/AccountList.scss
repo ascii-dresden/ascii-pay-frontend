@@ -12,6 +12,7 @@
     top: 0;
     bottom: 3rem;
     width: 100%;
+    padding: 0.5rem 0;
 
     overflow-x: hidden;
     overflow-y: auto;
@@ -28,7 +29,7 @@
 }
 
 .account-list-entry {
-    padding: 1rem;
+    padding: 0.7rem 1rem;
 
     &:hover {
         background-color: var(--secondary-hover-background);

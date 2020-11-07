@@ -2,7 +2,7 @@ import * as React from "react";
 
 import "./Basket.scss";
 import { Product } from "../../app/core/models";
-import { MdExpandMore, MdExpandLess, MdPhoto, MdEuroSymbol, MdClear } from "react-icons/md";
+import { MdPhoto, MdEuroSymbol, MdClear } from "react-icons/md";
 
 export interface BasketProps {
     freehand: number[],
@@ -74,15 +74,11 @@ class BasketEntry extends React.Component<BasketEntryProps, BasketEntryState> {
             image = <div><MdPhoto /></div>;
         }
 
-        let lessIcon = this.props.amount <= 1 ? <MdClear /> : <MdExpandMore />
-
         return <div className="basket-entry">
             <div className="basket-entry-image"><div>{image}</div></div>
             <div className="basket-entry-name">{this.props.product.name}</div>
             <div className="basket-entry-price">{(this.props.amount * this.props.product.current_price / 100).toFixed(2)}€</div>
             <div className="basket-entry-amount">Amount: {this.props.amount}</div>
-            <div className="basket-entry-amount-increase" onClick={() => this.props.updateAmount(1)}><MdExpandLess /></div>
-            <div className="basket-entry-amount-decrease" onClick={() => this.props.updateAmount(-1)}>{lessIcon}</div>
         </div>;
     }
 }

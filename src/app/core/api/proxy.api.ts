@@ -72,6 +72,7 @@ function connectEventSource() {
     }
 
     evtSource = new EventSource(BASE_URL + "proxy/events");
+
     evtSource.onmessage = (event) => {
         if (event.data === "connected" || event.data === "ping") {
             return;
@@ -93,14 +94,16 @@ function connectEventSource() {
         }
     }
 
-    evtSource.onerror = (event) => {
-        console.error("Connection to event source lost!", event);
+    evtSource.onerror = (_) => {
         for (let handler of eventHandlerList) {
             if (handler.onDisconnect) {
                 handler.onDisconnect();
             }
         }
-        connectEventSource();
+        disconnectEventSource()
+        setTimeout(() => {
+            connectEventSource();
+        }, 1000);
     }
 }
 

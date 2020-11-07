@@ -86,7 +86,7 @@
     top: 0;
     left: 3.6rem;
     line-height: 1.8rem;
-    right: 5rem;
+    right: 3rem;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -95,32 +95,14 @@
     position: absolute;
     top: 1.3rem;
     left: 3.6rem;
+    right: 3rem;
     font-size: 0.8rem;
 }
 .basket-entry-price {
     position: absolute;
     top: 0;
     line-height: 2.7rem;
-    right: 2.6rem;
-}
-.basket-entry-amount-increase, .basket-entry-amount-decrease {
-    position: absolute;
-    right: 0;
-    height: 50%;
-    width: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-        background-color: var(--secondary-hover-background);
-    }
-}
-.basket-entry-amount-increase {
-    top: 0;
-}
-.basket-entry-amount-decrease {
-    bottom: 0;
+    right: 0.6rem;
 }
 .basket-entry-delete {
     position: absolute;
