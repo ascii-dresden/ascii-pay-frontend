@@ -19,14 +19,15 @@ function createWindow() {
   mainWindow.removeMenu();
 
   if (process.env.NODE_ENV === 'development') {
-    electronLocalshortcut.register(mainWindow, "ctrl+r", () => {
-      mainWindow?.reload()
+    let win = mainWindow;
+    electronLocalshortcut.register("Ctrl+R", () => {
+      win.reload();
     });
-    electronLocalshortcut.register(mainWindow, "ctrl+shift+i", () => {
-      mainWindow?.webContents.toggleDevTools()
+    electronLocalshortcut.register("Ctrl+Shift+I", () => {
+      win.webContents.toggleDevTools();
     });
-    electronLocalshortcut.register(mainWindow, "f11", () => {
-      mainWindow?.setFullScreen(!mainWindow.isFullScreen)
+    electronLocalshortcut.register("F11", () => {
+      win.setFullScreen(!win.isFullScreen());
     });
 
     mainWindow.maximize();
