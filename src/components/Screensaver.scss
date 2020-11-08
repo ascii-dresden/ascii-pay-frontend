@@ -1,0 +1,58 @@
+.screensaver {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    background-color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .clock-container {
+        position: relative;
+    }
+
+    .date-time-string {
+        line-height: 4rem;
+        text-align: center;
+        color: #bbb;
+        font-size: 1.2rem;
+
+        span:first-child {
+            padding-right: 0.6rem;
+        }
+    }
+
+    .react-clock {
+        width: 12rem !important;
+        height: 12rem !important;
+    }
+
+    .react-clock__face {
+        border-color: #000;
+    }
+    .react-clock__mark__body {
+        background-color: #ffffff;
+    }
+    .react-clock__hand__body {
+        background-color: #ffffff;
+    }
+    .react-clock__second-hand__body {
+        background-color: var(--theme-color);
+    }
+
+    .connection-status {
+        position: absolute;
+        right: 2rem;
+        top: 1rem;
+        color: #bbb;
+        font-size: 2rem;
+        width: 4.2em;
+
+        .error ~ div ~ div {
+            opacity: 0.5;
+        }
+    }
+}

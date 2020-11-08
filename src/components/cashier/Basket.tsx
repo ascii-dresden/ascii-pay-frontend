@@ -75,7 +75,7 @@ class BasketEntry extends React.Component<BasketEntryProps, BasketEntryState> {
         }
 
         return <div className="basket-entry">
-            <div className="basket-entry-image"><div>{image}</div></div>
+            <div className="basket-entry-image" onClick={() => this.props.updateAmount(-1)}><div>{image}</div></div>
             <div className="basket-entry-name">{this.props.product.name}</div>
             <div className="basket-entry-price">{(this.props.amount * (this.props.product.current_price || 0) / 100).toFixed(2)}€</div>
             <div className="basket-entry-amount">Amount: {this.props.amount}</div>
@@ -95,11 +95,10 @@ class BasketFreehand extends React.Component<BasketFreehandProps, BasketFreehand
 
     render() {
         return <div className="basket-entry">
-            <div className="basket-entry-image"><div><div><MdEuroSymbol /></div></div></div>
+            <div className="basket-entry-image" onClick={() => this.props.delete(this.props.index)}><div><div><MdEuroSymbol /></div></div></div>
             <div className="basket-entry-name">Freehand</div>
             <div className="basket-entry-price">{(this.props.freehand / 100).toFixed(2)}€</div>
             <div className="basket-entry-amount">Lorem ipsum</div>
-            <div className="basket-entry-delete" onClick={() => this.props.delete(this.props.index)}><MdClear /></div>
         </div>;
     }
 }

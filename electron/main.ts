@@ -19,21 +19,35 @@ function createWindow() {
   mainWindow.removeMenu();
 
   if (process.env.NODE_ENV === 'development') {
-    let win = mainWindow;
     electronLocalshortcut.register("Ctrl+R", () => {
-      win.reload();
+      let win = BrowserWindow.getFocusedWindow();
+      if (win !== null) {
+        win.reload();
+      }
     });
     electronLocalshortcut.register("Ctrl+Shift+I", () => {
-      win.webContents.toggleDevTools();
+      let win = BrowserWindow.getFocusedWindow();
+      if (win !== null) {
+        win.webContents.toggleDevTools();
+      }
     });
     electronLocalshortcut.register("F11", () => {
-      win.setFullScreen(!win.isFullScreen());
+      let win = BrowserWindow.getFocusedWindow();
+      if (win !== null) {
+        win.setFullScreen(!win.isFullScreen());
+      }
     });
 
     mainWindow.maximize();
     mainWindow.loadURL('http://localhost:4000')
   } else {
-    mainWindow.setFullScreen(true);
+    mainWindow.setKiosk(true);
+
+    mainWindow.webContents.on('crashed', (e) => {
+      app.relaunch();
+      app.quit()
+    });
+
     mainWindow.loadURL(
       url.format({
         pathname: path.join(__dirname, 'renderer/index.html'),

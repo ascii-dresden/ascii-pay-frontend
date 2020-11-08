@@ -1,13 +1,16 @@
 import * as React from "react";
+import { MdPayment, MdGroup, MdMenu, MdPowerSettingsNew, MdLocalCafe } from "react-icons/md";
+import IdleTimer from 'react-idle-timer'
+
 import { Cashier } from "./cashier/Cashier";
 import { AccountView } from "./account/Account";
-import { ConnectionStatus, Status } from "./ConnectionStatus";
+import { Status } from "./ConnectionStatus";
+import { Screensaver } from "./Screensaver";
+import { ConnectionStatusDialog } from "./ConnectionStatusDialog";
 
 import { registerEventHandler, EventHandler, removeEventHandler } from "../app/core/api";
 
 import "./App.scss";
-
-import { MdPayment, MdGroup, MdMenu, MdPowerSettingsNew, MdLocalCafe } from "react-icons/md";
 
 enum Mode {
     Cashier,
@@ -20,26 +23,39 @@ export interface AppState {
     proxyConnected: boolean,
     serverConnected: boolean,
     mode: Mode,
-    menuActive: boolean
+    menuActive: boolean,
+    screensaver: boolean
 }
 
 export class App extends React.Component<AppProps, AppState> implements EventHandler {
     static displayName = "App"
 
+    idleTimer: IdleTimer | null
+
     constructor(props: AppProps) {
         super(props);
+
+        this.idleTimer = null
+
         this.state = {
             proxyConnected: true,
             serverConnected: true,
             mode: Mode.Cashier,
-            menuActive: false
+            menuActive: false,
+            screensaver: false
         };
+    }
 
-        this.onMenuToggle = this.onMenuToggle.bind(this);
-        this.onCashier = this.onCashier.bind(this);
-        this.onAccount = this.onAccount.bind(this);
-        this.onProduct = this.onProduct.bind(this);
-        this.onLogout = this.onLogout.bind(this);
+    handleOnActive() {
+        this.setState({
+            screensaver: false
+        });
+    }
+
+    handleOnIdle() {
+        this.setState({
+            screensaver: true
+        });
     }
 
     onMenuToggle() {
@@ -66,10 +82,6 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
         });
     }
 
-    onLogout() {
-
-    }
-
     render() {
         let main;
         switch (this.state.mode as Mode) {
@@ -84,33 +96,41 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
                 break;
         }
 
-        var connectionStatus;
+        let connectionStatus;
         if (!this.state.proxyConnected) {
-            connectionStatus = <ConnectionStatus status={Status.NoProxy} />
+            connectionStatus = Status.NoProxy;
         } else if (!this.state.serverConnected) {
-            connectionStatus = <ConnectionStatus status={Status.NoServer} />
+            connectionStatus = Status.NoServer;
+        } else {
+            connectionStatus = Status.Ok;
         }
 
         return <>
-            {connectionStatus}
+            <IdleTimer
+                ref={ref => { this.idleTimer = ref }}
+                timeout={1000 * 60 * 15}
+                onActive={() => this.handleOnActive()}
+                onIdle={() => this.handleOnIdle()}
+                debounce={250} />
+
             <div id="sidebar" className={this.state.menuActive ? "active" : ""}>
-                <div onClick={this.onMenuToggle}>
+                <div onClick={() => this.onMenuToggle()}>
                     <MdMenu />
                     <span>Menu</span>
                 </div>
-                <div onClick={this.onCashier} className={this.state.mode == Mode.Cashier ? "active" : ""}>
+                <div onClick={() => this.onCashier()} className={this.state.mode == Mode.Cashier ? "active" : ""}>
                     <MdPayment />
                     <span>Cashier</span>
                 </div>
-                <div onClick={this.onAccount} className={this.state.mode == Mode.Account ? "active" : ""}>
+                <div onClick={() => this.onAccount()} className={this.state.mode == Mode.Account ? "active" : ""}>
                     <MdGroup />
                     <span>Accounts</span>
                 </div>
-                <div onClick={this.onProduct} className={this.state.mode == Mode.Product ? "active" : ""}>
+                <div onClick={() => this.onProduct()} className={this.state.mode == Mode.Product ? "active" : ""}>
                     <MdLocalCafe />
                     <span>Products</span>
                 </div>
-                <div onClick={this.onLogout}>
+                <div onClick={() => this.handleOnIdle()}>
                     <MdPowerSettingsNew />
                     <span>Logout</span>
                 </div>
@@ -118,6 +138,8 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
             <div id="main">
                 {main}
             </div>
+            {connectionStatus !== Status.Ok ? <ConnectionStatusDialog status={connectionStatus} /> : null}
+            {this.state.screensaver ? <Screensaver status={connectionStatus} onAction={() => this.handleOnActive()} /> : null}
         </>;
     }
 
@@ -145,7 +167,7 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
     }
 
     onresize() {
-        const scale = Math.min(window.innerWidth  / 800, window.innerHeight / 480);
+        const scale = Math.min(window.innerWidth / 800, window.innerHeight / 480);
         document.documentElement.style.fontSize = Math.round(16 * scale) + "px";
     }
 }

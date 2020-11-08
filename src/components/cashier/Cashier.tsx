@@ -127,7 +127,6 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
         return <div id="cashier">
             {payment}
             <div id="cashier-left">
-                <Barista />
                 <Customer account={this.state.account} removeAccount={() => this.removeAccount()} />
                 <Basket
                     products={this.state.basketProducts}

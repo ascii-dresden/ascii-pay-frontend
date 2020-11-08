@@ -1,31 +1,28 @@
 .connection-status {
-    & > div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-}
-.connection-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     justify-content: space-between !important;
-    padding: 2rem 0;
+    font-size: 6rem;
 
     & > div:nth-child(1), & > div:nth-child(3), & > div:nth-child(5) {
-        font-size: 6rem;
+        font-size: 1em;
+        margin-bottom: -0.2em;
     }
     & > div:nth-child(2), & > div:nth-child(4) {
         position: relative;
-        padding-bottom: 1rem;
+        padding-bottom: 0.066em;
 
         svg {
             display: block;
         }
         svg:first-child {
-            font-size: 2rem;
+            font-size: 0.333em;
             position: absolute;
-            top: -2rem;
+            top: -1em;
         }
         svg:last-child {
-            font-size: 2.5rem;
+            font-size: 0.416em;
         }
     }
     .success > svg:first-child {

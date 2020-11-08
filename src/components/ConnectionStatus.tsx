@@ -11,7 +11,7 @@ export enum Status {
 
 export interface ConnectionStatusProps {
     status: Status
- }
+}
 export interface ConnectionStatusState { }
 
 export class ConnectionStatus extends React.Component<ConnectionStatusProps, ConnectionStatusState> {
@@ -20,10 +20,9 @@ export class ConnectionStatus extends React.Component<ConnectionStatusProps, Con
     render() {
         let proxyArrow;
         let serverArrow;
-        let message;
 
         switch (this.props.status as Status) {
-            case Status.Ok: 
+            case Status.Ok:
                 proxyArrow = <div className="success">
                     <MdDone />
                     <MdSwapHoriz />
@@ -32,9 +31,8 @@ export class ConnectionStatus extends React.Component<ConnectionStatusProps, Con
                     <MdDone />
                     <MdSwapHoriz />
                 </div>;
-                message = "Connection established"
                 break;
-            case Status.NoServer: 
+            case Status.NoServer:
                 proxyArrow = <div className="success">
                     <MdDone />
                     <MdSwapHoriz />
@@ -43,9 +41,8 @@ export class ConnectionStatus extends React.Component<ConnectionStatusProps, Con
                     <MdClose />
                     <MdSwapHoriz />
                 </div>;
-                message = "Connection to server failed"
                 break;
-            case Status.NoProxy: 
+            case Status.NoProxy:
                 proxyArrow = <div className="error">
                     <MdClose />
                     <MdSwapHoriz />
@@ -54,29 +51,20 @@ export class ConnectionStatus extends React.Component<ConnectionStatusProps, Con
                     <MdHelpOutline />
                     <MdSwapHoriz />
                 </div>;
-                message = "Connection to proxy failed"
                 break;
         }
 
-        return <div className="dialog">
-            <div className="dialog-body dialog-width connection-status">
-                <div><h2>Connection</h2></div>
-                <div className="connection-icons">
-                    <div>
-                        <MdTablet />
-                    </div>
-                    {proxyArrow}
-                    <div>
-                        <MdDeviceHub />
-                    </div>
-                    {serverArrow}
-                    <div>
-                        <MdDns />
-                    </div>
-                </div>
-                <div>
-                    {message}
-                </div>
+        return <div className="connection-status">
+            <div>
+                <MdTablet />
+            </div>
+            {proxyArrow}
+            <div>
+                <MdDeviceHub />
+            </div>
+            {serverArrow}
+            <div>
+                <MdDns />
             </div>
         </div>;
     }

@@ -6,6 +6,6 @@
         "module": "commonjs",
         "target": "ES2017",
         "jsx": "react",
-        "strict": true
+        "strict": true,
     }
 }
