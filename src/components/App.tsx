@@ -47,15 +47,19 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
     }
 
     handleOnActive() {
-        this.setState({
-            screensaver: false
-        });
+        if (this.state.screensaver) {
+            this.setState({
+                screensaver: false
+            });
+        }
     }
 
     handleOnIdle() {
-        this.setState({
-            screensaver: true
-        });
+        if (!this.state.screensaver) {
+            this.setState({
+                screensaver: true
+            });
+        }
     }
 
     onMenuToggle() {
@@ -105,13 +109,28 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
             connectionStatus = Status.Ok;
         }
 
+        if (this.state.screensaver) {
+            return <>
+                <IdleTimer
+                    ref={ref => { this.idleTimer = ref }}
+                    timeout={1000 * 60 * 15}
+                    onAction={() => this.handleOnActive()}
+                    onActive={() => this.handleOnActive()}
+                    onIdle={() => this.handleOnIdle()}
+                    debounce={250}
+                    eventsThrottle={1000} /><Screensaver status={connectionStatus} onAction={() => this.handleOnActive()} />
+            </>;
+        }
+
         return <>
             <IdleTimer
                 ref={ref => { this.idleTimer = ref }}
                 timeout={1000 * 60 * 15}
+                onAction={() => this.handleOnActive()}
                 onActive={() => this.handleOnActive()}
                 onIdle={() => this.handleOnIdle()}
-                debounce={250} />
+                debounce={250}
+                eventsThrottle={1000} />
 
             <div id="sidebar" className={this.state.menuActive ? "active" : ""}>
                 <div onClick={() => this.onMenuToggle()}>
@@ -139,7 +158,6 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
                 {main}
             </div>
             {connectionStatus !== Status.Ok ? <ConnectionStatusDialog status={connectionStatus} /> : null}
-            {this.state.screensaver ? <Screensaver status={connectionStatus} onAction={() => this.handleOnActive()} /> : null}
         </>;
     }
 

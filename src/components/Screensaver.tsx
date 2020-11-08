@@ -38,13 +38,26 @@ export class Screensaver extends React.Component<ScreensaverProps, ScreensaverSt
     render() {
         return <div className="screensaver" onClick={() => this.props.onAction()}>
             <div className="clock-container">
-                <Clock value={this.state.date} />
+                <Clock value={this.state.date}
+                    hourHandLength={60}
+                    hourHandOppositeLength={20}
+                    hourHandWidth={8}
+                    hourMarksLength={20}
+                    hourMarksWidth={8}
+                    minuteHandLength={90}
+                    minuteHandOppositeLength={20}
+                    minuteHandWidth={6}
+                    minuteMarksLength={6}
+                    minuteMarksWidth={3}
+                    secondHandLength={75}
+                    secondHandOppositeLength={25}
+                    secondHandWidth={3} />
                 <div className="date-time-string">
                     <span>{this.state.datestring}</span>
                     <span>{this.state.timestring}</span>
                 </div>
             </div>
-            { this.props.status !== Status.Ok ? <ConnectionStatus status={this.props.status} /> : null }
+            {this.props.status !== Status.Ok ? <ConnectionStatus status={this.props.status} /> : null}
         </div>;
     }
 
