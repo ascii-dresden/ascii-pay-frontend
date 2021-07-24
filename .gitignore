@@ -5,6 +5,7 @@
 /packages
 /tmp
 /out-tsc
+/.webpack
 # Only exists if Bazel was run
 /bazel-out
 

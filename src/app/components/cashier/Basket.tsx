@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import "./Basket.scss";
-import { Product } from "../../app/core/models";
+import { Product } from "../../core/models";
 import { MdPhoto, MdEuroSymbol, MdClear } from "react-icons/md";
 
 export interface BasketProps {

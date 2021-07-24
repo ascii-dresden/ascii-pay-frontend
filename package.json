@@ -1,73 +1,104 @@
 {
-  "name": "ascii-pay-ui",
+  "name": "ascii-pay-frontend",
+  "productName": "ascii-pay-frontend",
   "version": "1.0.0",
-  "description": "",
-  "main": "./dist/main.js",
+  "description": "My Electron application description",
+  "main": ".webpack/main",
   "scripts": {
-    "dev": "npm-run-all -p dev:react electron:serve",
-    "dev:electron": "cross-env NODE_ENV=development webpack --config webpack/electron.webpack.js --mode development && npm run start:electron",
-    "dev:react": "cross-env NODE_ENV=development webpack-dev-server --config webpack/react.webpack.js --mode development",
-    "electron:serve": "wait-on http-get://localhost:4000/ && npm run dev:electron",
-    "start:electron": "electron .",
-    "build": "npm-run-all build:electron build:react",
-    "build:run": "npm-run-all build start:electron",
-    "build:electron": "webpack --config webpack/electron.webpack.js",
-    "build:react": "webpack --config webpack/react.webpack.js",
-    "package": "npm-run-all build package:dist",
-    "package:dist": "electron-builder --dir"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint --ext .ts ."
   },
   "keywords": [],
-  "author": "",
+  "author": {
+    "name": "Lars Westermann",
+    "email": "git@lars-westermann.de"
+  },
   "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "ascii_pay_frontend"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "plugins": [
+        [
+          "@electron-forge/plugin-webpack",
+          {
+            "mainConfig": "./webpack.main.config.js",
+            "renderer": {
+              "config": "./webpack.renderer.config.js",
+              "entryPoints": [
+                {
+                  "html": "./src/index.html",
+                  "js": "./src/renderer.ts",
+                  "name": "main_window"
+                }
+              ]
+            }
+          }
+        ]
+      ]
+    }
+  },
   "devDependencies": {
-    "@types/electron-devtools-installer": "^2.2.0",
-    "@types/electron-localshortcut": "^3.1.0",
-    "@types/mousetrap": "^1.6.4",
-    "@types/react": "^16.9.56",
-    "@types/react-clock": "^3.0.0",
-    "@types/react-dom": "^16.9.9",
+    "@electron-forge/cli": "^6.0.0-beta.58",
+    "@electron-forge/maker-deb": "^6.0.0-beta.58",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.58",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.58",
+    "@electron-forge/maker-zip": "^6.0.0-beta.58",
+    "@electron-forge/plugin-webpack": "6.0.0-beta.58",
+    "@types/react": "^17.0.15",
+    "@types/react-clock": "^3.0.1",
+    "@types/react-dom": "^17.0.9",
     "@types/react-icons": "^3.0.0",
-    "@types/react-tabs": "^2.3.2",
-    "cross-env": "^7.0.2",
-    "css-loader": "^4.3.0",
-    "electron": "^8.5.3",
-    "electron-builder": "^22.7.0",
-    "electron-devtools-installer": "^3.1.1",
-    "html-webpack-plugin": "^4.5.0",
-    "npm-run-all": "^4.1.5",
-    "sass": "^1.29.0",
-    "sass-loader": "^9.0.3",
-    "source-map-loader": "^1.1.2",
-    "style-loader": "^1.3.0",
-    "ts-loader": "^8.0.10",
-    "typescript": "^3.9.7",
-    "wait-on": "^5.2.0",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.3.0"
+    "@types/react-tabs": "^2.3.3",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
+    "@vercel/webpack-asset-relocator-loader": "1.6.0",
+    "css-loader": "^6.2.0",
+    "electron": "13.1.7",
+    "electron-devtools-installer": "^3.2.0",
+    "eslint": "^7.31.0",
+    "eslint-plugin-import": "^2.23.4",
+    "fork-ts-checker-webpack-plugin": "^6.2.13",
+    "node-loader": "^2.0.0",
+    "sass": "^1.36.0",
+    "sass-loader": "^12.1.0",
+    "style-loader": "^3.2.1",
+    "ts-loader": "^9.2.4",
+    "typescript": "^4.3.5",
+    "webpack": "^5.46.0"
   },
   "dependencies": {
-    "electron-context-menu": "^2.3.0",
-    "electron-localshortcut": "^3.2.1",
-    "mousetrap": "^1.6.5",
-    "react": "^16.14.0",
+    "@reduxjs/toolkit": "^1.6.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "react": "^17.0.2",
     "react-clock": "^3.0.0",
-    "react-dom": "^16.14.0",
-    "react-icons": "^3.11.0",
-    "react-idle-timer": "^4.5.0",
-    "react-tabs": "^3.1.1"
-  },
-  "build": {
-    "appId": "ascii-pay-frontend",
-    "mac": {
-      "category": "public.app-category.business"
-    },
-    "directories": {
-      "output": "packages"
-    },
-    "files": [
-      "package.json",
-      "dist/**"
-    ]
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
+    "react-idle-timer": "^4.6.4",
+    "react-tabs": "^3.2.2"
   }
 }

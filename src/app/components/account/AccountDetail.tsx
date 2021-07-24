@@ -1,11 +1,11 @@
 import * as React from "react";
 
 
-import { registerEventHandler, EventHandler, removeEventHandler, addAccountNfcTag, reauthenticate } from "../../app/core/api";
+import { registerEventHandler, EventHandler, removeEventHandler, addAccountNfcTag, reauthenticate } from "../../core/api";
 
 import "./AccountDetail.scss";
 
-import { Account } from "../../app/core/models";
+import { Account } from "../../core/models";
 
 export interface AccountDetailProps {
     account: Account

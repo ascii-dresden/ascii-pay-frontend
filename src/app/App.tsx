@@ -1,14 +1,15 @@
 import * as React from "react";
+import * as ReactDOM from "react-dom";
 import { MdPayment, MdGroup, MdMenu, MdPowerSettingsNew, MdLocalCafe } from "react-icons/md";
 import IdleTimer from 'react-idle-timer'
 
-import { Cashier } from "./cashier/Cashier";
-import { AccountView } from "./account/Account";
-import { Status } from "./ConnectionStatus";
-import { Screensaver } from "./Screensaver";
-import { ConnectionStatusDialog } from "./ConnectionStatusDialog";
+import { Cashier } from "./components/cashier/Cashier";
+import { AccountView } from "./components/account/Account";
+import { Status } from "./components/ConnectionStatus";
+import { Screensaver } from "./components/Screensaver";
+import { ConnectionStatusDialog } from "./components/ConnectionStatusDialog";
 
-import { registerEventHandler, EventHandler, removeEventHandler } from "../app/core/api";
+import { registerEventHandler, EventHandler, removeEventHandler } from "./core/api";
 
 import "./App.scss";
 
@@ -189,3 +190,10 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
         document.documentElement.style.fontSize = Math.round(16 * scale) + "px";
     }
 }
+
+
+function render() {
+    ReactDOM.render(<App />, document.getElementById("app"));
+}
+
+render();

@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import "./Customer.scss";
-import { Account } from "../../app/core/models";
+import { Account } from "../../core/models";
 import { MdCancel } from "react-icons/md";
 
 export interface CustomerProps { 

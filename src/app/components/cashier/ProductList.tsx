@@ -1,8 +1,8 @@
 import * as React from "react";
 
 import "./ProductList.scss";
-import { Product, Category } from "../../app/core/models";
-import { listProducts } from "../../app/core/api";
+import { Product, Category } from "../../core/models";
+import { listProducts } from "../../core/api";
 import { MdPhoto } from "react-icons/md";
 
 export interface ProductListProps {
@@ -74,7 +74,7 @@ export class ProductList extends React.Component<ProductListProps, ProductListSt
     render() {
         let list = [];
 
-        for (let [category, products] of this.state.products) {
+        for (let [category, products] of this.state.products.entries()) {
             list.push(
                 <ProductListEntry key={products[0].category?.id} category={products[0].category||null} products={products} selectProduct={(product) => this.props.selectProduct(product)} />
             )

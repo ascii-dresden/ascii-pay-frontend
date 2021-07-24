@@ -3,9 +3,9 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import "./Cashier.scss";
 
-import { Account, Product } from "../../app/core/models";
-import { registerEventHandler, EventHandler, removeEventHandler, requestPaymentToken, cancelTokenRequest } from "../../app/core/api";
-import { payment } from "../../app/core/api"
+import { Account, Product } from "../../core/models";
+import { registerEventHandler, EventHandler, removeEventHandler, requestPaymentToken, cancelTokenRequest } from "../../core/api";
+import { payment } from "../../core/api"
 
 import { Barista } from "./Barista";
 import { Basket, BasketData } from "./Basket";

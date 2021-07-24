@@ -3,8 +3,8 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import "./Account.scss";
 
-import { Account } from "../../app/core/models";
-import { listAccounts } from "../../app/core/api";
+import { Account } from "../../core/models";
+import { listAccounts } from "../../core/api";
 
 import { AccountList } from "./AccountList";
 import { AccountDetail } from "./AccountDetail";
