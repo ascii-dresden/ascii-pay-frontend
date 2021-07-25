@@ -6,6 +6,7 @@
 /tmp
 /out-tsc
 /.webpack
+/out
 # Only exists if Bazel was run
 /bazel-out
 
