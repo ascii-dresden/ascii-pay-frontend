@@ -7,7 +7,6 @@ import { Account, Product } from "../../core/models";
 import { registerEventHandler, EventHandler, removeEventHandler, requestPaymentToken, cancelTokenRequest } from "../../core/api";
 import { payment } from "../../core/api"
 
-import { Barista } from "./Barista";
 import { Basket, BasketData } from "./Basket";
 import { Customer } from "./Customer";
 import { Keypad } from "./Keypad";
@@ -205,6 +204,7 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
     }
 
     onTimeout() {
+        this.removeAccount();
         if (this.state.payment !== null) {
             this.setState({
                 payment: {
@@ -220,11 +220,11 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
     }
 
     onNfcCardAdded(id: string, writeable: boolean) {
-        console.log("Nfc card added", id, writeable);
+        this.removeAccount();
     }
 
     onNfcCardRemoved() {
-        console.log("Nfc card removed");
+        this.removeAccount();
     }
 
     componentDidMount() {

@@ -22,11 +22,13 @@ html {
     background: var(--secondary-background);
     font-family: Roboto, sans-serif;
     overscroll-behavior: none;
+    cursor: none;
 }
 
 * {
     box-sizing: border-box;
     font-family: Roboto, sans-serif;
+    cursor: none;
 }
 
 ::-webkit-scrollbar {

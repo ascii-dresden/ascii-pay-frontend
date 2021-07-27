@@ -12,25 +12,33 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 const createWindow = (): void => {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
-    height: 600,
-    width: 800,
+    height: 1000,
+    width: 1600,
+    fullscreen: app.isPackaged
   });
 
-  // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  installExtension(REACT_DEVELOPER_TOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
+  if (app.isPackaged) {
+    mainWindow.setKiosk(true);
+  } else {
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
 
-  installExtension(REDUX_DEVTOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
+    installExtension(REDUX_DEVTOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
 
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
+  }
+
+  mainWindow.webContents.setVisualZoomLevelLimits(1.0, 1.0);
+  mainWindow.webContents.on('crashed', (e) => {
+    app.relaunch();
+    app.quit()
+  });
 };
 
 // This method will be called when Electron has finished

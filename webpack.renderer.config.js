@@ -17,6 +17,7 @@ module.exports = {
   module: {
     rules,
   },
+  target: 'web',
   plugins: plugins,
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css']

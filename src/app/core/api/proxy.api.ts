@@ -17,7 +17,7 @@ export interface EventHandler {
 export async function requestPaymentToken(amount: number) {
     return await requestProxyJson(
         Method.POST,
-        "proxy/request-payment-token",
+        "request-payment-token",
         {
             amount
         }
@@ -27,14 +27,14 @@ export async function requestPaymentToken(amount: number) {
 export async function reauthenticate() {
     return await requestProxyJson(
         Method.GET,
-        "proxy/reauthenticate"
+        "reauthenticate"
     )
 }
 
 export async function cancelTokenRequest() {
     return await requestProxyJson(
         Method.GET,
-        "proxy/cancel"
+        "cancel"
     )
 }
 
@@ -71,7 +71,7 @@ function connectEventSource() {
         return;
     }
 
-    evtSource = new EventSource(BASE_URL + "proxy/events");
+    evtSource = new EventSource(BASE_URL + "events");
 
     evtSource.onmessage = (event) => {
         if (event.data === "connected" || event.data === "ping") {
