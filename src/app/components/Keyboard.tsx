@@ -43,7 +43,7 @@ const keyboardSets = {
 import * as React from "react";
 
 import "./Keyboard.scss";
-import { MdBackspace, MdKeyboardReturn, MdKeyboardBackspace, MdKeyboardCapslock, MdSpaceBar, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardHide, MdClear, MdCancel, MdArrowBack, MdArrowForward } from "react-icons/md";
+import { MdKeyboardReturn, MdKeyboardBackspace, MdKeyboardCapslock, MdSpaceBar, MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardHide, MdCancel, MdArrowBack, MdArrowForward } from "react-icons/md";
 
 interface KeyProps { children: any, rowIndex: number, charIndex: number, onPress: () => void }
 const Key = (props: KeyProps) => <div className={"keyboard-key keyboard-key-" + props.rowIndex + "-" + props.charIndex} onClick={() => props.onPress()}>{props.children}</div>;
@@ -60,6 +60,7 @@ export interface KeyboardProps {
     mode: KeyboardMode
 }
 export interface KeyboardState {
+    inputField: HTMLInputElement | null,
     set: string,
     caps: boolean
 }
@@ -71,6 +72,7 @@ export class Keyboard extends React.Component<KeyboardProps, KeyboardState> {
         super(props)
 
         this.state = {
+            inputField: null,
             set: "default",
             caps: false
         }
@@ -198,7 +200,34 @@ export class Keyboard extends React.Component<KeyboardProps, KeyboardState> {
         }
     }
 
+
+
+    componentDidMount() {
+        document.body.onclick = (event) => {
+            console.log(document.activeElement);
+            let focusedElement = document.activeElement;
+
+            if (focusedElement.tagName === "INPUT") {
+                this.setState({
+                    inputField: focusedElement as HTMLInputElement
+                });
+            } else {
+                this.setState({
+                    inputField: null
+                });
+            }
+        };
+    }
+
+    componentWillUnmount() {
+        document.body.onclick = null;
+    }
+
     render() {
+        if (this.state.inputField == null) {
+            return <></>;
+        }
+
         let set = this.getKeyboardSet();
 
         return <div className="keyboard">

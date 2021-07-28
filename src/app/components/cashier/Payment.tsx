@@ -2,6 +2,7 @@ import * as React from "react";
 
 import "./Payment.scss";
 import { MdPayment, MdDone, MdErrorOutline, MdHourglassEmpty } from "react-icons/md";
+import { Dialog } from "../Dialog";
 
 export interface PaymentProps {
     data: PaymentData,
@@ -27,44 +28,47 @@ export class Payment extends React.Component<PaymentProps, PaymentState> {
         var message = "";
         switch (this.props.data.status as PaymentStatus) {
             case PaymentStatus.Success:
-                status = <div className="payment-success">
+                status = <div className="payment-status payment-success">
                     <MdDone />
                 </div>;
                 break;
             case PaymentStatus.Timeout:
-                status = <div className="payment-warn">
+                status = <div className="payment-status payment-warn">
                     <MdHourglassEmpty />
                 </div>;
                 message = "Timeout";
                 break;
             case PaymentStatus.AuthenticationError:
-                status = <div className="payment-error">
+                status = <div className="payment-status payment-error">
                     <MdErrorOutline />
                 </div>;
                 message = "Authentication error";
                 break;
             case PaymentStatus.PaymentError:
-                status = <div className="payment-error">
+                status = <div className="payment-status payment-error">
                     <MdErrorOutline />
                 </div>;
                 message = "Payment error";
                 break;
             default:
-                status = <div>
+                status = <div className="payment-status">
                     <MdPayment />
                 </div>;
                 break;
         }
 
-        return <div className="dialog">
-            <div className="dialog-body payment">
-                <div className="payment-header">Payment</div>
-                <div className="payment-status">{status}</div>
-                <div className="payment-message">{message}</div>
-                <div className="payment-amount">{(this.props.data.amount / 100).toFixed(2)}€</div>
-                <div className="payment-cancel" onClick={() => this.props.close()}>Cancel</div>
-            </div>
-        </div>;
+        let actionList = [
+            {
+                label: "Cancel",
+                action: () => this.props.close()
+            }
+        ];
+
+        return <Dialog title="Payment" actions={actionList}>
+            {status}
+            <div className="payment-message">{message}</div>
+            <div className="payment-amount">{(this.props.data.amount / 100).toFixed(2)}€</div>
+        </Dialog>;
     }
 
     checkTimeout() {

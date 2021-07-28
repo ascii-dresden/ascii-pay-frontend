@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { MdPayment, MdGroup, MdMenu, MdPowerSettingsNew, MdLocalCafe } from "react-icons/md";
+import { MdPayment, MdGroup, MdMenu, MdPowerSettingsNew, MdLocalCafe, MdDone } from "react-icons/md";
 import IdleTimer from 'react-idle-timer'
 
 import { Cashier } from "./components/cashier/Cashier";
@@ -12,6 +12,8 @@ import { ConnectionStatusDialog } from "./components/ConnectionStatusDialog";
 import { registerEventHandler, EventHandler, removeEventHandler } from "./core/api";
 
 import "./App.scss";
+import { Keyboard, KeyboardMode } from "./components/Keyboard";
+import { Dialog } from "./components/Dialog";
 
 enum Mode {
     Cashier,
@@ -158,6 +160,7 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
             <div id="main">
                 {main}
             </div>
+            <Keyboard mode={KeyboardMode.Default} />
             {connectionStatus !== Status.Ok ? <ConnectionStatusDialog status={connectionStatus} /> : null}
         </>;
     }

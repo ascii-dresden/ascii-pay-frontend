@@ -1,4 +1,4 @@
-import { requestProxyJson, Method, BASE_URL } from "./utils";
+import { requestProxyJson, Method, BASE_URL, requestProxyText } from "./utils";
 import { Product, Account } from "../models";
 
 export interface EventHandler {
@@ -15,7 +15,7 @@ export interface EventHandler {
 }
 
 export async function requestPaymentToken(amount: number) {
-    return await requestProxyJson(
+    return await requestProxyText(
         Method.POST,
         "request-payment-token",
         {
@@ -25,14 +25,14 @@ export async function requestPaymentToken(amount: number) {
 }
 
 export async function reauthenticate() {
-    return await requestProxyJson(
+    return await requestProxyText(
         Method.GET,
-        "reauthenticate"
+        "reauthenticate-nfc"
     )
 }
 
 export async function cancelTokenRequest() {
-    return await requestProxyJson(
+    return await requestProxyText(
         Method.GET,
         "cancel"
     )

@@ -1,5 +1,5 @@
 import { Account } from "../models";
-import { requestJson, Method } from "./utils";
+import { requestJson, Method, requestText } from "./utils";
 
 export async function listAccounts(search: string|null = null): Promise<Account[]> {
     return await requestJson(
@@ -24,22 +24,23 @@ export async function getAccount(id: string): Promise<Account> {
 }
 
 export async function updateAccount(account: Account) {
-    return await requestJson(
+    return await requestText(
         Method.POST,
-        "account/" + account.id
+        "account/" + account.id,
+        account
     )
 }
 
 export async function deleteAccount(account: Account) {
-    return await requestJson(
+    return await requestText(
         Method.DELETE,
         "account/" + account.id
     )
 }
 
 export async function addAccountBarcode(account: Account, barcode: string) {
-    return await requestJson(
-        Method.POST,
+    return await requestText(
+        Method.PUT,
         "account/" + account.id + "/barcode",
         {
             barcode
@@ -48,14 +49,14 @@ export async function addAccountBarcode(account: Account, barcode: string) {
 }
 
 export async function removeAccountBarcode(account: Account) {
-    return await requestJson(
+    return await requestText(
         Method.DELETE,
         "account/" + account.id + "/barcode"
     )
 }
 
 export async function addAccountNfcTag(account: Account, nfc: string, writeable: boolean) {
-    return await requestJson(
+    return await requestText(
         Method.PUT,
         "account/" + account.id + "/nfc",
         {
@@ -66,7 +67,7 @@ export async function addAccountNfcTag(account: Account, nfc: string, writeable:
 }
 
 export async function removeAccountNfcTag(account: Account) {
-    return await requestJson(
+    return await requestText(
         Method.DELETE,
         "account/" + account.id + "/nfc"
     )

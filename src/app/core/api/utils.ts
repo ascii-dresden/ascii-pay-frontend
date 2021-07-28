@@ -8,6 +8,27 @@ export enum Method {
     GET, PUT, POST, DELETE
 }
 
+export async function requestText(
+    method: Method,
+    url: string,
+    body: any = null
+): Promise<string> {
+    var params: RequestInit = {
+        method: Method[method],
+        cache: 'no-cache'
+    };
+
+    if (body) {
+        params.body = JSON.stringify(body);
+        params.headers = {
+            'Content-Type': 'application/json'
+        };
+    }
+
+    let response = await fetch(API_URL + url, params);
+    return await response.text();
+}
+
 export async function requestJson<T>(
     method: Method,
     url: string,
@@ -31,6 +52,27 @@ export async function requestJson<T>(
 
     let response = await fetch(API_URL + url, params);
     return await response.json() as T;
+}
+
+export async function requestProxyText(
+    method: Method,
+    url: string,
+    body: any = null
+): Promise<string> {
+    var params: RequestInit = {
+        method: Method[method],
+        cache: 'no-cache'
+    };
+
+    if (body) {
+        params.body = JSON.stringify(body);
+        params.headers = {
+            'Content-Type': 'application/json'
+        };
+    }
+
+    let response = await fetch(BASE_URL + url, params);
+    return await response.text();
 }
 
 export async function requestProxyJson<T>(
