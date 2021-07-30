@@ -1,8 +1,9 @@
 import * as React from "react";
 
 import "./Basket.scss";
+import { BASE_URL } from "../../core/api/utils";
 import { Product } from "../../core/models";
-import { MdPhoto, MdEuroSymbol, MdClear } from "react-icons/md";
+import { MdPhoto, MdEuroSymbol } from "react-icons/md";
 
 export interface BasketProps {
     freehand: number[],
@@ -69,7 +70,7 @@ class BasketEntry extends React.Component<BasketEntryProps, BasketEntryState> {
     render() {
         let image;
         if (this.props.product.image) {
-            image = <img src={this.props.product.image} />;
+            image = <img src={BASE_URL + "product/image/" + this.props.product.image} />;
         } else {
             image = <div><MdPhoto /></div>;
         }
