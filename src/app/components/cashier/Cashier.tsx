@@ -9,7 +9,7 @@ import { payment } from "../../core/api"
 
 import { Basket, BasketData } from "./Basket";
 import { Customer } from "./Customer";
-import { Keypad } from "./Keypad";
+import { Keypad } from "../Keypad";
 import { Payment, PaymentStatus, PaymentData } from "./Payment";
 import { ProductList } from "./ProductList";
 
@@ -18,6 +18,7 @@ export interface CashierState {
     account: Account|null,
     basketProducts: BasketData[],
     basketFreehands: number[],
+    freehand: number,
     payment: PaymentData|null
  }
 
@@ -31,6 +32,7 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
             account: null,
             basketProducts: [],
             basketFreehands: [],
+            freehand: 0,
             payment: null
         }
     }
@@ -81,10 +83,16 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
         })
     }
 
-    addFreehand(freehand: number) {
-        if (freehand === 0) return;
+    setFreehand(freehand: number) {
+        this.setState({
+            freehand: freehand
+        })
+    }
 
+    submitFreehand() {
         this.setState((state, props) => {
+            let freehand = state.freehand;
+            if (freehand === 0) return;
             let list = state.basketFreehands.map((f) => f);
             list.push(freehand);
             return {
@@ -93,19 +101,40 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
         })
     }
 
-    pay(amount: number) {
-        if (this.state.payment === null && amount != 0) {
-            this.setState({
-                payment: {
-                    status: PaymentStatus.Waiting,
-                    amount: amount
-                }
-            });
+    pay() {
+        this.setState((state, props) => {
+            let basketFreehands = state.basketFreehands.map((f) => f);
+            if (state.freehand != 0) {
+                basketFreehands.push(state.freehand);
+            }
 
-            (async () => {
-                await requestPaymentToken(-amount);
-            })()
-        }
+            var amount = 0;
+            for (var i = 0; i < basketFreehands.length; i++) {
+                amount += basketFreehands[i];
+            }
+            for (let data of state.basketProducts) {
+                amount += (data.product.current_price || 0) * data.amount;
+            }
+    
+            if (state.payment === null && amount != 0) {
+                (async () => {
+                    await requestPaymentToken(-amount);
+                })()
+
+                return {
+                    basketFreehands: basketFreehands,
+                    payment: {
+                        status: PaymentStatus.Waiting,
+                        amount: amount
+                    }
+                }
+            } else {
+                return {
+                    basketFreehands: basketFreehands,
+                    payment: null
+                }
+            }
+        });
     }
 
     cancelPayment() {
@@ -132,7 +161,7 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
                     freehand={this.state.basketFreehands}
                     updateProduct={(product, diff) => this.updateProduct(product, diff)}
                     deleteFreehand={(index) => this.removeFreehand(index)}
-                    pay={(amount) => this.pay(amount)} />
+                    pay={() => this.pay()} />
             </div>
             <div id="cashier-right">
                 <Tabs>
@@ -141,7 +170,7 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
                         <Tab>Products</Tab>
                     </TabList>
                     <TabPanel>
-                        <Keypad onSubmit={(cents: number) => this.addFreehand(cents)} />
+                        <Keypad value={this.state.freehand} onChange={(value) => this.setFreehand(value)} onSubmit={() => this.submitFreehand()} />
                     </TabPanel>
                     <TabPanel>
                         <ProductList selectProduct={(product) => this.updateProduct(product, 1)} />

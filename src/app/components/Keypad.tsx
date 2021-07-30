@@ -1,43 +1,44 @@
 import * as React from "react";
 import { useState } from "react";
 
-import { MdBackspace, MdDone } from "react-icons/md";
+import { MdAdd, MdBackspace, MdDone } from "react-icons/md";
 
 import "./Keypad.scss";
 
 export function Keypad(props: {
-    onSubmit: (cents: number) => void
+    value: number,
+    onChange: (value: number) => void,
+    onSubmit: () => void
 }) {
-	const [cents, setCents] = useState(0);
 
     function getDisplayString() {
-        let abs = Math.abs(cents);
-        let sign = cents < 0 ? "-" : ""
+        let abs = Math.abs(props.value);
+        let sign = props.value < 0 ? "-" : ""
         let euro = Math.floor(abs / 100).toString();
         let cent = (abs % 100).toString().padStart(2, '0');
         return sign + euro + "." + cent;
     }
 
     function onDigitPressed(digit: number) {
-        setCents(cents * 10 + (Math.sign(cents) || 1) * digit)
+        props.onChange(props.value * 10 + (Math.sign(props.value) || 1) * digit)
     }
 
     function onBackspace() {
-        setCents(Math.sign(cents) * Math.floor(Math.abs(cents / 10)))
+        props.onChange(Math.sign(props.value) * Math.floor(Math.abs(props.value / 10)))
     }
 
     function onNegate() {
-        setCents(-cents)
+        props.onChange(-props.value)
     }
 
     function onSubmit() {
-        props.onSubmit(cents);
-        setCents(0)
+        props.onSubmit();
+        props.onChange(0)
     }
 
     return <div className="keypad">
             <div className="keypad-display">{getDisplayString()}€</div>
-            <div className="keypad-submit"><MdDone onClick={() => onSubmit()} /></div>
+            <div className="keypad-submit"><MdAdd onClick={() => onSubmit()} /></div>
             <div className="keypad-keys">
                 <div className="keypad-key" onClick={() => onDigitPressed(7)}>7</div>
                 <div className="keypad-key" onClick={() => onDigitPressed(8)}>8</div>

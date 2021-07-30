@@ -9,7 +9,7 @@ export interface BasketProps {
     products: BasketData[],
     deleteFreehand: (index: number) => void,
     updateProduct: (product: Product, diff: number) => void,
-    pay: (amount: number) => void,
+    pay: () => void,
 }
 export interface BasketState { }
 
@@ -49,7 +49,7 @@ export class Basket extends React.Component<BasketProps, BasketState> {
             <div className="basket-content">{list}</div>
             <div className="basket-footer">
                 <div className="basket-footer-sum">{(sum / 100).toFixed(2)}€</div>
-                <div className="basket-footer-pay" onClick={() => this.props.pay(sum)}>Pay</div>
+                <div className="basket-footer-pay" onClick={() => this.props.pay()}>Pay</div>
             </div>
         </div>;
     }
@@ -96,9 +96,9 @@ class BasketFreehand extends React.Component<BasketFreehandProps, BasketFreehand
     render() {
         return <div className="basket-entry">
             <div className="basket-entry-image" onClick={() => this.props.delete(this.props.index)}><div><div><MdEuroSymbol /></div></div></div>
-            <div className="basket-entry-name">Freehand</div>
+            <div className="basket-entry-name"></div>
             <div className="basket-entry-price">{(this.props.freehand / 100).toFixed(2)}€</div>
-            <div className="basket-entry-amount">Lorem ipsum</div>
+            <div className="basket-entry-amount"></div>
         </div>;
     }
 }
