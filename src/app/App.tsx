@@ -14,6 +14,7 @@ import { registerEventHandler, EventHandler, removeEventHandler } from "./core/a
 import "./App.scss";
 import { Keyboard, KeyboardMode } from "./components/Keyboard";
 import { Dialog } from "./components/Dialog";
+import { Account, Product } from "./core/models";
 
 enum Mode {
     Cashier,
@@ -175,6 +176,14 @@ export class App extends React.Component<AppProps, AppState> implements EventHan
         this.setState({
             proxyConnected: true
         });
+    }
+
+    onAccountScanned(account: Account) {
+        this.handleOnActive();
+    }
+
+    onProductScanned(product: Product) {
+        this.handleOnActive();
     }
 
     componentDidMount() {

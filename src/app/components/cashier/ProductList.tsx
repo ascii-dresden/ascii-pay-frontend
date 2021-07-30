@@ -4,6 +4,7 @@ import "./ProductList.scss";
 import { Product, Category } from "../../core/models";
 import { listProducts } from "../../core/api";
 import { MdPhoto } from "react-icons/md";
+import { BASE_URL } from "../../core/api/utils";
 
 export interface ProductListProps {
     selectProduct: (product: Product) => void
@@ -133,7 +134,7 @@ class ProductView extends React.Component<ProductViewProps, ProductViewState> {
 
         let image;
         if (product.image) {
-            image = <img src={product.image} />;
+            image = <img src={BASE_URL + "product/image/" + product.image} />;
         } else {
             image = <div><MdPhoto /></div>;
         }
