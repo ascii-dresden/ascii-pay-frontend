@@ -3,9 +3,9 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import "./Account.scss";
 
-import { Account } from "../../core/models";
-import { registerEventHandler, EventHandler, removeEventHandler, addAccountNfcTag, reauthenticate, addAccountBarcode, updateAccount } from "../../core/api";
-import { listAccounts } from "../../core/api";
+import { Account } from "@ascii-pay-frontend/common/src/models";
+import { registerEventHandler, EventHandler, removeEventHandler, addAccountNfcTag, reauthenticate, addAccountBarcode, updateAccount } from "@ascii-pay-frontend/common/src/api";
+import { listAccounts } from "@ascii-pay-frontend/common/src/api";
 
 import { AccountList } from "./AccountList";
 import { AccountDetail } from "./AccountDetail";
@@ -150,9 +150,9 @@ export class AccountView extends React.Component<AccountProps, AccountState> imp
                     let account_number = request.code
                         .replace("https://pay.ascii.coffee?code=", "")
                         .replace(/-/g, " ");
-        
+
                     this.state.account.account_number = account_number;
-                    
+
                     popup = <Dialog title="Add new account number to account" actions={actionList} large={true}>
                         <div className="form">
                             <div>
@@ -179,7 +179,7 @@ export class AccountView extends React.Component<AccountProps, AccountState> imp
                         </div>
                     </Dialog>;
                 }
-                
+
             }
         }
         return <div id="account">
@@ -203,7 +203,7 @@ export class AccountView extends React.Component<AccountProps, AccountState> imp
     onAccountScanned(account: Account) {
         this.selectAccount(account);
     }
-    
+
     onBarCodeScanned(code: string) {
         if (this.state.account !== null) {
             this.setState({

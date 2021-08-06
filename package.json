@@ -1,105 +1,12 @@
 {
-  "name": "ascii-pay-frontend",
-  "productName": "ascii-pay-frontend",
-  "version": "1.0.0",
-  "description": "My Electron application description",
-  "main": ".webpack/main",
-  "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts ."
-  },
-  "keywords": [],
-  "author": {
-    "name": "Lars Westermann",
-    "email": "git@lars-westermann.de"
-  },
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "ascii_pay_frontend"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ],
-      "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
-            "mainConfig": "./webpack.main.config.js",
-            "renderer": {
-              "config": "./webpack.renderer.config.js",
-              "entryPoints": [
-                {
-                  "html": "./src/index.html",
-                  "js": "./src/renderer.ts",
-                  "name": "main_window"
-                }
-              ]
-            },
-            "devContentSecurityPolicy": "default-src 'self' 'unsafe-inline' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; img-src 'self' http://192.168.1.157:8000; connect-src ws://localhost:3000 http://192.168.1.157:8000;"
-          }
-        ]
-      ]
-    }
-  },
-  "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.58",
-    "@electron-forge/maker-deb": "^6.0.0-beta.58",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.58",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.58",
-    "@electron-forge/maker-zip": "^6.0.0-beta.58",
-    "@electron-forge/plugin-webpack": "6.0.0-beta.58",
-    "@types/react": "^17.0.15",
-    "@types/react-clock": "^3.0.1",
-    "@types/react-dom": "^17.0.9",
-    "@types/react-icons": "^3.0.0",
-    "@types/react-tabs": "^2.3.3",
-    "@typescript-eslint/eslint-plugin": "^4.28.4",
-    "@typescript-eslint/parser": "^4.28.4",
-    "@vercel/webpack-asset-relocator-loader": "1.6.0",
-    "css-loader": "^6.2.0",
-    "electron": "13.1.7",
-    "electron-devtools-installer": "^3.2.0",
-    "eslint": "^7.31.0",
-    "eslint-plugin-import": "^2.23.4",
-    "fork-ts-checker-webpack-plugin": "^6.2.13",
-    "node-loader": "^2.0.0",
-    "sass": "^1.36.0",
-    "sass-loader": "^12.1.0",
-    "style-loader": "^3.2.1",
-    "ts-loader": "^9.2.4",
-    "typescript": "^4.3.5",
-    "webpack": "^5.46.0"
-  },
-  "dependencies": {
-    "@reduxjs/toolkit": "^1.6.1",
-    "electron-squirrel-startup": "^1.0.0",
-    "react": "^17.0.2",
-    "react-clock": "^3.0.0",
-    "react-dom": "^17.0.2",
-    "react-icons": "^4.2.0",
-    "react-idle-timer": "^4.6.4",
-    "react-tabs": "^3.2.2"
-  }
+    "name": "ascii-pay-frontend",
+    "productName": "ascii-pay-frontend",
+    "version": "1.0.0",
+    "description": "Frontend apps for ascii-pay",
+    "private": true,
+    "workspaces":[
+        "common",
+        "dashboard",
+        "terminal"
+    ]
 }

@@ -1,8 +1,8 @@
 import * as React from "react";
 
 import "./Basket.scss";
-import { BASE_URL } from "../../core/api/utils";
-import { Product } from "../../core/models";
+import { BASE_URL } from "@ascii-pay-frontend/common/src/api/utils";
+import { Product } from "@ascii-pay-frontend/common/src/models";
 import { MdPhoto, MdEuroSymbol } from "react-icons/md";
 
 export interface BasketProps {

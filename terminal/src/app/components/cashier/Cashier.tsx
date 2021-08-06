@@ -3,9 +3,9 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import "./Cashier.scss";
 
-import { Account, Product } from "../../core/models";
-import { registerEventHandler, EventHandler, removeEventHandler, requestPaymentToken, cancelTokenRequest } from "../../core/api";
-import { payment } from "../../core/api"
+import { Account, Product } from "@ascii-pay-frontend/common/src/models";
+import { registerEventHandler, EventHandler, removeEventHandler, requestPaymentToken, cancelTokenRequest } from "@ascii-pay-frontend/common/src/api";
+import { payment } from "@ascii-pay-frontend/common/src/api"
 
 import { Basket, BasketData } from "./Basket";
 import { Customer } from "./Customer";
@@ -115,7 +115,7 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
             for (let data of state.basketProducts) {
                 amount += (data.product.current_price || 0) * data.amount;
             }
-    
+
             if (state.payment === null && amount != 0) {
                 (async () => {
                     await requestPaymentToken(-amount);
@@ -243,7 +243,7 @@ export class Cashier extends React.Component<CashierProps, CashierState> impleme
             });
         }
     }
-    
+
     onBarCodeScanned(code: string) {
         console.log("Bar code", code);
     }

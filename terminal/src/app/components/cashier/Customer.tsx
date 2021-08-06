@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import "./Customer.scss";
-import { Account } from "../../core/models";
+import { Account } from "@ascii-pay-frontend/common/src/models";
 import { MdCancel } from "react-icons/md";
 
-export interface CustomerProps { 
+export interface CustomerProps {
     account: Account|null,
     removeAccount: () => void,
 }

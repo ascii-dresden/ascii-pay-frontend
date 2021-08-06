@@ -3,7 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import "./AccountList.scss";
 
-import { Account } from "../../core/models";
+import { Account } from "@ascii-pay-frontend/common/src/models";
 
 export interface AccountListProps {
     accountList: Account[],

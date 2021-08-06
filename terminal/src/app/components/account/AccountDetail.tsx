@@ -1,11 +1,11 @@
 import * as React from "react";
 
 
-import { registerEventHandler, EventHandler, removeEventHandler, addAccountNfcTag, reauthenticate } from "../../core/api";
+import { registerEventHandler, EventHandler, removeEventHandler, addAccountNfcTag, reauthenticate } from "@ascii-pay-frontend/common/src/api";
 
 import "./AccountDetail.scss";
 
-import { Account } from "../../core/models";
+import { Account } from "@ascii-pay-frontend/common/src/models";
 
 export interface AccountDetailProps {
     account: Account

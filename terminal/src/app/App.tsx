@@ -9,12 +9,11 @@ import { Status } from "./components/ConnectionStatus";
 import { Screensaver } from "./components/Screensaver";
 import { ConnectionStatusDialog } from "./components/ConnectionStatusDialog";
 
-import { registerEventHandler, EventHandler, removeEventHandler } from "./core/api";
+import { registerEventHandler, EventHandler, removeEventHandler } from "@ascii-pay-frontend/common/src/api";
+import { Account, Product } from "@ascii-pay-frontend/common/src/models";
 
 import "./App.scss";
 import { Keyboard, KeyboardMode } from "./components/Keyboard";
-import { Dialog } from "./components/Dialog";
-import { Account, Product } from "./core/models";
 
 enum Mode {
     Cashier,

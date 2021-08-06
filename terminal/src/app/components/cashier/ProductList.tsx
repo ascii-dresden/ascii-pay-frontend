@@ -1,10 +1,10 @@
 import * as React from "react";
 
 import "./ProductList.scss";
-import { Product, Category } from "../../core/models";
-import { listProducts } from "../../core/api";
+import { Product, Category } from "@ascii-pay-frontend/common/src/models";
+import { listProducts } from "@ascii-pay-frontend/common/src/api";
 import { MdPhoto } from "react-icons/md";
-import { BASE_URL } from "../../core/api/utils";
+import { BASE_URL } from "@ascii-pay-frontend/common/src/api/utils";
 
 export interface ProductListProps {
     selectProduct: (product: Product) => void
