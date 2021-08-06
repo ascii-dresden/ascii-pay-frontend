@@ -4,6 +4,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@ant-design/charts": "^1.2.5",
+    "@ant-design/icons": "^4.6.2",
     "@reduxjs/toolkit": "^1.5.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
@@ -13,6 +15,8 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
+    "antd": "^4.16.10",
+    "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.0",
@@ -39,5 +43,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "sass": "^1.37.5"
   }
 }
