@@ -11,11 +11,15 @@ import {
   Space,
   Tag,
   Table,
+  PageHeader,
+  Button,
 } from "antd";
 import { Line } from "@ant-design/charts";
+import { red, blue } from "@ant-design/colors";
 import moment from "moment";
 import { ArrowDownOutlined, CreditCardOutlined } from "@ant-design/icons";
-const { Header, Content, Footer } = Layout;
+import { Link } from "react-router-dom";
+const { Content, Footer } = Layout;
 const { RangePicker } = DatePicker;
 
 const dateFormat = "YYYY-MM-DD";
@@ -696,7 +700,7 @@ export default function Overview() {
 
   const tableData: any[] = [];
   for (let item of diagramData) {
-    tableData.splice(0, 0, item);
+    tableData.push(item);
   }
 
   const columns = [
@@ -705,6 +709,9 @@ export default function Overview() {
       dataIndex: "date",
       key: "date",
       render: (value: string) => moment(value).format(dateTimeFormat),
+      sorter: (a: any, b: any) =>
+        moment(a.date).valueOf() - moment(b.date).valueOf(),
+      sortDirections: ["ascend", "descend"] as ("descend" | "ascend" | null)[],
     },
     {
       title: "Products",
@@ -714,7 +721,7 @@ export default function Overview() {
         <>
           {value.map((p) => (
             <Tag key={p.product_id}>
-              {p.amount} x {p.product.name}
+              {p.amount} × {p.product.name}
             </Tag>
           ))}
         </>
@@ -728,23 +735,23 @@ export default function Overview() {
     },
     {
       title: "Action",
-      render: (text: any, record: any) => <a>Details</a>,
+      render: (text: any, record: any) => <Button type="link">Details</Button>,
     },
   ];
 
   const config = {
     data: diagramData,
-    height: 400,
+    height: 300,
     xField: "date",
     yField: "balance",
-    color: "blue",
+    color: blue[5],
     stepType: "hv",
     annotations: [
       {
         type: "regionFilter",
         start: ["min", "min"] as [number | string, number | string],
         end: ["max", "0"] as [number | string, number | string],
-        color: "red",
+        color: red[5],
       },
     ],
     xAxis: {
@@ -800,8 +807,19 @@ export default function Overview() {
   return (
     <div id="Overview">
       <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }} />
-        <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
+        <PageHeader
+          title="Overview"
+          extra={[
+            <Button key="admin" type="text">
+              Open Management View
+            </Button>,
+            <Link to="/preferences">
+              <Button key="preferences">Preferences</Button>
+            </Link>,
+            <Button key="logout">Logout</Button>,
+          ]}
+        />
+        <Content style={{ margin: "8px 16px 0", overflow: "initial" }}>
           <Space direction="vertical" style={{ width: "100%" }}>
             <Row gutter={12} align="middle">
               <Col span={12}>
@@ -862,7 +880,7 @@ export default function Overview() {
                     <Statistic
                       title="Amount spent"
                       value={spent / 100}
-                      valueStyle={{ color: "#cf1322" }}
+                      valueStyle={{ color: red[5] }}
                       prefix={<ArrowDownOutlined />}
                       suffix="€"
                     />
@@ -879,7 +897,7 @@ export default function Overview() {
             </Card>
           </Space>
         </Content>
-        <Footer style={{ textAlign: "center" }}>ascii pay ©2021</Footer>
+        <Footer style={{ textAlign: "center" }}></Footer>
       </Layout>
     </div>
   );

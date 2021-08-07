@@ -1,6 +1,6 @@
 import React from "react";
 import "./Login.scss";
-import { Form, Input, Button, Checkbox, Image } from "antd";
+import { Form, Input, Button, Checkbox, Image, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const LOGO_URL: string = process.env.PUBLIC_URL + "/ascii-pay-logo-wide.svg";
@@ -12,6 +12,7 @@ export default function Login() {
 
   return (
     <div id="Login">
+      <Card>
       <Form
         name="login"
         className="login-form"
@@ -53,6 +54,7 @@ export default function Login() {
           </Button>
         </Form.Item>
       </Form>
+      </Card>
     </div>
   );
 }
