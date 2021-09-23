@@ -1,5 +1,5 @@
 import React from "react";
-import "./Overview.scss";
+import "./AccountList.scss";
 import {
   Layout,
   Statistic,
@@ -10,19 +10,24 @@ import {
   PageHeader,
   Button,
 } from "antd";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { AccountOutput } from "../model";
 const { Content, Footer } = Layout;
 
-export default function Preferences() {
-  let history = useHistory();
-
+export default function AccountList(props: { account: AccountOutput }) {
   return (
-    <div id="Preferences">
+    <div id="AccountList">
       <Layout className="site-layout">
         <PageHeader
-          title="Preferences"
-          onBack={() => history.goBack()}
-          extra={[<Button key="logout">Logout</Button>]}
+          title="Accounts"
+          extra={[
+            <Link to="/">
+              <Button key="user" type="text">
+                Open User View
+              </Button>
+            </Link>,
+            <Button key="logout">Logout</Button>,
+          ]}
         />
         <Content style={{ margin: "8px 16px 0", overflow: "initial" }}>
           <Space direction="vertical" style={{ width: "100%" }}>
