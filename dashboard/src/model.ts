@@ -16,12 +16,13 @@ export type TransactionOutput = {
     total: number
     beforeCredit: number
     afterCredit: number
-    date: number
+    date: string
     products: {
         product: {
-            id: string,
-            name: string,
-        },
+            id: string
+            name: string
+            currentPrice: number
+        }
         amount: number
     }[]
 }

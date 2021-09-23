@@ -15,8 +15,6 @@ export default function App() {
     fetchPolicy: "network-only"
   });
 
-  console.log(data, loading, error);
-
   if (loading) {
     return <></>;
   }

@@ -50,7 +50,8 @@ query getTransactions($accountId: String!, $transactionFilterFrom: String!, $tra
       amount,
       product {
         id,
-        name
+        name,
+        currentPrice
       }
     }
   }

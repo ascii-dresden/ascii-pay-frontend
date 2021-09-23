@@ -60,7 +60,7 @@ export default function Overview(props: { account: AccountOutput }) {
   );
 
   const transactionData: TransactionOutput[] =
-    transactionRawData?.getTransactions ?? [];
+    (transactionRawData?.getTransactions ?? []).slice();
   transactionData.reverse();
 
   let spent = 0;
@@ -75,6 +75,7 @@ export default function Overview(props: { account: AccountOutput }) {
     diagramData.push(item);
     tableData.push(item);
   }
+  tableData.reverse();
 
   const columns = [
     {
@@ -102,9 +103,9 @@ export default function Overview(props: { account: AccountOutput }) {
     },
     {
       title: "Total",
-      dataIndex: "price",
-      key: "price",
-      render: (value: number) => value.toFixed(2) + "€",
+      dataIndex: "total",
+      key: "total",
+      render: (value: number) => (value / 100).toFixed(2) + "€",
     },
     {
       title: "Action",
@@ -116,7 +117,7 @@ export default function Overview(props: { account: AccountOutput }) {
     data: diagramData,
     height: 300,
     xField: "date",
-    yField: "balance",
+    yField: "afterCredit",
     color: blue[5],
     stepType: "hv",
     annotations: [
@@ -137,7 +138,7 @@ export default function Overview(props: { account: AccountOutput }) {
     yAxis: {
       label: {
         formatter: (value: any) => {
-          return (value * 1.0).toFixed(2) + "€";
+          return (value * 1.0 / 100).toFixed(2) + "€";
         },
       },
     },
@@ -160,14 +161,14 @@ export default function Overview(props: { account: AccountOutput }) {
                 ></span>
                 <span className="g2-tooltip-name">Price</span>:
                 <span className="g2-tooltip-value">
-                  {(item.data.price * 1.0).toFixed(2)}€
+                  {(item.data.total * 1.0 / 100).toFixed(2)}€
                 </span>
               </li>
               <li className="g2-tooltip-list-item" data-index="">
                 <span className="g2-tooltip-marker"></span>
                 <span className="g2-tooltip-name">Balance</span>:
                 <span className="g2-tooltip-value">
-                  {(item.data.balance * 1.0).toFixed(2)}€
+                  {(item.data.afterCredit * 1.0 / 100).toFixed(2)}€
                 </span>
               </li>
             </ul>
@@ -214,8 +215,7 @@ export default function Overview(props: { account: AccountOutput }) {
                 <Card>
                   <Statistic
                     title="Current balance"
-                    value={props.account.credit / 100}
-                    precision={2}
+                    value={(props.account.credit / 100).toFixed(2)}
                     prefix={<CreditCardOutlined />}
                     suffix="€"
                   />
@@ -263,7 +263,7 @@ export default function Overview(props: { account: AccountOutput }) {
                       <>
                         <Statistic
                           title="Amount spent"
-                          value={spent / 100}
+                          value={(spent / 100).toFixed(2)}
                           valueStyle={{ color: red[5] }}
                           prefix={<ArrowDownOutlined />}
                           suffix="€"
