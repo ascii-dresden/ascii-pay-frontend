@@ -15,7 +15,7 @@ import {
   Button,
   Empty,
 } from "antd";
-import { Line } from "@ant-design/charts";
+import { Line, Scatter } from "@ant-design/charts";
 import { red, blue } from "@ant-design/colors";
 import moment, { Moment } from "moment";
 import { ArrowDownOutlined, CreditCardOutlined } from "@ant-design/icons";
@@ -27,7 +27,25 @@ const { Content, Footer } = Layout;
 const { RangePicker } = DatePicker;
 
 const dateFormat = "YYYY-MM-DD";
-const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
+const dateTimeFormat = "YYYY-MM-DD HH:mm";
+const dateTimeFormatInternal = "YYYY-MM-DDTHH:mm:ss";
+
+type DiagramData = {
+  renderTooltip: boolean;
+  id: string;
+  total: number;
+  beforeCredit: number;
+  afterCredit: number;
+  date: number;
+  products: {
+    product: {
+      id: string;
+      name: string;
+      currentPrice: number;
+    };
+    amount: number;
+  }[];
+};
 
 export default function Overview(props: { account: AccountOutput }) {
   const client = useApolloClient();
@@ -59,8 +77,9 @@ export default function Overview(props: { account: AccountOutput }) {
     }
   );
 
-  const transactionData: TransactionOutput[] =
-    (transactionRawData?.getTransactions ?? []).slice();
+  const transactionData: TransactionOutput[] = (
+    transactionRawData?.getTransactions ?? []
+  ).slice();
   transactionData.reverse();
 
   let spent = 0;
@@ -69,13 +88,42 @@ export default function Overview(props: { account: AccountOutput }) {
       spent -= item.total;
     }
   }
-  const diagramData: TransactionOutput[] = [];
+  const diagramData: DiagramData[] = [];
   const tableData: TransactionOutput[] = [];
   for (let item of transactionData) {
-    diagramData.push(item);
+    diagramData.push({
+      renderTooltip: true,
+      ...item,
+      date: moment(item.date).valueOf()
+    });
     tableData.push(item);
   }
   tableData.reverse();
+
+  if (diagramData.length > 0) {
+    diagramData.splice(0, 0, {
+      renderTooltip: false,
+      id: "from",
+      total: 0,
+      beforeCredit: diagramData[0].beforeCredit,
+      afterCredit: diagramData[0].beforeCredit,
+      date: (rangePickerValue ? rangePickerValue[0]?.valueOf() : 0) ?? 0,
+      products: [],
+    });
+
+    diagramData.push({
+      renderTooltip: false,
+      id: "to",
+      total: 0,
+      beforeCredit: diagramData[diagramData.length - 1].afterCredit,
+      afterCredit: diagramData[diagramData.length - 1].afterCredit,
+      date: (rangePickerValue ? rangePickerValue[1]?.valueOf() : 0) ?? 0,
+      products: [],
+    });
+  }
+
+  console.log(diagramData)
+  console.log(diagramData.map(x => moment(x.date.valueOf())))
 
   const columns = [
     {
@@ -131,14 +179,14 @@ export default function Overview(props: { account: AccountOutput }) {
     xAxis: {
       label: {
         formatter: (value: any) => {
-          return moment(value).format(dateFormat);
+          return moment(value * 1).format(dateFormat);
         },
       },
     },
     yAxis: {
       label: {
         formatter: (value: any) => {
-          return (value * 1.0 / 100).toFixed(2) + "€";
+          return ((value * 1.0) / 100).toFixed(2) + "€";
         },
       },
     },
@@ -148,10 +196,50 @@ export default function Overview(props: { account: AccountOutput }) {
           return (<></>) as unknown as HTMLElement;
         }
         let item = items[0];
+        if (!item.data.renderTooltip) {
+          if (item.data.id === "from") {
+            return (
+              <>
+                <div className="g2-tooltip-title">
+                  {moment(item.data.date).format(dateTimeFormat)}
+                </div>
+                <ul className="g2-tooltip-list">
+                  <li className="g2-tooltip-list-item" data-index="">
+                    <span className="g2-tooltip-marker"></span>
+                    <span className="g2-tooltip-name">Balance</span>:
+                    <span className="g2-tooltip-value">
+                      {((item.data.afterCredit * 1.0) / 100).toFixed(2)}€
+                    </span>
+                  </li>
+                </ul>
+              </>
+            ) as unknown as HTMLElement;
+          }
+          if (item.data.id === "to") {
+            return (
+              <>
+                <div className="g2-tooltip-title">
+                  {moment(item.data.date).format(dateTimeFormat)}
+                </div>
+                <ul className="g2-tooltip-list">
+                  <li className="g2-tooltip-list-item" data-index="">
+                    <span className="g2-tooltip-marker"></span>
+                    <span className="g2-tooltip-name">Balance</span>:
+                    <span className="g2-tooltip-value">
+                      {((item.data.afterCredit * 1.0) / 100).toFixed(2)}€
+                    </span>
+                  </li>
+                </ul>
+              </>
+            ) as unknown as HTMLElement;
+          }
+
+          return (<></>) as unknown as HTMLElement;
+        }
         return (
           <>
             <div className="g2-tooltip-title">
-              {moment(title).format(dateTimeFormat)}
+                  {moment(item.data.date).format(dateTimeFormat)}
             </div>
             <ul className="g2-tooltip-list">
               <li className="g2-tooltip-list-item" data-index="">
@@ -161,14 +249,14 @@ export default function Overview(props: { account: AccountOutput }) {
                 ></span>
                 <span className="g2-tooltip-name">Price</span>:
                 <span className="g2-tooltip-value">
-                  {(item.data.total * 1.0 / 100).toFixed(2)}€
+                  {((item.data.total * 1.0) / 100).toFixed(2)}€
                 </span>
               </li>
               <li className="g2-tooltip-list-item" data-index="">
                 <span className="g2-tooltip-marker"></span>
                 <span className="g2-tooltip-name">Balance</span>:
                 <span className="g2-tooltip-value">
-                  {(item.data.afterCredit * 1.0 / 100).toFixed(2)}€
+                  {((item.data.afterCredit * 1.0) / 100).toFixed(2)}€
                 </span>
               </li>
             </ul>
