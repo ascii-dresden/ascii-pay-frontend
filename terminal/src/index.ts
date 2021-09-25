@@ -9,7 +9,7 @@ const createWindow = (): void => {
   const mainWindow = new BrowserWindow({
     height: 1000,
     width: 1600,
-    fullscreen: app.isPackaged
+    fullscreen: app.isPackaged,
   });
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
@@ -23,7 +23,7 @@ const createWindow = (): void => {
   mainWindow.webContents.setVisualZoomLevelLimits(1.0, 1.0);
   mainWindow.webContents.on('crashed', (e) => {
     app.relaunch();
-    app.quit()
+    app.quit();
   });
 };
 

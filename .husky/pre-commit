@@ -2,8 +2,8 @@
 . "$(dirname "$0")/_/husky.sh"
 
 echo "Running prettier in common…"
-prettier --loglevel warn --write common/src/
+npx prettier --loglevel warn --write common/src/
 echo "Running prettier in dashboard…"
-prettier --loglevel warn --write dashboard/src/
+npx prettier --loglevel warn --write dashboard/src/
 echo "Running prettier in terminal…"
-prettier --loglevel warn --write terminal/src/
+npx prettier --loglevel warn --write terminal/src/

@@ -1,19 +1,19 @@
 .payment-status {
-    height: 10rem;
-    font-size: 8rem;
-    padding-top: 2rem;
+  height: 10rem;
+  font-size: 8rem;
+  padding-top: 2rem;
 
-    &.payment-success {
-        color: var(--success-color);
-    }
-    &.payment-warn {
-        color: var(--warn-color);
-    }
-    &.payment-error {
-        color: var(--error-color);
-    }
+  &.payment-success {
+    color: var(--success-color);
+  }
+  &.payment-warn {
+    color: var(--warn-color);
+  }
+  &.payment-error {
+    color: var(--error-color);
+  }
 }
 .payment-amount {
-    font-size: 1.5rem;
-    line-height: 3rem;
+  font-size: 1.5rem;
+  line-height: 3rem;
 }

@@ -1,18 +1,17 @@
-import React from "react";
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
-import AccountList from "./admin/AccountList";
-import "./App.scss";
-import Login from "./default/Login";
-import Overview from "./default/Overview";
-import Preferences from "./default/Preferences";
-import { useQuery } from "@apollo/client";
-import { GET_SELF } from "./graphql";
-import { AccountOutput } from "./model";
-
+import React from 'react';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import AccountList from './admin/AccountList';
+import './App.scss';
+import Login from './default/Login';
+import Overview from './default/Overview';
+import Preferences from './default/Preferences';
+import { useQuery } from '@apollo/client';
+import { GET_SELF } from './graphql';
+import { AccountOutput } from './model';
 
 export default function App() {
-  const { loading, error, data } = useQuery(GET_SELF,{
-    fetchPolicy: "network-only"
+  const { loading, error, data } = useQuery(GET_SELF, {
+    fetchPolicy: 'network-only',
   });
 
   if (loading) {
@@ -23,7 +22,7 @@ export default function App() {
     return <Login />;
   }
 
-  const account = data.getSelf as AccountOutput
+  const account = data.getSelf as AccountOutput;
 
   return (
     <Router basename="">

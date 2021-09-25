@@ -1,11 +1,11 @@
 .connection-status-dialog {
-    & > div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+  & > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    .connection-status {
-        padding: 2rem 0;
-    }
+  .connection-status {
+    padding: 2rem 0;
+  }
 }

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import "./Overview.scss";
+import React, { useState } from 'react';
+import './Overview.scss';
 import {
   Layout,
   Form,
@@ -14,21 +14,21 @@ import {
   PageHeader,
   Button,
   Empty,
-} from "antd";
-import { Line, Scatter } from "@ant-design/charts";
-import { red, blue } from "@ant-design/colors";
-import moment, { Moment } from "moment";
-import { ArrowDownOutlined, CreditCardOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import { useApolloClient, useMutation, useQuery } from "@apollo/client";
-import { GET_SELF, GET_TRANSACTIONS, LOGOUT } from "../graphql";
-import { AccountOutput, TransactionOutput } from "../model";
+} from 'antd';
+import { Line, Scatter } from '@ant-design/charts';
+import { red, blue } from '@ant-design/colors';
+import moment, { Moment } from 'moment';
+import { ArrowDownOutlined, CreditCardOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
+import { GET_SELF, GET_TRANSACTIONS, LOGOUT } from '../graphql';
+import { AccountOutput, TransactionOutput } from '../model';
 const { Content, Footer } = Layout;
 const { RangePicker } = DatePicker;
 
-const dateFormat = "YYYY-MM-DD";
-const dateTimeFormat = "YYYY-MM-DD HH:mm";
-const dateTimeFormatInternal = "YYYY-MM-DDTHH:mm:ss";
+const dateFormat = 'YYYY-MM-DD';
+const dateTimeFormat = 'YYYY-MM-DD HH:mm';
+const dateTimeFormatInternal = 'YYYY-MM-DDTHH:mm:ss';
 
 type DiagramData = {
   renderTooltip: boolean;
@@ -50,8 +50,8 @@ type DiagramData = {
 export default function Overview(props: { account: AccountOutput }) {
   const client = useApolloClient();
   const [rangePickerValue, setRangePickerValue] = useState([
-    moment().startOf("day").subtract(7, "days"),
-    moment().endOf("day"),
+    moment().startOf('day').subtract(7, 'days'),
+    moment().endOf('day'),
   ] as [Moment | null, Moment | null] | null);
 
   const [logoutFunction, { data: logoutData }] = useMutation(LOGOUT);
@@ -62,24 +62,15 @@ export default function Overview(props: { account: AccountOutput }) {
     });
   }
 
-  const { data: transactionRawData, loading: transactionLoading } = useQuery(
-    GET_TRANSACTIONS,
-    {
-      variables: {
-        accountId: props.account.id,
-        transactionFilterFrom: rangePickerValue
-          ? rangePickerValue[0]?.format(dateFormat)
-          : "",
-        transactionFilterTo: rangePickerValue
-          ? rangePickerValue[1]?.format(dateFormat)
-          : "",
-      },
-    }
-  );
+  const { data: transactionRawData, loading: transactionLoading } = useQuery(GET_TRANSACTIONS, {
+    variables: {
+      accountId: props.account.id,
+      transactionFilterFrom: rangePickerValue ? rangePickerValue[0]?.format(dateFormat) : '',
+      transactionFilterTo: rangePickerValue ? rangePickerValue[1]?.format(dateFormat) : '',
+    },
+  });
 
-  const transactionData: TransactionOutput[] = (
-    transactionRawData?.getTransactions ?? []
-  ).slice();
+  const transactionData: TransactionOutput[] = (transactionRawData?.getTransactions ?? []).slice();
   transactionData.reverse();
 
   let spent = 0;
@@ -94,7 +85,7 @@ export default function Overview(props: { account: AccountOutput }) {
     diagramData.push({
       renderTooltip: true,
       ...item,
-      date: moment(item.date).valueOf()
+      date: moment(item.date).valueOf(),
     });
     tableData.push(item);
   }
@@ -103,7 +94,7 @@ export default function Overview(props: { account: AccountOutput }) {
   if (diagramData.length > 0) {
     diagramData.splice(0, 0, {
       renderTooltip: false,
-      id: "from",
+      id: 'from',
       total: 0,
       beforeCredit: diagramData[0].beforeCredit,
       afterCredit: diagramData[0].beforeCredit,
@@ -113,7 +104,7 @@ export default function Overview(props: { account: AccountOutput }) {
 
     diagramData.push({
       renderTooltip: false,
-      id: "to",
+      id: 'to',
       total: 0,
       beforeCredit: diagramData[diagramData.length - 1].afterCredit,
       afterCredit: diagramData[diagramData.length - 1].afterCredit,
@@ -122,23 +113,22 @@ export default function Overview(props: { account: AccountOutput }) {
     });
   }
 
-  console.log(diagramData)
-  console.log(diagramData.map(x => moment(x.date.valueOf())))
+  console.log(diagramData);
+  console.log(diagramData.map((x) => moment(x.date.valueOf())));
 
   const columns = [
     {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
       render: (value: string) => moment(value).format(dateTimeFormat),
-      sorter: (a: any, b: any) =>
-        moment(a.date).valueOf() - moment(b.date).valueOf(),
-      sortDirections: ["ascend", "descend"] as ("descend" | "ascend" | null)[],
+      sorter: (a: any, b: any) => moment(a.date).valueOf() - moment(b.date).valueOf(),
+      sortDirections: ['ascend', 'descend'] as ('descend' | 'ascend' | null)[],
     },
     {
-      title: "Products",
-      dataIndex: "products",
-      key: "products",
+      title: 'Products',
+      dataIndex: 'products',
+      key: 'products',
       render: (value: any[]) => (
         <>
           {value.map((p) => (
@@ -150,13 +140,13 @@ export default function Overview(props: { account: AccountOutput }) {
       ),
     },
     {
-      title: "Total",
-      dataIndex: "total",
-      key: "total",
-      render: (value: number) => (value / 100).toFixed(2) + "€",
+      title: 'Total',
+      dataIndex: 'total',
+      key: 'total',
+      render: (value: number) => (value / 100).toFixed(2) + '€',
     },
     {
-      title: "Action",
+      title: 'Action',
       render: (text: any, record: any) => <Button type="link">Details</Button>,
     },
   ];
@@ -164,15 +154,15 @@ export default function Overview(props: { account: AccountOutput }) {
   const config = {
     data: diagramData,
     height: 300,
-    xField: "date",
-    yField: "afterCredit",
+    xField: 'date',
+    yField: 'afterCredit',
     color: blue[5],
-    stepType: "hv",
+    stepType: 'hv',
     annotations: [
       {
-        type: "regionFilter",
-        start: ["min", "min"] as [number | string, number | string],
-        end: ["max", "0"] as [number | string, number | string],
+        type: 'regionFilter',
+        start: ['min', 'min'] as [number | string, number | string],
+        end: ['max', '0'] as [number | string, number | string],
         color: red[5],
       },
     ],
@@ -186,7 +176,7 @@ export default function Overview(props: { account: AccountOutput }) {
     yAxis: {
       label: {
         formatter: (value: any) => {
-          return ((value * 1.0) / 100).toFixed(2) + "€";
+          return ((value * 1.0) / 100).toFixed(2) + '€';
         },
       },
     },
@@ -197,37 +187,29 @@ export default function Overview(props: { account: AccountOutput }) {
         }
         let item = items[0];
         if (!item.data.renderTooltip) {
-          if (item.data.id === "from") {
+          if (item.data.id === 'from') {
             return (
               <>
-                <div className="g2-tooltip-title">
-                  {moment(item.data.date).format(dateTimeFormat)}
-                </div>
+                <div className="g2-tooltip-title">{moment(item.data.date).format(dateTimeFormat)}</div>
                 <ul className="g2-tooltip-list">
                   <li className="g2-tooltip-list-item" data-index="">
                     <span className="g2-tooltip-marker"></span>
                     <span className="g2-tooltip-name">Balance</span>:
-                    <span className="g2-tooltip-value">
-                      {((item.data.afterCredit * 1.0) / 100).toFixed(2)}€
-                    </span>
+                    <span className="g2-tooltip-value">{((item.data.afterCredit * 1.0) / 100).toFixed(2)}€</span>
                   </li>
                 </ul>
               </>
             ) as unknown as HTMLElement;
           }
-          if (item.data.id === "to") {
+          if (item.data.id === 'to') {
             return (
               <>
-                <div className="g2-tooltip-title">
-                  {moment(item.data.date).format(dateTimeFormat)}
-                </div>
+                <div className="g2-tooltip-title">{moment(item.data.date).format(dateTimeFormat)}</div>
                 <ul className="g2-tooltip-list">
                   <li className="g2-tooltip-list-item" data-index="">
                     <span className="g2-tooltip-marker"></span>
                     <span className="g2-tooltip-name">Balance</span>:
-                    <span className="g2-tooltip-value">
-                      {((item.data.afterCredit * 1.0) / 100).toFixed(2)}€
-                    </span>
+                    <span className="g2-tooltip-value">{((item.data.afterCredit * 1.0) / 100).toFixed(2)}€</span>
                   </li>
                 </ul>
               </>
@@ -238,26 +220,17 @@ export default function Overview(props: { account: AccountOutput }) {
         }
         return (
           <>
-            <div className="g2-tooltip-title">
-                  {moment(item.data.date).format(dateTimeFormat)}
-            </div>
+            <div className="g2-tooltip-title">{moment(item.data.date).format(dateTimeFormat)}</div>
             <ul className="g2-tooltip-list">
               <li className="g2-tooltip-list-item" data-index="">
-                <span
-                  className="g2-tooltip-marker"
-                  style={{ backgroundColor: item.color }}
-                ></span>
+                <span className="g2-tooltip-marker" style={{ backgroundColor: item.color }}></span>
                 <span className="g2-tooltip-name">Price</span>:
-                <span className="g2-tooltip-value">
-                  {((item.data.total * 1.0) / 100).toFixed(2)}€
-                </span>
+                <span className="g2-tooltip-value">{((item.data.total * 1.0) / 100).toFixed(2)}€</span>
               </li>
               <li className="g2-tooltip-list-item" data-index="">
                 <span className="g2-tooltip-marker"></span>
                 <span className="g2-tooltip-name">Balance</span>:
-                <span className="g2-tooltip-value">
-                  {((item.data.afterCredit * 1.0) / 100).toFixed(2)}€
-                </span>
+                <span className="g2-tooltip-value">{((item.data.afterCredit * 1.0) / 100).toFixed(2)}€</span>
               </li>
             </ul>
           </>
@@ -284,15 +257,15 @@ export default function Overview(props: { account: AccountOutput }) {
               key="logout"
               onClick={() => {
                 logoutFunction();
-                localStorage.removeItem("token");
+                localStorage.removeItem('token');
               }}
             >
               Logout
             </Button>,
           ]}
         />
-        <Content style={{ margin: "8px 16px 0", overflow: "initial" }}>
-          <Space direction="vertical" style={{ width: "100%" }}>
+        <Content style={{ margin: '8px 16px 0', overflow: 'initial' }}>
+          <Space direction="vertical" style={{ width: '100%' }}>
             <Row gutter={12} align="middle">
               <Col span={12}>
                 <Card>
@@ -312,7 +285,7 @@ export default function Overview(props: { account: AccountOutput }) {
             </Row>
 
             <Card loading={!!transactionLoading}>
-              <Space size={32} direction="vertical" style={{ width: "100%" }}>
+              <Space size={32} direction="vertical" style={{ width: '100%' }}>
                 <Row gutter={16} align="middle">
                   <Col span={16}>
                     <Form layout="vertical">
@@ -324,22 +297,13 @@ export default function Overview(props: { account: AccountOutput }) {
                           format={dateFormat}
                           ranges={{
                             Today: [moment(), moment()],
-                            "Last 7 days": [
-                              moment().startOf("day").subtract(7, "days"),
-                              moment().endOf("day"),
-                            ],
-                            "Last 30 days": [
-                              moment().startOf("day").subtract(30, "days"),
-                              moment().endOf("day"),
-                            ],
-                            "Last 90 days": [
-                              moment().startOf("day").subtract(90, "days"),
-                              moment().endOf("day"),
-                            ],
-                            "This year": [moment().startOf("year"), moment()],
-                            "Last year": [
-                              moment().subtract(1, "year").startOf("year"),
-                              moment().subtract(1, "year").endOf("year"),
+                            'Last 7 days': [moment().startOf('day').subtract(7, 'days'), moment().endOf('day')],
+                            'Last 30 days': [moment().startOf('day').subtract(30, 'days'), moment().endOf('day')],
+                            'Last 90 days': [moment().startOf('day').subtract(90, 'days'), moment().endOf('day')],
+                            'This year': [moment().startOf('year'), moment()],
+                            'Last year': [
+                              moment().subtract(1, 'year').startOf('year'),
+                              moment().subtract(1, 'year').endOf('year'),
                             ],
                           }}
                         />
@@ -366,11 +330,7 @@ export default function Overview(props: { account: AccountOutput }) {
                 {transactionData.length > 0 ? (
                   <>
                     <Line {...config} />
-                    <Table
-                      columns={columns}
-                      dataSource={tableData}
-                      pagination={false}
-                    />
+                    <Table columns={columns} dataSource={tableData} pagination={false} />
                   </>
                 ) : (
                   <>
@@ -381,7 +341,7 @@ export default function Overview(props: { account: AccountOutput }) {
             </Card>
           </Space>
         </Content>
-        <Footer style={{ textAlign: "center" }}></Footer>
+        <Footer style={{ textAlign: 'center' }}></Footer>
       </Layout>
     </div>
   );

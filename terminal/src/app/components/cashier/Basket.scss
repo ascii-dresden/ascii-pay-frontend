@@ -1,122 +1,122 @@
 .basket {
-    position: absolute;
-    top: 3rem;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    overflow: hidden;
+  position: absolute;
+  top: 3rem;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
 .basket-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 3rem;
-    width: 100%;
-    padding: 0.6rem;
-    overflow-y: scroll;
-    overflow-x: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 3rem;
+  width: 100%;
+  padding: 0.6rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .basket-footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3rem;
-    width: 100%;
-    padding: 0.6rem;
-    border-top: solid 1px var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3rem;
+  width: 100%;
+  padding: 0.6rem;
+  border-top: solid 1px var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .basket-footer-pay {
-    padding: 2rem;
-    font-weight: bold;
-    color: var(--theme-color)
+  padding: 2rem;
+  font-weight: bold;
+  color: var(--theme-color);
 }
 
 .basket-entry {
-    position: relative;
-    height: 3rem;
-    margin-bottom: 0.5rem;
-    overflow: hidden;
+  position: relative;
+  height: 3rem;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
 }
 
 .basket-entry-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2.9rem;
-    height: 2.9rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2.9rem;
+  height: 2.9rem;
 
-    & > div {
-        width: 100%;
-        padding-top: 100%;
-        position: relative;
-        
-        img {
-            position: absolute;
-            left: 0;
-            top: 0;
-            max-width: 100%;
-            max-height: 100%;
-        }
+  & > div {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
 
-        div {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--tertiary-background);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            svg {
-                width: 2rem;
-                height: 2rem;
-            }
-        }
+    img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      max-width: 100%;
+      max-height: 100%;
     }
+
+    div {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--tertiary-background);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 2rem;
+        height: 2rem;
+      }
+    }
+  }
 }
 
 .basket-entry-name {
-    position: absolute;
-    top: 0;
-    left: 3.6rem;
-    line-height: 1.8rem;
-    right: 3rem;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 3.6rem;
+  line-height: 1.8rem;
+  right: 3rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .basket-entry-amount {
-    position: absolute;
-    top: 1.3rem;
-    left: 3.6rem;
-    right: 3rem;
-    font-size: 0.8rem;
+  position: absolute;
+  top: 1.3rem;
+  left: 3.6rem;
+  right: 3rem;
+  font-size: 0.8rem;
 }
 .basket-entry-price {
-    position: absolute;
-    top: 0;
-    line-height: 2.7rem;
-    right: 0.6rem;
+  position: absolute;
+  top: 0;
+  line-height: 2.7rem;
+  right: 0.6rem;
 }
 .basket-entry-delete {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    &:hover {
-        background-color: var(--secondary-hover-background);
-    }
+  &:hover {
+    background-color: var(--secondary-hover-background);
+  }
 }

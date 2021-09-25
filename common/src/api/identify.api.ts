@@ -1,62 +1,55 @@
-import { Account, Product } from "../models";
-import { requestJson, Method } from "./utils";
+import { Account, Product } from '../models';
+import { requestJson, Method } from './utils';
 
 type IdentifyRequestBarCode = {
-    type: "barcode";
-    code: string;
+  type: 'barcode';
+  code: string;
 };
 
 type IdentifyRequestNfc = {
-    type: "nfc";
-    id: string;
+  type: 'nfc';
+  id: string;
 };
 
 type IdentifyRequestNfcSecure = {
-    type: "nfc-secure";
-    id: string;
-    challenge: string;
-    response: string;
+  type: 'nfc-secure';
+  id: string;
+  challenge: string;
+  response: string;
 };
 
-type IdentifyRequest =
-    | IdentifyRequestBarCode
-    | IdentifyRequestNfc
-    | IdentifyRequestNfcSecure;
+type IdentifyRequest = IdentifyRequestBarCode | IdentifyRequestNfc | IdentifyRequestNfcSecure;
 
 type IdentifyResponseAccount = {
-    type: "account";
-    account: Account;
+  type: 'account';
+  account: Account;
 };
 
 type IdentifyResponseProduct = {
-    type: "product";
-    product: Product;
+  type: 'product';
+  product: Product;
 };
 
 type IdentifyResponseChallengeResponse = {
-    type: "authentication-needed";
-    id: string;
-    key: string;
-    challenge: string;
+  type: 'authentication-needed';
+  id: string;
+  key: string;
+  challenge: string;
 };
 
 type IdentifyResponseWriteKey = {
-    type: "write-key";
-    id: string;
-    key: string;
-    secret: string;
+  type: 'write-key';
+  id: string;
+  key: string;
+  secret: string;
 };
 
 type IdentifyResponse =
-| IdentifyResponseAccount
-| IdentifyResponseProduct
-| IdentifyResponseChallengeResponse
-| IdentifyResponseWriteKey;
+  | IdentifyResponseAccount
+  | IdentifyResponseProduct
+  | IdentifyResponseChallengeResponse
+  | IdentifyResponseWriteKey;
 
 export async function identify(request: IdentifyRequest): Promise<IdentifyResponse> {
-    return await requestJson(
-        Method.POST,
-        "identify",
-        request
-    )
+  return await requestJson(Method.POST, 'identify', request);
 }
