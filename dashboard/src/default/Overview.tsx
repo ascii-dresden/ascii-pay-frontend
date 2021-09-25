@@ -1,28 +1,30 @@
 import React, { useState } from 'react';
 import './Overview.scss';
 import {
-  Layout,
-  Form,
-  DatePicker,
-  Statistic,
-  Card,
-  Row,
-  Col,
-  Space,
-  Tag,
-  Table,
-  PageHeader,
   Button,
+  Card,
+  Col,
+  DatePicker,
   Empty,
+  Form,
+  Layout,
+  PageHeader,
+  Row,
+  Space,
+  Statistic,
+  Table,
+  Tag,
 } from 'antd';
-import { Line, Scatter } from '@ant-design/charts';
-import { red, blue } from '@ant-design/colors';
+import { Line } from '@ant-design/charts';
+import { blue, red } from '@ant-design/colors';
 import moment, { Moment } from 'moment';
 import { ArrowDownOutlined, CreditCardOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { GET_SELF, GET_TRANSACTIONS, LOGOUT } from '../graphql';
 import { AccountOutput, TransactionOutput } from '../model';
+import { LineConfig } from '@ant-design/charts/es/plots/line';
+
 const { Content, Footer } = Layout;
 const { RangePicker } = DatePicker;
 
@@ -151,13 +153,18 @@ export default function Overview(props: { account: AccountOutput }) {
     },
   ];
 
-  const config = {
+  const config: LineConfig = {
     data: diagramData,
     height: 300,
     xField: 'date',
     yField: 'afterCredit',
     color: blue[5],
     stepType: 'hv',
+    meta: {
+      date: {
+        type: 'time',
+      },
+    },
     annotations: [
       {
         type: 'regionFilter',
@@ -169,7 +176,7 @@ export default function Overview(props: { account: AccountOutput }) {
     xAxis: {
       label: {
         formatter: (value: any) => {
-          return moment(value * 1).format(dateFormat);
+          return value;
         },
       },
     },
