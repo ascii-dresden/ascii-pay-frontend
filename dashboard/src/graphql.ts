@@ -32,7 +32,7 @@ export const LOGOUT = gql`
 `;
 
 export const GET_TRANSACTIONS = gql`
-  query getTransactions($accountId: String!, $transactionFilterFrom: String!, $transactionFilterTo: String!) {
+  query getTransactions($accountId: UUID!, $transactionFilterFrom: String!, $transactionFilterTo: String!) {
     getTransactions(
       accountId: $accountId
       transactionFilterFrom: $transactionFilterFrom

@@ -32,7 +32,12 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postinstall": "run-s schema",
+    "schema": "run-s schema:download schema:generate schema:format",
+    "schema:download": "apollo client:download-schema schema.graphql",
+    "schema:format": "prettier --write src/types/graphql-global.ts",
+    "schema:generate": "apollo client:codegen --target=typescript --globalTypesFile=src/types/graphql-global.ts --passthroughCustomScalars"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -52,6 +57,7 @@
   "devDependencies": {
     "@types/react-router": "^5.1.16",
     "@types/react-router-dom": "^5.1.8",
+    "npm-run-all": "^4.1.5",
     "sass": "^1.37.5"
   }
 }
