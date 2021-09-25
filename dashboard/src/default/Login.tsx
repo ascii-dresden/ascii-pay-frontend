@@ -17,6 +17,8 @@ export default function Login() {
         username: values.username,
         password: values.password,
       },
+    }).catch(() => {
+      // login failed
     });
   };
 
