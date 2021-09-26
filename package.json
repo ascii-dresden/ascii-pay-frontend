@@ -5,7 +5,6 @@
   "description": "Frontend apps for ascii-pay",
   "private": true,
   "workspaces": [
-    "common",
     "dashboard",
     "terminal"
   ],
