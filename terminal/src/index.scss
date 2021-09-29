@@ -12,10 +12,10 @@ body {
   --success-text-color: #ffffff;
   --tertiary-background: #e0e0e0;
   --tertiary-hover-background: #e9e9e9;
-  --theme-color: #c0392b;
-  --theme-hover-color: #e74c3c;
+  --theme-color: #2980b9;
+  --theme-hover-color: #3498db;
   --theme-primary-text: #ffffff;
-  --theme-secondary-text: #cd6155;
+  --theme-secondary-text: #2980b9;
   --warn-color: #f39c12;
   --warn-text-color: #ffffff;
 }
@@ -31,6 +31,7 @@ body {
   height: 100%;
   background-color: var(--secondary-background);
   user-select: none;
+  overscroll-behavior: none;
 }
 
 #root {

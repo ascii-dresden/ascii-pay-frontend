@@ -1,10 +1,12 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import paymentReducer from './payment/paymentSlice';
+import registerSlice from './register/registerSlice';
 
 export const store = configureStore({
   reducer: {
     payment: paymentReducer,
+    register: registerSlice,
   },
 });
 

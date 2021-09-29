@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.scss';
 import PaymentPage from './payment/PaymentPage';
+import RegisterPage from './register/RegisterPage';
 import StartPage from './StartPage';
 
 export default function App() {
@@ -22,6 +23,9 @@ export default function App() {
       <Switch>
         <Route path="/payment">
           <PaymentPage />
+        </Route>
+        <Route path="/register">
+          <RegisterPage />
         </Route>
         <Route path="">
           <StartPage />

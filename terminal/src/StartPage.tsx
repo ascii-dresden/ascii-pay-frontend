@@ -31,6 +31,7 @@ export const useDate = () => {
 export default function StartPage() {
   const history = useHistory();
   const handleOpenPayment = () => history.push('/payment');
+  const handleOpenRegister = () => history.push('/register');
 
   const { date, wish } = useDate();
 
@@ -50,7 +51,7 @@ export default function StartPage() {
             <MdPeople />
             <span>Accounts</span>
           </div>
-          <div className="start-page-entry inactive">
+          <div className="start-page-entry" onClick={handleOpenRegister}>
             <MdLocalAtm />
             <span>Count register</span>
           </div>

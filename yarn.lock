@@ -2516,6 +2516,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/hammerjs@*":
+  version "2.0.40"
+  resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.40.tgz#ded0240b6ea1ad7afc1e60374c49087aaea5dbd8"
+  integrity sha512-VbjwR1fhsn2h2KXAY4oy1fm7dCxaKy0D+deTb8Ilc3Eo3rc5+5eA4rfYmZaHgNJKxVyI0f6WIXzO2zLkVmQPHA==
+
 "@types/history@*":
   version "4.7.9"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.9.tgz#1cfb6d60ef3822c589f18e70f8b12f9a28ce8724"
@@ -2639,6 +2644,14 @@
   integrity sha512-FIX2AVmPTGP30OUJ+0vadeIFJJ07Mh1m+U0rxfgyW34p3rTlXI+nlenvAxNn4BP36YyI9IJ/+UJ7Wu22N1pI7A==
   dependencies:
     "@types/react" "^16"
+
+"@types/react-hammerjs@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@types/react-hammerjs/-/react-hammerjs-1.0.2.tgz#2c3ce5686d35dd3feeb0d55b76921546e3afe437"
+  integrity sha512-4VuvxnXtZTMZMaZJinKYnUMtQvY1UfFScGAFR4v0ESl+BBv4kmuIkc9ruxu9YSn30poYuAkhhlz6ElVN3wEqSQ==
+  dependencies:
+    "@types/hammerjs" "*"
+    "@types/react" "*"
 
 "@types/react-icons@^3.0.0":
   version "3.0.0"
@@ -11694,6 +11707,13 @@ react-error-overlay@^6.0.9:
   version "6.0.9"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
+
+react-hammerjs@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-hammerjs/-/react-hammerjs-1.0.1.tgz#bc1ed9e9ef7da057163fb169ce12917b6d6ca7d8"
+  integrity sha1-vB7Z6e99oFcWP7FpzhKRe21sp9g=
+  dependencies:
+    hammerjs "^2.0.8"
 
 react-icons@*, react-icons@^4.2.0:
   version "4.2.0"

@@ -1,0 +1,80 @@
+.note-box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+
+  background-color: #424242;
+  color: #fff;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  grid-gap: 0.4rem;
+  touch-action: none;
+
+  & > div > div > span {
+    display: block;
+    font-weight: 800;
+    padding-bottom: 0.2rem;
+  }
+}
+
+.note-stack-group {
+  width: 100%;
+  height: 24.8rem;
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  width: 8rem;
+  padding-bottom: 1rem;
+}
+
+.note {
+  width: 8rem;
+  height: 4rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+
+  img {
+    width: 100%;
+  }
+
+  &:not(:first-child) {
+    margin-bottom: -3rem;
+  }
+
+  &:not(.previous) ~ .previous {
+    margin-bottom: -2rem;
+  }
+
+  &.previous {
+    filter: grayscale(100%);
+
+    & ~ .previous {
+      margin-bottom: -3rem;
+    }
+  }
+
+  &.empty {
+    filter: grayscale(0);
+    opacity: 0.2;
+  }
+}
+
+.note-group-sum {
+  position: relative;
+  line-height: 1.1rem;
+  height: 1.1rem;
+
+  & > span:first-child {
+    position: absolute;
+    left: 0;
+    width: 5rem;
+    text-align: center;
+  }
+  & > span:last-child {
+    position: absolute;
+    right: 0;
+    font-size: 0.8rem;
+  }
+}
