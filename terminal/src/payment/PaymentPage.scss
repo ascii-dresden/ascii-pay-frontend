@@ -1,0 +1,28 @@
+.payment-page-left {
+  position: absolute;
+  left: 0;
+  width: 40%;
+  top: 0;
+  height: 100%;
+}
+
+.payment-page-right {
+  position: absolute;
+  left: 40%;
+  right: 0;
+  top: 0;
+  height: 100%;
+}
+
+.payment-page-basket-sum {
+  position: absolute;
+  bottom: 0;
+  height: 3rem;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  font-size: 1.1rem;
+}

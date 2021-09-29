@@ -1,109 +1,66 @@
 {
   "name": "@ascii-pay-frontend/terminal",
-  "version": "1.0.0",
   "description": "Terminal ui for ascii-pay",
+  "version": "1.0.0",
   "private": true,
-  "main": ".webpack/main",
+  "dependencies": {
+    "@apollo/client": "^3.4.13",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@types/react-redux": "^7.1.7",
+    "graphql": "^15.6.0",
+    "moment": "^2.29.1",
+    "react": "^17.0.2",
+    "react-clock": "^3.0.0",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
+    "react-idle-timer": "^4.6.4",
+    "react-redux": "^7.2.5",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "react-tabs": "^3.2.2",
+    "typescript": "~4.1.5"
+  },
   "scripts": {
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts .",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
     "postinstall": "run-s schema",
     "schema": "run-s schema:download schema:generate schema:format",
     "schema:download": "apollo client:download-schema schema.graphql",
     "schema:format": "prettier --write src/types/graphql-global.ts",
     "schema:generate": "apollo client:codegen --target=typescript --globalTypesFile=src/types/graphql-global.ts --passthroughCustomScalars"
   },
-  "keywords": [],
-  "author": {
-    "name": "Lars Westermann",
-    "email": "git@lars-westermann.de"
+  "eslintConfig": {
+    "extends": "react-app"
   },
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "ascii_pay_frontend"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ],
-      "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
-            "mainConfig": "./webpack.main.config.js",
-            "renderer": {
-              "config": "./webpack.renderer.config.js",
-              "entryPoints": [
-                {
-                  "html": "./src/index.html",
-                  "js": "./src/renderer.ts",
-                  "name": "main_window"
-                }
-              ]
-            },
-            "devContentSecurityPolicy": "default-src 'self' 'unsafe-inline' data:; script-src 'self' 'unsafe-eval' 'unsafe-inline' data:; img-src 'self' http://192.168.1.157:8000; connect-src ws://localhost:3000 http://192.168.1.157:8000;"
-          }
-        ]
-      ]
-    }
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.58",
-    "@electron-forge/maker-deb": "^6.0.0-beta.58",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.58",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.58",
-    "@electron-forge/maker-zip": "^6.0.0-beta.58",
-    "@electron-forge/plugin-webpack": "6.0.0-beta.58",
-    "@types/react": "^17.0.15",
     "@types/react-clock": "^3.0.1",
-    "@types/react-dom": "^17.0.9",
     "@types/react-icons": "^3.0.0",
+    "@types/react-redux": "^7.1.18",
+    "@types/react-router": "^5.1.16",
+    "@types/react-router-dom": "^5.1.8",
     "@types/react-tabs": "^2.3.3",
-    "@typescript-eslint/eslint-plugin": "^4.28.4",
-    "@typescript-eslint/parser": "^4.28.4",
-    "@vercel/webpack-asset-relocator-loader": "1.6.0",
     "npm-run-all": "^4.1.5",
-    "css-loader": "^6.2.0",
-    "electron": "13.1.7",
-    "eslint": "^7.31.0",
-    "eslint-plugin-import": "^2.23.4",
-    "fork-ts-checker-webpack-plugin": "^6.2.13",
-    "node-loader": "^2.0.0",
-    "sass": "^1.36.0",
-    "sass-loader": "^12.1.0",
-    "style-loader": "^3.2.1",
-    "ts-loader": "^9.2.4",
-    "typescript": "^4.3.5",
-    "webpack": "^5.46.0",
-    "@babel/runtime": "^7.14.8"
-  },
-  "dependencies": {
-    "react": "^17.0.2",
-    "react-clock": "^3.0.0",
-    "react-dom": "^17.0.2",
-    "react-icons": "^4.2.0",
-    "react-idle-timer": "^4.6.4",
-    "react-tabs": "^3.2.2"
+    "sass": "^1.37.5"
   }
 }

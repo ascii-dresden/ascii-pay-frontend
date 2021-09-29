@@ -1,0 +1,52 @@
+.keypad-display {
+  line-height: 4rem;
+  padding: 0.5rem;
+  padding-left: 1rem;
+  font-size: 1.5rem;
+}
+
+.keypad-submit {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+  padding-right: 0.5rem;
+
+  svg {
+    margin: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.keypad-keys {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-rows: auto auto auto auto;
+  position: absolute;
+  left: 0.6rem;
+  top: 5rem;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  gap: 0.6rem;
+}
+
+.keypad-key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  background-color: var(--primary-background);
+  border: solid 1px var(--border-color);
+  font-size: 1.6rem;
+
+  svg {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+
+  &:hover {
+    background-color: var(--primary-hover-background);
+  }
+}

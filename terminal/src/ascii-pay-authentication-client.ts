@@ -65,15 +65,15 @@ export class AsciiPayAuthenticationClient {
 
   private createWebSocket(): WebSocket {
     let self = this;
-    let socket = new WebSocket(this.url);
+    const socket = new WebSocket(this.url);
 
-    socket.addEventListener('close', function (event) {
+    this.socket.addEventListener('close', function () {
       setTimeout(() => {
         self.socket = self.createWebSocket();
       }, 1000);
     });
 
-    socket.addEventListener('message', function (event) {
+    this.socket.addEventListener('message', function (event) {
       let message: WebSocketResponse = JSON.parse(event.data);
 
       for (const handler of self.handlerList) {

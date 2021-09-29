@@ -1,0 +1,63 @@
+.sidebar-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  .sidebar {
+    position: absolute;
+    left: 0;
+    width: 4rem;
+    top: 0;
+    height: 100%;
+    background-color: var(--primary-background);
+    border-right: solid 1px var(--border-color);
+    overflow: hidden;
+
+    & > div > div {
+      width: 4rem;
+      height: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg,
+      img {
+        width: 1.8rem;
+        height: 1.8rem;
+      }
+
+      &:hover {
+        background-color: var(--primary-hover-background);
+      }
+    }
+
+    .sidebar-top {
+      position: absolute;
+      top: 0;
+
+      & > div:first-child {
+        height: 4.4rem;
+
+        img {
+          width: 2rem;
+          height: 2rem;
+        }
+      }
+    }
+
+    .sidebar-bottom {
+      position: absolute;
+      bottom: 0;
+    }
+  }
+
+  .sidebar-content {
+    position: absolute;
+    left: 4rem;
+    right: 0;
+    top: 0;
+    height: 100%;
+  }
+}

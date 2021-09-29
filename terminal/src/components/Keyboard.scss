@@ -1,0 +1,167 @@
+.keyboard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+}
+
+.keyboard-box {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 16.6rem;
+  background-color: var(--tertiary-background);
+}
+.keyboard-body {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  padding: 0.3rem 0;
+}
+.keyboard-row {
+  position: relative;
+  width: 100%;
+  height: 4rem;
+  line-height: 3.4rem;
+  padding: 0 0.5%;
+  opacity: 1;
+}
+.keyboard-key {
+  background-color: var(--secondary-background);
+  text-align: center;
+  display: block;
+  float: left;
+  width: 7.33%;
+  height: 3.4rem;
+  margin: 0.3rem 0.5%;
+  overflow: hidden;
+  border: solid 1px var(--border-color);
+  box-sizing: border-box;
+  transition: border 0.4s, background-color 0.4s, color 0.4s;
+  position: relative;
+  &.inactive {
+    color: var(--secondary-text-color);
+  }
+  &.blank {
+    visibility: hidden;
+  }
+  &::after {
+    position: absolute;
+    display: block;
+    content: attr(data-second);
+    top: 0;
+    right: 0.4rem;
+    font-size: 0.6rem;
+    line-height: 1.2rem;
+  }
+}
+
+.keyboard-mode-default {
+  width: 49rem;
+  margin-left: -24.5rem;
+
+  &.keyboard-set-default {
+    .keyboard-key-0-10 {
+      width: 15.66% !important;
+    }
+    .keyboard-key-1-0 {
+      margin-left: 4.66% !important;
+    }
+    .keyboard-key-1-10 {
+      width: 11.5% !important;
+    }
+    .keyboard-key-3-1 {
+      width: 65.64% !important;
+    }
+  }
+  &.keyboard-set-special {
+    .keyboard-key-0-6,
+    .keyboard-key-0-9,
+    .keyboard-key-1-6,
+    .keyboard-key-1-9,
+    .keyboard-key-2-6,
+    .keyboard-key-2-9 {
+      margin-right: 4.66% !important;
+    }
+    .keyboard-key-1-10 {
+      position: absolute !important;
+      height: 7.4rem !important;
+      right: 0.55% !important;
+      padding-top: 1.96rem !important;
+      z-index: 1;
+    }
+
+    .keyboard-key-3-3 {
+      width: 32.32% !important;
+      margin-right: 4.66% !important;
+    }
+
+    .keyboard-key-3-4 {
+      width: 15.66% !important;
+    }
+
+    .keyboard-key-3-5 {
+      margin-right: 4.66% !important;
+    }
+  }
+}
+.keyboard-mode-calc {
+  width: 32rem;
+  margin-left: -16rem;
+
+  .keyboard-key {
+    width: 12.53% !important;
+    margin: 0.3rem 0.875% !important;
+  }
+
+  .keyboard-key-0-1,
+  .keyboard-key-0-4,
+  .keyboard-key-1-1,
+  .keyboard-key-1-4,
+  .keyboard-key-2-1,
+  .keyboard-key-2-4 {
+    margin-right: 8.01% !important;
+  }
+  .keyboard-key-1-5 {
+    position: absolute !important;
+    height: 7.4rem !important;
+    right: 0.875% !important;
+    padding-top: 1.96rem !important;
+    z-index: 1;
+  }
+  .keyboard-key-3-1,
+  .keyboard-key-3-3 {
+    margin-right: 8.01% !important;
+  }
+  .keyboard-key-3-2 {
+    width: 26.81% !important;
+  }
+}
+.keyboard-mode-pin {
+  width: 21rem;
+  margin-left: -10.5rem;
+
+  .keyboard-key {
+    width: 19.56% !important;
+    margin: 0.3rem 1.33% !important;
+  }
+
+  .keyboard-key-0-2,
+  .keyboard-key-1-2 {
+    margin-right: 12.44% !important;
+  }
+  .keyboard-key-1-3 {
+    position: absolute !important;
+    height: 7.4rem !important;
+    right: 0.4% !important;
+    padding-top: 1.96rem !important;
+    z-index: 1;
+  }
+  .keyboard-key-3-2 {
+    margin-right: 12.44% !important;
+  }
+}
