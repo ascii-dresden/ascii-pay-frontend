@@ -1,7 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "Running prettier in dashboard…"
-npx prettier --loglevel warn --write dashboard/src/
-echo "Running prettier in terminal…"
-npx prettier --loglevel warn --write terminal/src/
+echo "Running pretty-quick"
+npx pretty-quick --staged
