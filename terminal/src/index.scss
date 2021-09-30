@@ -47,3 +47,100 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-text-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-text-color);
+}
+
+.form {
+  padding: 1rem;
+
+  & > div {
+    padding-bottom: 1rem;
+  }
+
+  label {
+    display: block;
+    padding-bottom: 0.2rem;
+  }
+
+  input,
+  select {
+    width: 100%;
+    border: solid 1px var(--border-color);
+    border-radius: 0;
+    color: var(--primary-text-color);
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9em;
+    background-color: var(--primary-background);
+
+    &:hover {
+      background-color: var(--primary-hover-background);
+    }
+
+    &:focus {
+      background-color: var(--primary-hover-background);
+      border-color: var(--theme-color);
+      box-shadow: 0 0 0 1px var(--theme-color);
+      outline: none;
+    }
+
+    &:read-only {
+      background-color: var(--secondary-background);
+
+      &:hover {
+        background-color: var(--secondary-hover-background);
+      }
+    }
+
+    &:disabled {
+      background-color: var(--tertiary-background);
+
+      &:hover {
+        background-color: var(--tertiary-hover-background);
+      }
+    }
+  }
+
+  button {
+    width: 100%;
+    border: solid 1px var(--border-color);
+    border-radius: 0;
+    color: var(--primary-text-color);
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9em;
+    background-color: var(--tertiary-hover-background);
+
+    &:hover {
+      background-color: var(--secondary-background);
+    }
+
+    &:focus {
+      background-color: var(--secondary-background);
+      border-color: var(--theme-color);
+      box-shadow: 0 0 0 1px var(--theme-color);
+      outline: none;
+    }
+
+    &:disabled {
+      background-color: var(--tertiary-background);
+
+      &:hover {
+        background-color: var(--tertiary-hover-background);
+      }
+    }
+  }
+}

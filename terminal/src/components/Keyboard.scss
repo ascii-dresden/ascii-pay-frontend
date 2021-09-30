@@ -1,12 +1,51 @@
 .keyboard {
   position: absolute;
-  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 5;
 }
 
+@keyframes cursor-blink {
+  0% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 0;
+  }
+}
+
+.keyboard-display {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3rem;
+  bottom: 16.6rem;
+  background-color: var(--primary-background);
+  border-top: solid 1px var(--border-color);
+  border-top: solid 1px var(--border-color);
+  line-height: 3rem;
+  padding: 0 2rem;
+
+  &:before {
+    position: absolute;
+    content: attr(data-placeholder);
+    color: var(--border-color);
+  }
+
+  span {
+    white-space: pre;
+  }
+
+  & > span:first-child::after {
+    content: '';
+    height: 100%;
+    border-right: solid 1px var(--theme-color);
+    margin-left: -0.8px;
+    margin-right: -0.2px;
+    animation: cursor-blink 0.8s step-end infinite;
+  }
+}
 .keyboard-box {
   position: absolute;
   left: 0;
@@ -107,61 +146,5 @@
     .keyboard-key-3-5 {
       margin-right: 4.66% !important;
     }
-  }
-}
-.keyboard-mode-calc {
-  width: 32rem;
-  margin-left: -16rem;
-
-  .keyboard-key {
-    width: 12.53% !important;
-    margin: 0.3rem 0.875% !important;
-  }
-
-  .keyboard-key-0-1,
-  .keyboard-key-0-4,
-  .keyboard-key-1-1,
-  .keyboard-key-1-4,
-  .keyboard-key-2-1,
-  .keyboard-key-2-4 {
-    margin-right: 8.01% !important;
-  }
-  .keyboard-key-1-5 {
-    position: absolute !important;
-    height: 7.4rem !important;
-    right: 0.875% !important;
-    padding-top: 1.96rem !important;
-    z-index: 1;
-  }
-  .keyboard-key-3-1,
-  .keyboard-key-3-3 {
-    margin-right: 8.01% !important;
-  }
-  .keyboard-key-3-2 {
-    width: 26.81% !important;
-  }
-}
-.keyboard-mode-pin {
-  width: 21rem;
-  margin-left: -10.5rem;
-
-  .keyboard-key {
-    width: 19.56% !important;
-    margin: 0.3rem 1.33% !important;
-  }
-
-  .keyboard-key-0-2,
-  .keyboard-key-1-2 {
-    margin-right: 12.44% !important;
-  }
-  .keyboard-key-1-3 {
-    position: absolute !important;
-    height: 7.4rem !important;
-    right: 0.4% !important;
-    padding-top: 1.96rem !important;
-    z-index: 1;
-  }
-  .keyboard-key-3-2 {
-    margin-right: 12.44% !important;
   }
 }

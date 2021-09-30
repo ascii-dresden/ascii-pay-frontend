@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import AccountsPage from './accounts/AccountsPage';
 import './App.scss';
 import PaymentPage from './payment/PaymentPage';
 import RegisterPage from './register/RegisterPage';
@@ -26,6 +27,9 @@ export default function App() {
         </Route>
         <Route path="/register">
           <RegisterPage />
+        </Route>
+        <Route path="/accounts">
+          <AccountsPage />
         </Route>
         <Route path="">
           <StartPage />

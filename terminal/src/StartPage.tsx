@@ -31,6 +31,7 @@ export const useDate = () => {
 export default function StartPage() {
   const history = useHistory();
   const handleOpenPayment = () => history.push('/payment');
+  const handleOpenAccounts = () => history.push('/accounts');
   const handleOpenRegister = () => history.push('/register');
 
   const { date, wish } = useDate();
@@ -47,7 +48,7 @@ export default function StartPage() {
             <MdShoppingCart />
             <span>Payment</span>
           </div>
-          <div className="start-page-entry inactive">
+          <div className="start-page-entry" onClick={handleOpenAccounts}>
             <MdPeople />
             <span>Accounts</span>
           </div>

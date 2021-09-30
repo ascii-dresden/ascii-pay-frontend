@@ -7,6 +7,7 @@ import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@ap
 import { setContext } from '@apollo/client/link/context';
 import { Provider } from 'react-redux';
 import { store } from './store';
+import Keyboard from './components/Keyboard';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:8080/api/v1/graphql',
@@ -31,6 +32,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ApolloProvider client={client}>
+        <Keyboard />
         <App />
       </ApolloProvider>
     </Provider>

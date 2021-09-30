@@ -133,8 +133,8 @@ function solveCashProblem(coinBox: CoinBoxState, noteBox: NoteBoxState): [CoinBo
   const workingNoteBox: NoteBoxState = { ...noteBox };
 
   let currentTotal = getTotal(workingCoinBox, workingNoteBox);
-
   while (currentTotal > targetTotal) {
+    let currentTotalCapute = currentTotal;
     let boxHelper = [
       {
         centValue: 10000,
@@ -214,7 +214,7 @@ function solveCashProblem(coinBox: CoinBoxState, noteBox: NoteBoxState): [CoinBo
         targetCount: targetCoinBox.coin1,
         reduce: () => (workingCoinBox.coin1 -= 1),
       },
-    ].filter((it) => currentTotal - it.centValue >= targetTotal && it.currentCount > 0);
+    ].filter((it) => currentTotalCapute - it.centValue >= targetTotal && it.currentCount > 0);
 
     boxHelper.sort(
       (a, b) =>
