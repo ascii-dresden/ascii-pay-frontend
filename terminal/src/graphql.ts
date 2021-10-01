@@ -31,26 +31,26 @@ export const LOGOUT = gql`
   }
 `;
 
-export const GET_TRANSACTIONS = gql`
-  query getTransactions($accountId: UUID!, $transactionFilterFrom: String!, $transactionFilterTo: String!) {
-    getTransactions(
-      accountId: $accountId
-      transactionFilterFrom: $transactionFilterFrom
-      transactionFilterTo: $transactionFilterTo
-    ) {
-      id
-      total
-      beforeCredit
-      afterCredit
-      date
-      products {
-        amount
-        product {
-          id
-          name
-          currentPrice
-        }
+export const GET_ACCOUNTS = gql`
+  query getAccounts {
+    getAccounts {
+      element {
+        id
+        name
+        permission
       }
+    }
+  }
+`;
+
+export const GET_ACCOUNT = gql`
+  query getAccount($id: UUID) {
+    getAccount(id: $id) {
+      id
+      name
+      username
+      accountNumber
+      permission
     }
   }
 `;

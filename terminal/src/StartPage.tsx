@@ -45,7 +45,7 @@ export default function StartPage() {
       title: 'Enable screensaver',
       element: <MdSchedule />,
       action: () => dispatch(setScreensaver(true)),
-      buttom: true,
+      bottom: true,
     },
   ];
 

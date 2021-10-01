@@ -1,0 +1,30 @@
+.logged-account-header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 4.4rem;
+  background-color: var(--secondary-hover-background);
+  padding: 1rem;
+
+  span {
+    display: block;
+    line-height: 1.2rem;
+  }
+
+  div {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 4.4rem;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+  }
+}

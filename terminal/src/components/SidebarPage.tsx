@@ -5,7 +5,7 @@ export interface SidebarAction {
   element: any;
   title: string;
   action: () => void;
-  buttom?: boolean;
+  bottom?: boolean;
   active?: boolean;
 }
 
@@ -17,14 +17,14 @@ export interface SidebarProps {
 
 export default function Sidebar(props: SidebarProps) {
   const elementsTop = props.content
-    ?.filter((c) => c.buttom !== true)
+    ?.filter((c) => c.bottom !== true)
     .map((c, i) => (
       <div key={i} title={c.title} onClick={() => c.action()} className={c.active ? 'active' : ''}>
         {c.element}
       </div>
     ));
   const elementsBottom = props.content
-    ?.filter((c) => c.buttom === true)
+    ?.filter((c) => c.bottom === true)
     .map((c, i) => (
       <div key={i} title={c.title} onClick={() => c.action()} className={c.active ? 'active' : ''}>
         {c.element}

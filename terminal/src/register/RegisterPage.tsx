@@ -54,7 +54,7 @@ export default function RegisterPage() {
       element: <MdDone />,
       action: () => dispatch(toggleResultMode()),
       active: !!previous,
-      buttom: true,
+      bottom: true,
     },
   ];
 
