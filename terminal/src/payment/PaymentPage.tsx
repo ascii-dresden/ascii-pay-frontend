@@ -1,8 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Keypad from '../components/Keypad';
-import Money, { moneyToString } from '../Money';
-import Sidebar, { SidebarAction } from '../SidebarPage';
+import Money, { moneyToString } from '../components/Money';
+import Sidebar, { SidebarAction } from '../components/SidebarPage';
 import { useAppDispatch, useAppSelector } from '../store';
 import Basket from './Basket';
 import './PaymentPage.scss';

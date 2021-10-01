@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { setNote10, setNote100, setNote20, setNote5, setNote50 } from './registerSlice';
 import './NoteBox.scss';
-import Money, { moneyToString } from '../Money';
+import Money, { moneyToString } from '../components/Money';
 import Hammer from 'react-hammerjs';
 
 function NoteGroup(props: { name: string; image: string; centValue: number; count: number; previousCount: number }) {

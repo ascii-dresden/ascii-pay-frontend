@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store';
 import { setCoin1, setCoin10, setCoin100, setCoin2, setCoin20, setCoin200, setCoin5, setCoin50 } from './registerSlice';
 import './CoinBox.scss';
-import Money from '../Money';
+import Money from '../components/Money';
 import Hammer from 'react-hammerjs';
 
 type SuperscriptIndex = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MdArrowBack } from 'react-icons/md';
-import Money from '../Money';
+import Money from '../components/Money';
 import { useAppSelector } from '../store';
 import './Envelope.scss';
 import { getTotal } from './registerSlice';

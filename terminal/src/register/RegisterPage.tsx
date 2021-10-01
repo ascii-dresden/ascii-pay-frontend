@@ -1,7 +1,7 @@
 import React from 'react';
 import { MdDone, MdEuroSymbol, MdLocalAtm, MdMailOutline } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
-import Sidebar, { SidebarAction } from '../SidebarPage';
+import Sidebar, { SidebarAction } from '../components/SidebarPage';
 import { useAppDispatch, useAppSelector } from '../store';
 import CoinBox from './CoinBox';
 import Envelope from './Envelope';

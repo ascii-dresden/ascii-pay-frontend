@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface PaymentState {
   keypadValue: number;
   storedKeypadValues: number[];
+  screensaver: boolean;
 }
 
 const initialState: PaymentState = {
   keypadValue: 0,
   storedKeypadValues: [],
+  screensaver: false,
 };
 
 export const paymentSlice = createSlice({
@@ -29,8 +31,11 @@ export const paymentSlice = createSlice({
         state.storedKeypadValues.splice(index, 1);
       }
     },
+    setScreensaver: (state, action: PayloadAction<boolean>) => {
+      state.screensaver = action.payload;
+    },
   },
 });
 
-export const { setKeypadValue, submitKeypadValue, removeKeypadValue } = paymentSlice.actions;
+export const { setKeypadValue, submitKeypadValue, removeKeypadValue, setScreensaver } = paymentSlice.actions;
 export default paymentSlice.reducer;

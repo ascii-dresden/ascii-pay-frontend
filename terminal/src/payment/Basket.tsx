@@ -1,6 +1,6 @@
 import React from 'react';
 import { MdEuroSymbol } from 'react-icons/md';
-import Money from '../Money';
+import Money from '../components/Money';
 import { useAppDispatch, useAppSelector } from '../store';
 import './Basket.scss';
 import { removeKeypadValue } from './paymentSlice';

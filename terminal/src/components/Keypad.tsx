@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { MdAdd, MdBackspace } from 'react-icons/md';
-import Money from '../Money';
+import Money from './Money';
 
 import './Keypad.scss';
 

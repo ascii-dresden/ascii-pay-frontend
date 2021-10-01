@@ -1,10 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { MdLocalAtm, MdPeople, MdShoppingCart } from 'react-icons/md';
+import { MdLocalAtm, MdPeople, MdSchedule, MdSettings, MdShoppingCart } from 'react-icons/md';
 import './StartPage.scss';
-import SidebarPage from './SidebarPage';
+import SidebarPage, { SidebarAction } from './components/SidebarPage';
+import { setScreensaver } from './payment/paymentSlice';
+import { useAppDispatch } from './store';
 
-export const useDate = () => {
+const useDate = () => {
   const locale = 'en';
   const [today, setDate] = React.useState(new Date());
 
@@ -33,11 +35,22 @@ export default function StartPage() {
   const handleOpenPayment = () => history.push('/payment');
   const handleOpenAccounts = () => history.push('/accounts');
   const handleOpenRegister = () => history.push('/register');
+  const handleOpenSettings = () => history.push('/settings');
 
+  const dispatch = useAppDispatch();
   const { date, wish } = useDate();
 
+  const sidebarActions: SidebarAction[] = [
+    {
+      title: 'Enable screensaver',
+      element: <MdSchedule />,
+      action: () => dispatch(setScreensaver(true)),
+      buttom: true,
+    },
+  ];
+
   return (
-    <SidebarPage>
+    <SidebarPage content={sidebarActions}>
       <div className="start-page">
         <div className="start-page-header">
           <span>{wish}</span>
@@ -55,6 +68,10 @@ export default function StartPage() {
           <div className="start-page-entry" onClick={handleOpenRegister}>
             <MdLocalAtm />
             <span>Count register</span>
+          </div>
+          <div className="start-page-entry" onClick={handleOpenSettings}>
+            <MdSettings />
+            <span>Settings</span>
           </div>
         </div>
       </div>

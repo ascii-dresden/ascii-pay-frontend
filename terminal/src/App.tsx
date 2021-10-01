@@ -4,6 +4,7 @@ import AccountsPage from './accounts/AccountsPage';
 import './App.scss';
 import PaymentPage from './payment/PaymentPage';
 import RegisterPage from './register/RegisterPage';
+import SettingsPage from './SettingsPage';
 import StartPage from './StartPage';
 
 export default function App() {
@@ -30,6 +31,9 @@ export default function App() {
         </Route>
         <Route path="/accounts">
           <AccountsPage />
+        </Route>
+        <Route path="/settings">
+          <SettingsPage />
         </Route>
         <Route path="">
           <StartPage />

@@ -8,6 +8,7 @@ import { setContext } from '@apollo/client/link/context';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import Keyboard from './components/Keyboard';
+import Screensaver from './components/Screensaver';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:8080/api/v1/graphql',
@@ -28,12 +29,16 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+document.body.dataset['theme'] = localStorage.getItem('dark-mode') === 'true' ? 'dark' : 'light';
+document.body.dataset['highlight'] = localStorage.getItem('highlight-color') || 'blue';
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <ApolloProvider client={client}>
         <Keyboard />
         <App />
+        <Screensaver />
       </ApolloProvider>
     </Provider>
   </React.StrictMode>,

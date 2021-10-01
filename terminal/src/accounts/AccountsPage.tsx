@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import Sidebar from '../SidebarPage';
+import Sidebar from '../components/SidebarPage';
 import './AccountsPage.scss';
 import Login from './Login';
 

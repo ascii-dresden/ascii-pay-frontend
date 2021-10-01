@@ -36,7 +36,7 @@ export default function Sidebar(props: SidebarProps) {
       <div className="sidebar">
         <div className="sidebar-top">
           <div title="ascii pay" onClick={props.defaultAction}>
-            <img src="/favicon.svg" alt="" />
+            <img id="sidebar-ascii-logo" src="/favicon.svg" alt="" />
           </div>
           {elementsTop}
         </div>
