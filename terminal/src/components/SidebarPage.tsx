@@ -12,7 +12,7 @@ export interface SidebarAction {
 export interface SidebarProps {
   content?: SidebarAction[];
   defaultAction?: () => void;
-  children: any;
+  children?: any;
 }
 
 export default function Sidebar(props: SidebarProps) {
