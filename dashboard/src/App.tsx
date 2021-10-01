@@ -19,6 +19,7 @@ export default function App() {
   }
 
   if (error) {
+    console.log(error);
     return <Login />;
   }
 

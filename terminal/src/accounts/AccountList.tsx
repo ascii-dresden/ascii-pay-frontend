@@ -17,10 +17,8 @@ export default function AccountList(props: { onSelect: (id: string) => void }) {
   }
 
   const accountList = data.getAccounts.map((it: any) => (
-    <div>
-      <span key={it.element.id} onClick={() => props.onSelect(it.element.id)}>
-        {it.element.name}
-      </span>
+    <div key={it.element.id}>
+      <span onClick={() => props.onSelect(it.element.id)}>{it.element.name}</span>
     </div>
   ));
 

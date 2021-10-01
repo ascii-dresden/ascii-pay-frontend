@@ -16,6 +16,7 @@ export default function Login() {
       variables: {
         username: username,
         password: password,
+        accountAccessToken: null,
       },
     }).catch(() => {
       // login failed

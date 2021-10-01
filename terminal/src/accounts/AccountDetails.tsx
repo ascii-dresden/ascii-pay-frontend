@@ -29,19 +29,19 @@ export default function AccountDetails(props: { id: string }) {
     <div className="account-details form">
       <div>
         <label>Name</label>
-        <input readOnly={true} value={account.name} />
+        <input readOnly={true} value={account.name || ''} />
       </div>
       <div>
         <label>Username</label>
-        <input readOnly={true} value={account.username} />
+        <input readOnly={true} value={account.username || ''} />
       </div>
       <div>
         <label>Account number</label>
-        <input readOnly={true} value={account.accountNumber} />
+        <input readOnly={true} value={account.accountNumber || ''} />
       </div>
       <div>
         <label>Permission</label>
-        <input readOnly={true} value={account.permission} />
+        <input readOnly={true} value={account.permission || ''} />
       </div>
     </div>
   );

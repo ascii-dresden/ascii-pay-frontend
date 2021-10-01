@@ -14,17 +14,6 @@ export default function AccountsPage() {
   const client = useApolloClient();
   const history = useHistory();
 
-  const [logoutFunction, { data: logoutData }] = useMutation(LOGOUT);
-  if (logoutData) {
-    localStorage['token'] = '';
-    client.resetStore();
-    client.refetchQueries({
-      include: [GET_SELF],
-    });
-  }
-
-  let [accountId, setAccountId] = useState(null as string | null);
-
   const handleGoBack = () => {
     logoutFunction().catch(() => {
       // login failed
@@ -36,6 +25,9 @@ export default function AccountsPage() {
     fetchPolicy: 'network-only',
   });
 
+  const [logoutFunction, { data: logoutData }] = useMutation(LOGOUT);
+  let [accountId, setAccountId] = useState(null as string | null);
+
   if (loading) {
     return <Sidebar defaultAction={handleGoBack}></Sidebar>;
   }
@@ -46,6 +38,14 @@ export default function AccountsPage() {
         <Login />
       </Sidebar>
     );
+  }
+
+  if (logoutData) {
+    localStorage['token'] = '';
+    client.resetStore();
+    client.refetchQueries({
+      include: [GET_SELF],
+    });
   }
 
   const account = data.getSelf as AccountOutput;

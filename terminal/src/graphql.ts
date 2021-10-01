@@ -18,8 +18,8 @@ export const GET_SELF = gql`
 `;
 
 export const LOGIN = gql`
-  mutation login($username: String!, $password: String!) {
-    login(input: { username: $username, password: $password }) {
+  mutation login($username: String, $password: String, $accountAccessToken: String) {
+    login(username: $username, password: $password, accountAccessToken: $accountAccessToken) {
       token
     }
   }
