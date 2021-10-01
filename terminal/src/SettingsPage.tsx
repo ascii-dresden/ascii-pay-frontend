@@ -38,8 +38,20 @@ export default function SettingsPage() {
             <div>
               <span>Theme</span>
               <div className="settings-item settings-theme">
-                <div className={'theme-light' + (!darkMode ? ' active' : '')} onClick={() => setDarkMode(false)}></div>
-                <div className={'theme-dark' + (darkMode ? ' active' : '')} onClick={() => setDarkMode(true)}></div>
+                <div
+                  data-name="Light mode"
+                  className={'theme-light' + (!darkMode ? ' active' : '')}
+                  onClick={() => setDarkMode(false)}
+                >
+                  <img src="/favicon.svg" alt="" />
+                </div>
+                <div
+                  data-name="Dark mode"
+                  className={'theme-dark' + (darkMode ? ' active' : '')}
+                  onClick={() => setDarkMode(true)}
+                >
+                  <img src="/favicon.svg" alt="" />
+                </div>
               </div>
             </div>
             <div>
