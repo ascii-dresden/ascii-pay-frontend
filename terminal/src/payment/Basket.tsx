@@ -10,7 +10,7 @@ export default function Basket() {
   const dispatch = useAppDispatch();
 
   if (storedKeypadValues.length <= 0) {
-    return <div className="basket-empty">No entries</div>;
+    return <div className="basket-empty">No entries!</div>;
   }
 
   const content = storedKeypadValues.map((value, i) => (

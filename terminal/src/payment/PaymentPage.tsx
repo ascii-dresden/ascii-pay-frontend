@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Keypad from '../components/Keypad';
 import Money, { moneyToString } from '../components/Money';
 import Sidebar, { SidebarAction } from '../components/SidebarPage';
 import { useAppDispatch, useAppSelector } from '../store';
 import Basket from './Basket';
+import PaymentDialog from './PaymentDialog';
 import './PaymentPage.scss';
-import { setKeypadValue, submitKeypadValue } from './paymentSlice';
+import {
+  PaymentStatus,
+  removePaymentDialog,
+  setKeypadValue,
+  setPaymentDialog,
+  submitKeypadValue,
+} from './paymentSlice';
 import ScannedAccount from './ScannedAccount';
 
 export default function PaymentPage() {
@@ -15,7 +22,10 @@ export default function PaymentPage() {
 
   const keypadValue = useAppSelector((state) => state.payment.keypadValue);
   const storedKeypadValues = useAppSelector((state) => state.payment.storedKeypadValues);
+  const paymentDialogStatus = useAppSelector((state) => state.payment.payment);
   const dispatch = useAppDispatch();
+
+  const [showProductList, setShowProductList] = useState(false);
 
   const basketSum = storedKeypadValues.reduce((previous, current) => previous + current, 0);
 
@@ -28,6 +38,14 @@ export default function PaymentPage() {
     };
   });
 
+  const payAction = () => {
+    if (keypadValue !== 0) {
+      dispatch(submitKeypadValue(keypadValue));
+    }
+
+    dispatch(setPaymentDialog(PaymentStatus.Waiting));
+  };
+
   return (
     <Sidebar defaultAction={handleGoBack} content={quickActions}>
       <div className="payment-page-left">
@@ -35,18 +53,39 @@ export default function PaymentPage() {
         <Basket />
         <div className="payment-page-basket-sum">
           <Money value={basketSum} />
-          <span>Pay</span>
+          <span onClick={payAction}>Pay</span>
         </div>
       </div>
       <div className="payment-page-right">
-        <Keypad
-          value={keypadValue}
-          onChange={(value) => dispatch(setKeypadValue(value))}
-          onSubmit={(value) => {
-            dispatch(setKeypadValue(value));
-          }}
-        />
+        {showProductList ? (
+          <div></div>
+        ) : (
+          <Keypad
+            value={keypadValue}
+            onChange={(value) => dispatch(setKeypadValue(value))}
+            onSubmit={(value) => {
+              dispatch(submitKeypadValue(value));
+            }}
+          />
+        )}
       </div>
+      <div className="payment-page-tabs">
+        <span className={!showProductList ? 'active' : ''} onClick={() => setShowProductList(false)}>
+          Keypad
+        </span>
+        <span className={showProductList ? 'active' : ''} onClick={() => setShowProductList(true)}>
+          Products
+        </span>
+      </div>
+      {paymentDialogStatus ? (
+        <PaymentDialog
+          amount={paymentDialogStatus.amount}
+          status={paymentDialogStatus.status}
+          onClose={() => dispatch(removePaymentDialog())}
+        />
+      ) : (
+        <></>
+      )}
     </Sidebar>
   );
 }
