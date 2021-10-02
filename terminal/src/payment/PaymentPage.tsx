@@ -1,22 +1,31 @@
+import { useApolloClient } from '@apollo/client';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { AsciiPayAuthenticationClient, WebSocketMessageHandler } from '../ascii-pay-authentication-client';
 import Keypad from '../components/Keypad';
 import Money, { moneyToString } from '../components/Money';
 import Sidebar, { SidebarAction } from '../components/SidebarPage';
+import { GET_ACCOUNT_BY_ACCESS_TOKEN, TRANSACTION } from '../graphql';
 import { useAppDispatch, useAppSelector } from '../store';
+import { getAccountByAccessToken, getAccountByAccessTokenVariables } from '../__generated__/getAccountByAccessToken';
+import { transaction, transactionVariables } from '../__generated__/transaction';
 import Basket from './Basket';
 import PaymentDialog from './PaymentDialog';
 import './PaymentPage.scss';
 import {
+  clearKeypadValue,
   PaymentStatus,
+  removeAccount,
   removePaymentDialog,
+  setAccount,
   setKeypadValue,
   setPaymentDialog,
   submitKeypadValue,
+  updatePaymentDialog,
 } from './paymentSlice';
 import ScannedAccount from './ScannedAccount';
 
-export default function PaymentPage() {
+export default function PaymentPage(props: { authClient: AsciiPayAuthenticationClient }) {
   const history = useHistory();
   const handleGoBack = () => history.goBack();
 
@@ -24,6 +33,8 @@ export default function PaymentPage() {
   const storedKeypadValues = useAppSelector((state) => state.payment.storedKeypadValues);
   const paymentDialogStatus = useAppSelector((state) => state.payment.payment);
   const dispatch = useAppDispatch();
+
+  const client = useApolloClient();
 
   const [showProductList, setShowProductList] = useState(false);
 
@@ -43,8 +54,67 @@ export default function PaymentPage() {
       dispatch(submitKeypadValue(keypadValue));
     }
 
+    props.authClient.requestAccountAccessToken();
     dispatch(setPaymentDialog(PaymentStatus.Waiting));
   };
+
+  const handler: WebSocketMessageHandler = (message) => {
+    if (message.type === 'FoundAccountAccessToken') {
+      if (paymentDialogStatus) {
+        (async () => {
+          let result = await client.mutate<transaction, transactionVariables>({
+            mutation: TRANSACTION,
+            variables: {
+              accountAccessToken: message.payload.access_token,
+              amount: paymentDialogStatus.amount,
+            },
+          });
+
+          if (result.errors || !result.data) {
+            dispatch(updatePaymentDialog(PaymentStatus.PaymentError));
+          } else {
+            let data = result.data;
+            dispatch(clearKeypadValue());
+            dispatch(updatePaymentDialog(PaymentStatus.Success));
+            dispatch(
+              setAccount({
+                id: data?.transaction.account.id,
+                name: data.transaction.account.name,
+                balance: data.transaction.account.credit,
+              })
+            );
+          }
+        })();
+      } else {
+        (async () => {
+          let result = await client.query<getAccountByAccessToken, getAccountByAccessTokenVariables>({
+            query: GET_ACCOUNT_BY_ACCESS_TOKEN,
+            variables: {
+              accountAccessToken: message.payload.access_token,
+            },
+          });
+          let data = result.data;
+          dispatch(
+            setAccount({
+              id: data.getAccountByAccessToken.id,
+              name: data.getAccountByAccessToken.name,
+              balance: data.getAccountByAccessToken.credit,
+            })
+          );
+        })();
+      }
+    } else if (message.type === 'NfcCardRemoved') {
+      dispatch(removeAccount());
+    }
+  };
+
+  React.useEffect(() => {
+    props.authClient.addEventHandler(handler);
+    return () => props.authClient.removeEventHandler(handler);
+  });
+  React.useEffect(() => {
+    props.authClient.requestAccountAccessToken();
+  }, []);
 
   return (
     <Sidebar defaultAction={handleGoBack} content={quickActions}>

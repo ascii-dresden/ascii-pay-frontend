@@ -1,10 +1,11 @@
 import { useQuery } from '@apollo/client';
 import React from 'react';
 import { GET_ACCOUNTS } from '../graphql';
+import { getAccounts } from '../__generated__/getAccounts';
 import './AccountList.scss';
 
 export default function AccountList(props: { onSelect: (id: string) => void }) {
-  const { loading, error, data } = useQuery(GET_ACCOUNTS, {
+  const { loading, error, data } = useQuery<getAccounts>(GET_ACCOUNTS, {
     fetchPolicy: 'network-only',
   });
 
@@ -13,6 +14,10 @@ export default function AccountList(props: { onSelect: (id: string) => void }) {
   }
 
   if (error) {
+    return <></>;
+  }
+
+  if (!data) {
     return <></>;
   }
 

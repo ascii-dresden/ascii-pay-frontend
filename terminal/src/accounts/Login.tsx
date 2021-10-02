@@ -1,14 +1,16 @@
 import { useApolloClient, useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { SiContactlesspayment } from 'react-icons/si';
+import { AsciiPayAuthenticationClient, WebSocketMessageHandler } from '../ascii-pay-authentication-client';
 import { GET_SELF, LOGIN } from '../graphql';
+import { login, loginVariables } from '../__generated__/login';
 import './Login.scss';
 
-export default function Login() {
+export default function Login(props: { authClient: AsciiPayAuthenticationClient }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [mutateFunction, { data, loading, error }] = useMutation(LOGIN);
+  const [mutateFunction, { data, loading, error }] = useMutation<login, loginVariables>(LOGIN);
   const client = useApolloClient();
 
   const onLogin = (values: any) => {
@@ -29,6 +31,25 @@ export default function Login() {
       include: [GET_SELF],
     });
   }
+
+  const handler: WebSocketMessageHandler = (message) => {
+    if (message.type === 'FoundAccountAccessToken') {
+      mutateFunction({
+        variables: {
+          username: null,
+          password: null,
+          accountAccessToken: message.payload.access_token,
+        },
+      }).catch(() => {
+        // login failed
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    props.authClient.addEventHandler(handler);
+    return () => props.authClient.removeEventHandler(handler);
+  });
 
   let errorView = <></>;
   if (error) {

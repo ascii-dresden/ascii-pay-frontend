@@ -44,13 +44,35 @@ export const GET_ACCOUNTS = gql`
 `;
 
 export const GET_ACCOUNT = gql`
-  query getAccount($id: UUID) {
+  query getAccount($id: UUID!) {
     getAccount(id: $id) {
       id
       name
       username
       accountNumber
       permission
+    }
+  }
+`;
+
+export const GET_ACCOUNT_BY_ACCESS_TOKEN = gql`
+  query getAccountByAccessToken($accountAccessToken: String!) {
+    getAccountByAccessToken(accountAccessToken: $accountAccessToken) {
+      id
+      name
+      credit
+    }
+  }
+`;
+
+export const TRANSACTION = gql`
+  mutation transaction($accountAccessToken: String!, $amount: Int!) {
+    transaction(input: { accountAccessToken: $accountAccessToken, amount: $amount, products: [] }) {
+      account {
+        id
+        name
+        credit
+      }
     }
   }
 `;

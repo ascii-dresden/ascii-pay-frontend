@@ -54,6 +54,10 @@ export const paymentSlice = createSlice({
         state.storedKeypadValues.splice(index, 1);
       }
     },
+    clearKeypadValue: (state) => {
+      state.keypadValue = 0;
+      state.storedKeypadValues = [];
+    },
     setScreensaver: (state, action: PayloadAction<boolean>) => {
       state.screensaver = action.payload;
     },
@@ -64,9 +68,19 @@ export const paymentSlice = createSlice({
       state.scannedAccount = null;
     },
     setPaymentDialog: (state, action: PayloadAction<PaymentStatus>) => {
+      if (state.payment) return;
+
       const basketSum = state.storedKeypadValues.reduce((previous, current) => previous + current, 0);
       state.payment = {
         amount: basketSum,
+        status: action.payload,
+      };
+    },
+    updatePaymentDialog: (state, action: PayloadAction<PaymentStatus>) => {
+      if (!state.payment) return;
+
+      state.payment = {
+        amount: state.payment.amount,
         status: action.payload,
       };
     },
@@ -80,10 +94,12 @@ export const {
   setKeypadValue,
   submitKeypadValue,
   removeKeypadValue,
+  clearKeypadValue,
   setScreensaver,
   setAccount,
   removeAccount,
   setPaymentDialog,
+  updatePaymentDialog,
   removePaymentDialog,
 } = paymentSlice.actions;
 export default paymentSlice.reducer;

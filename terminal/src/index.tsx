@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { store } from './store';
 import Keyboard from './components/Keyboard';
 import Screensaver from './components/Screensaver';
+import { AsciiPayAuthenticationClient } from './ascii-pay-authentication-client';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:8080/api/v1/graphql',
@@ -24,7 +25,7 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const client = new ApolloClient({
+const apolloClient = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
@@ -32,12 +33,14 @@ const client = new ApolloClient({
 document.body.dataset['theme'] = localStorage.getItem('dark-mode') === 'true' ? 'dark' : 'light';
 document.body.dataset['highlight'] = localStorage.getItem('highlight-color') || 'blue';
 
+const authClient = new AsciiPayAuthenticationClient('ws://localhost:9001/');
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={apolloClient}>
         <Keyboard />
-        <App />
+        <App authClient={authClient} />
         <Screensaver />
       </ApolloProvider>
     </Provider>

@@ -1,10 +1,8 @@
 type RequestAccountAccessToken = {
   type: 'RequestAccountAccessToken';
-  payload: {};
 };
 type RequestReboot = {
   type: 'RequestReboot';
-  payload: {};
 };
 type RegisterNfcCard = {
   type: 'RegisterNfcCard';
@@ -41,7 +39,6 @@ type FoundAccountAccessToken = {
 };
 type NfcCardRemoved = {
   type: 'NfcCardRemoved';
-  payload: {};
 };
 export type WebSocketResponse =
   | FoundUnknownBarcode
@@ -56,24 +53,40 @@ export class AsciiPayAuthenticationClient {
   url: string;
   socket: WebSocket;
   handlerList: WebSocketMessageHandler[];
+  connected: boolean;
+  queue: (() => void)[];
 
   constructor(url: string) {
     this.url = url;
+    this.connected = false;
     this.socket = this.createWebSocket();
     this.handlerList = [];
+    this.queue = [];
   }
 
   private createWebSocket(): WebSocket {
     let self = this;
     const socket = new WebSocket(this.url);
 
-    this.socket.addEventListener('close', function () {
+    socket.addEventListener('open', function () {
+      self.connected = true;
+
+      for (let q of self.queue) {
+        q();
+      }
+
+      self.queue = [];
+    });
+
+    socket.addEventListener('close', function () {
+      self.queue = [];
+      self.connected = false;
       setTimeout(() => {
         self.socket = self.createWebSocket();
       }, 1000);
     });
 
-    this.socket.addEventListener('message', function (event) {
+    socket.addEventListener('message', function (event) {
       let message: WebSocketResponse = JSON.parse(event.data);
 
       for (const handler of self.handlerList) {
@@ -96,31 +109,53 @@ export class AsciiPayAuthenticationClient {
   }
 
   requestAccountAccessToken() {
-    const message: RequestAccountAccessToken = {
-      type: 'RequestAccountAccessToken',
-      payload: {},
+    const action = () => {
+      const message: RequestAccountAccessToken = {
+        type: 'RequestAccountAccessToken',
+      };
+
+      this.socket.send(JSON.stringify(message));
     };
 
-    this.socket.send(JSON.stringify(message));
+    if (this.connected) {
+      action();
+    } else {
+      this.queue.push(action);
+    }
   }
 
   requestReboot() {
-    const message: RequestReboot = {
-      type: 'RequestReboot',
-      payload: {},
+    const action = () => {
+      const message: RequestReboot = {
+        type: 'RequestReboot',
+      };
+
+      this.socket.send(JSON.stringify(message));
     };
 
-    this.socket.send(JSON.stringify(message));
+    if (this.connected) {
+      action();
+    } else {
+      this.queue.push(action);
+    }
   }
 
   registerNfcCard(account_id: string) {
-    const message: RegisterNfcCard = {
-      type: 'RegisterNfcCard',
-      payload: {
-        account_id: account_id,
-      },
+    const action = () => {
+      const message: RegisterNfcCard = {
+        type: 'RegisterNfcCard',
+        payload: {
+          account_id: account_id,
+        },
+      };
+
+      this.socket.send(JSON.stringify(message));
     };
 
-    this.socket.send(JSON.stringify(message));
+    if (this.connected) {
+      action();
+    } else {
+      this.queue.push(action);
+    }
   }
 }

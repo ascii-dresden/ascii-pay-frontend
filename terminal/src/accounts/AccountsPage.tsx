@@ -2,15 +2,17 @@ import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import React, { useState } from 'react';
 import { MdExitToApp } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
+import { AsciiPayAuthenticationClient } from '../ascii-pay-authentication-client';
 import Sidebar from '../components/SidebarPage';
 import { GET_SELF, LOGOUT } from '../graphql';
 import { AccountOutput } from '../model';
+import { logout } from '../__generated__/logout';
 import AccountDetails from './AccountDetails';
 import AccountList from './AccountList';
 import './AccountsPage.scss';
 import Login from './Login';
 
-export default function AccountsPage() {
+export default function AccountsPage(props: { authClient: AsciiPayAuthenticationClient }) {
   const client = useApolloClient();
   const history = useHistory();
 
@@ -25,7 +27,7 @@ export default function AccountsPage() {
     fetchPolicy: 'network-only',
   });
 
-  const [logoutFunction, { data: logoutData }] = useMutation(LOGOUT);
+  const [logoutFunction, { data: logoutData }] = useMutation<logout>(LOGOUT);
   let [accountId, setAccountId] = useState(null as string | null);
 
   if (loading) {
@@ -35,7 +37,7 @@ export default function AccountsPage() {
   if (error) {
     return (
       <Sidebar defaultAction={handleGoBack}>
-        <Login />
+        <Login authClient={props.authClient} />
       </Sidebar>
     );
   }
@@ -65,7 +67,7 @@ export default function AccountsPage() {
         </div>
       </div>
       <AccountList onSelect={(id) => setAccountId(id)} />
-      {accountId ? <AccountDetails id={accountId} /> : <></>}
+      {accountId ? <AccountDetails id={accountId} authClient={props.authClient} /> : <></>}
     </Sidebar>
   );
 }

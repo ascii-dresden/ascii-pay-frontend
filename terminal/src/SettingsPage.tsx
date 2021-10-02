@@ -2,10 +2,11 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import './SettingsPage.scss';
 import SidebarPage from './components/SidebarPage';
+import { AsciiPayAuthenticationClient, WebSocketMessageHandler } from './ascii-pay-authentication-client';
 
 const colors = ['teal', 'green', 'blue', 'purple', 'yellow', 'orange', 'red'];
 
-export default function SettingsPage() {
+export default function SettingsPage(props: { authClient: AsciiPayAuthenticationClient }) {
   const history = useHistory();
   const handleGoBack = () => history.goBack();
 
@@ -20,6 +21,15 @@ export default function SettingsPage() {
     document.body.dataset['highlight'] = highlightColor;
     localStorage.setItem('highlight-color', highlightColor);
   }, [highlightColor]);
+
+  const handler: WebSocketMessageHandler = (message) => {
+    console.log(message);
+  };
+
+  React.useEffect(() => {
+    props.authClient.addEventHandler(handler);
+    return () => props.authClient.removeEventHandler(handler);
+  });
 
   const hightlightViews = colors.map((c) => (
     <div
@@ -61,7 +71,7 @@ export default function SettingsPage() {
             <div>
               <span>Actions</span>
               <div className="settings-item settings-actions form">
-                <button>Reboot</button>
+                <button onClick={() => props.authClient.requestReboot()}>Reboot</button>
               </div>
             </div>
           </div>
