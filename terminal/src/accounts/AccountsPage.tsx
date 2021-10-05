@@ -1,20 +1,28 @@
 import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import React, { useState } from 'react';
-import { MdExitToApp } from 'react-icons/md';
+import { MdExitToApp, MdShowChart, MdViewList } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import { AsciiPayAuthenticationClient } from '../ascii-pay-authentication-client';
-import Sidebar from '../components/SidebarPage';
+import Sidebar, { SidebarAction } from '../components/SidebarPage';
 import { GET_SELF, LOGOUT } from '../graphql';
 import { AccountOutput } from '../model';
 import { logout } from '../__generated__/logout';
 import AccountDetails from './AccountDetails';
 import AccountList from './AccountList';
+import AccountOverview from './AccountOverview';
 import './AccountsPage.scss';
 import Login from './Login';
+
+enum Mode {
+  SELF,
+  LIST,
+}
 
 export default function AccountsPage(props: { authClient: AsciiPayAuthenticationClient }) {
   const client = useApolloClient();
   const history = useHistory();
+
+  const [mode, setMode] = useState(Mode.SELF);
 
   const handleGoBack = () => {
     logoutFunction().catch(() => {
@@ -29,6 +37,10 @@ export default function AccountsPage(props: { authClient: AsciiPayAuthentication
 
   const [logoutFunction, { data: logoutData }] = useMutation<logout>(LOGOUT);
   let [accountId, setAccountId] = useState(null as string | null);
+
+  React.useEffect(() => {
+    props.authClient.requestAccountAccessToken();
+  }, [props.authClient]);
 
   if (loading) {
     return <Sidebar defaultAction={handleGoBack}></Sidebar>;
@@ -56,8 +68,38 @@ export default function AccountsPage(props: { authClient: AsciiPayAuthentication
     });
   };
 
+  const actions: SidebarAction[] = [
+    {
+      title: 'Overview',
+      element: <MdShowChart />,
+      action: () => setMode(Mode.SELF),
+      active: mode === Mode.SELF,
+    },
+    {
+      title: 'List',
+      element: <MdViewList />,
+      action: () => setMode(Mode.LIST),
+      active: mode === Mode.LIST,
+    },
+  ];
+
+  let content;
+  switch (mode) {
+    case Mode.SELF:
+      content = <AccountOverview />;
+      break;
+    case Mode.LIST:
+      content = (
+        <>
+          <AccountList onSelect={(id) => setAccountId(id)} />
+          {accountId ? <AccountDetails id={accountId} authClient={props.authClient} /> : <></>}
+        </>
+      );
+      break;
+  }
+
   return (
-    <Sidebar defaultAction={handleGoBack}>
+    <Sidebar defaultAction={handleGoBack} content={actions}>
       <div className="logged-account-header">
         <span>{account.name}</span>
         <span>{account.permission}</span>
@@ -65,8 +107,7 @@ export default function AccountsPage(props: { authClient: AsciiPayAuthentication
           <MdExitToApp />
         </div>
       </div>
-      <AccountList onSelect={(id) => setAccountId(id)} />
-      {accountId ? <AccountDetails id={accountId} authClient={props.authClient} /> : <></>}
+      {content}
     </Sidebar>
   );
 }

@@ -77,6 +77,26 @@ export const TRANSACTION = gql`
   }
 `;
 
+export const GET_OWN_TRANSACTIONS = gql`
+  query getOwnTransactions($transactionFilterFrom: String!, $transactionFilterTo: String!) {
+    getOwnTransactions(transactionFilterFrom: $transactionFilterFrom, transactionFilterTo: $transactionFilterTo) {
+      id
+      total
+      beforeCredit
+      afterCredit
+      date
+      products {
+        amount
+        product {
+          id
+          name
+          currentPrice
+        }
+      }
+    }
+  }
+`;
+
 export const GET_PRODUCTS = gql`
   query getProducts {
     getProducts {
