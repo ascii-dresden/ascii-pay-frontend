@@ -33,15 +33,16 @@ export default function AccountDetails(props: { id: string; authClient: AsciiPay
     account = data.getAccount;
   }
 
-  const handler: WebSocketMessageHandler = (message) => {
-    if (message.type === 'FoundUnknownNfcCard') {
+  const handler: WebSocketMessageHandler = {
+    onFoundUnknownNfcCard(id: string, name: string) {
       setRegisterNfc({
-        id: message.payload.id,
-        name: message.payload.name,
+        id,
+        name,
       });
-    } else {
+    },
+    onNfcCardRemoved() {
       setRegisterNfc(null);
-    }
+    },
   };
 
   React.useEffect(() => {

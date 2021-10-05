@@ -10,6 +10,7 @@ import { store } from './store';
 import Keyboard from './components/Keyboard';
 import Screensaver from './components/Screensaver';
 import { AsciiPayAuthenticationClient } from './ascii-pay-authentication-client';
+import { setScreensaver } from './payment/paymentSlice';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:8080/api/v1/graphql',
@@ -34,6 +35,10 @@ document.body.dataset['theme'] = localStorage.getItem('dark-mode') === 'true' ? 
 document.body.dataset['highlight'] = localStorage.getItem('highlight-color') || 'blue';
 
 const authClient = new AsciiPayAuthenticationClient('ws://localhost:9001/');
+
+document.body.addEventListener('click', () => {
+  store.dispatch(setScreensaver(false));
+});
 
 ReactDOM.render(
   <React.StrictMode>

@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import './SettingsPage.scss';
 import SidebarPage from './components/SidebarPage';
-import { AsciiPayAuthenticationClient, WebSocketMessageHandler } from './ascii-pay-authentication-client';
+import { AsciiPayAuthenticationClient } from './ascii-pay-authentication-client';
 
 const colors = ['teal', 'green', 'blue', 'purple', 'yellow', 'orange', 'red'];
 
@@ -21,15 +21,6 @@ export default function SettingsPage(props: { authClient: AsciiPayAuthentication
     document.body.dataset['highlight'] = highlightColor;
     localStorage.setItem('highlight-color', highlightColor);
   }, [highlightColor]);
-
-  const handler: WebSocketMessageHandler = (message) => {
-    console.log(message);
-  };
-
-  React.useEffect(() => {
-    props.authClient.addEventHandler(handler);
-    return () => props.authClient.removeEventHandler(handler);
-  });
 
   const hightlightViews = colors.map((c) => (
     <div

@@ -32,18 +32,18 @@ export default function Login(props: { authClient: AsciiPayAuthenticationClient 
     });
   }
 
-  const handler: WebSocketMessageHandler = (message) => {
-    if (message.type === 'FoundAccountAccessToken') {
+  const handler: WebSocketMessageHandler = {
+    onFoundAccountAccessToken(access_token: string) {
       mutateFunction({
         variables: {
           username: null,
           password: null,
-          accountAccessToken: message.payload.access_token,
+          accountAccessToken: access_token,
         },
       }).catch(() => {
         // login failed
       });
-    }
+    },
   };
 
   React.useEffect(() => {

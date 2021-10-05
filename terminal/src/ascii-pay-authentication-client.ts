@@ -47,7 +47,36 @@ export type WebSocketResponse =
   | FoundAccountAccessToken
   | NfcCardRemoved;
 
-export type WebSocketMessageHandler = (message: WebSocketResponse) => void;
+export interface WebSocketMessageHandler {
+  onMessage?(message: WebSocketResponse): void;
+
+  onFoundUnknownBarcode?(code: string): void;
+  onFoundUnknownNfcCard?(id: string, name: string): void;
+  onFoundProductId?(product_id: string): void;
+  onFoundAccountAccessToken?(accessToken: string): void;
+  onNfcCardRemoved?(): void;
+}
+
+function dispatchMessage(message: WebSocketResponse, handler: WebSocketMessageHandler) {
+  handler.onMessage && handler.onMessage(message);
+  switch (message.type) {
+    case 'FoundUnknownBarcode':
+      handler.onFoundUnknownBarcode && handler.onFoundUnknownBarcode(message.payload.code);
+      break;
+    case 'FoundUnknownNfcCard':
+      handler.onFoundUnknownNfcCard && handler.onFoundUnknownNfcCard(message.payload.id, message.payload.name);
+      break;
+    case 'FoundProductId':
+      handler.onFoundProductId && handler.onFoundProductId(message.payload.product_id);
+      break;
+    case 'FoundAccountAccessToken':
+      handler.onFoundAccountAccessToken && handler.onFoundAccountAccessToken(message.payload.access_token);
+      break;
+    case 'NfcCardRemoved':
+      handler.onNfcCardRemoved && handler.onNfcCardRemoved();
+      break;
+  }
+}
 
 export class AsciiPayAuthenticationClient {
   url: string;
@@ -90,7 +119,7 @@ export class AsciiPayAuthenticationClient {
       let message: WebSocketResponse = JSON.parse(event.data);
 
       for (const handler of self.handlerList) {
-        handler(message);
+        dispatchMessage(message, handler);
       }
     });
 

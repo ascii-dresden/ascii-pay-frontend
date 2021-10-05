@@ -17,7 +17,7 @@ export default function ScannedAccount() {
     <div className="scanned-account" onClick={() => dispatch(removeAccount())}>
       <div>
         <span>{scannedAccount.name}</span>
-        <Money value={scannedAccount.balance} />
+        <Money value={scannedAccount.credit} />
       </div>
       <MdCancel />
     </div>
