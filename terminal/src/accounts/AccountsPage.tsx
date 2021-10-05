@@ -44,7 +44,6 @@ export default function AccountsPage(props: { authClient: AsciiPayAuthentication
 
   if (logoutData) {
     localStorage['token'] = '';
-    client.resetStore();
     client.refetchQueries({
       include: [GET_SELF],
     });

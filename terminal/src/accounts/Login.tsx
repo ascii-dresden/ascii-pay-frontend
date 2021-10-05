@@ -1,5 +1,5 @@
 import { useApolloClient, useMutation } from '@apollo/client';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SiContactlesspayment } from 'react-icons/si';
 import { AsciiPayAuthenticationClient, WebSocketMessageHandler } from '../ascii-pay-authentication-client';
 import { GET_SELF, LOGIN } from '../graphql';
@@ -13,17 +13,20 @@ export default function Login(props: { authClient: AsciiPayAuthenticationClient 
   const [mutateFunction, { data, loading, error }] = useMutation<login, loginVariables>(LOGIN);
   const client = useApolloClient();
 
-  const onLogin = (values: any) => {
-    mutateFunction({
-      variables: {
-        username: username,
-        password: password,
-        accountAccessToken: null,
-      },
-    }).catch(() => {
-      // login failed
-    });
-  };
+  const onLogin = useCallback(
+    (username, password) => {
+      mutateFunction({
+        variables: {
+          username: username,
+          password: password,
+          accountAccessToken: null,
+        },
+      }).catch(() => {
+        // login failed
+      });
+    },
+    [mutateFunction]
+  );
 
   if (data) {
     localStorage['token'] = data.login.token;
@@ -69,7 +72,7 @@ export default function Login(props: { authClient: AsciiPayAuthenticationClient 
             <label>Password</label>
             <input placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} />
           </div>
-          <button disabled={loading} onClick={onLogin}>
+          <button disabled={loading} onClick={() => onLogin(username, password)}>
             Login
           </button>
           {errorView}
