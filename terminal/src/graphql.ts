@@ -66,12 +66,29 @@ export const GET_ACCOUNT_BY_ACCESS_TOKEN = gql`
 `;
 
 export const TRANSACTION = gql`
-  mutation transaction($accountAccessToken: String!, $amount: Int!) {
-    transaction(input: { accountAccessToken: $accountAccessToken, amount: $amount, products: [] }) {
+  mutation transaction($accountAccessToken: String!, $amount: Int!, $products: [PaymentProductInput!]!) {
+    transaction(input: { accountAccessToken: $accountAccessToken, amount: $amount, products: $products }) {
       account {
         id
         name
         credit
+      }
+    }
+  }
+`;
+
+export const GET_PRODUCTS = gql`
+  query getProducts {
+    getProducts {
+      element {
+        id
+        name
+        currentPrice
+        image
+        category {
+          id
+          name
+        }
       }
     }
   }

@@ -10,16 +10,30 @@ export interface PaymentAccount {
   name: string;
   credit: number;
 }
+export interface PaymentProduct {
+  id: string;
+  name: string;
+  image: string | null;
+  currentPrice: number;
+}
 
 export interface PaymentPaymentWaiting {
   type: 'Waiting';
   timeout: number;
   amount: number;
+  products: {
+    product: PaymentProduct;
+    amount: number;
+  }[];
 }
 export interface PaymentPaymentInProgress {
   type: 'InProgress';
   timeout: number;
   amount: number;
+  products: {
+    product: PaymentProduct;
+    amount: number;
+  }[];
 }
 export interface PaymentPaymentError {
   type: 'Error';
@@ -43,6 +57,10 @@ interface PaymentState {
   screensaverTimeout: number;
   keypadValue: number;
   storedKeypadValues: number[];
+  storedProducts: {
+    product: PaymentProduct;
+    amount: number;
+  }[];
   scannedAccount: PaymentAccount | null;
   payment: PaymentPayment | null;
 }
@@ -52,6 +70,7 @@ const initialState: PaymentState = {
   screensaverTimeout: 0,
   keypadValue: 0,
   storedKeypadValues: [],
+  storedProducts: [],
   scannedAccount: null,
   payment: null,
 };
@@ -82,7 +101,13 @@ export const receiveAccountAccessToken = createAsyncThunk<
     const payment = state.payment;
     const variables: transactionVariables = {
       accountAccessToken: query.accessToken,
-      amount: state.payment.amount,
+      amount: -state.payment.amount,
+      products: state.payment.products.map(({ product, amount }) => {
+        return {
+          id: product.id,
+          amount: amount,
+        };
+      }),
     };
 
     let result = await query.apollo.mutate<transaction, transactionVariables>({
@@ -163,6 +188,33 @@ export const paymentSlice = createSlice({
       state.keypadValue = 0;
       state.storedKeypadValues = [];
     },
+    addProduct: (state, action: PayloadAction<PaymentProduct>) => {
+      const list = state.storedProducts.slice();
+      const index = list.findIndex((x) => x.product.id === action.payload.id);
+
+      if (index >= 0) {
+        list[index].amount += 1;
+      } else {
+        list.push({
+          product: action.payload,
+          amount: 1,
+        });
+      }
+      state.storedProducts = list;
+    },
+    removeProduct: (state, action: PayloadAction<string>) => {
+      state.storedProducts = state.storedProducts.slice();
+      const index = state.storedProducts.findIndex((x) => x.product.id === action.payload);
+
+      if (index >= 0) {
+        let amount = state.storedProducts[index].amount;
+        if (amount > 1) {
+          state.storedProducts[index].amount -= 1;
+        } else {
+          state.storedProducts.splice(index, 1);
+        }
+      }
+    },
     setScreensaver: (state, action: PayloadAction<boolean>) => {
       state.screensaver = action.payload;
       if (!action.payload) {
@@ -174,12 +226,16 @@ export const paymentSlice = createSlice({
     },
     payment: (state) => {
       if (state.payment) return;
-      const basketSum = state.storedKeypadValues.reduce((previous, current) => previous + current, 0);
+      const products = state.storedProducts;
+      const basketSum =
+        state.storedKeypadValues.reduce((previous, current) => previous + current, 0) +
+        products.reduce((previous, current) => previous + current.product.currentPrice * current.amount, 0);
 
       state.payment = {
         type: 'Waiting',
         timeout: Date.now() + PAYMENT_WAITING_TIMEOUT,
         amount: basketSum,
+        products: products,
       };
     },
     cancelPayment: (state) => {
@@ -207,6 +263,7 @@ export const paymentSlice = createSlice({
         if (state.payment.type === 'Success') {
           state.keypadValue = 0;
           state.storedKeypadValues = [];
+          state.storedProducts = [];
         }
       }
     });
@@ -216,6 +273,7 @@ export const paymentSlice = createSlice({
           type: 'InProgress',
           timeout: Date.now() + PAYMENT_INPROGRESS_TIMEOUT,
           amount: state.payment.amount,
+          products: state.storedProducts,
         };
       }
     });
@@ -227,6 +285,8 @@ export const {
   submitKeypadValue,
   removeKeypadValue,
   clearKeypadValue,
+  addProduct,
+  removeProduct,
   setScreensaver,
   removeAccount,
   payment,

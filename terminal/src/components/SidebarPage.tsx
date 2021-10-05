@@ -4,7 +4,7 @@ import './SidebarPage.scss';
 export interface SidebarAction {
   element: any;
   title: string;
-  action: () => void;
+  action: (event: React.MouseEvent) => void;
   bottom?: boolean;
   active?: boolean;
 }
@@ -19,14 +19,14 @@ export default function Sidebar(props: SidebarProps) {
   const elementsTop = props.content
     ?.filter((c) => c.bottom !== true)
     .map((c, i) => (
-      <div key={i} title={c.title} onClick={() => c.action()} className={c.active ? 'active' : ''}>
+      <div key={i} title={c.title} onClick={(e) => c.action(e)} className={c.active ? 'active' : ''}>
         {c.element}
       </div>
     ));
   const elementsBottom = props.content
     ?.filter((c) => c.bottom === true)
     .map((c, i) => (
-      <div key={i} title={c.title} onClick={() => c.action()} className={c.active ? 'active' : ''}>
+      <div key={i} title={c.title} onClick={(e) => c.action(e)} className={c.active ? 'active' : ''}>
         {c.element}
       </div>
     ));

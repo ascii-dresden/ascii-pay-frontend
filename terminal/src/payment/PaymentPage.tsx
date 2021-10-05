@@ -22,6 +22,7 @@ import {
   setScreensaver,
   submitKeypadValue,
 } from './paymentSlice';
+import ProductList from './ProductList';
 import ScannedAccount from './ScannedAccount';
 
 export default function PaymentPage(props: { authClient: AsciiPayAuthenticationClient }) {
@@ -30,12 +31,15 @@ export default function PaymentPage(props: { authClient: AsciiPayAuthenticationC
 
   const keypadValue = useAppSelector((state) => state.payment.keypadValue);
   const storedKeypadValues = useAppSelector((state) => state.payment.storedKeypadValues);
+  const storedProducts = useAppSelector((state) => state.payment.storedProducts);
   const paymentPayment = useAppSelector((state) => state.payment.payment);
   const dispatch = useAppDispatch();
   const client = useApolloClient();
 
   const [showProductList, setShowProductList] = useState(false);
-  const basketSum = storedKeypadValues.reduce((previous, current) => previous + current, 0);
+  const basketSum =
+    storedKeypadValues.reduce((previous, current) => previous + current, 0) +
+    storedProducts.reduce((previous, current) => previous + current.product.currentPrice * current.amount, 0);
   const quickActions: SidebarAction[] = [150, 110, 100, 80, -10, -100].map((v) => {
     return {
       title: 'Quick link: ' + moneyToString(v),
@@ -92,7 +96,7 @@ export default function PaymentPage(props: { authClient: AsciiPayAuthenticationC
       </div>
       <div className="payment-page-right">
         {showProductList ? (
-          <div></div>
+          <ProductList />
         ) : (
           <Keypad
             value={keypadValue}

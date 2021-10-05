@@ -1,0 +1,120 @@
+.product-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 1rem;
+}
+.product-list-error,
+.product-list-loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+
+  &::before {
+    display: block;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--secondary-background);
+    opacity: 0.8;
+  }
+
+  span {
+    position: relative;
+    z-index: 1;
+    padding: 1rem;
+    background: var(--primary-background);
+  }
+}
+.product-list-error span {
+  background: var(--error-color);
+  color: var(--error-text-color);
+}
+.product-list-entry {
+  padding: 0.5rem 0;
+}
+.product-list-entry-name {
+  padding-bottom: 0.5rem;
+}
+.product-list-entry-content {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-gap: 0.6rem;
+}
+.product-view {
+  border: solid 1px var(--border-color);
+  position: relative;
+}
+.product-view-name {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 0.2rem 0.5rem;
+  display: block;
+  width: 100%;
+  backdrop-filter: blur(4px);
+
+  span {
+    position: relative;
+    z-index: 1;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--primary-background);
+    opacity: 0.5;
+  }
+}
+.product-view-price {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+.product-view-image {
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
+
+  img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  div {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--tertiary-background);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+}
