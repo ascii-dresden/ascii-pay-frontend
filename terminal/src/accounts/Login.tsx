@@ -46,6 +46,7 @@ export default function Login(props: { authClient: AsciiPayAuthenticationClient 
       }).catch(() => {
         // login failed
       });
+      return true;
     },
   };
 

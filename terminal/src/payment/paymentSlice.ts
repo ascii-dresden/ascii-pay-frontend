@@ -2,49 +2,62 @@ import { ApolloClient } from '@apollo/client';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { GET_ACCOUNT_BY_ACCESS_TOKEN, TRANSACTION } from '../graphql';
 import { AppDispatch, RootState } from '../store';
+import { StampType } from '../types/graphql-global';
 import { getAccountByAccessToken, getAccountByAccessTokenVariables } from '../__generated__/getAccountByAccessToken';
 import { transaction, transactionVariables } from '../__generated__/transaction';
 
 export interface PaymentAccount {
-  id: string;
+  id: UUID;
   name: string;
   credit: number;
+  coffeeStamps: number;
+  bottleStamps: number;
 }
 export interface PaymentProduct {
-  id: string;
+  id: UUID;
   name: string;
   image: string | null;
-  currentPrice: number;
+  price: number;
+  payWithStamps: StampType;
+  giveStamps: StampType;
+}
+export interface PaymentItem {
+  price: number;
+  payWithStamps: StampType;
+  giveStamps: StampType;
+  product: PaymentProduct | null;
 }
 
 export interface PaymentPaymentWaiting {
   type: 'Waiting';
   timeout: number;
-  amount: number;
-  products: {
-    product: PaymentProduct;
-    amount: number;
-  }[];
+  total: number;
+  coffeeStamps: number;
+  bottleStamps: number;
+  items: PaymentItem[];
 }
 export interface PaymentPaymentInProgress {
   type: 'InProgress';
   timeout: number;
-  amount: number;
-  products: {
-    product: PaymentProduct;
-    amount: number;
-  }[];
+  total: number;
+  coffeeStamps: number;
+  bottleStamps: number;
+  items: PaymentItem[];
 }
 export interface PaymentPaymentError {
   type: 'Error';
   timeout: number;
-  amount: number;
+  total: number;
+  coffeeStamps: number;
+  bottleStamps: number;
   message: string;
 }
 export interface PaymentPaymentSuccess {
   type: 'Success';
   timeout: number;
-  amount: number;
+  total: number;
+  coffeeStamps: number;
+  bottleStamps: number;
 }
 export type PaymentPayment =
   | PaymentPaymentWaiting
@@ -52,30 +65,52 @@ export type PaymentPayment =
   | PaymentPaymentError
   | PaymentPaymentSuccess;
 
+export enum NotificationType {
+  GENERAL,
+  NFC,
+  QR,
+}
+export enum NotificationColor {
+  INFO,
+  WARN,
+  ERROR,
+}
+export interface Notification {
+  type: NotificationType;
+  color: NotificationColor;
+  title: string;
+  description: string;
+  timeout: number;
+}
+
 interface PaymentState {
   screensaver: boolean;
   screensaverTimeout: number;
   keypadValue: number;
-  storedKeypadValues: number[];
-  storedProducts: {
-    product: PaymentProduct;
-    amount: number;
-  }[];
+  storedPaymentItems: PaymentItem[];
   scannedAccount: PaymentAccount | null;
+  paymentTotal: number;
+  paymentCoffeeStamps: number;
+  paymentBottleStamps: number;
   payment: PaymentPayment | null;
+  notifications: Notification[];
 }
 
 const initialState: PaymentState = {
   screensaver: true,
   screensaverTimeout: 0,
   keypadValue: 0,
-  storedKeypadValues: [],
-  storedProducts: [],
+  storedPaymentItems: [],
   scannedAccount: null,
+  paymentTotal: 0,
+  paymentCoffeeStamps: 0,
+  paymentBottleStamps: 0,
   payment: null,
+  notifications: [],
 };
 
 const SCREENSAVER_TIMEOUT = 300_000;
+const NOTIFICATION_TIMEOUT = 5_000;
 const PAYMENT_WAITING_TIMEOUT = 30_000;
 const PAYMENT_INPROGRESS_TIMEOUT = 3_000;
 const PAYMENT_ERROR_TIMEOUT = 5_000;
@@ -101,11 +136,13 @@ export const receiveAccountAccessToken = createAsyncThunk<
     const payment = state.payment;
     const variables: transactionVariables = {
       accountAccessToken: query.accessToken,
-      amount: -state.payment.amount,
-      products: state.payment.products.map(({ product, amount }) => {
+      stopIfStampPaymentIsPossible: false,
+      transactionItems: state.payment.items.map((i) => {
         return {
-          id: product.id,
-          amount: amount,
+          price: i.price,
+          payWithStamps: i.payWithStamps,
+          giveStamps: i.giveStamps,
+          productId: i.product?.id,
         };
       }),
     };
@@ -122,7 +159,9 @@ export const receiveAccountAccessToken = createAsyncThunk<
           type: 'Error',
           message: 'Could not execute transaction!',
           timeout: Date.now() + PAYMENT_ERROR_TIMEOUT,
-          amount: payment.amount,
+          total: payment.total,
+          coffeeStamps: payment.coffeeStamps,
+          bottleStamps: payment.bottleStamps,
         },
       };
     } else {
@@ -132,11 +171,15 @@ export const receiveAccountAccessToken = createAsyncThunk<
           id: data.transaction.account.id,
           name: data.transaction.account.name,
           credit: data.transaction.account.credit,
+          coffeeStamps: data.transaction.account.coffeeStamps,
+          bottleStamps: data.transaction.account.bottleStamps,
         },
         payment: {
           type: 'Success',
           timeout: Date.now() + PAYMENT_SUCCESS_TIMEOUT,
-          amount: payment.amount,
+          total: payment.total,
+          coffeeStamps: payment.coffeeStamps,
+          bottleStamps: payment.bottleStamps,
         },
       };
     }
@@ -159,11 +202,49 @@ export const receiveAccountAccessToken = createAsyncThunk<
           id: data.getAccountByAccessToken.id,
           name: data.getAccountByAccessToken.name,
           credit: data.getAccountByAccessToken.credit,
+          coffeeStamps: data.getAccountByAccessToken.coffeeStamps,
+          bottleStamps: data.getAccountByAccessToken.bottleStamps,
         },
       };
     }
   }
 });
+
+function trimPrefix(str: string, prefix: string) {
+  if (str.startsWith(prefix)) {
+    return str.slice(prefix.length);
+  } else {
+    return str;
+  }
+}
+
+function calculateTotal(storedPaymentItems: PaymentItem[]) {
+  const total = storedPaymentItems.reduce((previous, current) => previous + current.price, 0);
+  const coffeeStamps = storedPaymentItems.reduce((previous, current) => {
+    if (current.payWithStamps === StampType.COFFEE) {
+      return previous - 10;
+    } else if (current.giveStamps === StampType.COFFEE) {
+      return previous + 1;
+    } else {
+      return previous;
+    }
+  }, 0);
+  const bottleStamps = storedPaymentItems.reduce((previous, current) => {
+    if (current.payWithStamps === StampType.BOTTLE) {
+      return previous - 10;
+    } else if (current.giveStamps === StampType.BOTTLE) {
+      return previous + 1;
+    } else {
+      return previous;
+    }
+  }, 0);
+
+  return {
+    total,
+    coffeeStamps,
+    bottleStamps,
+  };
+}
 
 export const paymentSlice = createSlice({
   name: 'payment',
@@ -174,46 +255,62 @@ export const paymentSlice = createSlice({
     },
     submitKeypadValue: (state, action: PayloadAction<number>) => {
       state.keypadValue = 0;
-      state.storedKeypadValues = state.storedKeypadValues.slice();
-      state.storedKeypadValues.push(action.payload);
-    },
-    removeKeypadValue: (state, action: PayloadAction<number>) => {
-      const index = state.storedKeypadValues.indexOf(action.payload);
-      if (index >= 0) {
-        state.storedKeypadValues = state.storedKeypadValues.slice();
-        state.storedKeypadValues.splice(index, 1);
-      }
-    },
-    clearKeypadValue: (state) => {
-      state.keypadValue = 0;
-      state.storedKeypadValues = [];
+      const items = state.storedPaymentItems.slice();
+      items.push({
+        price: action.payload,
+        payWithStamps: StampType.NONE,
+        giveStamps: StampType.NONE,
+        product: null,
+      });
+      state.storedPaymentItems = items;
+
+      const total = calculateTotal(items);
+      state.paymentTotal = total.total;
+      state.paymentCoffeeStamps = total.coffeeStamps;
+      state.paymentBottleStamps = total.bottleStamps;
     },
     addProduct: (state, action: PayloadAction<PaymentProduct>) => {
-      const list = state.storedProducts.slice();
-      const index = list.findIndex((x) => x.product.id === action.payload.id);
+      const items = state.storedPaymentItems.slice();
+      items.push({
+        price: action.payload.price,
+        payWithStamps: action.payload.payWithStamps,
+        giveStamps: action.payload.giveStamps,
+        product: action.payload,
+      });
+      state.storedPaymentItems = items;
 
-      if (index >= 0) {
-        list[index].amount += 1;
-      } else {
-        list.push({
-          product: action.payload,
-          amount: 1,
-        });
-      }
-      state.storedProducts = list;
+      const total = calculateTotal(items);
+      state.paymentTotal = total.total;
+      state.paymentCoffeeStamps = total.coffeeStamps;
+      state.paymentBottleStamps = total.bottleStamps;
     },
-    removeProduct: (state, action: PayloadAction<string>) => {
-      state.storedProducts = state.storedProducts.slice();
-      const index = state.storedProducts.findIndex((x) => x.product.id === action.payload);
+    removePaymentItemAtIndex: (state, action: PayloadAction<number>) => {
+      const items = state.storedPaymentItems.slice();
+      items.splice(action.payload, 1);
+      state.storedPaymentItems = items;
 
-      if (index >= 0) {
-        let amount = state.storedProducts[index].amount;
-        if (amount > 1) {
-          state.storedProducts[index].amount -= 1;
-        } else {
-          state.storedProducts.splice(index, 1);
-        }
-      }
+      const total = calculateTotal(items);
+      state.paymentTotal = total.total;
+      state.paymentCoffeeStamps = total.coffeeStamps;
+      state.paymentBottleStamps = total.bottleStamps;
+    },
+    setPaymentItemStamps: (
+      state,
+      action: PayloadAction<{
+        index: number;
+        payWithStamps: StampType;
+        giveStamps: StampType;
+      }>
+    ) => {
+      const items = state.storedPaymentItems.slice();
+      items[action.payload.index].payWithStamps = action.payload.payWithStamps;
+      items[action.payload.index].giveStamps = action.payload.giveStamps;
+      state.storedPaymentItems = items;
+
+      const total = calculateTotal(items);
+      state.paymentTotal = total.total;
+      state.paymentCoffeeStamps = total.coffeeStamps;
+      state.paymentBottleStamps = total.bottleStamps;
     },
     setScreensaver: (state, action: PayloadAction<boolean>) => {
       state.screensaver = action.payload;
@@ -221,21 +318,53 @@ export const paymentSlice = createSlice({
         state.screensaverTimeout = Date.now() + SCREENSAVER_TIMEOUT;
       }
     },
+    showNotification: (
+      state,
+      action: PayloadAction<{
+        type: NotificationType;
+        title: string;
+        color?: NotificationColor;
+        description?: string;
+      }>
+    ) => {
+      let list = state.notifications.slice();
+      list.push({
+        type: action.payload.type,
+        title: action.payload.title,
+        color: action.payload.color ?? NotificationColor.INFO,
+        description: action.payload.description ?? '',
+        timeout: Date.now() + NOTIFICATION_TIMEOUT,
+      });
+      state.notifications = list;
+    },
+    hideNotification: (state, action: PayloadAction<Notification>) => {
+      const index = state.notifications.findIndex(
+        (n) =>
+          n.color === action.payload.color &&
+          n.type === action.payload.type &&
+          n.title === action.payload.title &&
+          n.description === action.payload.description &&
+          n.timeout === action.payload.timeout
+      );
+      if (index >= 0) {
+        let list = state.notifications.slice();
+        list.splice(index, 1);
+        state.notifications = list;
+      }
+    },
     removeAccount: (state) => {
       state.scannedAccount = null;
     },
     payment: (state) => {
       if (state.payment) return;
-      const products = state.storedProducts;
-      const basketSum =
-        state.storedKeypadValues.reduce((previous, current) => previous + current, 0) +
-        products.reduce((previous, current) => previous + current.product.currentPrice * current.amount, 0);
 
       state.payment = {
         type: 'Waiting',
         timeout: Date.now() + PAYMENT_WAITING_TIMEOUT,
-        amount: basketSum,
-        products: products,
+        total: state.paymentTotal,
+        coffeeStamps: state.paymentCoffeeStamps,
+        bottleStamps: state.paymentBottleStamps,
+        items: state.storedPaymentItems,
       };
     },
     cancelPayment: (state) => {
@@ -251,6 +380,10 @@ export const paymentSlice = createSlice({
       if (state.payment && state.payment.timeout < now) {
         state.payment = null;
       }
+
+      if (state.notifications.length > 0) {
+        state.notifications = state.notifications.filter((n) => n.timeout >= now);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -262,9 +395,25 @@ export const paymentSlice = createSlice({
 
         if (state.payment.type === 'Success') {
           state.keypadValue = 0;
-          state.storedKeypadValues = [];
-          state.storedProducts = [];
+          state.storedPaymentItems = [];
+          const total = calculateTotal([]);
+          state.paymentTotal = total.total;
+          state.paymentCoffeeStamps = total.coffeeStamps;
+          state.paymentBottleStamps = total.bottleStamps;
         }
+      }
+    });
+    builder.addCase(receiveAccountAccessToken.rejected, (state, action) => {
+      if (state.payment) {
+        let errorMessage = trimPrefix(action.error.message || '', 'Transaction error: ');
+        state.payment = {
+          type: 'Error',
+          timeout: Date.now() + PAYMENT_ERROR_TIMEOUT,
+          total: state.payment.total,
+          coffeeStamps: state.payment.coffeeStamps,
+          bottleStamps: state.payment.bottleStamps,
+          message: errorMessage,
+        };
       }
     });
     builder.addCase(receiveAccountAccessToken.pending, (state) => {
@@ -272,8 +421,10 @@ export const paymentSlice = createSlice({
         state.payment = {
           type: 'InProgress',
           timeout: Date.now() + PAYMENT_INPROGRESS_TIMEOUT,
-          amount: state.payment.amount,
-          products: state.storedProducts,
+          total: state.payment.total,
+          coffeeStamps: state.payment.coffeeStamps,
+          bottleStamps: state.payment.bottleStamps,
+          items: state.payment.items,
         };
       }
     });
@@ -283,11 +434,12 @@ export const paymentSlice = createSlice({
 export const {
   setKeypadValue,
   submitKeypadValue,
-  removeKeypadValue,
-  clearKeypadValue,
   addProduct,
-  removeProduct,
+  removePaymentItemAtIndex,
+  setPaymentItemStamps,
   setScreensaver,
+  showNotification,
+  hideNotification,
   removeAccount,
   payment,
   cancelPayment,

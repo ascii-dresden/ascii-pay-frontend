@@ -47,7 +47,9 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
       {status}
       <div className="payment-message">{message}</div>
       <div className="payment-amount">
-        <Money value={props.payment.amount} />
+        <Money value={props.payment.total} />
+        <span>{props.payment.bottleStamps}</span>
+        <span>{props.payment.coffeeStamps}</span>
       </div>
     </Dialog>
   );

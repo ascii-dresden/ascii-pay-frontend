@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdCancel } from 'react-icons/md';
+import { MdCancel, MdCoffee, MdLiquor, MdPayment } from 'react-icons/md';
 import Money from '../components/Money';
 import { useAppDispatch, useAppSelector } from '../store';
 import { removeAccount } from './paymentSlice';
@@ -15,11 +15,24 @@ export default function ScannedAccount() {
 
   return (
     <div className="scanned-account" onClick={() => dispatch(removeAccount())}>
-      <div>
-        <span>{scannedAccount.name}</span>
-        <Money value={scannedAccount.credit} />
+      <div className="scanned-account-name">{scannedAccount.name}</div>
+      <div className="scanned-account-tags">
+        <div>
+          <MdPayment />
+          <Money value={scannedAccount.credit} />
+        </div>
+        <div>
+          <MdCoffee />
+          <span>{scannedAccount.coffeeStamps}</span>
+        </div>
+        <div>
+          <MdLiquor />
+          <span>{scannedAccount.bottleStamps}</span>
+        </div>
       </div>
-      <MdCancel />
+      <div className="scanned-account-remove">
+        <MdCancel />
+      </div>
     </div>
   );
 }

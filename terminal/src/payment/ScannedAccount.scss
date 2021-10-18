@@ -1,19 +1,27 @@
 .scanned-account {
   position: relative;
   height: 4.4rem;
-  text-align: center;
   line-height: 4.4rem;
+  text-align: center;
+}
+
+.scanned-account-name {
+  line-height: 1.4rem;
+  text-align: left;
+  padding: 0.8rem 1rem 0.4rem;
+  font-weight: bold;
+}
+.scanned-account-tags {
+  display: flex;
+  line-height: 1rem;
 
   div {
-    line-height: 1.4rem;
-    text-align: left;
-    padding: 0.8rem 1rem;
-
-    span {
-      display: block;
-    }
+    display: flex;
+    justify-content: center;
+    margin-left: 1rem;
   }
-
+}
+.scanned-account-remove {
   svg {
     position: absolute;
     top: 50%;

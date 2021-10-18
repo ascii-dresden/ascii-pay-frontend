@@ -13,7 +13,12 @@
     color: var(--error-color);
   }
 }
+.payment-message {
+  color: var(--error-color);
+  height: 1rem;
+}
 .payment-amount {
   font-size: 1.5rem;
-  line-height: 3rem;
+  line-height: 2rem;
+  margin-top: 1rem;
 }

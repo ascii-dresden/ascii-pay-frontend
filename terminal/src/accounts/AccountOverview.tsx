@@ -48,8 +48,14 @@ export default function AccountOverview() {
       total: 0,
       beforeCredit: diagramData[0].beforeCredit,
       afterCredit: diagramData[0].beforeCredit,
+      coffeeStamps: 0,
+      beforeCoffeeStamps: diagramData[0].beforeCoffeeStamps,
+      afterCoffeeStamps: diagramData[0].beforeCoffeeStamps,
+      bottleStamps: 0,
+      beforeBottleStamps: diagramData[0].beforeBottleStamps,
+      afterBottleStamps: diagramData[0].beforeBottleStamps,
       date: timeRange.start.valueOf(),
-      products: [],
+      items: [],
     });
 
     diagramData.push({
@@ -57,8 +63,14 @@ export default function AccountOverview() {
       total: 0,
       beforeCredit: diagramData[diagramData.length - 1].afterCredit,
       afterCredit: diagramData[diagramData.length - 1].afterCredit,
+      coffeeStamps: 0,
+      beforeCoffeeStamps: diagramData[diagramData.length - 1].afterCoffeeStamps,
+      afterCoffeeStamps: diagramData[diagramData.length - 1].afterCoffeeStamps,
+      bottleStamps: 0,
+      beforeBottleStamps: diagramData[diagramData.length - 1].afterBottleStamps,
+      afterBottleStamps: diagramData[diagramData.length - 1].afterBottleStamps,
       date: timeRange.end.valueOf(),
-      products: [],
+      items: [],
     });
   }
 

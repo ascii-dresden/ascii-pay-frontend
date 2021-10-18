@@ -1,20 +1,20 @@
 .payment-page-left {
   position: absolute;
   left: 0;
-  width: 40%;
+  width: 60%;
   top: 0;
   height: 100%;
 }
 
 .payment-page-right {
   position: absolute;
-  left: 40%;
+  left: 60%;
   right: 0;
   top: 0;
-  bottom: 3.5rem;
+  height: 100%;
 }
 
-.payment-page-basket-sum {
+.payment-page-summary {
   position: absolute;
   bottom: 0;
   height: 3.2rem;
@@ -27,9 +27,14 @@
   font-size: 1.1rem;
   background-color: var(--secondary-hover-background);
   border-top: solid 1px var(--border-color);
-  border-right: solid 1px var(--border-color);
+  border-left: solid 1px var(--border-color);
 
-  span:last-child {
+  & > div {
+    display: flex;
+    align-items: center;
+  }
+
+  & > span {
     color: var(--theme-color);
     font-weight: bold;
   }

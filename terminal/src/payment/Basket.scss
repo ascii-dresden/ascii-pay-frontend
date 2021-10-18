@@ -73,17 +73,25 @@
   top: 0;
   left: 3.6rem;
   line-height: 1.8rem;
-  right: 3rem;
+  right: 3.3rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.basket-entry-amount {
+.basket-entry-stamps {
   position: absolute;
   top: 1.3rem;
   left: 3.6rem;
   right: 3rem;
   font-size: 0.8rem;
+  display: flex;
+  line-height: 1.2rem;
+
+  & > div {
+    display: flex;
+
+    align-items: center;
+  }
 }
 .basket-entry-price {
   position: absolute;

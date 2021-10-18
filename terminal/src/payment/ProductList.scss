@@ -57,6 +57,7 @@
 .product-view {
   border: solid 1px var(--border-color);
   position: relative;
+  overflow: hidden;
 }
 .product-view-name {
   position: absolute;

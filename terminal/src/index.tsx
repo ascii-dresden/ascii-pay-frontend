@@ -11,6 +11,7 @@ import Keyboard from './components/Keyboard';
 import Screensaver from './components/Screensaver';
 import { AsciiPayAuthenticationClient } from './ascii-pay-authentication-client';
 import { setScreensaver } from './payment/paymentSlice';
+import NotificationManager from './components/NotificationManager';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:8080/api/v1/graphql',
@@ -47,6 +48,7 @@ ReactDOM.render(
         <Keyboard />
         <App authClient={authClient} />
         <Screensaver />
+        <NotificationManager />
       </ApolloProvider>
     </Provider>
   </React.StrictMode>,

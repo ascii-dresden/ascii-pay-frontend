@@ -1,6 +1,6 @@
 import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import React, { useState } from 'react';
-import { MdExitToApp, MdShowChart, MdViewList } from 'react-icons/md';
+import { MdExitToApp, MdPeople, MdShowChart } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import { AsciiPayAuthenticationClient } from '../ascii-pay-authentication-client';
 import Sidebar, { SidebarAction } from '../components/SidebarPage';
@@ -77,7 +77,7 @@ export default function AccountsPage(props: { authClient: AsciiPayAuthentication
     },
     {
       title: 'List',
-      element: <MdViewList />,
+      element: <MdPeople />,
       action: () => setMode(Mode.LIST),
       active: mode === Mode.LIST,
     },

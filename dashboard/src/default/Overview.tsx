@@ -15,7 +15,6 @@ export default function Overview(props: { account: AccountOutput }) {
   const [logoutFunction, { data: logoutData }] = useMutation(LOGOUT);
   if (logoutData) {
     localStorage['token'] = '';
-    client.resetStore();
     client.refetchQueries({
       include: [GET_SELF],
     });

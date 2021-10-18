@@ -1,0 +1,57 @@
+.notifications {
+  position: absolute;
+  z-index: 100;
+  top: 1rem;
+  right: 1rem;
+  width: 45%;
+}
+
+.notification {
+  background-color: var(--primary-background);
+  border: solid 1px var(--border-color);
+
+  position: relative;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.8rem 0.5rem;
+
+  &.notification-warn {
+    svg {
+      color: var(--warn-color);
+    }
+  }
+  &.notification-error {
+    svg {
+      color: var(--error-color);
+    }
+  }
+}
+
+.notification-icon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3rem;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.notification-title {
+  padding-left: 2.5rem;
+  font-weight: bold;
+}
+
+.notification-description {
+  padding-left: 2.5rem;
+  padding-top: 0.5rem;
+
+  &:empty {
+    padding-top: 0;
+  }
+}

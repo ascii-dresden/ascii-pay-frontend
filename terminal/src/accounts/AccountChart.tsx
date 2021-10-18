@@ -2,20 +2,39 @@ import React from 'react';
 import { LineConfig } from '@ant-design/charts/es/plots/line';
 import { Line } from '@ant-design/charts';
 import { moneyToString } from '../components/Money';
+import { StampType } from '../types/graphql-global';
 
 export type DiagramData = {
-  id: string;
+  id: UUID;
   total: number;
   beforeCredit: number;
   afterCredit: number;
+  coffeeStamps: number;
+  beforeCoffeeStamps: number;
+  afterCoffeeStamps: number;
+  bottleStamps: number;
+  beforeBottleStamps: number;
+  afterBottleStamps: number;
   date: number;
-  products: {
+  items: {
+    price: number;
+    payWithStamps: StampType;
+    giveStamps: StampType;
     product: {
-      id: string;
+      id: UUID;
       name: string;
-      currentPrice: number | null;
-    };
-    amount: number;
+      price: number | null;
+      payWithStamps: StampType | null;
+      giveStamps: StampType | null;
+      image: string | null;
+      category: {
+        id: UUID;
+        name: string;
+        price: number;
+        payWithStamps: StampType;
+        giveStamps: StampType;
+      };
+    } | null;
   }[];
 };
 

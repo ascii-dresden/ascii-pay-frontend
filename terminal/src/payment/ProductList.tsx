@@ -7,6 +7,7 @@ import { MdPhoto } from 'react-icons/md';
 import { moneyToString } from '../components/Money';
 import { useAppDispatch } from '../store';
 import { addProduct } from './paymentSlice';
+import { StampType } from '../types/graphql-global';
 
 const groupBy = function <T>(array: T[], selector: (x: T) => string | null) {
   let map = new Map<string | null, T[]>();
@@ -67,7 +68,9 @@ function ProductItem(props: { product: getProducts_getProducts_element }) {
         id: props.product.id,
         name: props.product.name,
         image: props.product.image,
-        currentPrice: props.product.currentPrice ?? 0,
+        price: props.product.price ?? props.product.category.price,
+        payWithStamps: StampType.NONE,
+        giveStamps: props.product.giveStamps ?? props.product.category.giveStamps,
       })
     );
   }, [props, dispatch]);
@@ -83,14 +86,12 @@ function ProductItem(props: { product: getProducts_getProducts_element }) {
     );
   }
   return (
-    <div className="product-item" onClick={clickHandler}>
-      <div className="product-view" key={props.product.id}>
-        <div className="product-view-image">{image}</div>
-        <span className="product-view-name">
-          <span>{props.product.name}</span>
-        </span>
-        <span className="product-view-price">{moneyToString(props.product.currentPrice || 0)}</span>
-      </div>
+    <div className="product-view" key={props.product.id} onClick={clickHandler}>
+      <div className="product-view-image">{image}</div>
+      <span className="product-view-name">
+        <span>{props.product.name}</span>
+      </span>
+      <span className="product-view-price">{moneyToString(props.product.price ?? props.product.category.price)}</span>
     </div>
   );
 }

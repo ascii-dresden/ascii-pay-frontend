@@ -39,9 +39,11 @@ export default function AccountDetails(props: { id: string; authClient: AsciiPay
         id,
         name,
       });
+      return true;
     },
     onNfcCardRemoved() {
       setRegisterNfc(null);
+      return true;
     },
   };
 

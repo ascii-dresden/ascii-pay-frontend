@@ -6,13 +6,15 @@ export const GET_SELF = gql`
       id
       credit
       minimumCredit
+      coffeeStamps
+      bottleStamps
       name
       mail
       username
       accountNumber
       permission
       receivesMonthlyReport
-      allowNfcRegistration
+      useDigitalStamps
     }
   }
 `;
@@ -61,17 +63,35 @@ export const GET_ACCOUNT_BY_ACCESS_TOKEN = gql`
       id
       name
       credit
+      coffeeStamps
+      bottleStamps
     }
   }
 `;
 
 export const TRANSACTION = gql`
-  mutation transaction($accountAccessToken: String!, $amount: Int!, $products: [PaymentProductInput!]!) {
-    transaction(input: { accountAccessToken: $accountAccessToken, amount: $amount, products: $products }) {
+  mutation transaction(
+    $accountAccessToken: String!
+    $stopIfStampPaymentIsPossible: Boolean!
+    $transactionItems: [PaymentItemInput!]!
+  ) {
+    transaction(
+      input: {
+        accountAccessToken: $accountAccessToken
+        stopIfStampPaymentIsPossible: $stopIfStampPaymentIsPossible
+        transactionItems: $transactionItems
+      }
+    ) {
       account {
         id
         name
         credit
+        coffeeStamps
+        bottleStamps
+      }
+      accountAccessToken
+      error {
+        message
       }
     }
   }
@@ -84,13 +104,31 @@ export const GET_OWN_TRANSACTIONS = gql`
       total
       beforeCredit
       afterCredit
+      coffeeStamps
+      beforeCoffeeStamps
+      afterCoffeeStamps
+      bottleStamps
+      beforeBottleStamps
+      afterBottleStamps
       date
-      products {
-        amount
+      items {
+        price
+        payWithStamps
+        giveStamps
         product {
           id
           name
-          currentPrice
+          price
+          payWithStamps
+          giveStamps
+          image
+          category {
+            id
+            name
+            price
+            payWithStamps
+            giveStamps
+          }
         }
       }
     }
@@ -103,11 +141,16 @@ export const GET_PRODUCTS = gql`
       element {
         id
         name
-        currentPrice
+        price
+        payWithStamps
+        giveStamps
         image
         category {
           id
           name
+          price
+          payWithStamps
+          giveStamps
         }
       }
     }

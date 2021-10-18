@@ -40,48 +40,70 @@ type FoundAccountAccessToken = {
 type NfcCardRemoved = {
   type: 'NfcCardRemoved';
 };
+type Error = {
+  type: 'Error';
+  payload: {
+    source: string;
+    message: string;
+  };
+};
 export type WebSocketResponse =
   | FoundUnknownBarcode
   | FoundUnknownNfcCard
   | FoundProductId
   | FoundAccountAccessToken
-  | NfcCardRemoved;
+  | NfcCardRemoved
+  | Error;
 
 export interface WebSocketMessageHandler {
-  onMessage?(message: WebSocketResponse): void;
+  onMessage?(message: WebSocketResponse): void | boolean;
 
-  onFoundUnknownBarcode?(code: string): void;
-  onFoundUnknownNfcCard?(id: string, name: string): void;
-  onFoundProductId?(product_id: string): void;
-  onFoundAccountAccessToken?(accessToken: string): void;
-  onNfcCardRemoved?(): void;
+  onFoundUnknownBarcode?(code: string): void | boolean;
+  onFoundUnknownNfcCard?(id: string, name: string): void | boolean;
+  onFoundProductId?(product_id: string): void | boolean;
+  onFoundAccountAccessToken?(accessToken: string): void | boolean;
+  onNfcCardRemoved?(): void | boolean;
+  onError?(source: string, message: string): void | boolean;
 }
 
 function dispatchMessage(message: WebSocketResponse, handler: WebSocketMessageHandler) {
-  handler.onMessage && handler.onMessage(message);
+  let consumeMessage = handler.onMessage && handler.onMessage(message);
+  let consumeType: boolean | void | undefined;
   switch (message.type) {
     case 'FoundUnknownBarcode':
-      handler.onFoundUnknownBarcode && handler.onFoundUnknownBarcode(message.payload.code);
+      consumeType =
+        (handler.onFoundUnknownBarcode && handler.onFoundUnknownBarcode(message.payload.code)) || consumeType;
       break;
     case 'FoundUnknownNfcCard':
-      handler.onFoundUnknownNfcCard && handler.onFoundUnknownNfcCard(message.payload.id, message.payload.name);
+      consumeType =
+        (handler.onFoundUnknownNfcCard && handler.onFoundUnknownNfcCard(message.payload.id, message.payload.name)) ||
+        consumeType;
       break;
     case 'FoundProductId':
-      handler.onFoundProductId && handler.onFoundProductId(message.payload.product_id);
+      consumeType = (handler.onFoundProductId && handler.onFoundProductId(message.payload.product_id)) || consumeType;
       break;
     case 'FoundAccountAccessToken':
-      handler.onFoundAccountAccessToken && handler.onFoundAccountAccessToken(message.payload.access_token);
+      consumeType =
+        (handler.onFoundAccountAccessToken && handler.onFoundAccountAccessToken(message.payload.access_token)) ||
+        consumeType;
       break;
     case 'NfcCardRemoved':
-      handler.onNfcCardRemoved && handler.onNfcCardRemoved();
+      consumeType = (handler.onNfcCardRemoved && handler.onNfcCardRemoved()) || consumeType;
+      break;
+    case 'Error':
+      consumeType =
+        (handler.onError && handler.onError(message.payload.source, message.payload.message)) || consumeType;
       break;
   }
+
+  return !!consumeType || !!consumeMessage;
 }
 
 export class AsciiPayAuthenticationClient {
   url: string;
   socket: WebSocket;
   handlerList: WebSocketMessageHandler[];
+  fallbackHandlerList: WebSocketMessageHandler[];
   connected: boolean;
   queue: (() => void)[];
 
@@ -90,6 +112,7 @@ export class AsciiPayAuthenticationClient {
     this.connected = false;
     this.socket = this.createWebSocket();
     this.handlerList = [];
+    this.fallbackHandlerList = [];
     this.queue = [];
   }
 
@@ -118,8 +141,17 @@ export class AsciiPayAuthenticationClient {
     socket.addEventListener('message', function (event) {
       let message: WebSocketResponse = JSON.parse(event.data);
 
+      let useFallbackHandler = true;
       for (const handler of self.handlerList) {
-        dispatchMessage(message, handler);
+        if (dispatchMessage(message, handler)) {
+          useFallbackHandler = false;
+        }
+      }
+
+      if (useFallbackHandler) {
+        for (const handler of self.fallbackHandlerList) {
+          dispatchMessage(message, handler);
+        }
       }
     });
 
@@ -134,6 +166,17 @@ export class AsciiPayAuthenticationClient {
     const index = this.handlerList.indexOf(handler);
     if (index >= 0) {
       this.handlerList.splice(index, 1);
+    }
+  }
+
+  addFallbackEventHandler(handler: WebSocketMessageHandler) {
+    this.fallbackHandlerList.push(handler);
+  }
+
+  removeFallbackEventHandler(handler: WebSocketMessageHandler) {
+    const index = this.fallbackHandlerList.indexOf(handler);
+    if (index >= 0) {
+      this.fallbackHandlerList.splice(index, 1);
     }
   }
 
