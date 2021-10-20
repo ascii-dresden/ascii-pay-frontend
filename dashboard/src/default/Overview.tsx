@@ -5,14 +5,15 @@ import { CreditCardOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { GET_SELF, LOGOUT } from '../graphql';
-import { AccountOutput } from '../model';
 import { TransactionHistory } from './TransactionHistory/TransactionHistory';
+import { getSelf_getSelf } from '../__generated__/getSelf';
+import { logout } from '../__generated__/logout';
 
 const { Content, Footer } = Layout;
-export default function Overview(props: { account: AccountOutput }) {
+export default function Overview(props: { account: getSelf_getSelf }) {
   const client = useApolloClient();
 
-  const [logoutFunction, { data: logoutData }] = useMutation(LOGOUT);
+  const [logoutFunction, { data: logoutData }] = useMutation<logout>(LOGOUT);
   if (logoutData) {
     localStorage['token'] = '';
     client.refetchQueries({
@@ -37,7 +38,7 @@ export default function Overview(props: { account: AccountOutput }) {
               key="logout"
               onClick={() => {
                 logoutFunction().catch(() => {
-                  // login failed
+                  // logout failed
                 });
                 localStorage.removeItem('token');
               }}
@@ -65,7 +66,7 @@ export default function Overview(props: { account: AccountOutput }) {
                 </Card>
               </Col>
             </Row>
-            <TransactionHistory account={props.account} />
+            <TransactionHistory />
           </Space>
         </Content>
         <Footer style={{ textAlign: 'center' }}></Footer>

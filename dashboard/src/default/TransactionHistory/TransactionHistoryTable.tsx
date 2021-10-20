@@ -1,10 +1,10 @@
-import { TransactionOutput } from '../../model';
-import { Button, Table, Tag } from 'antd';
 import React from 'react';
+import { Button, Table, Tag } from 'antd';
 import moment from 'moment';
+import { getOwnTransactions_getOwnTransactions } from '../../__generated__/getOwnTransactions';
 
 type TransactionHistoryTableProps = {
-  dataSource: TransactionOutput[];
+  dataSource: getOwnTransactions_getOwnTransactions[];
 };
 
 const dateTimeFormat = 'YYYY-MM-DD HH:mm';
@@ -23,15 +23,7 @@ export function TransactionHistoryTable(props: TransactionHistoryTableProps) {
       title: 'Products',
       dataIndex: 'products',
       key: 'products',
-      render: (value: any[]) => (
-        <>
-          {value.map((p) => (
-            <Tag key={p.product_id}>
-              {p.amount} × {p.product.name}
-            </Tag>
-          ))}
-        </>
-      ),
+      render: (value: any[]) => <></>,
     },
     {
       title: 'Total',

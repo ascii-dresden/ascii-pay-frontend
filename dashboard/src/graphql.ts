@@ -6,13 +6,15 @@ export const GET_SELF = gql`
       id
       credit
       minimumCredit
+      coffeeStamps
+      bottleStamps
       name
       mail
       username
       accountNumber
       permission
       receivesMonthlyReport
-      allowNfcRegistration
+      useDigitalStamps
     }
   }
 `;
@@ -31,24 +33,38 @@ export const LOGOUT = gql`
   }
 `;
 
-export const GET_TRANSACTIONS = gql`
-  query getTransactions($accountId: UUID!, $transactionFilterFrom: String!, $transactionFilterTo: String!) {
-    getTransactions(
-      accountId: $accountId
-      transactionFilterFrom: $transactionFilterFrom
-      transactionFilterTo: $transactionFilterTo
-    ) {
+export const GET_OWN_TRANSACTIONS = gql`
+  query getOwnTransactions($transactionFilterFrom: String!, $transactionFilterTo: String!) {
+    getOwnTransactions(transactionFilterFrom: $transactionFilterFrom, transactionFilterTo: $transactionFilterTo) {
       id
       total
       beforeCredit
       afterCredit
+      coffeeStamps
+      beforeCoffeeStamps
+      afterCoffeeStamps
+      bottleStamps
+      beforeBottleStamps
+      afterBottleStamps
       date
-      products {
-        amount
+      items {
+        price
+        payWithStamps
+        giveStamps
         product {
           id
           name
-          currentPrice
+          price
+          payWithStamps
+          giveStamps
+          image
+          category {
+            id
+            name
+            price
+            payWithStamps
+            giveStamps
+          }
         }
       }
     }

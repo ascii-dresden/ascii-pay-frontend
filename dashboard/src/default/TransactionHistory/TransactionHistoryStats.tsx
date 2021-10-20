@@ -1,10 +1,10 @@
-import { TransactionOutput } from '../../model';
+import React from 'react';
 import { Col, Statistic } from 'antd';
 import { red } from '@ant-design/colors';
 import { ArrowDownOutlined } from '@ant-design/icons';
-import React from 'react';
+import { getOwnTransactions_getOwnTransactions } from '../../__generated__/getOwnTransactions';
 
-export function TransactionHistoryStats(props: { transactionData: TransactionOutput[] }) {
+export function TransactionHistoryStats(props: { transactionData: getOwnTransactions_getOwnTransactions[] }) {
   let spent = 0;
   for (let item of props.transactionData) {
     if (item.total < 0) {

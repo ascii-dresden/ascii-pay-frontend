@@ -7,10 +7,10 @@ import Overview from './default/Overview';
 import Preferences from './default/Preferences';
 import { useQuery } from '@apollo/client';
 import { GET_SELF } from './graphql';
-import { AccountOutput } from './model';
+import { getSelf } from './__generated__/getSelf';
 
 export default function App() {
-  const { loading, error, data } = useQuery(GET_SELF, {
+  const { loading, error, data } = useQuery<getSelf>(GET_SELF, {
     fetchPolicy: 'network-only',
   });
 
@@ -18,12 +18,12 @@ export default function App() {
     return <></>;
   }
 
-  if (error) {
+  if (error || !data) {
     console.log(error);
     return <Login />;
   }
 
-  const account = data.getSelf as AccountOutput;
+  const account = data.getSelf;
 
   return (
     <Router basename="">

@@ -1,5 +1,4 @@
 import moment, { Moment } from 'moment';
-import { AccountOutput } from '../../model';
 import React, { useState } from 'react';
 import { Card, Row, Space } from 'antd';
 import { TransactionHistoryContent } from './TransactionHistoryContent';
@@ -7,15 +6,13 @@ import { TransactionHistoryDatePicker, TransactionHistoryTimeRange } from './Tra
 import { TransactionHistoryStats } from './TransactionHistoryStats';
 import { useTransactionData } from './useTransactionData';
 
-type TransactionHistoryProps = { account: AccountOutput };
-
-export function TransactionHistory({ account }: TransactionHistoryProps) {
+export function TransactionHistory() {
   const [timeRange, setTimeRange] = useState({
     start: moment().startOf('day').subtract(7, 'days'),
     end: moment().endOf('day'),
   } as TransactionHistoryTimeRange);
 
-  const { transactionLoading, transactionData } = useTransactionData(account, timeRange);
+  const { transactionLoading, transactionData } = useTransactionData(timeRange);
 
   let onDatePickerChange = (dates: [Moment | null, Moment | null] | null) => {
     if (dates === null) {

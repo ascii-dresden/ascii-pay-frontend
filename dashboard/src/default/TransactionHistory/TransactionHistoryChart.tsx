@@ -1,23 +1,42 @@
+import React from 'react';
 import { LineConfig } from '@ant-design/charts/es/plots/line';
 import { Line } from '@ant-design/charts';
-import React from 'react';
 import { blue, red } from '@ant-design/colors';
 import moment from 'moment';
+import { StampType } from '../../types/graphql-global';
 
 export type DiagramData = {
-  renderTooltip: boolean;
-  id: string;
+  id: UUID;
   total: number;
   beforeCredit: number;
   afterCredit: number;
+  coffeeStamps: number;
+  beforeCoffeeStamps: number;
+  afterCoffeeStamps: number;
+  bottleStamps: number;
+  beforeBottleStamps: number;
+  afterBottleStamps: number;
   date: number;
-  products: {
+  renderTooltip: boolean;
+  items: {
+    price: number;
+    payWithStamps: StampType;
+    giveStamps: StampType;
     product: {
-      id: string;
+      id: UUID;
       name: string;
-      currentPrice: number;
-    };
-    amount: number;
+      price: number | null;
+      payWithStamps: StampType | null;
+      giveStamps: StampType | null;
+      image: string | null;
+      category: {
+        id: UUID;
+        name: string;
+        price: number;
+        payWithStamps: StampType;
+        giveStamps: StampType;
+      };
+    } | null;
   }[];
 };
 

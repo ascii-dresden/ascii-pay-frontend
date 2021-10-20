@@ -2,10 +2,10 @@ import React from 'react';
 import './AccountList.scss';
 import { Layout, Statistic, Card, Row, Col, Space, PageHeader, Button } from 'antd';
 import { Link } from 'react-router-dom';
-import { AccountOutput } from '../model';
+import { getSelf_getSelf } from '../__generated__/getSelf';
 const { Content, Footer } = Layout;
 
-export default function AccountList(props: { account: AccountOutput }) {
+export default function AccountList(props: { account: getSelf_getSelf }) {
   return (
     <div id="AccountList">
       <Layout className="site-layout">

@@ -2,10 +2,10 @@ import React from 'react';
 import './Overview.scss';
 import { Layout, Card, PageHeader, Button, Form, Input } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { AccountOutput } from '../model';
+import { getSelf_getSelf } from '../__generated__/getSelf';
 const { Content, Footer } = Layout;
 
-export default function Preferences(props: { account: AccountOutput }) {
+export default function Preferences(props: { account: getSelf_getSelf }) {
   let history = useHistory();
 
   const onFinish = (values: any) => {
