@@ -21,4 +21,14 @@
   font-size: 1.5rem;
   line-height: 2rem;
   margin-top: 1rem;
+  width: 14rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  & > div {
+    display: flex;
+    align-items: center;
+  }
 }

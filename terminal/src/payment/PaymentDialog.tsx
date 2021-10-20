@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './PaymentDialog.scss';
-import { MdDone, MdErrorOutline } from 'react-icons/md';
+import { MdCoffee, MdDone, MdErrorOutline, MdLiquor, MdPayment } from 'react-icons/md';
 import { SiContactlesspayment } from 'react-icons/si';
 import Dialog from '../components/Dialog';
 import Money from '../components/Money';
@@ -47,9 +47,18 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
       {status}
       <div className="payment-message">{message}</div>
       <div className="payment-amount">
-        <Money value={props.payment.total} />
-        <span>{props.payment.bottleStamps}</span>
-        <span>{props.payment.coffeeStamps}</span>
+        <div>
+          <MdPayment />
+          <Money value={props.payment.total} />
+        </div>
+        <div>
+          <MdCoffee />
+          <span>{props.payment.coffeeStamps}</span>
+        </div>
+        <div>
+          <MdLiquor />
+          <span>{props.payment.bottleStamps}</span>
+        </div>
       </div>
     </Dialog>
   );

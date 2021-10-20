@@ -78,7 +78,7 @@ export default function Basket() {
           <div className="basket-entry-image">
             <div>{image}</div>
           </div>
-          <div className="basket-entry-name">{value.product?.name}</div>
+          <div className="basket-entry-name">{value.product?.name ?? value.nameHint}</div>
           <div className="basket-entry-price">
             <Money value={value.price} />
           </div>

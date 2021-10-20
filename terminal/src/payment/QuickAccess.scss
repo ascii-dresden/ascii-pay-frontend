@@ -3,13 +3,20 @@
   width: 100%;
   height: 100%;
 
-  display: grid;
-  grid-template-columns: auto auto auto;
-  grid-template-rows: auto auto auto auto;
   padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.quick-access-row {
+  display: flex;
+  flex: 1 1 0px;
   gap: 0.6rem;
 }
 .quick-access-entry {
+  flex: 1 1 0px;
+  padding: 0.5rem;
+
   position: relative;
   background-color: var(--primary-background);
   border: solid 1px var(--border-color);
@@ -17,4 +24,51 @@
   &:hover {
     background-color: var(--primary-hover-background);
   }
+}
+
+.quick-access-entry-center {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.quick-access-entry-extra {
+  position: absolute;
+  right: -0.4rem;
+  bottom: -0.4rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--primary-background);
+  border: solid 1px var(--border-color);
+  border-radius: 100%;
+  z-index: 1;
+
+  span {
+    display: none;
+  }
+}
+
+.quick-access-entry-name {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 0.5rem;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.quick-access-entry-stamp {
+  display: flex;
+  align-items: center;
 }

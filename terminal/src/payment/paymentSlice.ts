@@ -26,6 +26,7 @@ export interface PaymentItem {
   payWithStamps: StampType;
   giveStamps: StampType;
   product: PaymentProduct | null;
+  nameHint?: string;
 }
 
 export interface PaymentPaymentWaiting {
@@ -284,6 +285,16 @@ export const paymentSlice = createSlice({
       state.paymentCoffeeStamps = total.coffeeStamps;
       state.paymentBottleStamps = total.bottleStamps;
     },
+    addPaymentItem: (state, action: PayloadAction<PaymentItem>) => {
+      const items = state.storedPaymentItems.slice();
+      items.push(action.payload);
+      state.storedPaymentItems = items;
+
+      const total = calculateTotal(items);
+      state.paymentTotal = total.total;
+      state.paymentCoffeeStamps = total.coffeeStamps;
+      state.paymentBottleStamps = total.bottleStamps;
+    },
     removePaymentItemAtIndex: (state, action: PayloadAction<number>) => {
       const items = state.storedPaymentItems.slice();
       items.splice(action.payload, 1);
@@ -435,6 +446,7 @@ export const {
   setKeypadValue,
   submitKeypadValue,
   addProduct,
+  addPaymentItem,
   removePaymentItemAtIndex,
   setPaymentItemStamps,
   setScreensaver,
