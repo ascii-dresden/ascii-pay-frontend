@@ -11,6 +11,7 @@ interface QuickAccessEntry {
   icon: any;
   price?: number;
   className?: string;
+  colorHint?: string;
   payWithStamps?: StampType;
   giveStamps?: StampType;
 }
@@ -23,6 +24,7 @@ const entries: QuickAccessEntry[][] = [
       price: 80,
       giveStamps: StampType.COFFEE,
       className: 'group-coffee coffee',
+      colorHint: 'coffee',
     },
     {
       name: 'Milch\u00ADkaffee\nKakao',
@@ -30,6 +32,7 @@ const entries: QuickAccessEntry[][] = [
       price: 100,
       giveStamps: StampType.COFFEE,
       className: 'group-coffee milk-coffee',
+      colorHint: 'coffee',
     },
     {
       name: 'Großer Latte',
@@ -37,6 +40,7 @@ const entries: QuickAccessEntry[][] = [
       price: 120,
       giveStamps: StampType.COFFEE,
       className: 'group-coffee large-latte',
+      colorHint: 'coffee',
     },
   ],
   [
@@ -45,18 +49,21 @@ const entries: QuickAccessEntry[][] = [
       icon: <></>,
       price: 100,
       className: 'group-cup',
+      colorHint: 'cup',
     },
     {
       name: 'Tassen\u00ADrückgabe',
       icon: <></>,
       price: -100,
       className: 'group-cup',
+      colorHint: 'cup',
     },
     {
       name: 'Eigener Becher',
       icon: <></>,
       price: -10,
       className: 'group-cup',
+      colorHint: 'cup',
     },
   ],
   [
@@ -65,12 +72,14 @@ const entries: QuickAccessEntry[][] = [
       icon: <></>,
       price: 150,
       className: 'group-bottle bottle-150',
+      colorHint: 'bottle',
     },
     {
       name: 'Flasche 0,33l',
       icon: <></>,
       price: 110,
       className: 'group-bottle bottle-110',
+      colorHint: 'bottle',
     },
   ],
   [
@@ -157,6 +166,7 @@ function QuickAccessEntryView(props: { entry: QuickAccessEntry }) {
         giveStamps: props.entry.giveStamps ?? StampType.NONE,
         product: null,
         nameHint: props.entry.name,
+        colorHint: props.entry.colorHint,
       })
     );
   };

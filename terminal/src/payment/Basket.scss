@@ -36,6 +36,34 @@
   width: 2.9rem;
   height: 2.9rem;
 
+  &.bottle,
+  &.coffee,
+  &.cup {
+    & > div div::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+  }
+
+  &.bottle > div div::before {
+    //background: linear-gradient(155deg, rgba(0, 0, 0, 0) 69%, var(--bottle-color) 69%, var(--bottle-color) 100%);
+    background: var(--bottle-color);
+  }
+
+  &.coffee > div div::before {
+    //background: linear-gradient(155deg, rgba(0, 0, 0, 0) 69%, var(--coffee-color) 69%, var(--coffee-color) 100%);
+    background: var(--coffee-color);
+  }
+
+  &.cup > div div::before {
+    //background: linear-gradient(155deg, rgba(0, 0, 0, 0) 69%, var(--cup-color) 69%, var(--cup-color) 100%);
+    background: var(--cup-color);
+  }
+
   & > div {
     width: 100%;
     padding-top: 100%;
@@ -61,6 +89,8 @@
       justify-content: center;
 
       svg {
+        position: absolute;
+        z-index: 2;
         width: 2rem;
         height: 2rem;
       }
@@ -68,36 +98,47 @@
   }
 }
 
-.basket-entry-name {
+.basket-entry-content {
   position: absolute;
   top: 0;
+  bottom: 0;
   left: 3.6rem;
-  line-height: 1.8rem;
-  right: 3.3rem;
+  right: 3.6rem;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  div {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }
 .basket-entry-stamps {
-  position: absolute;
-  top: 1.3rem;
-  left: 3.6rem;
-  right: 3rem;
   font-size: 0.8rem;
   display: flex;
   line-height: 1.2rem;
 
+  &:empty {
+    display: none;
+  }
   & > div {
     display: flex;
-
     align-items: center;
   }
 }
 .basket-entry-price {
   position: absolute;
   top: 0;
-  line-height: 2.7rem;
+  bottom: 0;
   right: 0.6rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 .basket-entry-delete {
   position: absolute;

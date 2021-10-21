@@ -72,17 +72,21 @@ export default function Basket() {
       );
     }
 
+    let colorClass = value.colorHint ? ' ' + value.colorHint : '';
+
     return (
       <div key={i} onClick={() => dispatch(removePaymentItemAtIndex(i))}>
         <div className="basket-entry">
-          <div className="basket-entry-image">
+          <div className={'basket-entry-image' + colorClass}>
             <div>{image}</div>
           </div>
-          <div className="basket-entry-name">{value.product?.name ?? value.nameHint}</div>
+          <div className="basket-entry-content">
+            <div>{value.product?.name ?? value.nameHint}</div>
+            <div className="basket-entry-stamps">{stamps}</div>
+          </div>
           <div className="basket-entry-price">
             <Money value={value.price} />
           </div>
-          <div className="basket-entry-stamps">{stamps}</div>
         </div>
       </div>
     );

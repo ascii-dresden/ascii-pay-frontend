@@ -27,6 +27,7 @@ export interface PaymentItem {
   giveStamps: StampType;
   product: PaymentProduct | null;
   nameHint?: string;
+  colorHint?: string;
 }
 
 export interface PaymentPaymentWaiting {
