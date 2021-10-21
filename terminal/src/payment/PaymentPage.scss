@@ -38,6 +38,10 @@
     color: var(--theme-color);
     font-weight: bold;
   }
+
+  .disabled {
+    color: var(--secondary-text-color);
+  }
 }
 
 .payment-page-tabs {

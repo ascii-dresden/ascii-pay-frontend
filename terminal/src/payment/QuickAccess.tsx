@@ -17,25 +17,13 @@ interface QuickAccessEntry {
 const entries: QuickAccessEntry[][] = [
   [
     {
-      name: 'Flasche 0,5l\nFlasche 0,33l BIO',
-      icon: <></>,
-      price: 150,
-    },
-    {
-      name: 'Flasche 0,33l',
-      icon: <></>,
-      price: 110,
-    },
-  ],
-  [
-    {
       name: 'Kaffee',
       icon: <></>,
       price: 80,
       giveStamps: StampType.COFFEE,
     },
     {
-      name: 'Milch\u00ADkaffee',
+      name: 'Milch\u00ADkaffee\nKakao',
       icon: <></>,
       price: 100,
       giveStamps: StampType.COFFEE,
@@ -66,7 +54,19 @@ const entries: QuickAccessEntry[][] = [
   ],
   [
     {
-      name: 'Flaschen\u00ADrückgabe',
+      name: 'Flasche 0,33l BIO\nFlasche 0,5l',
+      icon: <></>,
+      price: 150,
+    },
+    {
+      name: 'Flasche 0,33l',
+      icon: <></>,
+      price: 110,
+    },
+  ],
+  [
+    {
+      name: 'Flaschen\u00ADstempel',
       icon: <></>,
       giveStamps: StampType.BOTTLE,
     },

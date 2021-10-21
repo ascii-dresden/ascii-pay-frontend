@@ -262,6 +262,7 @@ export const paymentSlice = createSlice({
         payWithStamps: StampType.NONE,
         giveStamps: StampType.NONE,
         product: null,
+        nameHint: 'Eigener Betrag',
       });
       state.storedPaymentItems = items;
 
@@ -368,6 +369,7 @@ export const paymentSlice = createSlice({
     },
     payment: (state) => {
       if (state.payment) return;
+      if (state.storedPaymentItems.length <= 0) return;
 
       state.payment = {
         type: 'Waiting',

@@ -41,6 +41,7 @@ export default function PaymentPage(props: { authClient: AsciiPayAuthenticationC
   const paymentTotal = useAppSelector((state) => state.payment.paymentTotal);
   const paymentCoffeeStamps = useAppSelector((state) => state.payment.paymentCoffeeStamps);
   const paymentBottleStamps = useAppSelector((state) => state.payment.paymentBottleStamps);
+  const storedPaymentItems = useAppSelector((state) => state.payment.storedPaymentItems);
   const paymentPayment = useAppSelector((state) => state.payment.payment);
   const dispatch = useAppDispatch();
   const client = useApolloClient();
@@ -144,7 +145,12 @@ export default function PaymentPage(props: { authClient: AsciiPayAuthenticationC
             <MdLiquor />
             <span>{paymentBottleStamps}</span>
           </div>
-          <span onClick={payAction}>Pay</span>
+          <span
+            onClick={payAction}
+            className={storedPaymentItems.length > 0 || keypadValue != 0 ? 'enabled' : 'disabled'}
+          >
+            Pay
+          </span>
         </div>
       </div>
       {paymentPayment ? <PaymentDialog payment={paymentPayment} onClose={() => dispatch(cancelPayment())} /> : <></>}

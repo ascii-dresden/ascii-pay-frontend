@@ -1,7 +1,7 @@
 import React from 'react';
 
 export function moneyToString(value: number): string {
-  return (value / 100).toFixed(2) + '€';
+  return (value / 100).toFixed(2).replace('.', ',') + ' €';
 }
 
 export default function Money(props: { value: number; compact?: boolean }) {
