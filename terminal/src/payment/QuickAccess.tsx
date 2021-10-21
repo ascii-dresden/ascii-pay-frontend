@@ -10,6 +10,7 @@ interface QuickAccessEntry {
   name: string;
   icon: any;
   price?: number;
+  className?: string;
   payWithStamps?: StampType;
   giveStamps?: StampType;
 }
@@ -21,18 +22,21 @@ const entries: QuickAccessEntry[][] = [
       icon: <></>,
       price: 80,
       giveStamps: StampType.COFFEE,
+      className: 'group-coffee coffee',
     },
     {
       name: 'Milch\u00ADkaffee\nKakao',
       icon: <></>,
       price: 100,
       giveStamps: StampType.COFFEE,
+      className: 'group-coffee milk-coffee',
     },
     {
       name: 'Großer Latte',
       icon: <></>,
       price: 120,
       giveStamps: StampType.COFFEE,
+      className: 'group-coffee large-latte',
     },
   ],
   [
@@ -40,16 +44,19 @@ const entries: QuickAccessEntry[][] = [
       name: 'Tassen\u00ADpfand',
       icon: <></>,
       price: 100,
+      className: 'group-cup',
     },
     {
       name: 'Tassen\u00ADrückgabe',
       icon: <></>,
       price: -100,
+      className: 'group-cup',
     },
     {
       name: 'Eigener Becher',
       icon: <></>,
       price: -10,
+      className: 'group-cup',
     },
   ],
   [
@@ -57,11 +64,13 @@ const entries: QuickAccessEntry[][] = [
       name: 'Flasche 0,33l BIO\nFlasche 0,5l',
       icon: <></>,
       price: 150,
+      className: 'group-bottle bottle-150',
     },
     {
       name: 'Flasche 0,33l',
       icon: <></>,
       price: 110,
+      className: 'group-bottle bottle-110',
     },
   ],
   [
@@ -69,21 +78,25 @@ const entries: QuickAccessEntry[][] = [
       name: 'Flaschen\u00ADstempel',
       icon: <></>,
       giveStamps: StampType.BOTTLE,
+      className: 'group-stamp bottle-stamp',
     },
     {
       name: 'Gratis Flasche',
       icon: <></>,
       payWithStamps: StampType.BOTTLE,
+      className: 'group-stamp bottle-free',
     },
     {
       name: 'Kaffee\u00ADstempel',
       icon: <></>,
       giveStamps: StampType.COFFEE,
+      className: 'group-stamp coffee-stamp',
     },
     {
       name: 'Gratis Kaffee',
       icon: <></>,
       payWithStamps: StampType.COFFEE,
+      className: 'group-stamp coffee-free',
     },
   ],
 ];
@@ -121,19 +134,9 @@ function QuickAccessEntryView(props: { entry: QuickAccessEntry }) {
     );
   }
   if (props.entry.giveStamps === StampType.COFFEE) {
-    stemp = (
-      <div key="coffee+1" className="quick-access-entry-stamp">
-        <MdCoffee />
-        <span>+1</span>
-      </div>
-    );
+    stemp = <img id="sidebar-ascii-logo" src="/favicon.svg" alt="" />;
   } else if (props.entry.giveStamps === StampType.BOTTLE) {
-    stemp = (
-      <div key="bottle+1" className="quick-access-entry-stamp">
-        <MdLiquor />
-        <span>+1</span>
-      </div>
-    );
+    stemp = <img id="sidebar-ascii-logo" src="/favicon.svg" alt="" />;
   }
 
   let center: any | null = null;
@@ -159,7 +162,7 @@ function QuickAccessEntryView(props: { entry: QuickAccessEntry }) {
   };
 
   return (
-    <div className="quick-access-entry" onClick={onClick}>
+    <div className={'quick-access-entry ' + (props.entry.className ?? '')} onClick={onClick}>
       <div className="quick-access-entry-name">{props.entry.name}</div>
       {center ? <div className="quick-access-entry-center">{center}</div> : null}
       {extra ? <div className="quick-access-entry-extra">{extra}</div> : null}

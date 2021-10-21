@@ -7,6 +7,10 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+
+  --bottle-color: #9ad381;
+  --coffee-color: #f1b474;
+  --cup-color: #d0ddf1;
 }
 .quick-access-row {
   display: flex;
@@ -23,6 +27,56 @@
 
   &:hover {
     background-color: var(--primary-hover-background);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  img {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  &.group-bottle::before {
+    background: linear-gradient(155deg, rgba(0, 0, 0, 0) 75%, var(--bottle-color) 75%, var(--bottle-color) 100%);
+  }
+
+  &.group-stamp {
+    border-radius: 100%;
+    border-width: 4px;
+    height: 98px;
+
+    .quick-access-entry-name {
+      top: 12% !important;
+    }
+
+    .quick-access-entry-center {
+      top: 30% !important;
+    }
+  }
+
+  &.group-coffee::before {
+    background: linear-gradient(155deg, rgba(0, 0, 0, 0) 75%, var(--coffee-color) 75%, var(--coffee-color) 100%);
+  }
+
+  &.group-cup::before {
+    background: linear-gradient(155deg, rgba(0, 0, 0, 0) 75%, var(--cup-color) 75%, var(--cup-color) 100%);
+  }
+
+  &.bottle-stamp,
+  &.bottle-free {
+    border-color: var(--bottle-color);
+  }
+
+  &.coffee-stamp,
+  &.coffee-free {
+    border-color: var(--coffee-color);
   }
 }
 
