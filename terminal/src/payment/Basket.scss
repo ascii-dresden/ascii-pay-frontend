@@ -138,7 +138,11 @@
   right: 0.6rem;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
+}
+.basket-entry-count::after {
+  content: '×';
 }
 .basket-entry-delete {
   position: absolute;

@@ -5,7 +5,7 @@ import Stamp from '../components/Stamp';
 import { useAppDispatch, useAppSelector } from '../store';
 import { StampType } from '../types/graphql-global';
 import './Basket.scss';
-import { removePaymentItemAtIndex } from './paymentSlice';
+import { groupPaymentItems, PaymentItem, paymentItemEqual, removePaymentItemAtIndex } from './paymentSlice';
 
 export default function Basket() {
   const storedPaymentItems = useAppSelector((state) => state.payment.storedPaymentItems);
@@ -15,7 +15,16 @@ export default function Basket() {
     return <div className="basket-empty">No entries!</div>;
   }
 
-  const content = storedPaymentItems.map((value, i) => {
+  const paymentItemMap = groupPaymentItems(storedPaymentItems);
+
+  const onRemove = (item: PaymentItem) => {
+    let i = storedPaymentItems.findIndex((v) => paymentItemEqual(v, item));
+    dispatch(removePaymentItemAtIndex(i));
+  };
+
+  let content: any = [];
+  let index = 0;
+  for (let [value, count] of paymentItemMap) {
     let image;
 
     if (value.product) {
@@ -55,8 +64,8 @@ export default function Basket() {
 
     let colorClass = value.colorHint ? ' ' + value.colorHint : '';
 
-    return (
-      <div key={i} onClick={() => dispatch(removePaymentItemAtIndex(i))}>
+    content.push(
+      <div key={index} onClick={() => onRemove(value)}>
         <div className="basket-entry">
           <div className={'basket-entry-image' + colorClass}>
             <div>{image}</div>
@@ -66,12 +75,15 @@ export default function Basket() {
             <div className="basket-entry-stamps">{stamps}</div>
           </div>
           <div className="basket-entry-price">
+            {count > 1 ? <span className="basket-entry-count">{count}</span> : null}
             <Money value={value.price} />
           </div>
         </div>
       </div>
     );
-  });
+
+    index += 1;
+  }
 
   return (
     <div className="basket">

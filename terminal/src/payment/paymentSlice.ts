@@ -165,10 +165,10 @@ export function groupPaymentItems(items: PaymentItem[]): Map<PaymentItem, number
         map.set(key, value + 1);
         break;
       }
+    }
 
-      if (!found) {
-        map.set(item, 1);
-      }
+    if (!found) {
+      map.set(item, 1);
     }
   }
 
