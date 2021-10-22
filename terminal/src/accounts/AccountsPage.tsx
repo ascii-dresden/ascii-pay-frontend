@@ -38,10 +38,6 @@ export default function AccountsPage(props: { authClient: AsciiPayAuthentication
   const [logoutFunction, { data: logoutData }] = useMutation<logout>(LOGOUT);
   let [accountId, setAccountId] = useState(null as string | null);
 
-  React.useEffect(() => {
-    props.authClient.requestAccountAccessToken();
-  }, [props.authClient]);
-
   if (loading) {
     return <Sidebar defaultAction={handleGoBack}></Sidebar>;
   }

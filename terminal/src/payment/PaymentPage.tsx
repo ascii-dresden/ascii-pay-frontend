@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client';
 import React, { useState } from 'react';
-import { MdApps, MdOutlineCalculate, MdOutlineListAlt } from 'react-icons/md';
+import { MdApps, MdOutlineCalculate, MdOutlineListAlt, MdSchedule } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import {
   AsciiPayAuthenticationClient,
@@ -67,6 +67,15 @@ export default function PaymentPage(props: { authClient: AsciiPayAuthenticationC
       element: <MdOutlineListAlt />,
       action: () => setActivePage(Page.PRODUCTS),
       active: activePage === Page.PRODUCTS,
+    },
+    {
+      title: 'Enable screensaver',
+      element: <MdSchedule />,
+      action: (event) => {
+        event.stopPropagation();
+        dispatch(setScreensaver(true));
+      },
+      bottom: true,
     },
   ];
 

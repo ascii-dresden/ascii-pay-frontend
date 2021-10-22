@@ -91,6 +91,7 @@
     border: solid 1px var(--border-color);
     padding: 0.5rem;
     margin-top: 1rem;
+    height: 3.2rem;
   }
 
   &.left {
@@ -104,7 +105,7 @@
 
 .payment-dialog-message {
   position: absolute;
-  top: 13rem;
+  bottom: 2rem;
   width: 100%;
   left: 0;
   text-align: center;

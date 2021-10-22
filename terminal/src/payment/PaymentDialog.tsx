@@ -91,7 +91,7 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
         <Stamp value={props.payment.bottleStamps} type={StampType.BOTTLE} />
       </div>
       {props.payment.type === 'ReacalculateStamps' ? (
-        <button onClick={proceedWithoutStamps}>Proceed without changes</button>
+        <button onClick={proceedWithoutStamps}>Proceed transaction</button>
       ) : null}
     </div>
   );
@@ -107,13 +107,13 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
           <Stamp value={props.payment.withStamps.coffeeStamps} type={StampType.COFFEE} />
           <Stamp value={props.payment.withStamps.bottleStamps} type={StampType.BOTTLE} />
         </div>
-        <button onClick={proceedWithStamps}>Proceed with changes</button>
+        <button onClick={proceedWithStamps}>Pay with stamps</button>
       </div>
     );
   }
   return (
     <div className="payment-dialog">
-      <div className="payment-dialog-background"></div>
+      <div className="payment-dialog-background" onClick={props.onClose}></div>
       <div className="payment-dialog-window">
         <div className="payment-dialog-cancel" onClick={props.onClose}>
           <MdClose />

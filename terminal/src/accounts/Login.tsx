@@ -52,8 +52,9 @@ export default function Login(props: { authClient: AsciiPayAuthenticationClient 
 
   React.useEffect(() => {
     props.authClient.addEventHandler(handler);
+    props.authClient.requestAccountAccessToken();
     return () => props.authClient.removeEventHandler(handler);
-  });
+  }, [props.authClient]);
 
   let errorView = <></>;
   if (error) {
