@@ -34,13 +34,13 @@
     align-items: center;
   }
 
-  & > span {
+  & > span:last-child {
     color: var(--theme-color);
     font-weight: bold;
   }
 
   .disabled {
-    color: var(--secondary-text-color);
+    color: var(--secondary-text-color) !important;
   }
 }
 

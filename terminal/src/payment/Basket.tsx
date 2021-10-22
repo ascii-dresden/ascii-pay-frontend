@@ -1,6 +1,7 @@
 import React from 'react';
-import { MdCoffee, MdEuroSymbol, MdLiquor, MdPhoto } from 'react-icons/md';
+import { MdEuroSymbol, MdPhoto } from 'react-icons/md';
 import Money from '../components/Money';
+import Stamp from '../components/Stamp';
 import { useAppDispatch, useAppSelector } from '../store';
 import { StampType } from '../types/graphql-global';
 import './Basket.scss';
@@ -41,35 +42,15 @@ export default function Basket() {
 
     let stamps: any[] = [];
     if (value.payWithStamps === StampType.COFFEE) {
-      stamps.push(
-        <div key="coffee-10">
-          <MdCoffee />
-          <span>-10</span>
-        </div>
-      );
+      stamps.push(<Stamp key="coffee-10" value={-10} type={StampType.COFFEE} />);
     } else if (value.payWithStamps === StampType.BOTTLE) {
-      stamps.push(
-        <div key="bottle-10">
-          <MdLiquor />
-          <span>-10</span>
-        </div>
-      );
+      stamps.push(<Stamp key="bottle-10" value={-10} type={StampType.BOTTLE} />);
     }
 
     if (value.giveStamps === StampType.COFFEE) {
-      stamps.push(
-        <div key="coffee+1">
-          <MdCoffee />
-          <span>+1</span>
-        </div>
-      );
+      stamps.push(<Stamp key="coffee+1" value={1} type={StampType.COFFEE} />);
     } else if (value.giveStamps === StampType.BOTTLE) {
-      stamps.push(
-        <div key="bottle+1">
-          <MdLiquor />
-          <span>+1</span>
-        </div>
-      );
+      stamps.push(<Stamp key="bottle+1" value={1} type={StampType.BOTTLE} />);
     }
 
     let colorClass = value.colorHint ? ' ' + value.colorHint : '';

@@ -1,20 +1,39 @@
 import React from 'react';
 
 import './PaymentDialog.scss';
-import { MdCoffee, MdDone, MdErrorOutline, MdLiquor, MdPayment } from 'react-icons/md';
+import { MdClose, MdDone, MdErrorOutline, MdPriorityHigh } from 'react-icons/md';
 import { SiContactlesspayment } from 'react-icons/si';
-import Dialog from '../components/Dialog';
 import Money from '../components/Money';
-import { PaymentPayment } from './paymentSlice';
+import {
+  PaymentPayment,
+  paymentProceedWithoutStamps,
+  paymentProceedWithStamps,
+  receiveAccountAccessToken,
+} from './paymentSlice';
+import Stamp from '../components/Stamp';
+import { StampType } from '../types/graphql-global';
+import { useAppDispatch } from '../store';
+import { useApolloClient } from '@apollo/client';
 
 export default function PaymentDialog(props: { payment: PaymentPayment; onClose: () => void }) {
+  const dispatch = useAppDispatch();
+  const client = useApolloClient();
+
   let status;
-  var message = '';
+  let message = '';
+
   switch (props.payment.type) {
     case 'Success':
       status = (
         <div className="payment-status payment-success">
           <MdDone />
+        </div>
+      );
+      break;
+    case 'ReacalculateStamps':
+      status = (
+        <div className="payment-status payment-warn">
+          <MdPriorityHigh />
         </div>
       );
       break;
@@ -35,31 +54,75 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
       break;
   }
 
-  const actionList = [
-    {
-      label: 'Cancel',
-      action: () => props.onClose(),
-    },
-  ];
+  let proceedWithStamps = () => {
+    if (props.payment.type === 'ReacalculateStamps') {
+      let accessToken = props.payment.accountAccessToken;
+      dispatch(paymentProceedWithStamps());
 
-  return (
-    <Dialog title="Payment" actions={actionList}>
-      {status}
-      <div className="payment-message">{message}</div>
-      <div className="payment-amount">
-        <div>
-          <MdPayment />
-          <Money value={props.payment.total} />
-        </div>
-        <div>
-          <MdCoffee />
-          <span>{props.payment.coffeeStamps}</span>
-        </div>
-        <div>
-          <MdLiquor />
-          <span>{props.payment.bottleStamps}</span>
-        </div>
+      dispatch(
+        receiveAccountAccessToken({
+          apollo: client,
+          accessToken: accessToken,
+        })
+      );
+    }
+  };
+  let proceedWithoutStamps = () => {
+    if (props.payment.type === 'ReacalculateStamps') {
+      let accessToken = props.payment.accountAccessToken;
+      dispatch(paymentProceedWithoutStamps());
+
+      dispatch(
+        receiveAccountAccessToken({
+          apollo: client,
+          accessToken: accessToken,
+        })
+      );
+    }
+  };
+
+  let leftContent = (
+    <div className={'payment-dialog-content' + (props.payment.type === 'ReacalculateStamps' ? ' left' : '')}>
+      <div>
+        <Money value={props.payment.total} />
       </div>
-    </Dialog>
+      <div>
+        <Stamp value={props.payment.coffeeStamps} type={StampType.COFFEE} />
+        <Stamp value={props.payment.bottleStamps} type={StampType.BOTTLE} />
+      </div>
+      {props.payment.type === 'ReacalculateStamps' ? (
+        <button onClick={proceedWithoutStamps}>Proceed without changes</button>
+      ) : null}
+    </div>
+  );
+
+  let rightContent;
+  if (props.payment.type === 'ReacalculateStamps') {
+    rightContent = (
+      <div className="payment-dialog-content right">
+        <div>
+          <Money value={props.payment.withStamps.total} />
+        </div>
+        <div>
+          <Stamp value={props.payment.withStamps.coffeeStamps} type={StampType.COFFEE} />
+          <Stamp value={props.payment.withStamps.bottleStamps} type={StampType.BOTTLE} />
+        </div>
+        <button onClick={proceedWithStamps}>Proceed with changes</button>
+      </div>
+    );
+  }
+  return (
+    <div className="payment-dialog">
+      <div className="payment-dialog-background"></div>
+      <div className="payment-dialog-window">
+        <div className="payment-dialog-cancel" onClick={props.onClose}>
+          <MdClose />
+        </div>
+        <div className="payment-dialog-status">{status}</div>
+        <div className="payment-dialog-message">{message}</div>
+        {leftContent}
+        {rightContent}
+      </div>
+    </div>
   );
 }

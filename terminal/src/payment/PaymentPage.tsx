@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client';
 import React, { useState } from 'react';
-import { MdApps, MdCoffee, MdLiquor, MdOutlineCalculate, MdOutlineListAlt, MdPayment } from 'react-icons/md';
+import { MdApps, MdOutlineCalculate, MdOutlineListAlt } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import {
   AsciiPayAuthenticationClient,
@@ -10,7 +10,9 @@ import {
 import Keypad from '../components/Keypad';
 import Money from '../components/Money';
 import Sidebar, { SidebarAction } from '../components/SidebarPage';
+import Stamp from '../components/Stamp';
 import { useAppDispatch, useAppSelector } from '../store';
+import { StampType } from '../types/graphql-global';
 import Basket from './Basket';
 import PaymentDialog from './PaymentDialog';
 import './PaymentPage.scss';
@@ -133,21 +135,12 @@ export default function PaymentPage(props: { authClient: AsciiPayAuthenticationC
         <ScannedAccount />
         <Basket />
         <div className="payment-page-summary">
-          <div>
-            <MdPayment />
-            <Money value={paymentTotal} />
-          </div>
-          <div>
-            <MdCoffee />
-            <span>{paymentCoffeeStamps}</span>
-          </div>
-          <div>
-            <MdLiquor />
-            <span>{paymentBottleStamps}</span>
-          </div>
+          <Money value={paymentTotal} />
+          <Stamp value={paymentCoffeeStamps} type={StampType.COFFEE} />
+          <Stamp value={paymentBottleStamps} type={StampType.BOTTLE} />
           <span
             onClick={payAction}
-            className={storedPaymentItems.length > 0 || keypadValue != 0 ? 'enabled' : 'disabled'}
+            className={storedPaymentItems.length > 0 || keypadValue !== 0 ? 'enabled' : 'disabled'}
           >
             Pay
           </span>

@@ -24,6 +24,7 @@ export interface PaymentProduct {
 export interface PaymentItem {
   price: number;
   payWithStamps: StampType;
+  couldBePaidWithStamps: StampType;
   giveStamps: StampType;
   product: PaymentProduct | null;
   nameHint?: string;
@@ -33,14 +34,34 @@ export interface PaymentItem {
 export interface PaymentPaymentWaiting {
   type: 'Waiting';
   timeout: number;
+  stopIfStampPaymentIsPossible: boolean;
   total: number;
   coffeeStamps: number;
   bottleStamps: number;
   items: PaymentItem[];
 }
+
+export interface PaymentPaymentRecalculateStamps {
+  type: 'ReacalculateStamps';
+  timeout: number;
+  stopIfStampPaymentIsPossible: boolean;
+  accountAccessToken: string;
+  total: number;
+  coffeeStamps: number;
+  bottleStamps: number;
+  items: PaymentItem[];
+  withStamps: {
+    total: number;
+    coffeeStamps: number;
+    bottleStamps: number;
+    items: PaymentItem[];
+  };
+}
+
 export interface PaymentPaymentInProgress {
   type: 'InProgress';
   timeout: number;
+  stopIfStampPaymentIsPossible: boolean;
   total: number;
   coffeeStamps: number;
   bottleStamps: number;
@@ -49,6 +70,7 @@ export interface PaymentPaymentInProgress {
 export interface PaymentPaymentError {
   type: 'Error';
   timeout: number;
+  stopIfStampPaymentIsPossible: boolean;
   total: number;
   coffeeStamps: number;
   bottleStamps: number;
@@ -57,6 +79,7 @@ export interface PaymentPaymentError {
 export interface PaymentPaymentSuccess {
   type: 'Success';
   timeout: number;
+  stopIfStampPaymentIsPossible: boolean;
   total: number;
   coffeeStamps: number;
   bottleStamps: number;
@@ -64,6 +87,7 @@ export interface PaymentPaymentSuccess {
 export type PaymentPayment =
   | PaymentPaymentWaiting
   | PaymentPaymentInProgress
+  | PaymentPaymentRecalculateStamps
   | PaymentPaymentError
   | PaymentPaymentSuccess;
 
@@ -118,30 +142,120 @@ const PAYMENT_INPROGRESS_TIMEOUT = 3_000;
 const PAYMENT_ERROR_TIMEOUT = 5_000;
 const PAYMENT_SUCCESS_TIMEOUT = 2_000;
 
-export const receiveAccountAccessToken = createAsyncThunk<
-  {
-    account: PaymentAccount | null;
-    payment?: PaymentPayment;
-  },
-  {
-    apollo: ApolloClient<object>;
-    accessToken: string;
-  },
-  {
-    dispatch: AppDispatch;
-    state: RootState;
-  }
->('payment/receiveAccessToken', async (query, thunkApi) => {
-  const state = thunkApi.getState().payment;
+export function paymentItemEqual(a: PaymentItem, b: PaymentItem): boolean {
+  if (a.price !== b.price) return false;
+  if (a.payWithStamps !== b.payWithStamps) return false;
+  if (a.couldBePaidWithStamps !== b.couldBePaidWithStamps) return false;
+  if (a.giveStamps !== b.giveStamps) return false;
+  if (a.product?.id !== b.product?.id) return false;
+  if (a.nameHint !== b.nameHint) return false;
+  if (a.colorHint !== b.colorHint) return false;
 
+  return true;
+}
+
+export function groupPaymentItems(items: PaymentItem[]): Map<PaymentItem, number> {
+  let map = new Map<PaymentItem, number>();
+
+  for (let item of items) {
+    let found = false;
+    for (let [key, value] of map) {
+      if (paymentItemEqual(item, key)) {
+        found = true;
+        map.set(key, value + 1);
+        break;
+      }
+
+      if (!found) {
+        map.set(item, 1);
+      }
+    }
+  }
+
+  return map;
+}
+
+function calcAlternativeStamps(
+  current: {
+    total: number;
+    coffeeStamps: number;
+    bottleStamps: number;
+    items: PaymentItem[];
+  },
+  account: PaymentAccount
+): {
+  total: number;
+  coffeeStamps: number;
+  bottleStamps: number;
+  items: PaymentItem[];
+} {
+  let newItems = current.items.slice();
+
+  let maxPrice: number = 0;
+  let maxIndex: number = -1;
+  for (let i = 0; i < newItems.length; i++) {
+    let item = newItems[i];
+
+    if (item.payWithStamps !== StampType.NONE) {
+      continue;
+    }
+
+    switch (item.couldBePaidWithStamps) {
+      case StampType.COFFEE:
+        if (account.coffeeStamps >= 10 && item.price > maxPrice) {
+          maxIndex = i;
+          maxPrice = item.price;
+        }
+        break;
+      case StampType.BOTTLE:
+        if (account.bottleStamps >= 10 && item.price > maxPrice) {
+          maxIndex = i;
+          maxPrice = item.price;
+        }
+        break;
+    }
+  }
+
+  if (maxIndex >= 0) {
+    let item = newItems[maxIndex];
+
+    let newItem: PaymentItem = {
+      ...item,
+      price: 0,
+      payWithStamps: item.couldBePaidWithStamps,
+      giveStamps: StampType.NONE,
+    };
+
+    newItems.splice(maxIndex, 1, newItem);
+  }
+
+  let total = calculateTotal(newItems);
+
+  return {
+    total: total.total,
+    coffeeStamps: total.coffeeStamps,
+    bottleStamps: total.bottleStamps,
+    items: newItems,
+  };
+}
+
+async function onReceiveAccountAccessToken(
+  accessToken: string,
+  state: PaymentState,
+  apollo: ApolloClient<object>
+): Promise<{
+  account: PaymentAccount | null;
+  payment?: PaymentPayment;
+}> {
   if (state.payment && state.payment.type === 'InProgress') {
     const payment = state.payment;
     const variables: transactionVariables = {
-      accountAccessToken: query.accessToken,
-      stopIfStampPaymentIsPossible: false,
+      accountAccessToken: accessToken,
+      stopIfStampPaymentIsPossible: payment.stopIfStampPaymentIsPossible,
       transactionItems: state.payment.items.map((i) => {
         return {
-          price: i.price,
+          price: -i.price,
+          couldBePaidWithStamps: i.couldBePaidWithStamps,
           payWithStamps: i.payWithStamps,
           giveStamps: i.giveStamps,
           productId: i.product?.id,
@@ -149,7 +263,7 @@ export const receiveAccountAccessToken = createAsyncThunk<
       }),
     };
 
-    let result = await query.apollo.mutate<transaction, transactionVariables>({
+    let result = await apollo.mutate<transaction, transactionVariables>({
       mutation: TRANSACTION,
       variables,
     });
@@ -161,6 +275,7 @@ export const receiveAccountAccessToken = createAsyncThunk<
           type: 'Error',
           message: 'Could not execute transaction!',
           timeout: Date.now() + PAYMENT_ERROR_TIMEOUT,
+          stopIfStampPaymentIsPossible: payment.stopIfStampPaymentIsPossible,
           total: payment.total,
           coffeeStamps: payment.coffeeStamps,
           bottleStamps: payment.bottleStamps,
@@ -168,28 +283,64 @@ export const receiveAccountAccessToken = createAsyncThunk<
       };
     } else {
       let data = result.data;
-      return {
-        account: {
+
+      if (data.transaction.error) {
+        let account = {
           id: data.transaction.account.id,
           name: data.transaction.account.name,
           credit: data.transaction.account.credit,
           coffeeStamps: data.transaction.account.coffeeStamps,
           bottleStamps: data.transaction.account.bottleStamps,
-        },
-        payment: {
-          type: 'Success',
-          timeout: Date.now() + PAYMENT_SUCCESS_TIMEOUT,
-          total: payment.total,
-          coffeeStamps: payment.coffeeStamps,
-          bottleStamps: payment.bottleStamps,
-        },
-      };
+        };
+        let withStamps = calcAlternativeStamps(
+          {
+            total: payment.total,
+            coffeeStamps: payment.coffeeStamps,
+            bottleStamps: payment.bottleStamps,
+            items: payment.items,
+          },
+          account
+        );
+
+        return {
+          account: account,
+          payment: {
+            type: 'ReacalculateStamps',
+            timeout: Date.now() + PAYMENT_WAITING_TIMEOUT,
+            stopIfStampPaymentIsPossible: payment.stopIfStampPaymentIsPossible,
+            accountAccessToken: data.transaction.accountAccessToken ?? '',
+            total: payment.total,
+            coffeeStamps: payment.coffeeStamps,
+            bottleStamps: payment.bottleStamps,
+            items: payment.items,
+            withStamps: withStamps,
+          },
+        };
+      } else {
+        return {
+          account: {
+            id: data.transaction.account.id,
+            name: data.transaction.account.name,
+            credit: data.transaction.account.credit,
+            coffeeStamps: data.transaction.account.coffeeStamps,
+            bottleStamps: data.transaction.account.bottleStamps,
+          },
+          payment: {
+            type: 'Success',
+            timeout: Date.now() + PAYMENT_SUCCESS_TIMEOUT,
+            stopIfStampPaymentIsPossible: payment.stopIfStampPaymentIsPossible,
+            total: payment.total,
+            coffeeStamps: payment.coffeeStamps,
+            bottleStamps: payment.bottleStamps,
+          },
+        };
+      }
     }
   } else {
     const variables: getAccountByAccessTokenVariables = {
-      accountAccessToken: query.accessToken,
+      accountAccessToken: accessToken,
     };
-    let result = await query.apollo.query<getAccountByAccessToken, getAccountByAccessTokenVariables>({
+    let result = await apollo.query<getAccountByAccessToken, getAccountByAccessTokenVariables>({
       query: GET_ACCOUNT_BY_ACCESS_TOKEN,
       variables,
     });
@@ -210,6 +361,25 @@ export const receiveAccountAccessToken = createAsyncThunk<
       };
     }
   }
+}
+
+export const receiveAccountAccessToken = createAsyncThunk<
+  {
+    account: PaymentAccount | null;
+    payment?: PaymentPayment;
+  },
+  {
+    apollo: ApolloClient<object>;
+    accessToken: string;
+  },
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+  }
+>('payment/receiveAccessToken', async (query, thunkApi) => {
+  const state = thunkApi.getState().payment;
+
+  return await onReceiveAccountAccessToken(query.accessToken, state, query.apollo);
 });
 
 function trimPrefix(str: string, prefix: string) {
@@ -261,6 +431,7 @@ export const paymentSlice = createSlice({
       items.push({
         price: action.payload,
         payWithStamps: StampType.NONE,
+        couldBePaidWithStamps: StampType.NONE,
         giveStamps: StampType.NONE,
         product: null,
         nameHint: 'Eigener Betrag',
@@ -277,6 +448,7 @@ export const paymentSlice = createSlice({
       items.push({
         price: action.payload.price,
         payWithStamps: action.payload.payWithStamps,
+        couldBePaidWithStamps: StampType.NONE,
         giveStamps: action.payload.giveStamps,
         product: action.payload,
       });
@@ -375,10 +547,37 @@ export const paymentSlice = createSlice({
       state.payment = {
         type: 'Waiting',
         timeout: Date.now() + PAYMENT_WAITING_TIMEOUT,
+        stopIfStampPaymentIsPossible: true,
         total: state.paymentTotal,
         coffeeStamps: state.paymentCoffeeStamps,
         bottleStamps: state.paymentBottleStamps,
         items: state.storedPaymentItems,
+      };
+    },
+    paymentProceedWithStamps: (state) => {
+      if (state.payment?.type !== 'ReacalculateStamps') return;
+
+      state.payment = {
+        type: 'Waiting',
+        timeout: Date.now() + PAYMENT_WAITING_TIMEOUT,
+        stopIfStampPaymentIsPossible: true,
+        total: state.payment.withStamps.total,
+        coffeeStamps: state.payment.withStamps.coffeeStamps,
+        bottleStamps: state.payment.withStamps.bottleStamps,
+        items: state.payment.withStamps.items,
+      };
+    },
+    paymentProceedWithoutStamps: (state) => {
+      if (state.payment?.type !== 'ReacalculateStamps') return;
+
+      state.payment = {
+        type: 'Waiting',
+        timeout: Date.now() + PAYMENT_WAITING_TIMEOUT,
+        stopIfStampPaymentIsPossible: false,
+        total: state.payment.total,
+        coffeeStamps: state.payment.coffeeStamps,
+        bottleStamps: state.payment.bottleStamps,
+        items: state.payment.items,
       };
     },
     cancelPayment: (state) => {
@@ -423,6 +622,7 @@ export const paymentSlice = createSlice({
         state.payment = {
           type: 'Error',
           timeout: Date.now() + PAYMENT_ERROR_TIMEOUT,
+          stopIfStampPaymentIsPossible: state.payment.stopIfStampPaymentIsPossible,
           total: state.payment.total,
           coffeeStamps: state.payment.coffeeStamps,
           bottleStamps: state.payment.bottleStamps,
@@ -435,6 +635,7 @@ export const paymentSlice = createSlice({
         state.payment = {
           type: 'InProgress',
           timeout: Date.now() + PAYMENT_INPROGRESS_TIMEOUT,
+          stopIfStampPaymentIsPossible: state.payment.stopIfStampPaymentIsPossible,
           total: state.payment.total,
           coffeeStamps: state.payment.coffeeStamps,
           bottleStamps: state.payment.bottleStamps,
@@ -457,6 +658,8 @@ export const {
   hideNotification,
   removeAccount,
   payment,
+  paymentProceedWithStamps,
+  paymentProceedWithoutStamps,
   cancelPayment,
   checkTimeouts,
 } = paymentSlice.actions;

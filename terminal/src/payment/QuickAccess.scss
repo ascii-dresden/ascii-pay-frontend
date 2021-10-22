@@ -12,6 +12,10 @@
   display: flex;
   flex: 1 1 0px;
   gap: 0.6rem;
+
+  &:last-child {
+    flex-grow: 0.9;
+  }
 }
 .quick-access-entry {
   flex: 1 1 0px;
