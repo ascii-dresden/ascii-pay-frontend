@@ -10,7 +10,10 @@ type RegisterNfcCard = {
     account_id: string;
   };
 };
-export type WebSocketRequest = RequestAccountAccessToken | RequestReboot | RegisterNfcCard;
+type RequestStatusInformation = {
+  type: 'RequestStatusInformation';
+};
+export type WebSocketRequest = RequestAccountAccessToken | RequestReboot | RegisterNfcCard | RequestStatusInformation;
 
 type FoundUnknownBarcode = {
   type: 'FoundUnknownBarcode';
@@ -40,6 +43,12 @@ type FoundAccountAccessToken = {
 type NfcCardRemoved = {
   type: 'NfcCardRemoved';
 };
+type StatusInformation = {
+  type: 'StatusInformation';
+  payload: {
+    status: string;
+  };
+};
 type Error = {
   type: 'Error';
   payload: {
@@ -53,6 +62,7 @@ export type WebSocketResponse =
   | FoundProductId
   | FoundAccountAccessToken
   | NfcCardRemoved
+  | StatusInformation
   | Error;
 
 export interface WebSocketMessageHandler {
@@ -63,6 +73,7 @@ export interface WebSocketMessageHandler {
   onFoundProductId?(product_id: string): void | boolean;
   onFoundAccountAccessToken?(accessToken: string): void | boolean;
   onNfcCardRemoved?(): void | boolean;
+  onStatusInformation?(status: string): void | boolean;
   onError?(source: string, message: string): void | boolean;
 }
 
@@ -89,6 +100,9 @@ function dispatchMessage(message: WebSocketResponse, handler: WebSocketMessageHa
       break;
     case 'NfcCardRemoved':
       consumeType = (handler.onNfcCardRemoved && handler.onNfcCardRemoved()) || consumeType;
+      break;
+    case 'StatusInformation':
+      consumeType = (handler.onStatusInformation && handler.onStatusInformation(message.payload.status)) || consumeType;
       break;
     case 'Error':
       consumeType =
@@ -219,6 +233,22 @@ export class AsciiPayAuthenticationClient {
         payload: {
           account_id: account_id,
         },
+      };
+
+      this.socket.send(JSON.stringify(message));
+    };
+
+    if (this.connected) {
+      action();
+    } else {
+      this.queue.push(action);
+    }
+  }
+
+  requestStatusInformation() {
+    const action = () => {
+      const message: RequestStatusInformation = {
+        type: 'RequestStatusInformation',
       };
 
       this.socket.send(JSON.stringify(message));

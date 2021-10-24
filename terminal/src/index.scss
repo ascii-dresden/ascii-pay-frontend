@@ -99,6 +99,7 @@ body {
   color: var(--primary-text-color);
   user-select: none;
   overscroll-behavior: none;
+  overflow: hidden;
 }
 
 #root {
@@ -113,6 +114,7 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-size: 0.9rem;
 }
 
 ::-webkit-scrollbar {

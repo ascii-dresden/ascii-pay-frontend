@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import './SettingsPage.scss';
 import SidebarPage from './components/SidebarPage';
-import { AsciiPayAuthenticationClient } from './ascii-pay-authentication-client';
+import { AsciiPayAuthenticationClient, WebSocketMessageHandler } from './ascii-pay-authentication-client';
 
 const colors = ['teal', 'green', 'blue', 'purple', 'yellow', 'orange', 'red'];
 
@@ -21,6 +21,21 @@ export default function SettingsPage(props: { authClient: AsciiPayAuthentication
     document.body.dataset['highlight'] = highlightColor;
     localStorage.setItem('highlight-color', highlightColor);
   }, [highlightColor]);
+
+  const [statusInformation, setStatusInformation] = React.useState('');
+  const handler: WebSocketMessageHandler = {
+    onStatusInformation(status: string) {
+      setStatusInformation(status);
+      return true;
+    },
+  };
+
+  React.useEffect(() => {
+    props.authClient.addEventHandler(handler);
+    props.authClient.requestStatusInformation();
+    return () => props.authClient.removeEventHandler(handler);
+    // eslint-disable-next-line
+  }, [props.authClient]);
 
   const hightlightViews = colors.map((c) => (
     <div
@@ -63,6 +78,14 @@ export default function SettingsPage(props: { authClient: AsciiPayAuthentication
               <span>Actions</span>
               <div className="settings-item settings-actions form">
                 <button onClick={() => props.authClient.requestReboot()}>Reboot</button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div>
+              <span>Proxy status</span>
+              <div className="settings-item settings-proxy-status">
+                <code>{statusInformation}</code>
               </div>
             </div>
           </div>

@@ -12,8 +12,15 @@
   grid-gap: 0.4rem;
 
   & > div {
+    position: relative;
     & > div {
+      position: relative;
       padding: 0 1rem;
+
+      div {
+        max-width: 100%;
+      }
+
       & > span {
         display: block;
         padding: 0.5rem 0 0.2rem;
@@ -124,4 +131,10 @@
   .color-red {
     background-color: #c0392b;
   }
+}
+
+.settings-proxy-status {
+  white-space: pre;
+  overflow: auto;
+  max-width: 100%;
 }

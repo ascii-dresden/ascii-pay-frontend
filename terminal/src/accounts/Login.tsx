@@ -54,6 +54,7 @@ export default function Login(props: { authClient: AsciiPayAuthenticationClient 
     props.authClient.addEventHandler(handler);
     props.authClient.requestAccountAccessToken();
     return () => props.authClient.removeEventHandler(handler);
+    // eslint-disable-next-line
   }, [props.authClient]);
 
   let errorView = <></>;
