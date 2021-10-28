@@ -1,6 +1,6 @@
 import { useApolloClient } from '@apollo/client';
 import React, { useState } from 'react';
-import { MdApps, MdOutlineCalculate, MdOutlineListAlt, MdSchedule } from 'react-icons/md';
+import { MdApps, MdManageSearch, MdOutlineCalculate, MdSchedule } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import {
   AsciiPayAuthenticationClient,
@@ -64,7 +64,7 @@ export default function PaymentPage(props: { authClient: AsciiPayAuthenticationC
     },
     {
       title: 'Product list',
-      element: <MdOutlineListAlt />,
+      element: <MdManageSearch />,
       action: () => setActivePage(Page.PRODUCTS),
       active: activePage === Page.PRODUCTS,
     },

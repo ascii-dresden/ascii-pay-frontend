@@ -1,7 +1,7 @@
 import React from 'react';
 
 import './PaymentDialog.scss';
-import { MdClose, MdDone, MdErrorOutline, MdPriorityHigh } from 'react-icons/md';
+import { MdClose, MdDone, MdErrorOutline, MdHelpOutline } from 'react-icons/md';
 import { SiContactlesspayment } from 'react-icons/si';
 import Money from '../components/Money';
 import {
@@ -21,6 +21,7 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
 
   let status;
   let message = '';
+  let title = '';
 
   switch (props.payment.type) {
     case 'Success':
@@ -33,9 +34,10 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
     case 'ReacalculateStamps':
       status = (
         <div className="payment-status payment-warn">
-          <MdPriorityHigh />
+          <MdHelpOutline />
         </div>
       );
+      title = 'Stempel einlösen';
       break;
     case 'Error':
       status = (
@@ -118,6 +120,7 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
         <div className="payment-dialog-cancel" onClick={props.onClose}>
           <MdClose />
         </div>
+        <div className="payment-dialog-title">{title}</div>
         <div className="payment-dialog-status">{status}</div>
         <div className="payment-dialog-message">{message}</div>
         {leftContent}

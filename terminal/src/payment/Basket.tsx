@@ -1,5 +1,6 @@
 import React from 'react';
 import { MdEuroSymbol, MdPhoto } from 'react-icons/md';
+import { BASE_URI } from '..';
 import Money from '../components/Money';
 import Stamp from '../components/Stamp';
 import { useAppDispatch, useAppSelector } from '../store';
@@ -31,7 +32,7 @@ export default function Basket() {
       if (value.product.image) {
         image = (
           <div>
-            <img src={value.product.image} alt="" />
+            <img src={BASE_URI + value.product.image} alt="" />
           </div>
         );
       } else {

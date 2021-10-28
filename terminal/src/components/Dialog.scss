@@ -29,11 +29,15 @@
   margin-top: -12rem;
   background-color: var(--secondary-background);
   border: solid 1px var(--border-color);
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  & > div {
+    width: 100%;
+  }
 
   &.dialog-width {
     width: 36rem;
@@ -42,21 +46,29 @@
 }
 
 .dialog-title {
-  font-size: 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
   line-height: 3rem;
+  text-align: center;
 }
 .dialog-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 16rem;
+
+  & > div {
+    width: 100%;
+    padding: 0;
+  }
 }
 .dialog-actions {
-  line-height: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
 }
 .dialog-action {
-  padding: 0 0.8rem;
+  flex: 1 1 auto;
 }

@@ -1,12 +1,14 @@
-import { useQuery } from '@apollo/client';
-import React, { useState } from 'react';
+import { useApolloClient, useQuery } from '@apollo/client';
+import React, { useCallback, useState } from 'react';
 import { AsciiPayAuthenticationClient, WebSocketMessageHandler } from '../ascii-pay-authentication-client';
+import Dialog from '../components/Dialog';
 import { GET_ACCOUNT } from '../graphql';
 import { Permission } from '../types/graphql-global';
 import { getAccount, getAccountVariables, getAccount_getAccount } from '../__generated__/getAccount';
 import './AccountDetails.scss';
 
 export default function AccountDetails(props: { id: string; authClient: AsciiPayAuthenticationClient }) {
+  const client = useApolloClient();
   const { loading, error, data } = useQuery<getAccount, getAccountVariables>(GET_ACCOUNT, {
     fetchPolicy: 'network-only',
     variables: {
@@ -20,6 +22,7 @@ export default function AccountDetails(props: { id: string; authClient: AsciiPay
       name: string;
     } | null
   );
+  const [registerAccountNumber, setRegisterAccountNumber] = useState(null as string | null);
 
   let account: getAccount_getAccount = {
     __typename: 'AccountOutput',
@@ -35,10 +38,16 @@ export default function AccountDetails(props: { id: string; authClient: AsciiPay
 
   const handler: WebSocketMessageHandler = {
     onFoundUnknownNfcCard(id: string, name: string) {
+      setRegisterAccountNumber(null);
       setRegisterNfc({
         id,
         name,
       });
+      return true;
+    },
+    onFoundAccountNumber(accountNumber: string) {
+      setRegisterNfc(null);
+      setRegisterAccountNumber(accountNumber);
       return true;
     },
     onNfcCardRemoved() {
@@ -49,23 +58,87 @@ export default function AccountDetails(props: { id: string; authClient: AsciiPay
 
   React.useEffect(() => {
     props.authClient.addEventHandler(handler);
+    props.authClient.requestAccountAccessToken();
     return () => props.authClient.removeEventHandler(handler);
-  });
+    // eslint-disable-next-line
+  }, [props.authClient]);
+
+  // const setAccountNumber = useCallback(
+  //   (id: string, accountNumber: string) => {
+
+  //     mutateFunction({
+  //       variables: {
+  //         username: username,
+  //         password: password,
+  //         accountAccessToken: null,
+  //       },
+  //     }).catch(() => {
+  //       // login failed
+  //     });
+  //   },
+  //   [mutateFunction]
+  // );
 
   let addView = <></>;
   if (registerNfc && account.id) {
-    const registerNfcHander = () => {
-      if (account.id) {
-        props.authClient.registerNfcCard(account.id);
-        setRegisterNfc(null);
-      }
-    };
+    let action = [
+      {
+        label: 'Register nfc card',
+        action: () => {
+          if (account.id) {
+            props.authClient.registerNfcCard(account.id);
+            setRegisterNfc(null);
+          }
+        },
+      },
+      {
+        label: 'Cancel',
+        action: () => {
+          setRegisterNfc(null);
+        },
+      },
+    ];
     addView = (
-      <div>
-        <label>Found new nfc card</label>
-        <input readOnly={true} value={registerNfc.name} />
-        <button onClick={registerNfcHander}>Register nfc card</button>
-      </div>
+      <Dialog title="Found new nfc card" actions={action}>
+        <div className="form">
+          <div>
+            <label>NFC Type</label>
+            <input readOnly={true} value={registerNfc.name} />
+          </div>
+          <div>
+            <label>NFC ID</label>
+            <input readOnly={true} value={registerNfc.id} />
+          </div>
+        </div>
+      </Dialog>
+    );
+  } else if (registerAccountNumber && account.id) {
+    let action = [
+      {
+        label: 'Register account number',
+        action: () => {
+          if (account.id) {
+            // TODO
+            setRegisterAccountNumber(null);
+          }
+        },
+      },
+      {
+        label: 'Cancel',
+        action: () => {
+          setRegisterAccountNumber(null);
+        },
+      },
+    ];
+    addView = (
+      <Dialog title="Found account number" actions={action}>
+        <div className="form">
+          <div>
+            <label>Account number</label>
+            <input readOnly={true} value={registerAccountNumber} />
+          </div>
+        </div>
+      </Dialog>
     );
   }
 

@@ -30,9 +30,21 @@
   border: solid 1px var(--border-color);
 }
 
+.payment-dialog-title {
+  position: absolute;
+  top: 2.5rem;
+  left: 50%;
+  margin-left: -5rem;
+  height: 10rem;
+  width: 10rem;
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: bold;
+}
+
 .payment-dialog-status {
   position: absolute;
-  top: 4rem;
+  top: 5rem;
   left: 50%;
   margin-left: -5rem;
   height: 10rem;

@@ -57,6 +57,18 @@ export const GET_ACCOUNT = gql`
   }
 `;
 
+export const SET_ACCOUNT_NUMBER = gql`
+  mutation setAccountNumber($id: UUID!, $accountNumber: String!) {
+    updateAccount(id: $id, input: { accountNumber: $accountNumber }) {
+      id
+      name
+      username
+      accountNumber
+      permission
+    }
+  }
+`;
+
 export const GET_ACCOUNT_BY_ACCESS_TOKEN = gql`
   query getAccountByAccessToken($accountAccessToken: String!) {
     getAccountByAccessToken(accountAccessToken: $accountAccessToken) {
@@ -151,6 +163,7 @@ export const GET_PRODUCTS = gql`
           price
           payWithStamps
           giveStamps
+          ordering
         }
       }
     }

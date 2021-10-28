@@ -15,9 +15,9 @@ export interface DialogProps {
 export default function Dialog(props: DialogProps) {
   let actions = props.actions.map(({ label, action }) => {
     return (
-      <div key={label} className="dialog-action" onClick={() => action()}>
+      <button key={label} className="dialog-action" onClick={() => action()}>
         {label}
-      </div>
+      </button>
     );
   });
 

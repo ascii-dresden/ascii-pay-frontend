@@ -77,7 +77,8 @@ export default function SettingsPage(props: { authClient: AsciiPayAuthentication
             <div>
               <span>Actions</span>
               <div className="settings-item settings-actions form">
-                <button onClick={() => props.authClient.requestReboot()}>Reboot</button>
+                <button onClick={() => window.location.reload()}>Reload page</button>
+                <button onClick={() => props.authClient.requestReboot()}>Reboot terminal</button>
               </div>
             </div>
           </div>

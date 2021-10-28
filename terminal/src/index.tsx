@@ -13,8 +13,10 @@ import { AsciiPayAuthenticationClient } from './ascii-pay-authentication-client'
 import { setScreensaver } from './payment/paymentSlice';
 import NotificationManager from './components/NotificationManager';
 
+export const BASE_URI = 'http://localhost:8080';
+
 const httpLink = createHttpLink({
-  uri: 'http://localhost:8080/api/v1/graphql',
+  uri: BASE_URI + '/api/v1/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {

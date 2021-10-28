@@ -21,6 +21,12 @@ type FoundUnknownBarcode = {
     code: string;
   };
 };
+type FoundAccountNumber = {
+  type: 'FoundAccountNumber';
+  payload: {
+    account_number: string;
+  };
+};
 type FoundUnknownNfcCard = {
   type: 'FoundUnknownNfcCard';
   payload: {
@@ -58,6 +64,7 @@ type Error = {
 };
 export type WebSocketResponse =
   | FoundUnknownBarcode
+  | FoundAccountNumber
   | FoundUnknownNfcCard
   | FoundProductId
   | FoundAccountAccessToken
@@ -69,6 +76,7 @@ export interface WebSocketMessageHandler {
   onMessage?(message: WebSocketResponse): void | boolean;
 
   onFoundUnknownBarcode?(code: string): void | boolean;
+  onFoundAccountNumber?(accountNumber: string): void | boolean;
   onFoundUnknownNfcCard?(id: string, name: string): void | boolean;
   onFoundProductId?(product_id: string): void | boolean;
   onFoundAccountAccessToken?(accessToken: string): void | boolean;
@@ -84,6 +92,10 @@ function dispatchMessage(message: WebSocketResponse, handler: WebSocketMessageHa
     case 'FoundUnknownBarcode':
       consumeType =
         (handler.onFoundUnknownBarcode && handler.onFoundUnknownBarcode(message.payload.code)) || consumeType;
+      break;
+    case 'FoundAccountNumber':
+      consumeType =
+        (handler.onFoundAccountNumber && handler.onFoundAccountNumber(message.payload.account_number)) || consumeType;
       break;
     case 'FoundUnknownNfcCard':
       consumeType =

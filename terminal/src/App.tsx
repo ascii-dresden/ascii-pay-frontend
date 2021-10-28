@@ -42,6 +42,15 @@ export default function App(props: { authClient: AsciiPayAuthenticationClient })
         })
       );
     },
+    onFoundAccountNumber(accountNumber: string) {
+      dispatch(
+        showNotification({
+          type: NotificationType.QR,
+          title: 'Found account number',
+          description: accountNumber,
+        })
+      );
+    },
     onFoundUnknownNfcCard(id: string, name: string) {
       dispatch(
         showNotification({
@@ -72,6 +81,14 @@ export default function App(props: { authClient: AsciiPayAuthenticationClient })
         showNotification({
           type: NotificationType.NFC,
           title: 'Nfc card was removed',
+        })
+      );
+    },
+    onStatusInformation(status) {
+      dispatch(
+        showNotification({
+          type: NotificationType.GENERAL,
+          title: 'Receive status information',
         })
       );
     },
