@@ -13,10 +13,12 @@ import { AsciiPayAuthenticationClient } from './ascii-pay-authentication-client'
 import { setScreensaver } from './payment/paymentSlice';
 import NotificationManager from './components/NotificationManager';
 
-export const BASE_URI = 'http://localhost:8080';
+const HOST = window.location.hostname;
+export const SERVER_URI = 'http://' + HOST + ':8080';
+export const PROXY_URI = 'ws://' + HOST + ':9001/';
 
 const httpLink = createHttpLink({
-  uri: BASE_URI + '/api/v1/graphql',
+  uri: SERVER_URI + '/api/v1/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -37,7 +39,7 @@ const apolloClient = new ApolloClient({
 document.body.dataset['theme'] = localStorage.getItem('dark-mode') === 'true' ? 'dark' : 'light';
 document.body.dataset['highlight'] = localStorage.getItem('highlight-color') || 'blue';
 
-const authClient = new AsciiPayAuthenticationClient('ws://localhost:9001/');
+const authClient = new AsciiPayAuthenticationClient(PROXY_URI);
 
 document.body.addEventListener('click', () => {
   store.dispatch(setScreensaver(false));

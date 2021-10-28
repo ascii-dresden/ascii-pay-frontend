@@ -11,7 +11,7 @@ import { useAppDispatch } from '../store';
 import { addProduct } from './paymentSlice';
 import { StampType } from '../types/graphql-global';
 import Stamp from '../components/Stamp';
-import { BASE_URI } from '..';
+import { SERVER_URI } from '..';
 
 const groupBy = function <T>(array: T[], selector: (x: T) => string | null) {
   let map = new Map<string | null, T[]>();
@@ -135,7 +135,7 @@ function ProductItem(props: { product: getProducts_getProducts_element }) {
     if (props.product.image) {
       image = (
         <div>
-          <img src={BASE_URI + props.product.image} alt="" />
+          <img src={SERVER_URI + props.product.image} alt="" />
         </div>
       );
     } else {

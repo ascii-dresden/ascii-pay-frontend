@@ -69,11 +69,16 @@ export default function Login(props: { authClient: AsciiPayAuthenticationClient 
         <div className="form">
           <div>
             <label>Username</label>
-            <input placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+            <input placeholder="Username" inputMode="none" onChange={(e) => setUsername(e.target.value)} />
           </div>
           <div>
             <label>Password</label>
-            <input placeholder="Password" type="password" onChange={(e) => setPassword(e.target.value)} />
+            <input
+              placeholder="Password"
+              inputMode="none"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
           <button disabled={loading} onClick={() => onLogin(username, password)}>
             Login
