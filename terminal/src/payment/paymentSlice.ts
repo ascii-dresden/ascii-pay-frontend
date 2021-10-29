@@ -560,7 +560,7 @@ export const paymentSlice = createSlice({
       state.payment = {
         type: 'Waiting',
         timeout: Date.now() + PAYMENT_WAITING_TIMEOUT,
-        stopIfStampPaymentIsPossible: true,
+        stopIfStampPaymentIsPossible: false,
         total: state.payment.withStamps.total,
         coffeeStamps: state.payment.withStamps.coffeeStamps,
         bottleStamps: state.payment.withStamps.bottleStamps,

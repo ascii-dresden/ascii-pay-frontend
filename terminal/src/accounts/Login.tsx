@@ -57,6 +57,9 @@ export default function Login(props: { authClient: AsciiPayAuthenticationClient 
     // eslint-disable-next-line
   }, [props.authClient]);
 
+  const usernameInput = React.useRef<HTMLInputElement>(null);
+  const passwordInput = React.useRef<HTMLInputElement>(null);
+
   let errorView = <></>;
   if (error) {
     errorView = <div className="login-error">Login failed!</div>;
@@ -69,18 +72,27 @@ export default function Login(props: { authClient: AsciiPayAuthenticationClient 
         <div className="form">
           <div>
             <label>Username</label>
-            <input placeholder="Username" inputMode="none" onChange={(e) => setUsername(e.target.value)} />
+            <input
+              ref={usernameInput}
+              placeholder="Username"
+              inputMode="none"
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
           <div>
             <label>Password</label>
             <input
+              ref={passwordInput}
               placeholder="Password"
               inputMode="none"
               type="password"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button disabled={loading} onClick={() => onLogin(username, password)}>
+          <button
+            disabled={loading}
+            onClick={() => onLogin(usernameInput.current?.value ?? username, passwordInput.current?.value ?? password)}
+          >
             Login
           </button>
           {errorView}

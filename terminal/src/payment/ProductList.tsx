@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../graphql';
-import { getProducts, getProducts_getProducts_element } from '../__generated__/getProducts';
+import { getProducts, getProducts_getProducts, getProducts_getProducts_element } from '../__generated__/getProducts';
 import './ProductList.scss';
 import { MdCoffee, MdEuroSymbol, MdPhoto } from 'react-icons/md';
 import { FaLeaf, FaWineBottle } from 'react-icons/fa';
@@ -54,14 +54,30 @@ export default function ProductList() {
 
   const productGroup = groupBy(data.getProducts, (x) => getGroupingKey(x.element));
 
+  let resultArray: {
+    categoryId: string;
+    categoryName: string;
+    categoryOrder: number;
+    productList: getProducts_getProducts[];
+  }[] = [];
+  for (let [categoryId, productList] of productGroup.entries()) {
+    resultArray.push({
+      categoryId: categoryId ?? '',
+      categoryName: productList[0].element.category.name,
+      categoryOrder: productList[0].element.category.ordering ?? 999,
+      productList,
+    });
+  }
+  resultArray.sort((a, b) => a.categoryOrder - b.categoryOrder);
+
   let tabs: any[] = [];
   let content: any[] = [];
   let index = 0;
-  for (let [categoryId, productList] of productGroup.entries()) {
+  for (let entry of resultArray) {
     let active = index === tabIndex;
     let currentTabIndex = index;
 
-    let name = productList[0].element.category.name;
+    let name = entry.categoryName;
     let icon: any | null = null;
     switch (name) {
       case 'Heißgetränke':
@@ -84,20 +100,15 @@ export default function ProductList() {
     }
 
     tabs.push(
-      <div
-        key={categoryId}
-        style={{ order: productList[0].element.category?.ordering ?? 0 }}
-        className={active ? 'active' : ''}
-        onClick={() => setTabIndex(currentTabIndex)}
-      >
+      <div key={entry.categoryId} className={active ? 'active' : ''} onClick={() => setTabIndex(currentTabIndex)}>
         {icon}
         <span>{name}</span>
       </div>
     );
 
     if (active) {
-      productList.sort((a, b) => a.element.name.localeCompare(b.element.name));
-      for (let product of productList) {
+      entry.productList.sort((a, b) => a.element.name.localeCompare(b.element.name));
+      for (let product of entry.productList) {
         content.push(<ProductItem key={product.element.id} product={product.element} />);
       }
     }

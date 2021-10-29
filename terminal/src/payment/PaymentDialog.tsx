@@ -61,12 +61,14 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
       let accessToken = props.payment.accountAccessToken;
       dispatch(paymentProceedWithStamps());
 
-      dispatch(
-        receiveAccountAccessToken({
-          apollo: client,
-          accessToken: accessToken,
-        })
-      );
+      setTimeout(() => {
+        dispatch(
+          receiveAccountAccessToken({
+            apollo: client,
+            accessToken: accessToken,
+          })
+        );
+      }, 500);
     }
   };
   let proceedWithoutStamps = () => {
@@ -74,12 +76,14 @@ export default function PaymentDialog(props: { payment: PaymentPayment; onClose:
       let accessToken = props.payment.accountAccessToken;
       dispatch(paymentProceedWithoutStamps());
 
-      dispatch(
-        receiveAccountAccessToken({
-          apollo: client,
-          accessToken: accessToken,
-        })
-      );
+      setTimeout(() => {
+        dispatch(
+          receiveAccountAccessToken({
+            apollo: client,
+            accessToken: accessToken,
+          })
+        );
+      }, 500);
     }
   };
 
