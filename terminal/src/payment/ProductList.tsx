@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../graphql';
-import { getProducts, getProducts_getProducts, getProducts_getProducts_element } from '../__generated__/getProducts';
+import { getProducts, getProducts_getProducts } from '../__generated__/getProducts';
 import './ProductList.scss';
 import { MdCoffee, MdEuroSymbol, MdPhoto } from 'react-icons/md';
 import { FaLeaf, FaWineBottle } from 'react-icons/fa';
@@ -27,12 +27,6 @@ const groupBy = function <T>(array: T[], selector: (x: T) => string | null) {
   return map;
 };
 
-function getGroupingKey(x: getProducts_getProducts_element): string {
-  let name = x.category.name;
-  name = name.replace(' BIO', '');
-  return name;
-}
-
 export default function ProductList() {
   const { loading, error, data } = useQuery<getProducts>(GET_PRODUCTS, {
     fetchPolicy: 'network-only',
@@ -52,7 +46,22 @@ export default function ProductList() {
     return <></>;
   }
 
-  const productGroup = groupBy(data.getProducts, (x) => getGroupingKey(x.element));
+  const productGroup = groupBy(data.getProducts, (x) => x.category.name);
+
+  const ordering = (name: string): number => {
+    switch (name) {
+      case 'Heißgetränke':
+        return 0;
+      case 'Kaltgetränke 0,5l':
+        return 0;
+      case 'Kaltgetränke 0,33l':
+        return 0;
+      case 'Snacks':
+        return 0;
+      default:
+        return 999;
+    }
+  };
 
   let resultArray: {
     categoryId: string;
@@ -63,8 +72,8 @@ export default function ProductList() {
   for (let [categoryId, productList] of productGroup.entries()) {
     resultArray.push({
       categoryId: categoryId ?? '',
-      categoryName: productList[0].element.category.name,
-      categoryOrder: productList[0].element.category.ordering ?? 999,
+      categoryName: productList[0].category.name,
+      categoryOrder: ordering(productList[0].category.name),
       productList,
     });
   }
@@ -89,7 +98,6 @@ export default function ProductList() {
         name = 'Flasche 0,5l';
         break;
       case 'Kaltgetränke 0,33l':
-      case 'Kaltgetränke 0,33l BIO':
         icon = <FaWineBottle />;
         name = 'Flasche 0,33l';
         break;
@@ -107,9 +115,9 @@ export default function ProductList() {
     );
 
     if (active) {
-      entry.productList.sort((a, b) => a.element.name.localeCompare(b.element.name));
+      entry.productList.sort((a, b) => a.name.localeCompare(b.name));
       for (let product of entry.productList) {
-        content.push(<ProductItem key={product.element.id} product={product.element} />);
+        content.push(<ProductItem key={product.id} product={product} />);
       }
     }
 
@@ -124,7 +132,7 @@ export default function ProductList() {
   );
 }
 
-function ProductItem(props: { product: getProducts_getProducts_element }) {
+function ProductItem(props: { product: getProducts_getProducts }) {
   const dispatch = useAppDispatch();
 
   const clickHandler = useCallback(() => {
@@ -133,9 +141,9 @@ function ProductItem(props: { product: getProducts_getProducts_element }) {
         id: props.product.id,
         name: props.product.name,
         image: props.product.image,
-        price: props.product.price ?? props.product.category.price,
+        price: props.product.price,
         payWithStamps: StampType.NONE,
-        giveStamps: props.product.giveStamps ?? props.product.category.giveStamps,
+        giveStamps: props.product.giveStamps,
       })
     );
   }, [props, dispatch]);
@@ -165,15 +173,15 @@ function ProductItem(props: { product: getProducts_getProducts_element }) {
   }
 
   let stamps: any[] = [];
-  if (props.product.giveStamps ?? props.product.category.giveStamps === StampType.COFFEE) {
+  if (props.product.giveStamps === StampType.COFFEE) {
     stamps.push(<Stamp key="coffee+1" value={1} type={StampType.COFFEE} />);
-  } else if (props.product.giveStamps ?? props.product.category.giveStamps === StampType.BOTTLE) {
+  } else if (props.product.giveStamps === StampType.BOTTLE) {
     stamps.push(<Stamp key="bottle+1" value={1} type={StampType.BOTTLE} />);
   }
 
-  if (props.product.payWithStamps ?? props.product.category.payWithStamps === StampType.COFFEE) {
+  if (props.product.payWithStamps === StampType.COFFEE) {
     stamps.push(<Stamp key="coffee-10" value="Bezahlbar mit " type={StampType.COFFEE} />);
-  } else if (props.product.payWithStamps ?? props.product.category.payWithStamps === StampType.BOTTLE) {
+  } else if (props.product.payWithStamps === StampType.BOTTLE) {
     stamps.push(<Stamp key="bottle-10" value="Bezahlbar mit " type={StampType.BOTTLE} />);
   }
 
@@ -186,7 +194,7 @@ function ProductItem(props: { product: getProducts_getProducts_element }) {
     <div className="product-entry-name">
       <span>{splitName ? props.product.name.substring(0, start) : props.product.name}</span>
       {splitName ? <i>{props.product.name.substring(start, end)}</i> : null}
-      {props.product.category.name.includes('BIO') ? (
+      {props.product.flags.includes('BIO') ? (
         <div key="bio" className="product-entry-bio">
           <FaLeaf />
         </div>
@@ -205,7 +213,7 @@ function ProductItem(props: { product: getProducts_getProducts_element }) {
           <div className="product-entry-stamps">{stamps}</div>
         </div>
         <div className="product-entry-price">
-          <Money value={props.product.price ?? props.product.category.price} />
+          <Money value={props.product.price} />
         </div>
       </div>
     </div>

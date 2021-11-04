@@ -135,11 +135,7 @@ export const GET_OWN_TRANSACTIONS = gql`
           giveStamps
           image
           category {
-            id
             name
-            price
-            payWithStamps
-            giveStamps
           }
         }
       }
@@ -150,21 +146,16 @@ export const GET_OWN_TRANSACTIONS = gql`
 export const GET_PRODUCTS = gql`
   query getProducts {
     getProducts {
-      element {
-        id
+      id
+      name
+      nickname
+      price
+      payWithStamps
+      giveStamps
+      image
+      flags
+      category {
         name
-        price
-        payWithStamps
-        giveStamps
-        image
-        category {
-          id
-          name
-          price
-          payWithStamps
-          giveStamps
-          ordering
-        }
       }
     }
   }

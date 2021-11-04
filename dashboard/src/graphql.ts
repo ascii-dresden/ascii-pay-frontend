@@ -59,11 +59,7 @@ export const GET_OWN_TRANSACTIONS = gql`
           giveStamps
           image
           category {
-            id
             name
-            price
-            payWithStamps
-            giveStamps
           }
         }
       }

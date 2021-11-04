@@ -23,16 +23,12 @@ export type DiagramData = {
     product: {
       id: UUID;
       name: string;
-      price: number | null;
-      payWithStamps: StampType | null;
-      giveStamps: StampType | null;
+      price: number;
+      payWithStamps: StampType;
+      giveStamps: StampType;
       image: string | null;
       category: {
-        id: UUID;
         name: string;
-        price: number;
-        payWithStamps: StampType;
-        giveStamps: StampType;
       };
     } | null;
   }[];
