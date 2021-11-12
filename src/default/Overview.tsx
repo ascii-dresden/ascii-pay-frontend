@@ -26,13 +26,11 @@ export default function Overview(props: { account: getSelf_getSelf }) {
         <PageHeader
           title="Overview"
           extra={[
-            <Link to="/admin/accounts">
-              <Button key="admin" type="text">
-                Open Management View
-              </Button>
+            <Link key="admin" to="/admin/accounts">
+              <Button type="text">Open Management View</Button>
             </Link>,
-            <Link to="/preferences">
-              <Button key="preferences">Preferences</Button>
+            <Link key="preferences" to="/preferences">
+              <Button>Preferences</Button>
             </Link>,
             <Button
               key="logout"

@@ -66,3 +66,123 @@ export const GET_OWN_TRANSACTIONS = gql`
     }
   }
 `;
+
+export const GET_ACCOUNTS = gql`
+  query getAccounts {
+    getAccounts {
+      element {
+        id
+        credit
+        minimumCredit
+        name
+        mail
+        username
+        accountNumber
+        permission
+        useDigitalStamps
+        coffeeStamps
+        bottleStamps
+        receivesMonthlyReport
+      }
+    }
+  }
+`;
+
+export const GET_ACCOUNT = gql`
+  query getAccount($id: UUID!) {
+    getAccount(id: $id) {
+      id
+      credit
+      minimumCredit
+      name
+      mail
+      username
+      accountNumber
+      permission
+      useDigitalStamps
+      coffeeStamps
+      bottleStamps
+      receivesMonthlyReport
+    }
+  }
+`;
+
+export const UPDATE_ACCOUNT = gql`
+  mutation updateAccount(
+    $id: UUID!
+    $name: String
+    $permission: Permission
+    $username: String
+    $mail: String
+    $accountNumber: String
+    $minimumCredit: Int
+    $useDigitalStamps: Boolean
+    $receivesMonthlyReport: Boolean
+  ) {
+    updateAccount(
+      id: $id
+      input: {
+        name: $name
+        permission: $permission
+        username: $username
+        mail: $mail
+        accountNumber: $accountNumber
+        minimumCredit: $minimumCredit
+        useDigitalStamps: $useDigitalStamps
+        receivesMonthlyReport: $receivesMonthlyReport
+      }
+    ) {
+      id
+      credit
+      minimumCredit
+      name
+      mail
+      username
+      accountNumber
+      permission
+      useDigitalStamps
+      coffeeStamps
+      bottleStamps
+      receivesMonthlyReport
+    }
+  }
+`;
+
+export const CREATE_ACCOUNT = gql`
+  mutation createAccount(
+    $name: String!
+    $permission: Permission!
+    $username: String
+    $mail: String
+    $accountNumber: String
+    $minimumCredit: Int
+    $useDigitalStamps: Boolean
+    $receivesMonthlyReport: Boolean
+  ) {
+    createAccount(
+      input: {
+        name: $name
+        permission: $permission
+        username: $username
+        mail: $mail
+        accountNumber: $accountNumber
+        minimumCredit: $minimumCredit
+        useDigitalStamps: $useDigitalStamps
+        receivesMonthlyReport: $receivesMonthlyReport
+      }
+    ) {
+      id
+      credit
+      minimumCredit
+      name
+      mail
+      username
+      accountNumber
+      permission
+      useDigitalStamps
+      coffeeStamps
+      bottleStamps
+      receivesMonthlyReport
+    }
+  }
+`;
