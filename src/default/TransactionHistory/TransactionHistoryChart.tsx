@@ -7,6 +7,7 @@ import { StampType } from '../../types/graphql-global';
 
 export type DiagramData = {
   id: UUID;
+  renderTooltip: boolean;
   total: number;
   beforeCredit: number;
   afterCredit: number;
@@ -17,7 +18,6 @@ export type DiagramData = {
   beforeBottleStamps: number;
   afterBottleStamps: number;
   date: number;
-  renderTooltip: boolean;
   items: {
     price: number;
     payWithStamps: StampType;
@@ -25,16 +25,12 @@ export type DiagramData = {
     product: {
       id: UUID;
       name: string;
-      price: number | null;
-      payWithStamps: StampType | null;
-      giveStamps: StampType | null;
+      price: number;
+      payWithStamps: StampType;
+      giveStamps: StampType;
       image: string | null;
       category: {
-        id: UUID;
         name: string;
-        price: number;
-        payWithStamps: StampType;
-        giveStamps: StampType;
       };
     } | null;
   }[];

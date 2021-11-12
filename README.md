@@ -1,17 +1,15 @@
-# ascii-pay-frontend
+# ascii pay dashboard
 
-## Dashboard
+## Development
 
-```bash
-yarn workspace @ascii-pay-frontend/dashboard start
-# or
-yarn workspace @ascii-pay-frontend/dashboard build
+```sh
+yarn install
+yarn start
 ```
 
-## Terminal
+### Build android wrapper
 
-```bash
-yarn workspace @ascii-pay-frontend/terminal start
-# or
-yarn workspace @ascii-pay-frontend/terminal package
+```sh
+yarn install
+yarn build
 ```

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Table, Tag } from 'antd';
+import { Button, Table } from 'antd';
 import moment from 'moment';
 import { getOwnTransactions_getOwnTransactions } from '../../__generated__/getOwnTransactions';
 
