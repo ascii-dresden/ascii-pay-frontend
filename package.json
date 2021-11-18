@@ -3,7 +3,7 @@
   "description": "Dashboard ui for ascii-pay",
   "version": "1.0.0",
   "private": true,
-  "bin": "app.js",
+  "homepage": "./",
   "dependencies": {
     "@ant-design/charts": "^1.2.5",
     "@ant-design/colors": "^6.0.0",
