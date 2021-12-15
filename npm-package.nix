@@ -1,8 +1,9 @@
-{  }:
+{ pkgs, ... }:
   allDeps:
     {
       key = { name = "ascii-pay-dashboard"; scope = ""; };
       version = "1.0.0";
+      nativeBuildInputs = with pkgs; [yarn];
       nodeBuildInputs = let
         a = allDeps;
       in [
@@ -38,5 +39,12 @@
         (a."graphql@^15.6.0")
         (a."prettier@^2.4.1")
         ];
-      meta = { description = "Dashboard ui for ascii-pay"; };
-      }
+      
+        buildPhase = ''
+          ls -al
+          yarn schema:generate --offline
+          yarn build --offline
+        '';
+
+    meta = { description = "Dashboard ui for ascii-pay"; };
+}

@@ -22,7 +22,12 @@
                       inherit sha1;
                       };
                     nodeBuildInputs = deps;
-                    };
+                    dontMakeSourcesWritable = true;
+
+                    postUnpack = ''
+                        chmod +x package || true
+                    ''; 
+                  };
         nodeFileLocalPackage = key:
           version:
             path:
