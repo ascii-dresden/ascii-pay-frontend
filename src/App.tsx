@@ -19,7 +19,6 @@ export default function App() {
   }
 
   if (error || !data) {
-    console.log(error);
     return <Login />;
   }
 

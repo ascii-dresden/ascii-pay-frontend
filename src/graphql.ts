@@ -68,8 +68,8 @@ export const GET_OWN_TRANSACTIONS = gql`
 `;
 
 export const GET_ACCOUNTS = gql`
-  query getAccounts {
-    getAccounts {
+  query getAccounts($search: String) {
+    getAccounts(search: $search) {
       element {
         id
         credit
@@ -183,6 +183,42 @@ export const CREATE_ACCOUNT = gql`
       coffeeStamps
       bottleStamps
       receivesMonthlyReport
+    }
+  }
+`;
+
+export const GET_ACCOUNT_ACCESS_TOKEN = gql`
+  mutation getAccountAccessToken($id: UUID!) {
+    getAccountAccessToken(id: $id) {
+      token
+    }
+  }
+`;
+
+export const TRANSACTION = gql`
+  mutation transaction(
+    $accountAccessToken: String!
+    $stopIfStampPaymentIsPossible: Boolean!
+    $transactionItems: [PaymentItemInput!]!
+  ) {
+    transaction(
+      input: {
+        accountAccessToken: $accountAccessToken
+        stopIfStampPaymentIsPossible: $stopIfStampPaymentIsPossible
+        transactionItems: $transactionItems
+      }
+    ) {
+      account {
+        id
+        name
+        credit
+        coffeeStamps
+        bottleStamps
+      }
+      accountAccessToken
+      error {
+        message
+      }
     }
   }
 `;
