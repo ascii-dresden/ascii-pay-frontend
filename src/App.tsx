@@ -5,12 +5,12 @@ import Login from './default/Login';
 import Overview from './default/Overview';
 import Preferences from './default/Preferences';
 import { useQuery } from '@apollo/client';
-import { GET_SELF } from './graphql';
-import { getSelf } from './__generated__/getSelf';
+import { GET_ACCOUNT } from './graphql';
 import AccountPage from './admin/AccountPage';
+import { getAccount } from './__generated__/getAccount';
 
 export default function App() {
-  const { loading, error, data } = useQuery<getSelf>(GET_SELF, {
+  const { loading, error, data } = useQuery<getAccount>(GET_ACCOUNT, {
     fetchPolicy: 'network-only',
   });
 
@@ -22,7 +22,7 @@ export default function App() {
     return <Login />;
   }
 
-  const account = data.getSelf;
+  const account = data.getAccount;
 
   return (
     <Router basename="">

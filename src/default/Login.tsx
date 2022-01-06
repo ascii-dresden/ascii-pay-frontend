@@ -3,7 +3,7 @@ import './Login.scss';
 import { Form, Input, Button, Image, Card, Spin, Alert } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useApolloClient, useMutation } from '@apollo/client';
-import { GET_SELF, LOGIN } from '../graphql';
+import { GET_ACCOUNT, LOGIN } from '../graphql';
 
 const LOGO_URL: string = process.env.PUBLIC_URL + '/ascii-pay-logo-wide.svg';
 
@@ -26,7 +26,7 @@ export default function Login() {
   if (data) {
     localStorage['token'] = data.login.token;
     client.refetchQueries({
-      include: [GET_SELF],
+      include: [GET_ACCOUNT],
     });
   }
 

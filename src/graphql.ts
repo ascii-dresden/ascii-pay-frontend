@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const GET_SELF = gql`
-  query getSelf {
-    getSelf {
+export const GET_ACCOUNT = gql`
+  query getAccount($id: UUID) {
+    getAccount(id: $id) {
       id
       credit
       minimumCredit
@@ -15,6 +15,12 @@ export const GET_SELF = gql`
       permission
       receivesMonthlyReport
       useDigitalStamps
+      isPasswordSet
+      nfcTokens {
+        cardId
+        cardType
+        name
+      }
     }
   }
 `;
@@ -33,9 +39,13 @@ export const LOGOUT = gql`
   }
 `;
 
-export const GET_OWN_TRANSACTIONS = gql`
-  query getOwnTransactions($transactionFilterFrom: String!, $transactionFilterTo: String!) {
-    getOwnTransactions(transactionFilterFrom: $transactionFilterFrom, transactionFilterTo: $transactionFilterTo) {
+export const GET_TRANSACTIONS = gql`
+  query getTransactions($accountId: UUID, $transactionFilterFrom: String!, $transactionFilterTo: String!) {
+    getTransactions(
+      accountId: $accountId
+      transactionFilterFrom: $transactionFilterFrom
+      transactionFilterTo: $transactionFilterTo
+    ) {
       id
       total
       beforeCredit
@@ -84,25 +94,6 @@ export const GET_ACCOUNTS = gql`
         bottleStamps
         receivesMonthlyReport
       }
-    }
-  }
-`;
-
-export const GET_ACCOUNT = gql`
-  query getAccount($id: UUID!) {
-    getAccount(id: $id) {
-      id
-      credit
-      minimumCredit
-      name
-      mail
-      username
-      accountNumber
-      permission
-      useDigitalStamps
-      coffeeStamps
-      bottleStamps
-      receivesMonthlyReport
     }
   }
 `;

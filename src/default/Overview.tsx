@@ -4,7 +4,7 @@ import { Button, Card, Col, Layout, PageHeader, Row, Space, Statistic } from 'an
 import { CreditCardOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { useApolloClient, useMutation } from '@apollo/client';
-import { GET_SELF, LOGOUT } from '../graphql';
+import { GET_ACCOUNT, LOGOUT } from '../graphql';
 import { TransactionHistory } from './TransactionHistory/TransactionHistory';
 import { getSelf_getSelf } from '../__generated__/getSelf';
 import { logout } from '../__generated__/logout';
@@ -17,7 +17,7 @@ export default function Overview(props: { account: getSelf_getSelf }) {
   if (logoutData) {
     localStorage['token'] = '';
     client.refetchQueries({
-      include: [GET_SELF],
+      include: [GET_ACCOUNT],
     });
   }
   return (
