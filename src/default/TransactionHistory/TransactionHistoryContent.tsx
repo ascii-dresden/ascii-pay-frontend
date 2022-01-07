@@ -4,17 +4,17 @@ import { TransactionHistoryTable } from './TransactionHistoryTable';
 import { Empty } from 'antd';
 import moment from 'moment';
 import { TransactionHistoryTimeRange } from './TransactionHistoryDatePicker';
-import { getOwnTransactions_getOwnTransactions } from '../../__generated__/getOwnTransactions';
+import { getTransactions_getTransactions } from '../../__generated__/getTransactions';
 
 export function TransactionHistoryContent({
   transactionData,
   timeRange,
 }: {
-  transactionData: getOwnTransactions_getOwnTransactions[];
+  transactionData: getTransactions_getTransactions[];
   timeRange: TransactionHistoryTimeRange;
 }) {
   const diagramData: DiagramData[] = [];
-  const tableData: getOwnTransactions_getOwnTransactions[] = [];
+  const tableData: getTransactions_getTransactions[] = [];
   for (let item of transactionData) {
     diagramData.push({
       renderTooltip: true,

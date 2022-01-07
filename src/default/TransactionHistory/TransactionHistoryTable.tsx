@@ -1,10 +1,10 @@
 import React from 'react';
 import { Button, Table } from 'antd';
 import moment from 'moment';
-import { getOwnTransactions_getOwnTransactions } from '../../__generated__/getOwnTransactions';
+import { getTransactions_getTransactions } from '../../__generated__/getTransactions';
 
 type TransactionHistoryTableProps = {
-  dataSource: getOwnTransactions_getOwnTransactions[];
+  dataSource: getTransactions_getTransactions[];
 };
 
 const dateTimeFormat = 'YYYY-MM-DD HH:mm';

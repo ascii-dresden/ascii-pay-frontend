@@ -2,9 +2,9 @@ import React from 'react';
 import { Col, Statistic } from 'antd';
 import { red } from '@ant-design/colors';
 import { ArrowDownOutlined } from '@ant-design/icons';
-import { getOwnTransactions_getOwnTransactions } from '../../__generated__/getOwnTransactions';
+import { getTransactions_getTransactions } from '../../__generated__/getTransactions';
 
-export function TransactionHistoryStats(props: { transactionData: getOwnTransactions_getOwnTransactions[] }) {
+export function TransactionHistoryStats(props: { transactionData: getTransactions_getTransactions[] }) {
   let spent = 0;
   for (let item of props.transactionData) {
     if (item.total < 0) {

@@ -2,11 +2,11 @@ import React from 'react';
 import './AccountPage.scss';
 import { Layout, Card, Space, PageHeader, Button } from 'antd';
 import { Link } from 'react-router-dom';
-import { getSelf_getSelf } from '../__generated__/getSelf';
 import AccountList from './AccountList';
+import { getAccount_getAccount } from '../__generated__/getAccount';
 const { Content, Footer } = Layout;
 
-export default function AccountPage(props: { account: getSelf_getSelf }) {
+export default function AccountPage(props: { account: getAccount_getAccount }) {
   return (
     <div id="AccountList">
       <Layout className="site-layout">

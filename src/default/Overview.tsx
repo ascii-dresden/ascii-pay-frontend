@@ -6,11 +6,11 @@ import { Link } from 'react-router-dom';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { GET_ACCOUNT, LOGOUT } from '../graphql';
 import { TransactionHistory } from './TransactionHistory/TransactionHistory';
-import { getSelf_getSelf } from '../__generated__/getSelf';
 import { logout } from '../__generated__/logout';
+import { getAccount_getAccount } from '../__generated__/getAccount';
 
 const { Content, Footer } = Layout;
-export default function Overview(props: { account: getSelf_getSelf }) {
+export default function Overview(props: { account: getAccount_getAccount }) {
   const client = useApolloClient();
 
   const [logoutFunction, { data: logoutData }] = useMutation<logout>(LOGOUT);
