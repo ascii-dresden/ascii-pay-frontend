@@ -21,6 +21,12 @@ export interface EditAccount {
   useDigitalStamps: boolean;
   receivesMonthlyReport: boolean;
   minimumCredit: number;
+  isPasswordSet: boolean;
+  nfcTokens: {
+    cardId: string;
+    cardType: string;
+    name: string;
+  }[];
 }
 
 enum DialogMode {

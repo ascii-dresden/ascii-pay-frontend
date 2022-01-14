@@ -1,9 +1,19 @@
-import React from 'react';
-import { Modal, Form, Input, Divider, Select } from 'antd';
+import React, { useRef } from 'react';
+import { Modal, Form, Input, Divider, Select, Button } from 'antd';
 import { EditAccount } from './AccountList';
 import { updateAccount, updateAccountVariables } from '../__generated__/updateAccount';
 import { useApolloClient } from '@apollo/client';
-import { UPDATE_ACCOUNT } from '../graphql';
+import {
+  DELETE_ACCOUNT_NFC_CARD,
+  DELETE_ACCOUNT_PASSWORD,
+  GET_ACCOUNTS,
+  SET_ACCOUNT_PASSWORD,
+  UPDATE_ACCOUNT,
+} from '../graphql';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { deleteAccountPassword, deleteAccountPasswordVariables } from '../__generated__/deleteAccountPassword';
+import { deleteAccountNfcCard, deleteAccountNfcCardVariables } from '../__generated__/deleteAccountNfcCard';
+import { setAccountPassword, setAccountPasswordVariables } from '../__generated__/setAccountPassword';
 
 const { Option } = Select;
 
@@ -32,6 +42,104 @@ export default function AccountEditDialog(props: { account: EditAccount; closeDi
       props.closeDialog();
     })();
   };
+
+  let removePassword = () => {
+    (async () => {
+      try {
+        await client.mutate<deleteAccountPassword, deleteAccountPasswordVariables>({
+          mutation: DELETE_ACCOUNT_PASSWORD,
+          variables: {
+            id: props.account.id,
+          },
+        });
+
+        client.refetchQueries({
+          include: [GET_ACCOUNTS],
+        });
+        props.closeDialog();
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  };
+
+  let removeNfcToken = (cardId: string) => {
+    (async () => {
+      try {
+        await client.mutate<deleteAccountNfcCard, deleteAccountNfcCardVariables>({
+          mutation: DELETE_ACCOUNT_NFC_CARD,
+          variables: {
+            id: props.account.id,
+            cardId,
+          },
+        });
+
+        client.refetchQueries({
+          include: [GET_ACCOUNTS],
+        });
+        props.closeDialog();
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  };
+
+  let auth: any[] = [];
+  let passwordRef = useRef<Input>(null);
+
+  let setPassword = () => {
+    (async () => {
+      try {
+        await client.mutate<setAccountPassword, setAccountPasswordVariables>({
+          mutation: SET_ACCOUNT_PASSWORD,
+          variables: {
+            id: props.account.id,
+            newPassword: passwordRef.current?.input.value ?? '',
+          },
+        });
+
+        client.refetchQueries({
+          include: [GET_ACCOUNTS],
+        });
+        props.closeDialog();
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  };
+
+  if (props.account.isPasswordSet) {
+    auth.push(
+      <Form.Item key="password" label="Password" name="password">
+        <Input.Group compact>
+          <Input style={{ width: '80%' }} value="Is set" />
+          <Button style={{ width: '20%' }} onClick={() => removePassword()} icon={<DeleteOutlined />} />
+        </Input.Group>
+      </Form.Item>
+    );
+  } else {
+    auth.push(
+      <Form.Item key="password" label="Password" name="password">
+        <Input.Group compact>
+          <Input ref={passwordRef} type="password" style={{ width: '80%' }} placeholder="Password" />
+          <Button style={{ width: '20%' }} onClick={() => setPassword()} icon={<PlusOutlined />} />
+        </Input.Group>
+      </Form.Item>
+    );
+  }
+
+  auth.push(
+    ...props.account.nfcTokens.map((token) => {
+      return (
+        <Form.Item key={'nfc-' + token.cardId} label="NFC Token" name={'nfc-' + token.cardId}>
+          <Input.Group compact>
+            <Input style={{ width: '80%' }} value={token.name + ': ' + token.cardId} />
+            <Button style={{ width: '20%' }} onClick={() => removeNfcToken(token.cardId)} icon={<DeleteOutlined />} />
+          </Input.Group>
+        </Form.Item>
+      );
+    })
+  );
 
   updateForm.setFieldsValue({
     id: props.account.id,
@@ -95,6 +203,8 @@ export default function AccountEditDialog(props: { account: EditAccount; closeDi
         <Form.Item label="Minimum credit" name="minimumCredit">
           <Input suffix="cents" placeholder="Minimum credit" />
         </Form.Item>
+        <Divider />
+        {auth}
       </Form>
     </Modal>
   );

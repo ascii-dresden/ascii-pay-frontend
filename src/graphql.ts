@@ -93,6 +93,12 @@ export const GET_ACCOUNTS = gql`
         coffeeStamps
         bottleStamps
         receivesMonthlyReport
+        isPasswordSet
+        nfcTokens {
+          cardId
+          cardType
+          name
+        }
       }
     }
   }
@@ -211,5 +217,23 @@ export const TRANSACTION = gql`
         message
       }
     }
+  }
+`;
+
+export const SET_ACCOUNT_PASSWORD = gql`
+  mutation setAccountPassword($id: UUID!, $oldPassword: String, $newPassword: String!) {
+    setAccountPassword(id: $id, oldPassword: $oldPassword, newPassword: $newPassword)
+  }
+`;
+
+export const DELETE_ACCOUNT_PASSWORD = gql`
+  mutation deleteAccountPassword($id: UUID!) {
+    deleteAccountPassword(id: $id)
+  }
+`;
+
+export const DELETE_ACCOUNT_NFC_CARD = gql`
+  mutation deleteAccountNfcCard($id: UUID!, $cardId: String!) {
+    deleteAccountNfcCard(id: $id, cardId: $cardId)
   }
 `;
