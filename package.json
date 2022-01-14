@@ -35,7 +35,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "run-s schema",
     "schema": "run-s schema:download schema:generate schema:format",
     "schema:download": "apollo client:download-schema schema.graphql",
     "schema:format": "prettier --write src/types/graphql-global.ts",
