@@ -37,7 +37,6 @@ speed-measure-plugin*.json
 
 # misc
 **/__generated__
-schema.graphql
 /.sass-cache
 /connect.lock
 /coverage

@@ -1,0 +1,189 @@
+type AccountAccessTokenOutput {
+  token: String!
+}
+input AccountCreateInput {
+  name: String!
+  permission: Permission!
+  username: String
+  mail: String
+  accountNumber: String
+  minimumCredit: Int
+  useDigitalStamps: Boolean
+  receivesMonthlyReport: Boolean
+}
+type AccountNfcTokenOutput {
+  cardId: String!
+  cardType: String!
+  name: String!
+}
+type AccountOutput {
+  id: UUID!
+  credit: Int!
+  minimumCredit: Int!
+  name: String!
+  mail: String!
+  username: String!
+  accountNumber: String!
+  permission: Permission!
+  useDigitalStamps: Boolean!
+  coffeeStamps: Int!
+  bottleStamps: Int!
+  receivesMonthlyReport: Boolean!
+  isPasswordSet: Boolean!
+  nfcTokens: [AccountNfcTokenOutput!]!
+}
+input AccountUpdateInput {
+  minimumCredit: Int
+  name: String
+  mail: String
+  username: String
+  accountNumber: String
+  permission: Permission
+  useDigitalStamps: Boolean
+  receivesMonthlyReport: Boolean
+}
+type Category {
+  name: String!
+}
+"""
+A scalar that can represent any JSON Object value.
+"""
+scalar JSONObject
+type LoginOutput {
+  token: String!
+  authorization: String!
+}
+type Mutation {
+  login(username: String, password: String, accountAccessToken: String): LoginOutput!
+  logout: String!
+  createAccount(input: AccountCreateInput!): AccountOutput!
+  updateAccount(id: UUID!, input: AccountUpdateInput!): AccountOutput!
+  deleteAccount(id: UUID!): String!
+  deleteAccountNfcCard(id: UUID!, cardId: String!): String!
+  setAccountPassword(id: UUID!, oldPassword: String, newPassword: String!): String!
+  deleteAccountPassword(id: UUID!): String!
+  getAccountAccessToken(id: UUID!): AccountAccessTokenOutput!
+  transaction(input: PaymentInput!): PaymentOutput!
+  updateProducts: String!
+}
+"""
+ISO 8601 combined date and time without timezone.
+
+# Examples
+
+* `2015-07-01T08:59:60.123`,
+"""
+scalar NaiveDateTime
+input PaymentInput {
+  accountAccessToken: String!
+  stopIfStampPaymentIsPossible: Boolean!
+  transactionItems: [PaymentItemInput!]!
+}
+input PaymentItemInput {
+  price: Int!
+  payWithStamps: StampType!
+  couldBePaidWithStamps: StampType!
+  giveStamps: StampType!
+  productId: String
+}
+type PaymentOutput {
+  account: AccountOutput!
+  transaction: TransactionOutput
+  accountAccessToken: String
+  error: PaymentOutputError
+}
+type PaymentOutputError {
+  message: String!
+}
+"""
+Represents the permission level of an account
+"""
+enum Permission {
+  DEFAULT
+  MEMBER
+  ADMIN
+}
+"""
+Represent a product
+"""
+type Product {
+  id: String!
+  name: String!
+  price: Int!
+  payWithStamps: StampType!
+  giveStamps: StampType!
+  nickname: String
+  image: String
+  barcode: String
+  flags: [String!]!
+  category: Category!
+}
+type Query {
+  getAccounts(search: String): [SearchElementAccount!]!
+  getAccount(id: UUID): AccountOutput!
+  getAccountByAccessToken(accountAccessToken: String!): AccountOutput!
+  getTransactions(accountId: UUID, transactionFilterFrom: String, transactionFilterTo: String): [TransactionOutput!]!
+  getTransaction(accountId: UUID, transactionId: UUID!): TransactionOutput!
+  getProducts: [Product!]!
+  getProduct(id: String!): Product!
+  _service: _Service!
+  _entities(representations: [_Any!]!): [_Entity]!
+}
+type SearchElementAccount {
+  element: AccountOutput!
+  highlight: JSONObject!
+}
+"""
+Represents the permission level of an account
+"""
+enum StampType {
+  NONE
+  COFFEE
+  BOTTLE
+}
+type TransactionItemOutput {
+  transactionId: UUID!
+  index: Int!
+  price: Int!
+  payWithStamps: StampType!
+  giveStamps: StampType!
+  product: Product
+}
+type TransactionOutput {
+  id: UUID!
+  accountId: UUID!
+  total: Int!
+  beforeCredit: Int!
+  afterCredit: Int!
+  coffeeStamps: Int!
+  beforeCoffeeStamps: Int!
+  afterCoffeeStamps: Int!
+  bottleStamps: Int!
+  beforeBottleStamps: Int!
+  afterBottleStamps: Int!
+  date: NaiveDateTime!
+  items: [TransactionItemOutput!]!
+}
+"""
+A UUID is a unique 128-bit number, stored as 16 octets. UUIDs are parsed as Strings
+within GraphQL. UUIDs are used to assign unique identifiers to entities without requiring a central
+allocating authority.
+
+# References
+
+* [Wikipedia: Universally Unique Identifier](http://en.wikipedia.org/wiki/Universally_unique_identifier)
+* [RFC4122: A Universally Unique IDentifier (UUID) URN Namespace](http://tools.ietf.org/html/rfc4122)
+"""
+scalar UUID
+"""
+The `_Any` scalar is used to pass representations of entities from external services into the root `_entities` field for execution.
+"""
+scalar _Any
+union _Entity = AccountOutput | Product
+type _Service {
+  sdl: String
+}
+schema {
+  query: Query
+  mutation: Mutation
+}
