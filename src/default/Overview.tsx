@@ -9,6 +9,10 @@ import { TransactionHistory } from './TransactionHistory/TransactionHistory';
 import { logout } from '../__generated__/logout';
 import { getAccount_getAccount } from '../__generated__/getAccount';
 
+const APPLE_WALLET_URL: string = '/apple-wallet.svg';
+const COFFEE_STAMP_URL: string = '/kaffe_stempel_icons.svg';
+const BOTTLE_STAMP_URL: string = '/getraeke_stempel_icons.svg';
+
 const { Content, Footer } = Layout;
 export default function Overview(props: { account: getAccount_getAccount }) {
   const client = useApolloClient();
@@ -51,16 +55,47 @@ export default function Overview(props: { account: getAccount_getAccount }) {
               <Col span={12}>
                 <Card>
                   <Statistic title="Name" value={props.account.name} />
+
+                  <a
+                    className="apple-wallet"
+                    href={'/v1/AsciiPayCard.pkpass?auth_token=' + localStorage.getItem('token')}
+                  >
+                    <img src={APPLE_WALLET_URL} alt="Download apple wallet card" />
+                  </a>
                 </Card>
               </Col>
               <Col span={12}>
                 <Card>
-                  <Statistic
-                    title="Current balance"
-                    value={(props.account.credit / 100).toFixed(2)}
-                    prefix={<CreditCardOutlined />}
-                    suffix="€"
-                  />
+                  <Space>
+                    <Statistic
+                      title="Current balance"
+                      value={(props.account.credit / 100).toFixed(2)}
+                      prefix={<CreditCardOutlined />}
+                      suffix="€"
+                    />
+                    <Statistic
+                      title="Coffee stamps"
+                      value={props.account.coffeeStamps}
+                      prefix={
+                        <img
+                          style={{ width: '1.4rem', marginTop: '-0.4rem' }}
+                          src={COFFEE_STAMP_URL}
+                          alt="Coffee stamp icon"
+                        />
+                      }
+                    />
+                    <Statistic
+                      title="Bottle stamps"
+                      value={props.account.bottleStamps}
+                      prefix={
+                        <img
+                          style={{ width: '1.4rem', marginTop: '-0.4rem' }}
+                          src={BOTTLE_STAMP_URL}
+                          alt="Bottle stamp icon"
+                        />
+                      }
+                    />
+                  </Space>
                 </Card>
               </Col>
             </Row>

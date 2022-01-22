@@ -17,6 +17,41 @@ body {
   min-height: 100%;
 }
 
+@media (min-width: 576px) {
+  #root > * {
+    width: 576px;
+    margin: auto;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  #root > * {
+    width: 748px;
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  #root > * {
+    width: 972px;
+  }
+}
+
+// X-Large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+  #root > * {
+    width: 1180px;
+  }
+}
+
+// XX-Large devices (larger desktops, 1400px and up)
+@media (min-width: 1400px) {
+  #root > * {
+    width: 1380px;
+  }
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

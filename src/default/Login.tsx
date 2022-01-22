@@ -1,6 +1,6 @@
 import React from 'react';
 import './Login.scss';
-import { Form, Input, Button, Image, Card, Spin, Alert } from 'antd';
+import { Form, Input, Button, Card, Spin, Alert } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useApolloClient, useMutation } from '@apollo/client';
 import { GET_ACCOUNT, LOGIN } from '../graphql';
@@ -40,7 +40,7 @@ export default function Login() {
       <Card>
         <Spin spinning={!!loading}>
           <Form name="login" className="login-form" onFinish={onFinish}>
-            <Image src={LOGO_URL} />
+            <img src={LOGO_URL} alt="ascii pay" />
             <Form.Item name="username" rules={[{ required: true, message: 'Please input your Username!' }]}>
               <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
             </Form.Item>
