@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AccountList.scss';
 import { Table, Button, Space, Tag } from 'antd';
 import { useQuery } from '@apollo/client';
@@ -45,12 +45,13 @@ export default function AccountList() {
     } | null
   );
 
-  const { loading, error, data } = useQuery<getAccounts, getAccountsVariables>(GET_ACCOUNTS, {
+  const { loading, error, data, refetch } = useQuery<getAccounts, getAccountsVariables>(GET_ACCOUNTS, {
     fetchPolicy: 'network-only',
-    variables: {
-      search: searchString,
-    },
   });
+
+  useEffect(() => {
+    refetch({ search: searchString });
+  }, [refetch, searchString]);
 
   if (error) {
     return <></>;
@@ -163,7 +164,12 @@ export default function AccountList() {
   return (
     <Space direction="vertical">
       <Space>
-        <Search placeholder="Search account" allowClear onSearch={setSearchString} />
+        <Search
+          placeholder="Search account"
+          allowClear
+          onChange={(e) => setSearchString(e.target.value)}
+          onSearch={setSearchString}
+        />
         <Button
           onClick={() =>
             setDialogMode({
