@@ -1,45 +1,20 @@
-import React from 'react';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import './App.scss';
-import Login from './default/Login';
-import Overview from './default/Overview';
-import Preferences from './default/Preferences';
-import { useQuery } from '@apollo/client';
-import { GET_ACCOUNT } from './graphql';
-import AccountPage from './admin/AccountPage';
-import { getAccount } from './__generated__/getAccount';
+import React from "react";
+import styled from "styled-components";
 
-export default function App() {
-  const { loading, error, data } = useQuery<getAccount>(GET_ACCOUNT, {
-    fetchPolicy: 'network-only',
-  });
+const StyledApp = styled.div`
+  background-color: #393d46;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+`;
 
-  if (loading) {
-    return <></>;
-  }
-
-  if (error || !data) {
-    return <Login />;
-  }
-
-  const account = data.getAccount;
-
+export function App() {
   return (
-    <Router basename="">
-      <Switch>
-        <Route path="/admin/accounts">
-          <AccountPage account={account} />
-        </Route>
-        <Route path="/admin">
-          <Redirect to="/admin/accounts" />
-        </Route>
-        <Route path="/preferences">
-          <Preferences account={account} />
-        </Route>
-        <Route path="">
-          <Overview account={account} />
-        </Route>
-      </Switch>
-    </Router>
+    <StyledApp>
+      Dashboard
+    </StyledApp>
   );
 }
