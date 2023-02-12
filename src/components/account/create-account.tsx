@@ -4,6 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  MenuItem,
   TextField,
 } from "@mui/material";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -13,10 +14,12 @@ import { LoadingButton } from "@mui/lab";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useCreateAccountMutation } from "../../redux/api/accountApi";
+import { RoleDto } from "../../redux/api/contracts";
 
 const createAccountSchema = object({
   name: string().min(1, "Name is required"),
   email: string().email("Email is required"),
+  role: string(),
 });
 
 export type ICreateAccount = TypeOf<typeof createAccountSchema>;
@@ -65,7 +68,7 @@ const CreateAccount = (props: {
     createAccount({
       name: values.name,
       email: values.email,
-      role: "Member",
+      role: (values.role ?? "Basic") as unknown as RoleDto,
     });
   };
 
@@ -92,15 +95,18 @@ const CreateAccount = (props: {
                 sx={{ mb: "1rem" }}
                 {...methods.register("email")}
               />
-              <LoadingButton
-                variant="contained"
+              <TextField
+                label="Role"
                 fullWidth
-                sx={{ py: "0.8rem", mt: 4, backgroundColor: "#2363eb" }}
-                type="submit"
-                loading={isLoading}
+                focused
+                select
+                sx={{ mb: "1rem" }}
+                {...methods.register("role")}
               >
-                Create Account
-              </LoadingButton>
+                <MenuItem value="Basic">Basic</MenuItem>
+                <MenuItem value="Member">Member</MenuItem>
+                <MenuItem value="Admin">Admin</MenuItem>
+              </TextField>
             </Box>
           </DialogContent>
           <DialogActions>

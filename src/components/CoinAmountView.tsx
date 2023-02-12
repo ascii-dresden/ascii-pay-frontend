@@ -22,7 +22,7 @@ const StyledCoinAmountEntry = styled.div`
     width: 1rem;
   }
 
-  &:not(:first-child) {
+  &:not(:first-of-type) {
     margin-left: 0.5rem;
   }
 `;
@@ -31,9 +31,7 @@ export function centsToString(cents: number): string {
   return (cents / 100).toFixed(2) + " €";
 }
 
-export const CoinAmountView = (props: {
-  coins: CoinAmountDto;
-}) => {
+export const CoinAmountView = (props: { coins: CoinAmountDto }) => {
   return (
     <StyledCoinAmountView>
       <StyledCoinAmountEntry>
@@ -41,11 +39,11 @@ export const CoinAmountView = (props: {
       </StyledCoinAmountEntry>
       <StyledCoinAmountEntry>
         <span>{props.coins.CoffeeStamp ?? 0}</span>
-        <img src={coffeeStamp}/>
+        <img src={coffeeStamp} />
       </StyledCoinAmountEntry>
       <StyledCoinAmountEntry>
         <span>{props.coins.BottleStamp ?? 0}</span>
-        <img src={bottleStamp}/>
+        <img src={bottleStamp} />
       </StyledCoinAmountEntry>
     </StyledCoinAmountView>
   );
