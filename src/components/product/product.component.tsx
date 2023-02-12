@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import UpdateProduct from "./update-product";
 import { ProductDto } from "../../redux/api/contracts";
 import { BASE_URL } from "../../redux/api/customFetchBase";
+import { CoinAmountView } from "../CoinAmountView";
 
 interface IProductItemProps {
   product: ProductDto;
@@ -89,8 +90,12 @@ const ProductItem: FC<IProductItemProps> = ({ product }) => {
           />
         </TableCell>
         <TableCell>{product.name}</TableCell>
-        <TableCell align="right">{JSON.stringify(product.price)}</TableCell>
-        <TableCell align="right">{JSON.stringify(product.bonus)}</TableCell>
+        <TableCell align="right">
+          <CoinAmountView coins={product.price} />
+        </TableCell>
+        <TableCell align="right">
+          <CoinAmountView coins={product.bonus} />
+        </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">
             <Button onClick={() => setOpenModal(true)}>Edit</Button>

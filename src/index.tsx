@@ -7,6 +7,7 @@ import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
+import { Global } from "@emotion/react";
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
@@ -16,7 +17,7 @@ root.render(
       <Router>
         <CookiesProvider>
           <AuthMiddleware>
-            <GlobalStyle />
+            <Global styles={GlobalStyle} />
             <App />
           </AuthMiddleware>
         </CookiesProvider>

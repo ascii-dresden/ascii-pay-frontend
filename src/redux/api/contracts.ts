@@ -1,9 +1,9 @@
 export type CoinTypeDto = "Cent" | "CoffeeStamp" | "BottleStamp";
 
 export type CoinAmountDto = {
-  cent?: number;
-  coffeeStamp?: number;
-  bottleStamp?: number;
+  Cent?: number;
+  CoffeeStamp?: number;
+  BottleStamp?: number;
 };
 
 export type RoleDto = "Basic" | "Member" | "Admin";
