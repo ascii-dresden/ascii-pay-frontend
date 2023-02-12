@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AccountsPage from "./pages/accountsPage";
 import ProductsPage from "./pages/productsPage";
+import SetupPage from "./pages/setupPage";
 
 export function App() {
   return (
@@ -33,6 +34,7 @@ export function App() {
           <Route path="unauthorized" element={<UnauthorizedPage />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
+        <Route path="create-admin-account" element={<SetupPage />} />
       </Routes>
     </>
   );

@@ -5,17 +5,19 @@ import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "../components/FormInput";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
-import { useLoginUserMutation } from "../redux/api/authApi";
+import { useCreateAdminAccountMutation } from "../redux/api/accountApi";
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.8rem 0;
   font-weight: 500;
 `;
 
-const loginSchema = object({
+const setupSchema = object({
+  name: string().min(1, "Name is required"),
+  email: string().email("Email is required"),
   username: string().min(1, "Username is required"),
   password: string()
     .min(1, "Password is required")
@@ -23,21 +25,18 @@ const loginSchema = object({
     .max(32, "Password must be less than 32 characters"),
 });
 
-type LoginInput = TypeOf<typeof loginSchema>;
+type SetupInput = TypeOf<typeof setupSchema>;
 
-const LoginPage = () => {
-  const methods = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
+const SetupPage = () => {
+  const methods = useForm<SetupInput>({
+    resolver: zodResolver(setupSchema),
   });
 
-  // 👇 API Login Mutation
-  const [loginUser, { isLoading, isError, error, isSuccess }] =
-    useLoginUserMutation();
+  // 👇 API Setup Mutation
+  const [setupUser, { isLoading, isError, error, isSuccess }] =
+    useCreateAdminAccountMutation();
 
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const from = ((location.state as any)?.from.pathname as string) || "/";
 
   const {
     reset,
@@ -47,8 +46,8 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("You successfully logged in");
-      navigate(from);
+      toast.success("Account successfully created!");
+      navigate("/");
     }
     if (isError) {
       if (Array.isArray((error as any).data.error)) {
@@ -73,9 +72,9 @@ const LoginPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitSuccessful]);
 
-  const onSubmitHandler: SubmitHandler<LoginInput> = (values) => {
-    // 👇 Executing the loginUser Mutation
-    loginUser(values);
+  const onSubmitHandler: SubmitHandler<SetupInput> = (values) => {
+    // 👇 Executing the setupUser Mutation
+    setupUser(values);
   };
 
   return (
@@ -106,7 +105,7 @@ const LoginPage = () => {
             letterSpacing: 1,
           }}
         >
-          Welcome Back!
+          Setup ascii pay!
         </Typography>
 
         <FormProvider {...methods}>
@@ -118,6 +117,8 @@ const LoginPage = () => {
             maxWidth="27rem"
             width="100%"
           >
+            <FormInput name="name" label="Name" />
+            <FormInput name="email" label="Email" />
             <FormInput name="username" label="Username" />
             <FormInput name="password" label="Password" type="password" />
 
@@ -129,7 +130,7 @@ const LoginPage = () => {
               type="submit"
               loading={isLoading}
             >
-              Login
+              Create admin account
             </LoadingButton>
           </Box>
         </FormProvider>
@@ -138,4 +139,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SetupPage;

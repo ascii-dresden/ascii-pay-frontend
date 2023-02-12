@@ -22,7 +22,7 @@ const createAccountSchema = object({
   role: string(),
 });
 
-export type ICreateAccount = TypeOf<typeof createAccountSchema>;
+type ICreateAccount = TypeOf<typeof createAccountSchema>;
 
 const CreateAccount = (props: {
   open: boolean;

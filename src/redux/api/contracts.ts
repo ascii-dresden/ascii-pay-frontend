@@ -46,6 +46,13 @@ export type SaveAccountDto = {
   role: RoleDto;
 };
 
+export type CreateAdminAccountDto = {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+};
+
 export type AuthTokenDto = {
   token: string;
 };

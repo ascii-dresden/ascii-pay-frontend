@@ -21,7 +21,7 @@ const createProductSchema = object({
   category: string(),
 });
 
-export type ICreateProduct = TypeOf<typeof createProductSchema>;
+type ICreateProduct = TypeOf<typeof createProductSchema>;
 
 const CreateProduct = (props: {
   open: boolean;
