@@ -4,6 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  MenuItem,
   TextField,
 } from "@mui/material";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -13,12 +14,13 @@ import { LoadingButton } from "@mui/lab";
 import { useEffect } from "react";
 import { pickBy } from "lodash";
 import { toast } from "react-toastify";
-import { AccountDto } from "../../redux/api/contracts";
+import { AccountDto, RoleDto } from "../../redux/api/contracts";
 import { useUpdateAccountMutation } from "../../redux/api/accountApi";
 
 const updateAccountSchema = object({
   name: string().min(1, "Name is required"),
   email: string().email("Email is required"),
+  role: string(),
 }).partial();
 
 type IUpdateAccount = TypeOf<typeof updateAccountSchema>;
@@ -69,6 +71,7 @@ const UpdateAccount = (props: {
       methods.reset({
         name: props.account.name,
         email: props.account.email,
+        role: props.account.role,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,7 +93,7 @@ const UpdateAccount = (props: {
       account: {
         name: values.name ?? "",
         email: values.email ?? "",
-        role: "Member",
+        role: (values.role ?? "Basic") as unknown as RoleDto,
       },
     });
   };
@@ -120,6 +123,18 @@ const UpdateAccount = (props: {
                 sx={{ mb: "1rem" }}
                 {...methods.register("email")}
               />
+              <TextField
+                label="Role"
+                fullWidth
+                focused
+                select
+                sx={{ mb: "1rem" }}
+                {...methods.register("role")}
+              >
+                <MenuItem value="Basic">Basic</MenuItem>
+                <MenuItem value="Member">Member</MenuItem>
+                <MenuItem value="Admin">Admin</MenuItem>
+              </TextField>
             </Box>
           </DialogContent>
           <DialogActions>
