@@ -8,19 +8,19 @@ import {
   TextField,
 } from "@mui/material";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { object, string, TypeOf } from "zod";
+import { enum as zEnum, object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoadingButton } from "@mui/lab";
 import { useEffect } from "react";
 import { pickBy } from "lodash";
 import { toast } from "react-toastify";
-import { AccountDto, RoleDto } from "../../redux/api/contracts";
+import { AccountDto } from "../../redux/api/contracts";
 import { useUpdateAccountMutation } from "../../redux/api/accountApi";
 
 const updateAccountSchema = object({
   name: string().min(1, "Name is required"),
   email: string().email("Email is required"),
-  role: string(),
+  role: zEnum(["Basic", "Member", "Admin"]),
 }).partial();
 
 type IUpdateAccount = TypeOf<typeof updateAccountSchema>;
@@ -45,15 +45,9 @@ const UpdateAccount = (props: {
 
     if (isError) {
       if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
+        (error as any).data.error.forEach((el: any) => toast.error(el.message));
       } else {
-        toast.error((error as any).data.message, {
-          position: "top-right",
-        });
+        toast.error((error as any).data.message);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,9 +85,9 @@ const UpdateAccount = (props: {
     updateAccount({
       id: props.account?.id!,
       account: {
-        name: values.name ?? "",
-        email: values.email ?? "",
-        role: (values.role ?? "Basic") as unknown as RoleDto,
+        name: values.name ?? props.account.name,
+        email: values.email ?? props.account.email,
+        role: values.role ?? props.account.role,
       },
     });
   };
@@ -108,7 +102,7 @@ const UpdateAccount = (props: {
           onSubmit={methods.handleSubmit(onSubmitHandler)}
         >
           <DialogContent>
-            <Box pt={2}>
+            <Box pt={1}>
               <TextField
                 label="Account name"
                 fullWidth
@@ -141,7 +135,7 @@ const UpdateAccount = (props: {
             <LoadingButton
               variant="contained"
               fullWidth
-              sx={{ py: "0.8rem", mt: 4, backgroundColor: "#2363eb" }}
+              sx={{ py: "0.8rem" }}
               type="submit"
               loading={isLoading}
             >

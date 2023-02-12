@@ -1,10 +1,10 @@
-function stringToColor(string: string) {
+function stringToColor(name: string) {
   let hash = 0;
   let i;
 
   /* eslint-disable no-bitwise */
-  for (i = 0; i < string.length; i += 1) {
-    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  for (i = 0; i < name.length; i += 1) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
   }
 
   let color = "#";
@@ -19,10 +19,20 @@ function stringToColor(string: string) {
 }
 
 export function stringAvatar(name: string) {
+  const split = name.split(" ");
+  if (split.length < 2 || split[0].length < 1 || split[1].length < 1) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.length < 1 ? "" : name[0]}`,
+    };
+  }
+
   return {
     sx: {
       bgcolor: stringToColor(name),
     },
-    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+    children: `${split[0][0]}${name.split(" ")[1][0]}`,
   };
 }

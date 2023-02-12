@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import UpdateAccount from "./update-account";
 import { AccountDto } from "../../redux/api/contracts";
 import { stringAvatar } from "../stringAvatar";
+import { CoinAmountView } from "../CoinAmountView";
 
 interface IAccountItemProps {
   account: AccountDto;
@@ -57,7 +58,9 @@ const AccountItem: FC<IAccountItemProps> = ({ account }) => {
         <TableCell>{account.name}</TableCell>
         <TableCell>{account.email}</TableCell>
         <TableCell>{account.role}</TableCell>
-        <TableCell align="right">{JSON.stringify(account.balance)}</TableCell>
+        <TableCell align="right">
+          <CoinAmountView coins={account.balance} />
+        </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">
             <Button onClick={() => setOpenModal(true)}>Edit</Button>
