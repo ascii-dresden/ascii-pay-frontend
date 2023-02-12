@@ -147,7 +147,7 @@ const FileUpload: React.FC<IProps> = ({ limit, multiple, name }) => {
                 ref={ref}
                 onChange={onFileDrop}
                 multiple={multiple}
-                accept="image/jpg, image/png, image/jpeg"
+                accept="image/jpg, image/png, image/jpeg, image/svg"
                 style={{
                   opacity: 0,
                   position: "absolute",

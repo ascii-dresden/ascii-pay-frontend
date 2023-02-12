@@ -1,12 +1,10 @@
 import {
   Box,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
-  Typography,
 } from "@mui/material";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
@@ -101,20 +99,13 @@ const UpdateAccount = (props: {
     <Dialog open={props.open} onClose={() => props.setOpen(false)}>
       <DialogTitle>Update account</DialogTitle>
       <FormProvider {...methods}>
-        <DialogContent>
-          <Box>
-            <Box display="flex" justifyContent="space-between" sx={{ mb: 3 }}>
-              <Typography variant="h5" component="h1">
-                Edit Post
-              </Typography>
-              {isLoading && <CircularProgress size="1rem" color="primary" />}
-            </Box>
-            <Box
-              component="form"
-              noValidate
-              autoComplete="off"
-              onSubmit={methods.handleSubmit(onSubmitHandler)}
-            >
+        <form
+          autoComplete="off"
+          noValidate
+          onSubmit={methods.handleSubmit(onSubmitHandler)}
+        >
+          <DialogContent>
+            <Box pt={2}>
               <TextField
                 label="Account name"
                 fullWidth
@@ -130,19 +121,19 @@ const UpdateAccount = (props: {
                 {...methods.register("email")}
               />
             </Box>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <LoadingButton
-            variant="contained"
-            fullWidth
-            sx={{ py: "0.8rem", mt: 4, backgroundColor: "#2363eb" }}
-            type="submit"
-            loading={isLoading}
-          >
-            Edit Account
-          </LoadingButton>
-        </DialogActions>
+          </DialogContent>
+          <DialogActions>
+            <LoadingButton
+              variant="contained"
+              fullWidth
+              sx={{ py: "0.8rem", mt: 4, backgroundColor: "#2363eb" }}
+              type="submit"
+              loading={isLoading}
+            >
+              Edit Account
+            </LoadingButton>
+          </DialogActions>
+        </form>
       </FormProvider>
     </Dialog>
   );

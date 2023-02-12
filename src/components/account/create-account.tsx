@@ -73,25 +73,37 @@ const CreateAccount = (props: {
     <Dialog open={props.open} onClose={() => props.setOpen(false)}>
       <DialogTitle>Create account</DialogTitle>
       <FormProvider {...methods}>
-        <DialogContent>
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-            onSubmit={methods.handleSubmit(onSubmitHandler)}
-          >
-            <TextField
-              label="Account name"
-              fullWidth
-              sx={{ mb: "1rem" }}
-              {...methods.register("name")}
-            />
-            <TextField
-              label="Email"
-              fullWidth
-              sx={{ mb: "1rem" }}
-              {...methods.register("email")}
-            />
+        <form
+          autoComplete="off"
+          noValidate
+          onSubmit={methods.handleSubmit(onSubmitHandler)}
+        >
+          <DialogContent>
+            <Box pt={2}>
+              <TextField
+                label="Account name"
+                fullWidth
+                sx={{ mb: "1rem" }}
+                {...methods.register("name")}
+              />
+              <TextField
+                label="Email"
+                fullWidth
+                sx={{ mb: "1rem" }}
+                {...methods.register("email")}
+              />
+              <LoadingButton
+                variant="contained"
+                fullWidth
+                sx={{ py: "0.8rem", mt: 4, backgroundColor: "#2363eb" }}
+                type="submit"
+                loading={isLoading}
+              >
+                Create Account
+              </LoadingButton>
+            </Box>
+          </DialogContent>
+          <DialogActions>
             <LoadingButton
               variant="contained"
               fullWidth
@@ -101,19 +113,8 @@ const CreateAccount = (props: {
             >
               Create Account
             </LoadingButton>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <LoadingButton
-            variant="contained"
-            fullWidth
-            sx={{ py: "0.8rem", mt: 4, backgroundColor: "#2363eb" }}
-            type="submit"
-            loading={isLoading}
-          >
-            Create Account
-          </LoadingButton>
-        </DialogActions>
+          </DialogActions>
+        </form>
       </FormProvider>
     </Dialog>
   );

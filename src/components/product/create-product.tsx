@@ -9,7 +9,6 @@ import {
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import FileUpload from "../FileUpload/FileUpload";
 import { LoadingButton } from "@mui/lab";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
@@ -68,10 +67,10 @@ const CreateProduct = (props: {
     createProduct({
       name: values.name,
       price: {
-        cent: 0,
+        Cent: 0,
       },
       bonus: {
-        coffeeStamp: 0,
+        CoffeeStamp: 0,
       },
       nickname: values.nickname,
       barcode: values.barcode,
@@ -84,45 +83,45 @@ const CreateProduct = (props: {
     <Dialog open={props.open} onClose={() => props.setOpen(false)}>
       <DialogTitle>Create product</DialogTitle>
       <FormProvider {...methods}>
-        <DialogContent>
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-            onSubmit={methods.handleSubmit(onSubmitHandler)}
-          >
-            <TextField
-              label="Product name"
+        <form
+          autoComplete="off"
+          noValidate
+          onSubmit={methods.handleSubmit(onSubmitHandler)}
+        >
+          <DialogContent>
+            <Box pt={2}>
+              <TextField
+                label="Product name"
+                fullWidth
+                sx={{ mb: "1rem" }}
+                {...methods.register("name")}
+              />
+              <TextField
+                label="Nickname"
+                fullWidth
+                sx={{ mb: "1rem" }}
+                {...methods.register("nickname")}
+              />
+              <TextField
+                label="Category"
+                fullWidth
+                sx={{ mb: "1rem" }}
+                {...methods.register("category")}
+              />
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <LoadingButton
+              variant="contained"
               fullWidth
-              sx={{ mb: "1rem" }}
-              {...methods.register("name")}
-            />
-            <TextField
-              label="Nickname"
-              fullWidth
-              sx={{ mb: "1rem" }}
-              {...methods.register("nickname")}
-            />
-            <TextField
-              label="Category"
-              fullWidth
-              sx={{ mb: "1rem" }}
-              {...methods.register("category")}
-            />
-            <FileUpload limit={1} name="image" multiple={false} />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <LoadingButton
-            variant="contained"
-            fullWidth
-            sx={{ py: "0.8rem", mt: 4, backgroundColor: "#2363eb" }}
-            type="submit"
-            loading={isLoading}
-          >
-            Create Product
-          </LoadingButton>
-        </DialogActions>
+              sx={{ py: "0.8rem", mt: 4, backgroundColor: "#2363eb" }}
+              type="submit"
+              loading={isLoading}
+            >
+              Create Product
+            </LoadingButton>
+          </DialogActions>
+        </form>
       </FormProvider>
     </Dialog>
   );
