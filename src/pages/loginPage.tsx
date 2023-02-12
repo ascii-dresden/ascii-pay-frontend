@@ -5,30 +5,14 @@ import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "../components/FormInput";
 import { useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 import { useLoginUserMutation } from "../redux/api/authApi";
 
 const LoadingButton = styled(_LoadingButton)`
-  padding: 0.6rem 0;
-  background-color: #f9d13e;
-  color: #2363eb;
+  padding: 0.8rem 0;
   font-weight: 500;
-
-  &:hover {
-    background-color: #ebc22c;
-    transform: translateY(-2px);
-  }
-`;
-
-const LinkItem = styled(Link)`
-  text-decoration: none;
-  color: #2363eb;
-
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const loginSchema = object({
@@ -102,7 +86,6 @@ const LoginPage = () => {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        backgroundColor: "#2363eb",
       }}
     >
       <Box
@@ -117,7 +100,6 @@ const LoginPage = () => {
           textAlign="center"
           component="h1"
           sx={{
-            color: "#f9d13e",
             fontWeight: 600,
             fontSize: { xs: "2rem", md: "3rem" },
             mb: 2,
@@ -125,13 +107,6 @@ const LoginPage = () => {
           }}
         >
           Welcome Back!
-        </Typography>
-        <Typography
-          variant="body1"
-          component="h2"
-          sx={{ color: "#e5e7eb", mb: 2 }}
-        >
-          Login to have access!
         </Typography>
 
         <FormProvider {...methods}>
@@ -142,11 +117,6 @@ const LoginPage = () => {
             autoComplete="off"
             maxWidth="27rem"
             width="100%"
-            sx={{
-              backgroundColor: "#e5e7eb",
-              p: { xs: "1rem", sm: "2rem" },
-              borderRadius: 2,
-            }}
           >
             <FormInput name="username" label="Username" />
             <FormInput name="password" label="Password" type="password" />

@@ -1,4 +1,4 @@
-export type CoinTypeDto = "cent" | "coffeeStamp" | "bottleStamp";
+export type CoinTypeDto = "Cent" | "CoffeeStamp" | "BottleStamp";
 
 export type CoinAmountDto = {
   cent?: number;
@@ -6,9 +6,9 @@ export type CoinAmountDto = {
   bottleStamp?: number;
 };
 
-export type RoleDto = "basic" | "member" | "admin";
+export type RoleDto = "Basic" | "Member" | "Admin";
 
-export type CardTypeDto = "nfcId" | "asciiMifare";
+export type CardTypeDto = "NfcId" | "AsciiMifare";
 
 export type AuthMethodDtoPasswordBased = {
   type: "passwordBased";
@@ -16,14 +16,14 @@ export type AuthMethodDtoPasswordBased = {
 };
 
 export type AuthMethodDtoNfcBased = {
-  type: "nfcBased";
+  type: "NfcBased";
   name: string;
   card_id: string;
   card_type: CardTypeDto;
 };
 
 export type AuthMethodDtoPublicTab = {
-  type: "publicTab";
+  type: "PublicTab";
 };
 
 export type AuthMethodDto =

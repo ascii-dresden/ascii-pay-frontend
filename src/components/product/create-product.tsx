@@ -1,16 +1,19 @@
-import { Box, CircularProgress, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FileUpload from "../FileUpload/FileUpload";
 import { LoadingButton } from "@mui/lab";
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useCreateProductMutation } from "../../redux/api/productApi";
-
-interface ICreatePostProp {
-  setOpenPostModal: (openPostModal: boolean) => void;
-}
 
 const createProductSchema = object({
   name: string().min(1, "Title is required"),
@@ -21,8 +24,11 @@ const createProductSchema = object({
 
 export type ICreateProduct = TypeOf<typeof createProductSchema>;
 
-const CreateProduct: FC<ICreatePostProp> = ({ setOpenPostModal }) => {
-  const [createPost, { isLoading, isError, error, isSuccess }] =
+const CreateProduct = (props: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) => {
+  const [createProduct, { isLoading, isError, error, isSuccess }] =
     useCreateProductMutation();
 
   const methods = useForm<ICreateProduct>({
@@ -32,7 +38,7 @@ const CreateProduct: FC<ICreatePostProp> = ({ setOpenPostModal }) => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Post created successfully");
-      setOpenPostModal(false);
+      props.setOpen(false);
     }
 
     if (isError) {
@@ -59,7 +65,7 @@ const CreateProduct: FC<ICreatePostProp> = ({ setOpenPostModal }) => {
   }, [methods.formState.isSubmitting]);
 
   const onSubmitHandler: SubmitHandler<ICreateProduct> = (values) => {
-    createPost({
+    createProduct({
       name: values.name,
       price: {
         cent: 0,
@@ -75,39 +81,38 @@ const CreateProduct: FC<ICreatePostProp> = ({ setOpenPostModal }) => {
   };
 
   return (
-    <Box>
-      <Box display="flex" justifyContent="space-between" sx={{ mb: 3 }}>
-        <Typography variant="h5" component="h1">
-          Create Post
-        </Typography>
-        {isLoading && <CircularProgress size="1rem" color="primary" />}
-      </Box>
+    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+      <DialogTitle>Create product</DialogTitle>
       <FormProvider {...methods}>
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-          onSubmit={methods.handleSubmit(onSubmitHandler)}
-        >
-          <TextField
-            label="Product name"
-            fullWidth
-            sx={{ mb: "1rem" }}
-            {...methods.register("name")}
-          />
-          <TextField
-            label="Nickname"
-            fullWidth
-            sx={{ mb: "1rem" }}
-            {...methods.register("nickname")}
-          />
-          <TextField
-            label="Category"
-            fullWidth
-            sx={{ mb: "1rem" }}
-            {...methods.register("category")}
-          />
-          <FileUpload limit={1} name="image" multiple={false} />
+        <DialogContent>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+            onSubmit={methods.handleSubmit(onSubmitHandler)}
+          >
+            <TextField
+              label="Product name"
+              fullWidth
+              sx={{ mb: "1rem" }}
+              {...methods.register("name")}
+            />
+            <TextField
+              label="Nickname"
+              fullWidth
+              sx={{ mb: "1rem" }}
+              {...methods.register("nickname")}
+            />
+            <TextField
+              label="Category"
+              fullWidth
+              sx={{ mb: "1rem" }}
+              {...methods.register("category")}
+            />
+            <FileUpload limit={1} name="image" multiple={false} />
+          </Box>
+        </DialogContent>
+        <DialogActions>
           <LoadingButton
             variant="contained"
             fullWidth
@@ -117,9 +122,9 @@ const CreateProduct: FC<ICreatePostProp> = ({ setOpenPostModal }) => {
           >
             Create Product
           </LoadingButton>
-        </Box>
+        </DialogActions>
       </FormProvider>
-    </Box>
+    </Dialog>
   );
 };
 

@@ -20,7 +20,7 @@ export const accountApi = createApi({
     }),
     updateAccount: builder.mutation<
       AccountDto,
-      { id: string; account: SaveAccountDto }
+      { id: number; account: SaveAccountDto }
     >({
       query({ id, account }) {
         return {
@@ -69,7 +69,7 @@ export const accountApi = createApi({
       query(id) {
         return {
           url: `/account/${id}`,
-          method: "Delete",
+          method: "DELETE",
           credentials: "include",
         };
       },
