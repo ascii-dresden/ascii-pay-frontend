@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import customFetchBase from "./customFetchBase";
-import { AccountDto, SaveAccountDto } from "./contracts";
+import { AccountDto, CreateAdminAccountDto, SaveAccountDto } from "./contracts";
 
 export const accountApi = createApi({
   reducerPath: "accountApi",
@@ -75,6 +75,17 @@ export const accountApi = createApi({
       },
       invalidatesTags: [{ type: "Accounts", id: "LIST" }],
     }),
+    createAdminAccount: builder.mutation<AccountDto, CreateAdminAccountDto>({
+      query(account) {
+        return {
+          url: "/create-admin-account",
+          method: "POST",
+          credentials: "include",
+          body: account,
+        };
+      },
+      invalidatesTags: [{ type: "Accounts", id: "LIST" }],
+    }),
   }),
 });
 
@@ -83,4 +94,5 @@ export const {
   useDeleteAccountMutation,
   useUpdateAccountMutation,
   useGetAllAccountsQuery,
+  useCreateAdminAccountMutation,
 } = accountApi;
