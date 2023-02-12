@@ -1,13 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/layout";
-import ProfilePage from "./pages/profile.page";
-import HomePage from "./pages/home.page";
-import LoginPage from "./pages/login.page";
-import UnauthorizePage from "./pages/unauthorize.page";
+import ProfilePage from "./pages/profilePage";
+import LoginPage from "./pages/loginPage";
+import UnauthorizedPage from "./pages/unauthorizedPage";
 import RequireUser from "./components/requireUser";
-import AdminPage from "./pages/admin.page";
+import AdminPage from "./pages/adminPage";
 import { CssBaseline } from "@mui/material";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AccountsPage from "./pages/accountsPage";
+import ProductsPage from "./pages/productsPage";
 
 export function App() {
   return (
@@ -16,15 +18,19 @@ export function App() {
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          {/* Private Route */}
-          <Route element={<RequireUser allowedRoles={["user", "admin"]} />}>
-            <Route path="profile" element={<ProfilePage />} />
+          <Route
+            element={
+              <RequireUser allowedRoles={["Basic", "Member", "Admin"]} />
+            }
+          >
+            <Route index element={<ProfilePage />} />
           </Route>
-          <Route element={<RequireUser allowedRoles={["admin"]} />}>
+          <Route element={<RequireUser allowedRoles={["Admin"]} />}>
+            <Route path="accounts" element={<AccountsPage />} />
+            <Route path="products" element={<ProductsPage />} />
             <Route path="admin" element={<AdminPage />} />
           </Route>
-          <Route path="unauthorized" element={<UnauthorizePage />} />
+          <Route path="unauthorized" element={<UnauthorizedPage />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
       </Routes>

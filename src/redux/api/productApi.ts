@@ -69,7 +69,7 @@ export const productApi = createApi({
       query(id) {
         return {
           url: `/product/${id}`,
-          method: "Delete",
+          method: "DELETE",
           credentials: "include",
         };
       },

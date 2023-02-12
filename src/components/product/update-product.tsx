@@ -1,19 +1,23 @@
-import { Box, CircularProgress, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { object, string, TypeOf } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FileUpload from "../FileUpload/FileUpload";
 import { LoadingButton } from "@mui/lab";
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
 import { pickBy } from "lodash";
 import { toast } from "react-toastify";
 import { ProductDto } from "../../redux/api/contracts";
 import { useUpdateProductMutation } from "../../redux/api/productApi";
-
-interface IUpdatePostProp {
-  setOpenPostModal: (openPostModal: boolean) => void;
-  product: ProductDto;
-}
 
 const updateProductSchema = object({
   name: string().min(1, "Title is required"),
@@ -24,7 +28,11 @@ const updateProductSchema = object({
 
 type IUpdateProduct = TypeOf<typeof updateProductSchema>;
 
-const UpdateProduct: FC<IUpdatePostProp> = ({ setOpenPostModal, product }) => {
+const UpdateProduct = (props: {
+  product: ProductDto;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) => {
   const [updateProduct, { isLoading, isError, error, isSuccess }] =
     useUpdateProductMutation();
 
@@ -34,8 +42,8 @@ const UpdateProduct: FC<IUpdatePostProp> = ({ setOpenPostModal, product }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Post updated successfully");
-      setOpenPostModal(false);
+      toast.success("Product updated successfully");
+      props.setOpen(false);
     }
 
     if (isError) {
@@ -62,16 +70,16 @@ const UpdateProduct: FC<IUpdatePostProp> = ({ setOpenPostModal, product }) => {
   }, [methods.formState.isSubmitting]);
 
   useEffect(() => {
-    if (product) {
+    if (props.product) {
       methods.reset({
-        name: product.name,
-        nickname: product.nickname ?? undefined,
-        barcode: product.barcode ?? undefined,
-        category: product.category,
+        name: props.product.name,
+        nickname: props.product.nickname ?? undefined,
+        barcode: props.product.barcode ?? undefined,
+        category: props.product.category,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product]);
+  }, [props.product]);
 
   const onSubmitHandler: SubmitHandler<IUpdateProduct> = (values) => {
     const formData = new FormData();
@@ -85,7 +93,7 @@ const UpdateProduct: FC<IUpdatePostProp> = ({ setOpenPostModal, product }) => {
     }
     formData.append("data", JSON.stringify(otherFormData));
     updateProduct({
-      id: product?.id!,
+      id: props.product?.id!,
       product: {
         name: values.name ?? "",
         price: {
@@ -103,42 +111,49 @@ const UpdateProduct: FC<IUpdatePostProp> = ({ setOpenPostModal, product }) => {
   };
 
   return (
-    <Box>
-      <Box display="flex" justifyContent="space-between" sx={{ mb: 3 }}>
-        <Typography variant="h5" component="h1">
-          Edit Post
-        </Typography>
-        {isLoading && <CircularProgress size="1rem" color="primary" />}
-      </Box>
+    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+      <DialogTitle>Update product</DialogTitle>
       <FormProvider {...methods}>
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-          onSubmit={methods.handleSubmit(onSubmitHandler)}
-        >
-          <TextField
-            label="Product name"
-            fullWidth
-            sx={{ mb: "1rem" }}
-            focused
-            {...methods.register("name")}
-          />
-          <TextField
-            label="Nickname"
-            fullWidth
-            focused
-            sx={{ mb: "1rem" }}
-            {...methods.register("nickname")}
-          />
-          <TextField
-            label="Category"
-            fullWidth
-            focused
-            sx={{ mb: "1rem" }}
-            {...methods.register("category")}
-          />
-          <FileUpload limit={1} name="image" multiple={false} />
+        <DialogContent>
+          <Box>
+            <Box display="flex" justifyContent="space-between" sx={{ mb: 3 }}>
+              <Typography variant="h5" component="h1">
+                Edit Post
+              </Typography>
+              {isLoading && <CircularProgress size="1rem" color="primary" />}
+            </Box>
+            <Box
+              component="form"
+              noValidate
+              autoComplete="off"
+              onSubmit={methods.handleSubmit(onSubmitHandler)}
+            >
+              <TextField
+                label="Product name"
+                fullWidth
+                sx={{ mb: "1rem" }}
+                focused
+                {...methods.register("name")}
+              />
+              <TextField
+                label="Nickname"
+                fullWidth
+                focused
+                sx={{ mb: "1rem" }}
+                {...methods.register("nickname")}
+              />
+              <TextField
+                label="Category"
+                fullWidth
+                focused
+                sx={{ mb: "1rem" }}
+                {...methods.register("category")}
+              />
+              <FileUpload limit={1} name="image" multiple={false} />
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions>
           <LoadingButton
             variant="contained"
             fullWidth
@@ -146,11 +161,11 @@ const UpdateProduct: FC<IUpdatePostProp> = ({ setOpenPostModal, product }) => {
             type="submit"
             loading={isLoading}
           >
-            Edit Post
+            Edit Product
           </LoadingButton>
-        </Box>
+        </DialogActions>
       </FormProvider>
-    </Box>
+    </Dialog>
   );
 };
 
