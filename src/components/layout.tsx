@@ -11,7 +11,6 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
-  Typography,
 } from "@mui/material";
 import { useAppSelector } from "../redux/store";
 import { useLogoutUserMutation } from "../redux/api/authApi";
@@ -23,6 +22,7 @@ import {
   Coffee,
   Home,
 } from "@mui/icons-material";
+import logo from "../assets/ascii-pay-logo-wide.svg";
 
 const drawerWidth = 240;
 
@@ -65,13 +65,13 @@ const Layout = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
-          <Typography
-            variant="h6"
-            onClick={() => navigate("/")}
-            sx={{ cursor: "pointer" }}
-          >
-            ascii pay
-          </Typography>
+          <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
+            <img
+              style={{ height: "2rem", marginTop: "0.5rem" }}
+              src={logo}
+              alt="ascii pay"
+            />
+          </Box>
           <Box display="flex" sx={{ ml: "auto" }}>
             {!user && (
               <>
