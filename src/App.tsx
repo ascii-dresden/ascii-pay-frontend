@@ -5,16 +5,34 @@ import LoginPage from "./pages/loginPage";
 import UnauthorizedPage from "./pages/unauthorizedPage";
 import RequireUser from "./components/requireUser";
 import AdminPage from "./pages/adminPage";
-import { CssBaseline } from "@mui/material";
+import {
+  createTheme,
+  CssBaseline,
+  ThemeProvider,
+  useMediaQuery,
+} from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AccountsPage from "./pages/accountsPage";
 import ProductsPage from "./pages/productsPage";
 import SetupPage from "./pages/setupPage";
+import React from "react";
 
 export function App() {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: prefersDarkMode ? "dark" : "light",
+        },
+      }),
+    [prefersDarkMode]
+  );
+
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <ToastContainer />
       <Routes>
@@ -36,6 +54,6 @@ export function App() {
         <Route path="login" element={<LoginPage />} />
         <Route path="create-admin-account" element={<SetupPage />} />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 }
