@@ -133,6 +133,7 @@ export const {
   useDeleteAccountMutation,
   useUpdateAccountMutation,
   useGetAllAccountsQuery,
+  useGetAccountQuery,
   useCreateAdminAccountMutation,
   usePaymentMutation,
   useGetAllTransactionsQuery,
