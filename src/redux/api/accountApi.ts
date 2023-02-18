@@ -1,11 +1,17 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import customFetchBase from "./customFetchBase";
-import { AccountDto, CreateAdminAccountDto, SaveAccountDto } from "./contracts";
+import {
+  AccountDto,
+  CreateAdminAccountDto,
+  PaymentDto,
+  SaveAccountDto,
+  TransactionDto,
+} from "./contracts";
 
 export const accountApi = createApi({
   reducerPath: "accountApi",
   baseQuery: customFetchBase,
-  tagTypes: ["Accounts"],
+  tagTypes: ["Accounts", "Transactions"],
   endpoints: (builder) => ({
     createAccount: builder.mutation<AccountDto, SaveAccountDto>({
       query(account) {
@@ -75,6 +81,39 @@ export const accountApi = createApi({
       },
       invalidatesTags: [{ type: "Accounts", id: "LIST" }],
     }),
+    payment: builder.mutation<
+      TransactionDto,
+      { id: number; payment: PaymentDto }
+    >({
+      query({ id, payment }) {
+        return {
+          url: `/account/${id}/payment`,
+          method: "POST",
+          credentials: "include",
+          body: payment,
+        };
+      },
+      invalidatesTags: (result, error, { id }) =>
+        result
+          ? [
+              { type: "Accounts", id },
+              { type: "Accounts", id: "LIST" },
+              { type: "Transactions", id: "LIST" },
+            ]
+          : [
+              { type: "Accounts", id: "LIST" },
+              { type: "Transactions", id: "LIST" },
+            ],
+    }),
+    getAllTransactions: builder.query<TransactionDto[], number>({
+      query(id) {
+        return {
+          url: `/account/${id}/transactions`,
+          credentials: "include",
+        };
+      },
+      providesTags: [{ type: "Transactions", id: "LIST" }],
+    }),
     createAdminAccount: builder.mutation<AccountDto, CreateAdminAccountDto>({
       query(account) {
         return {
@@ -95,4 +134,6 @@ export const {
   useUpdateAccountMutation,
   useGetAllAccountsQuery,
   useCreateAdminAccountMutation,
+  usePaymentMutation,
+  useGetAllTransactionsQuery,
 } = accountApi;

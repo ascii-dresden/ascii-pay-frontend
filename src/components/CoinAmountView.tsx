@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 const StyledCoinAmountView = styled.div`
   display: flex;
   justify-content: end;
+  width: 12rem;
 `;
 
 const StyledCoinAmountEntry = styled.div`
