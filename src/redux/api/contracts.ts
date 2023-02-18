@@ -91,7 +91,7 @@ export type TransactionItemDto = {
 export type TransactionDto = {
   id: number;
   timestamp: string;
-  account_id: number;
+  account_id?: number | null;
   items: TransactionItemDto[];
 };
 
