@@ -2,7 +2,7 @@ import { TableCell, TableRow } from "@mui/material";
 import { CoinAmountDto, TransactionDto } from "../../redux/api/contracts";
 import { CoinAmountView } from "../CoinAmountView";
 
-function getTransactionSum(transaction: TransactionDto): CoinAmountDto {
+export function getTransactionSum(transaction: TransactionDto): CoinAmountDto {
   let centAmount = 0;
   let coffeeStampAmount = 0;
   let bottleStampAmount = 0;
@@ -23,6 +23,28 @@ function getTransactionSum(transaction: TransactionDto): CoinAmountDto {
     Cent: centAmount,
     CoffeeStamp: coffeeStampAmount,
     BottleStamp: bottleStampAmount,
+  };
+}
+
+export function addCoinAmount(
+  left: CoinAmountDto,
+  right: CoinAmountDto
+): CoinAmountDto {
+  return {
+    Cent: (left.Cent ?? 0) + (right.Cent ?? 0),
+    CoffeeStamp: (left.CoffeeStamp ?? 0) + (right.CoffeeStamp ?? 0),
+    BottleStamp: (left.BottleStamp ?? 0) + (right.BottleStamp ?? 0),
+  };
+}
+
+export function substractCoinAmount(
+  left: CoinAmountDto,
+  right: CoinAmountDto
+): CoinAmountDto {
+  return {
+    Cent: (left.Cent ?? 0) - (right.Cent ?? 0),
+    CoffeeStamp: (left.CoffeeStamp ?? 0) - (right.CoffeeStamp ?? 0),
+    BottleStamp: (left.BottleStamp ?? 0) - (right.BottleStamp ?? 0),
   };
 }
 

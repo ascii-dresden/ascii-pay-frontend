@@ -1,15 +1,9 @@
 import { Box, Container, Paper, Typography } from "@mui/material";
 import FullScreenLoader from "../components/FullScreenLoader";
 import { TransactionList } from "../components/transaction/transactions.list";
-import { CoinAmountView } from "../components/CoinAmountView";
-import styled from "@emotion/styled";
 import React, { useEffect } from "react";
 import { useGetAccountQuery } from "../redux/api/accountApi";
 import { toast } from "react-toastify";
-
-const StyledBalanceDiv = styled.div`
-  display: flex;
-`;
 
 export const AccountDetailsPage = (props: { accountId: number }) => {
   const {
@@ -53,19 +47,13 @@ export const AccountDetailsPage = (props: { accountId: number }) => {
           <Typography gutterBottom>
             <strong>Email Address:</strong> {account.email}
           </Typography>
-          <StyledBalanceDiv>
-            <Typography gutterBottom>
-              <strong>Balance:</strong>
-            </Typography>
-            <CoinAmountView coins={account.balance} />
-          </StyledBalanceDiv>
           <Typography gutterBottom>
             <strong>Role:</strong> {account.role}
           </Typography>
         </Box>
       </Paper>
 
-      <TransactionList accountId={account.id} />
+      <TransactionList account={account} />
     </Container>
   );
 };
