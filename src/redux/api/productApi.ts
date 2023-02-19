@@ -1,5 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import customFetchBase from "./customFetchBase";
+import { customFetchBase } from "./customFetchBase";
 import { ProductDto, SaveProductDto } from "./contracts";
 
 export const productApi = createApi({

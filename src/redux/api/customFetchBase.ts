@@ -17,7 +17,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
 });
 
-const customFetchBase: BaseQueryFn<
+export const customFetchBase: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
@@ -56,5 +56,3 @@ const customFetchBase: BaseQueryFn<
 
   return result;
 };
-
-export default customFetchBase;

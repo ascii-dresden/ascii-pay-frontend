@@ -9,15 +9,15 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import FullScreenLoader from "../components/FullScreenLoader";
-import { TransactionList } from "../components/transaction/transactions.list";
+import { FullScreenLoader } from "../FullScreenLoader";
+import { TransactionListView } from "../transaction/TransactionListView";
 import React, { useEffect, useState } from "react";
-import { useGetAccountQuery } from "../redux/api/accountApi";
+import { useGetAccountQuery } from "../../redux/api/accountApi";
 import { toast } from "react-toastify";
 import { Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { UpdateAccountDialog } from "../components/account/updateAccountDialog";
-import { CoinAmountView } from "../components/CoinAmountView";
+import { UpdateAccountDialog } from "./UpdateAccountDialog";
+import { CoinAmountView } from "../transaction/CoinAmountView";
 
 export const AccountDetailsView = (props: {
   accountId: number;
@@ -146,7 +146,7 @@ export const AccountDetailsView = (props: {
         </Paper>
       </Box>
 
-      <TransactionList account={account} />
+      <TransactionListView account={account} />
 
       <UpdateAccountDialog
         account={account}

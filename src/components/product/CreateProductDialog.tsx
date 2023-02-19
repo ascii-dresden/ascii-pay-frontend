@@ -11,26 +11,21 @@ import {
 import { LoadingButton } from "@mui/lab";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
-import { useUpdateProductMutation } from "../../redux/api/productApi";
-import {
-  CoinAmountDto,
-  ProductDto,
-  SaveProductDto,
-} from "../../redux/api/contracts";
-import { CoinAmountEdit } from "../CoinAmountEdit";
+import { useCreateProductMutation } from "../../redux/api/productApi";
+import { CoinAmountDto, SaveProductDto } from "../../redux/api/contracts";
+import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
 import { Close } from "@mui/icons-material";
-import { CategoryInput } from "./categoryInput";
-import { TagsInput } from "./tagsInput";
+import { CategoryInput } from "./CategoryInput";
+import { TagsInput } from "./TagsInput";
 
-export const UpdateProductDialog = (props: {
-  product: ProductDto;
+export const CreateProductDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
   categories: string[];
   tags: string[];
 }) => {
-  const [updateProduct, { isLoading, isError, error, isSuccess }] =
-    useUpdateProductMutation();
+  const [createProduct, { isLoading, isError, error, isSuccess }] =
+    useCreateProductMutation();
 
   const [name, setName] = React.useState("");
   const [nickname, setNickname] = React.useState("");
@@ -40,19 +35,9 @@ export const UpdateProductDialog = (props: {
   const [price, setPrice] = React.useState<CoinAmountDto>({});
   const [bonus, setBonus] = React.useState<CoinAmountDto>({});
 
-  React.useEffect(() => {
-    setName(props.product.name);
-    setNickname(props.product.nickname ?? "");
-    setCategory(props.product.category);
-    setBarcode(props.product.barcode ?? "");
-    setTags(props.product.tags);
-    setPrice(props.product.price);
-    setBonus(props.product.bonus);
-  }, [props.product]);
-
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Product updated successfully");
+      toast.success("Product created successfully");
       props.setOpen(false);
     }
 
@@ -80,16 +65,13 @@ export const UpdateProductDialog = (props: {
     if (barcode.length > 0) {
       saveProduct.barcode = barcode;
     }
-    updateProduct({
-      id: props.product.id,
-      product: saveProduct,
-    });
+    createProduct(saveProduct);
   };
 
   return (
     <Dialog open={props.open} onClose={() => props.setOpen(false)}>
       <DialogTitle component="div">
-        <Typography variant="h5">Edit product</Typography>
+        <Typography variant="h5">Create a new product</Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}
@@ -148,7 +130,7 @@ export const UpdateProductDialog = (props: {
           onClick={handleSubmit}
           loading={isLoading}
         >
-          Save changes
+          Create Product
         </LoadingButton>
       </DialogActions>
     </Dialog>

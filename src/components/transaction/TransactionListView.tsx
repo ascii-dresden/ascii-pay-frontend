@@ -1,0 +1,196 @@
+import {
+  Avatar,
+  Box,
+  CircularProgress,
+  Collapse,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import {
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  ShoppingCartOutlined,
+} from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useGetAllTransactionsQuery } from "../../redux/api/accountApi";
+import { CreatePaymentDialog } from "./CreatePaymentDialog";
+import { CoinAmountView } from "./CoinAmountView";
+import { AccountDto, TransactionDto } from "../../redux/api/contracts";
+import { BASE_URL } from "../../redux/api/customFetchBase";
+import { stringAvatar } from "../stringAvatar";
+import { TransactionChart } from "./TransactionChart";
+import { getTransactionSum } from "./transactionUtils";
+
+export const TransactionListView = (props: { account: AccountDto }) => {
+  const [openModal, setOpenModal] = useState(false);
+  const {
+    isLoading,
+    isError,
+    error,
+    data: transactions,
+  } = useGetAllTransactionsQuery(props.account.id);
+
+  useEffect(() => {
+    if (isError) {
+      if (Array.isArray((error as any).data.error)) {
+        (error as any).data.error.forEach((el: any) =>
+          toast.error(el.message, {
+            position: "top-right",
+          })
+        );
+      } else {
+        toast.error((error as any).data.message, {
+          position: "top-right",
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
+
+  if (isLoading || transactions === undefined) {
+    return (
+      <>
+        <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <div style={{ height: "365px" }}></div>
+            <CircularProgress />
+          </Box>
+        </Paper>
+        <Paper elevation={4}>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ height: "16rem" }}
+          >
+            <CircularProgress />
+          </Box>
+        </Paper>
+      </>
+    );
+  }
+
+  let sortedTransactions = [...transactions];
+  sortedTransactions.reverse();
+
+  return (
+    <>
+      <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
+        <TransactionChart account={props.account} transactions={transactions} />
+      </Paper>
+      <TableContainer component={Paper} elevation={4}>
+        <Toolbar>
+          <Typography sx={{ flex: "1 1 100%" }} variant="h6" component="div">
+            Transactions
+          </Typography>
+          <Tooltip title="Create transaction">
+            <IconButton onClick={() => setOpenModal(true)}>
+              <ShoppingCartOutlined />
+            </IconButton>
+          </Tooltip>
+        </Toolbar>
+        <Table sx={{ minWidth: 650 }} aria-label="Transactions table">
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Total</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {sortedTransactions?.map((transaction) => (
+              <TransactionListRow
+                key={transaction.id}
+                transaction={transaction}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <CreatePaymentDialog
+        accountId={props.account.id}
+        open={openModal}
+        setOpen={setOpenModal}
+      />
+    </>
+  );
+};
+
+const TransactionListRow = (props: { transaction: TransactionDto }) => {
+  const [open, setOpen] = React.useState(false);
+
+  const format = new Intl.DateTimeFormat("de-DE", {
+    dateStyle: "full",
+    timeStyle: "long",
+  });
+  return (
+    <>
+      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </IconButton>
+        </TableCell>
+        <TableCell>
+          {format.format(new Date(props.transaction.timestamp))}
+        </TableCell>
+        <TableCell align="right">
+          <CoinAmountView coins={getTransactionSum(props.transaction)} />
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="h6" gutterBottom component="div">
+                Items
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell></TableCell>
+                    <TableCell>Product</TableCell>
+                    <TableCell>Price</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {props.transaction.items.map((item, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        {item.product ? (
+                          <Avatar
+                            alt={item.product.name}
+                            src={`${BASE_URL}/product/${item.product.id}/image`}
+                            {...stringAvatar(item.product.name)}
+                          />
+                        ) : null}
+                      </TableCell>
+                      <TableCell>{item.product?.name ?? "-"}</TableCell>
+                      <TableCell>
+                        <CoinAmountView coins={item.effective_price} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+};

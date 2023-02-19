@@ -1,7 +1,7 @@
 import { useAppSelector } from "../redux/store";
-import FullScreenLoader from "../components/FullScreenLoader";
+import { FullScreenLoader } from "../components/FullScreenLoader";
 import React from "react";
-import { AccountDetailsView } from "./accountDetailsView";
+import { AccountDetailsView } from "../components/account/AccountDetailsView";
 
 export const ProfilePage = () => {
   const user = useAppSelector((state) => state.userState.user);

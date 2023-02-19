@@ -1,8 +1,8 @@
-import { CoinAmountDto } from "../redux/api/contracts";
+import { CoinAmountDto } from "../../redux/api/contracts";
 import styled from "@emotion/styled";
 import { Euro } from "@mui/icons-material";
-import { CoffeeStamp } from "./CoffeeStamp";
-import { BottleStamp } from "./BottleStamp";
+import { CoffeeStamp } from "../CoffeeStamp";
+import { BottleStamp } from "../BottleStamp";
 
 const StyledCoinAmountView = styled.div`
   display: flex;

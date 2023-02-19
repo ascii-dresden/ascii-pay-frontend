@@ -10,9 +10,9 @@ import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { CoinAmountDto } from "../../redux/api/contracts";
 import { usePaymentMutation } from "../../redux/api/accountApi";
-import { CoinAmountEdit } from "../CoinAmountEdit";
+import { CoinAmountEdit } from "./CoinAmountEdit";
 
-export const CreatePayment = (props: {
+export const CreatePaymentDialog = (props: {
   accountId: number;
   open: boolean;
   setOpen: (open: boolean) => void;

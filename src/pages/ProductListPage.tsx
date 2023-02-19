@@ -25,16 +25,16 @@ import {
 } from "../redux/api/productApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import FullScreenLoader from "../components/FullScreenLoader";
 import { Add } from "@mui/icons-material";
-import { CreateProductDialog } from "../components/product/createProductDialog";
+import { CreateProductDialog } from "../components/product/CreateProductDialog";
 import { BASE_URL } from "../redux/api/customFetchBase";
 import { stringAvatar } from "../components/stringAvatar";
-import { CoinAmountView } from "../components/CoinAmountView";
-import { UpdateProductDialog } from "../components/product/updateProductDialog";
+import { CoinAmountView } from "../components/transaction/CoinAmountView";
+import { UpdateProductDialog } from "../components/product/UpdateProductDialog";
 import { ProductDto } from "../redux/api/contracts";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
+import { PaperScreenLoader } from "../components/PaperScreenLoader";
 
 const StyledTab = styled(Tab)({
   textTransform: "none",
@@ -69,8 +69,49 @@ export const ProductListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
+  const header = (
+    <Paper elevation={0}>
+      <Box sx={{ px: 1, py: 2, mb: 3 }}>
+        <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
+          <div>
+            <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+              Products
+            </Typography>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link
+                underline="hover"
+                color="inherit"
+                onClick={() => navigate("/")}
+              >
+                ascii-pay
+              </Link>
+              <Link
+                underline="hover"
+                color="text.primary"
+                aria-current="page"
+                onClick={() => navigate("/products")}
+              >
+                Products
+              </Link>
+            </Breadcrumbs>
+          </div>
+
+          <Button
+            variant="outlined"
+            size="large"
+            startIcon={<Add />}
+            sx={{ whiteSpace: "nowrap", width: "13rem" }}
+            onClick={() => setOpenModal(true)}
+          >
+            New Product
+          </Button>
+        </Toolbar>
+      </Box>
+    </Paper>
+  );
+
   if (isLoading || products === undefined) {
-    return <FullScreenLoader />;
+    return <PaperScreenLoader>{header}</PaperScreenLoader>;
   }
 
   let categories = products
@@ -92,51 +133,7 @@ export const ProductListPage = () => {
 
   return (
     <Container maxWidth="lg">
-      <Paper elevation={0}>
-        <Box sx={{ px: 1, py: 2, mb: 3 }}>
-          <Toolbar
-            disableGutters={true}
-            sx={{ justifyContent: "space-between" }}
-          >
-            <div>
-              <Typography
-                sx={{ flex: "1 1 100%" }}
-                variant="h5"
-                component="div"
-              >
-                Products
-              </Typography>
-              <Breadcrumbs aria-label="breadcrumb">
-                <Link
-                  underline="hover"
-                  color="inherit"
-                  onClick={() => navigate("/")}
-                >
-                  ascii-pay
-                </Link>
-                <Link
-                  underline="hover"
-                  color="text.primary"
-                  aria-current="page"
-                  onClick={() => navigate("/products")}
-                >
-                  Products
-                </Link>
-              </Breadcrumbs>
-            </div>
-
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<Add />}
-              sx={{ whiteSpace: "nowrap", width: "13rem" }}
-              onClick={() => setOpenModal(true)}
-            >
-              New Product
-            </Button>
-          </Toolbar>
-        </Box>
-      </Paper>
+      {header}
       <TableContainer component={Paper} elevation={4}>
         <Box
           sx={{
