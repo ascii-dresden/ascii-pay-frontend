@@ -19,10 +19,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import {
-  useDeleteProductMutation,
-  useGetAllProductsQuery,
-} from "../redux/api/productApi";
+import { useGetAllProductsQuery } from "../redux/api/productApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Add } from "@mui/icons-material";
@@ -34,6 +31,7 @@ import { UpdateProductDialog } from "../components/product/UpdateProductDialog";
 import { ProductDto } from "../redux/api/contracts";
 import { useNavigate } from "react-router-dom";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
+import { DeleteProductDialog } from "../components/product/DeleteProductDialog";
 
 export const ProductListPage = () => {
   const navigate = useNavigate();
@@ -184,36 +182,8 @@ const ProductListRow = (props: {
   categories: string[];
   tags: string[];
 }) => {
-  const [openModal, setOpenModal] = useState(false);
-  const [deleteProduct, { isLoading, error, isSuccess, isError }] =
-    useDeleteProductMutation();
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Product deleted successfully");
-    }
-
-    if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error((error as any).data.message, {
-          position: "top-right",
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading]);
-
-  const onDeleteHandler = (id: number) => {
-    if (window.confirm("Are you sure")) {
-      deleteProduct(id);
-    }
-  };
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   return (
     <>
@@ -241,19 +211,22 @@ const ProductListRow = (props: {
         </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">
-            <Button onClick={() => setOpenModal(true)}>Edit</Button>
-            <Button onClick={() => onDeleteHandler(props.product.id)}>
-              Delete
-            </Button>
+            <Button onClick={() => setOpenUpdateModal(true)}>Edit</Button>
+            <Button onClick={() => setOpenDeleteModal(true)}>Delete</Button>
           </ButtonGroup>
         </TableCell>
       </TableRow>
       <UpdateProductDialog
         product={props.product}
-        open={openModal}
-        setOpen={setOpenModal}
+        open={openUpdateModal}
+        setOpen={setOpenUpdateModal}
         categories={props.categories}
         tags={props.tags}
+      />
+      <DeleteProductDialog
+        product={props.product}
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
       />
     </>
   );

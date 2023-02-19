@@ -16,10 +16,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import {
-  useDeleteAccountMutation,
-  useGetAllAccountsQuery,
-} from "../redux/api/accountApi";
+import { useGetAllAccountsQuery } from "../redux/api/accountApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Add } from "@mui/icons-material";
@@ -30,6 +27,7 @@ import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { UpdateAccountDialog } from "../components/account/UpdateAccountDialog";
 import { AccountDto } from "../redux/api/contracts";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
+import { DeleteAccountDialog } from "../components/account/DeleteAccountDialog";
 
 export const AccountListPage = () => {
   const navigate = useNavigate();
@@ -132,36 +130,8 @@ export const AccountListPage = () => {
 
 const AccountListRow = (props: { account: AccountDto }) => {
   const navigate = useNavigate();
-  const [openModal, setOpenModal] = useState(false);
-  const [deleteAccount, { isLoading, error, isSuccess, isError }] =
-    useDeleteAccountMutation();
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Account deleted successfully");
-    }
-
-    if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error((error as any).data.message, {
-          position: "top-right",
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading]);
-
-  const onDeleteHandler = (id: number) => {
-    if (window.confirm("Are you sure")) {
-      deleteAccount(id);
-    }
-  };
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   return (
     <>
@@ -185,17 +155,20 @@ const AccountListRow = (props: { account: AccountDto }) => {
             <Button onClick={() => navigate(`/accounts/${props.account.id}`)}>
               Profile
             </Button>
-            <Button onClick={() => setOpenModal(true)}>Edit</Button>
-            <Button onClick={() => onDeleteHandler(props.account.id)}>
-              Delete
-            </Button>
+            <Button onClick={() => setOpenUpdateModal(true)}>Edit</Button>
+            <Button onClick={() => setOpenDeleteModal(true)}>Delete</Button>
           </ButtonGroup>
         </TableCell>
       </TableRow>
       <UpdateAccountDialog
         account={props.account}
-        open={openModal}
-        setOpen={setOpenModal}
+        open={openUpdateModal}
+        setOpen={setOpenUpdateModal}
+      />
+      <DeleteAccountDialog
+        account={props.account}
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
       />
     </>
   );
