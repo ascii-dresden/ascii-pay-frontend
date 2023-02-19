@@ -24,7 +24,7 @@ import { toast } from "react-toastify";
 import { Add } from "@mui/icons-material";
 import { CreateProductDialog } from "../components/product/CreateProductDialog";
 import { BASE_URL } from "../redux/api/customFetchBase";
-import { stringAvatar } from "../components/stringAvatar";
+import { stringWithoutColorAvatar } from "../components/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { UpdateProductDialog } from "../components/product/UpdateProductDialog";
 import { ProductDto } from "../redux/api/contracts";
@@ -185,7 +185,8 @@ const ProductListRow = (props: {
           <Avatar
             alt={props.product.name}
             src={`${BASE_URL}/product/${props.product.id}/image`}
-            {...stringAvatar(props.product.name)}
+            variant="square"
+            {...stringWithoutColorAvatar(props.product.name)}
           />
         </TableCell>
         <TableCell>
