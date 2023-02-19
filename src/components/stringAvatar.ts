@@ -36,3 +36,16 @@ export function stringAvatar(name: string) {
     children: `${split[0][0]}${name.split(" ")[1][0]}`,
   };
 }
+
+export function stringWithoutColorAvatar(name: string) {
+  const split = name.split(" ");
+  if (split.length < 2 || split[0].length < 1 || split[1].length < 1) {
+    return {
+      children: `${name.length < 1 ? "" : name[0]}`,
+    };
+  }
+
+  return {
+    children: `${split[0][0]}${name.split(" ")[1][0]}`,
+  };
+}
