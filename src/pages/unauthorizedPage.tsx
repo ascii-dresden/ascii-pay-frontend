@@ -1,6 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 
-const UnauthorizedPage = () => {
+export const UnauthorizedPage = () => {
   return (
     <Container maxWidth="lg">
       <Box
@@ -19,5 +19,3 @@ const UnauthorizedPage = () => {
     </Container>
   );
 };
-
-export default UnauthorizedPage;

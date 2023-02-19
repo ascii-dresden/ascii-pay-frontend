@@ -1,16 +1,14 @@
 import { useAppSelector } from "../redux/store";
 import FullScreenLoader from "../components/FullScreenLoader";
 import React from "react";
-import { AccountDetailsPage } from "./accountDetailsPage";
+import { AccountDetailsView } from "./accountDetailsView";
 
-const ProfilePage = () => {
+export const ProfilePage = () => {
   const user = useAppSelector((state) => state.userState.user);
 
   if (!user) {
     return <FullScreenLoader />;
   }
 
-  return <AccountDetailsPage accountId={user.id} />;
+  return <AccountDetailsView accountId={user.id} isRoot={true} />;
 };
-
-export default ProfilePage;

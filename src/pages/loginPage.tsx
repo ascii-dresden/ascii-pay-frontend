@@ -19,7 +19,7 @@ const LoadingButton = styled(_LoadingButton)`
   font-weight: 500;
 `;
 
-const LoginPage = () => {
+export const LoginPage = () => {
   const [loginUser, { isLoading, isError, error, isSuccess }] =
     useLoginUserMutation();
 
@@ -144,5 +144,3 @@ const LoginPage = () => {
     </Box>
   );
 };
-
-export default LoginPage;

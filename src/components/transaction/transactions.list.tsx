@@ -1,5 +1,4 @@
 import {
-  Box,
   IconButton,
   Paper,
   Table,
@@ -197,18 +196,12 @@ export const TransactionList = (props: { account: AccountDto }) => {
 
   return (
     <>
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Box sx={{ display: "flex" }}>
-          <Typography sx={{ mx: 1 }} variant="h6">
-            Balance:
-          </Typography>
-          <CoinAmountView coins={props.account.balance} />
-        </Box>
+      <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
         <div id="chart">
           <Chart options={options} series={series} type="line" height={350} />
         </div>
       </Paper>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} elevation={4}>
         <Toolbar>
           <Typography sx={{ flex: "1 1 100%" }} variant="h6" component="div">
             Transactions
