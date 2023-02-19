@@ -36,16 +36,11 @@ export const UpdateAccountDialog = (props: {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Account updated successfully");
+      toast.success("Account updated successfully!");
       props.setOpen(false);
-    }
-
-    if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) => toast.error(el.message));
-      } else {
-        toast.error((error as any).data.message);
-      }
+    } else if (isError) {
+      toast.error("Account could not be updated!");
+      console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);

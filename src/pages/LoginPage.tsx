@@ -33,21 +33,10 @@ export const LoginPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("You successfully logged in");
       navigate(from);
-    }
-    if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error((error as any).data.message, {
-          position: "top-right",
-        });
-      }
+    } else if (isError) {
+      toast.error("Username or password wrong!");
+      console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);

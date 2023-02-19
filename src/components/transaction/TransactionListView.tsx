@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useGetAllTransactionsQuery } from "../../redux/api/accountApi";
 import { CoinAmountView } from "./CoinAmountView";
@@ -25,7 +25,6 @@ import { TransactionChart } from "./TransactionChart";
 import { getTransactionSum } from "./transactionUtils";
 
 export const TransactionListView = (props: { account: AccountDto }) => {
-  const [openModal, setOpenModal] = useState(false);
   const {
     isLoading,
     isError,
@@ -35,17 +34,8 @@ export const TransactionListView = (props: { account: AccountDto }) => {
 
   useEffect(() => {
     if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error((error as any).data.message, {
-          position: "top-right",
-        });
-      }
+      toast.error("Could not load transactions!");
+      console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);

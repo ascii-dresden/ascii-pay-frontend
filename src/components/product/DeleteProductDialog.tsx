@@ -24,16 +24,11 @@ export const DeleteProductDialog = (props: {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Product deleted successfully");
+      toast.success("Product deleted successfully!");
       props.setOpen(false);
-    }
-
-    if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) => toast.error(el.message));
-      } else {
-        toast.error((error as any).data.message);
-      }
+    } else if (isError) {
+      toast.error("Product could not be deleted!");
+      console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
