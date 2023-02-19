@@ -2,7 +2,6 @@ import {
   Box,
   Breadcrumbs,
   Button,
-  Chip,
   Container,
   Link,
   Paper,
@@ -19,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { UpdateAccountDialog } from "./UpdateAccountDialog";
 import { CoinAmountView } from "../transaction/CoinAmountView";
 import { CreatePaymentDialog } from "../transaction/CreatePaymentDialog";
+import { RoleChip } from "./RoleChip";
 
 export const AccountDetailsPageView = (props: {
   accountId: number;
@@ -70,9 +70,8 @@ export const AccountDetailsPageView = (props: {
                 variant="h5"
                 component="div"
               >
-                {account.name}
-
-                <Chip sx={{ ml: 2 }} size="small" label={account.role} />
+                <span style={{ marginRight: "0.6rem" }}>{account.name}</span>
+                <RoleChip role={account.role} />
               </Typography>
 
               {props.isRoot ? (
