@@ -4,6 +4,7 @@ import {
   AppBar,
   Box,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -15,7 +16,7 @@ import { useAppSelector } from "../redux/store";
 import { useLogoutUserMutation } from "../redux/api/authApi";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
-import { AccountCircle, Coffee, Home } from "@mui/icons-material";
+import { AccountCircle, Coffee, Home, Menu } from "@mui/icons-material";
 import logo from "../assets/ascii-pay-logo-wide.svg";
 
 const drawerWidth = 240;
@@ -23,6 +24,11 @@ const drawerWidth = 240;
 export const Layout = () => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userState.user);
+
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   const [logoutUser, { isLoading, isSuccess, error, isError }] =
     useLogoutUserMutation();
@@ -52,6 +58,40 @@ export const Layout = () => {
     logoutUser();
   };
 
+  const drawerContent = (
+    <>
+      <Toolbar></Toolbar>
+      <Box sx={{ overflow: "auto" }}>
+        <List>
+          <ListItem disablePadding onClick={() => navigate("/")}>
+            <ListItemButton>
+              <ListItemIcon>
+                <Home />
+              </ListItemIcon>
+              <ListItemText primary="Profile" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding onClick={() => navigate("/accounts")}>
+            <ListItemButton>
+              <ListItemIcon>
+                <AccountCircle />
+              </ListItemIcon>
+              <ListItemText primary="Accounts" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding onClick={() => navigate("/products")}>
+            <ListItemButton>
+              <ListItemIcon>
+                <Coffee />
+              </ListItemIcon>
+              <ListItemText primary="Products" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Box>
+    </>
+  );
+
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
@@ -59,6 +99,15 @@ export const Layout = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { md: "none" } }}
+          >
+            <Menu />
+          </IconButton>
           <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
             <img
               style={{ height: "2rem", marginTop: "0.5rem" }}
@@ -90,8 +139,11 @@ export const Layout = () => {
         </Toolbar>
       </AppBar>
       <Drawer
-        variant="permanent"
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
         sx={{
+          display: { xs: "block", sm: "block", md: "none" },
           width: drawerWidth,
           flexShrink: 0,
           [`& .MuiDrawer-paper`]: {
@@ -100,35 +152,21 @@ export const Layout = () => {
           },
         }}
       >
-        <Toolbar>Test</Toolbar>
-        <Box sx={{ overflow: "auto" }}>
-          <List>
-            <ListItem disablePadding onClick={() => navigate("/")}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <Home />
-                </ListItemIcon>
-                <ListItemText primary="Profile" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding onClick={() => navigate("/accounts")}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <AccountCircle />
-                </ListItemIcon>
-                <ListItemText primary="Accounts" />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding onClick={() => navigate("/products")}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <Coffee />
-                </ListItemIcon>
-                <ListItemText primary="Products" />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Box>
+        {drawerContent}
+      </Drawer>
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: "none", sm: "none", md: "block" },
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        {drawerContent}
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />

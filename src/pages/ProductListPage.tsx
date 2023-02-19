@@ -33,12 +33,7 @@ import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { UpdateProductDialog } from "../components/product/UpdateProductDialog";
 import { ProductDto } from "../redux/api/contracts";
 import { useNavigate } from "react-router-dom";
-import styled from "@emotion/styled";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
-
-const StyledTab = styled(Tab)({
-  textTransform: "none",
-});
 
 export const ProductListPage = () => {
   const navigate = useNavigate();
@@ -119,17 +114,22 @@ export const ProductListPage = () => {
     .filter((value, index, self) => {
       return self.indexOf(value) === index;
     });
+  categories.sort();
+
   let tags = products
     .flatMap((p) => p.tags)
     .filter((value, index, self) => {
       return self.indexOf(value) === index;
     });
+  tags.sort();
 
   let filteredProducts: ProductDto[] = products;
-  if (tabIndex > 0 && tabIndex <= categories.length) {
-    let category = categories[tabIndex - 1];
+  if (tabIndex < categories.length) {
+    let category = categories[tabIndex];
     filteredProducts = products.filter((p) => p.category === category);
   }
+
+  filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <Container maxWidth="lg">
@@ -142,13 +142,12 @@ export const ProductListPage = () => {
           }}
         >
           <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
-            <StyledTab label="All" />
             {categories.map((c) => (
-              <StyledTab key={c} label={c} />
+              <Tab key={c} label={c.length > 0 ? c : "Uncategorized"} />
             ))}
           </Tabs>
         </Box>
-        <Table sx={{ minWidth: 650 }} aria-label="Products table">
+        <Table aria-label="Products table">
           <TableHead>
             <TableRow>
               <TableCell></TableCell>

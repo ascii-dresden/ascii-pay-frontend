@@ -27,6 +27,11 @@ export function App() {
         palette: {
           mode: prefersDarkMode ? "dark" : "light",
         },
+        typography: {
+          button: {
+            textTransform: "none",
+          },
+        },
       }),
     [prefersDarkMode]
   );

@@ -11,19 +11,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Toolbar,
-  Tooltip,
   Typography,
 } from "@mui/material";
-import {
-  KeyboardArrowDown,
-  KeyboardArrowUp,
-  ShoppingCartOutlined,
-} from "@mui/icons-material";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useGetAllTransactionsQuery } from "../../redux/api/accountApi";
-import { CreatePaymentDialog } from "./CreatePaymentDialog";
 import { CoinAmountView } from "./CoinAmountView";
 import { AccountDto, TransactionDto } from "../../redux/api/contracts";
 import { BASE_URL } from "../../redux/api/customFetchBase";
@@ -89,17 +82,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
         <TransactionChart account={props.account} transactions={transactions} />
       </Paper>
       <TableContainer component={Paper} elevation={4}>
-        <Toolbar>
-          <Typography sx={{ flex: "1 1 100%" }} variant="h6" component="div">
-            Transactions
-          </Typography>
-          <Tooltip title="Create transaction">
-            <IconButton onClick={() => setOpenModal(true)}>
-              <ShoppingCartOutlined />
-            </IconButton>
-          </Tooltip>
-        </Toolbar>
-        <Table sx={{ minWidth: 650 }} aria-label="Transactions table">
+        <Table aria-label="Transactions table">
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
@@ -117,11 +100,6 @@ export const TransactionListView = (props: { account: AccountDto }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <CreatePaymentDialog
-        accountId={props.account.id}
-        open={openModal}
-        setOpen={setOpenModal}
-      />
     </>
   );
 };

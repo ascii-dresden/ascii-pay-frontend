@@ -4,6 +4,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import React, { useEffect } from "react";
@@ -11,6 +13,7 @@ import { toast } from "react-toastify";
 import { CoinAmountDto } from "../../redux/api/contracts";
 import { usePaymentMutation } from "../../redux/api/accountApi";
 import { CoinAmountEdit } from "./CoinAmountEdit";
+import { Close } from "@mui/icons-material";
 
 export const CreatePaymentDialog = (props: {
   accountId: number;
@@ -26,6 +29,7 @@ export const CreatePaymentDialog = (props: {
     if (isSuccess) {
       toast.success("Payment successfully executed");
       props.setOpen(false);
+      setCoins({});
     }
 
     if (isError) {
@@ -53,8 +57,22 @@ export const CreatePaymentDialog = (props: {
 
   return (
     <Dialog open={props.open} onClose={() => props.setOpen(false)}>
-      <DialogTitle>Payment</DialogTitle>
-      <DialogContent>
+      <DialogTitle component="div">
+        <Typography variant="h5">Payment</Typography>
+        <IconButton
+          aria-label="close"
+          onClick={() => props.setOpen(false)}
+          sx={{
+            position: "absolute",
+            right: 16,
+            top: 10,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <Close />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers={true}>
         <Box pt={1}>
           <CoinAmountEdit coins={coins} onChange={setCoins} />
         </Box>
@@ -63,7 +81,7 @@ export const CreatePaymentDialog = (props: {
         <LoadingButton
           variant="contained"
           fullWidth
-          sx={{ py: "0.8rem" }}
+          sx={{ mx: 2, py: 1.5 }}
           onClick={handleSubmit}
           loading={isLoading}
         >
