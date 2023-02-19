@@ -1,4 +1,4 @@
-import { css } from "@emotion/react";
+import { css } from "@emotion/css";
 
 export const GlobalStyle = css`
   body {

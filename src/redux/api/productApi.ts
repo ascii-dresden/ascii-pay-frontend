@@ -38,6 +38,42 @@ export const productApi = createApi({
             ]
           : [{ type: "Products", id: "LIST" }],
     }),
+    updateProductImage: builder.mutation<
+      void,
+      { id: number; content: FormData }
+    >({
+      query({ id, content }) {
+        return {
+          url: `/product/${id}/image`,
+          method: "PUT",
+          credentials: "include",
+          body: content,
+        };
+      },
+      invalidatesTags: (result, error, { id }) =>
+        result
+          ? [
+              { type: "Products", id },
+              { type: "Products", id: "LIST" },
+            ]
+          : [{ type: "Products", id: "LIST" }],
+    }),
+    deleteProductImage: builder.mutation<void, number>({
+      query(id) {
+        return {
+          url: `/product/${id}/image`,
+          method: "DELETE",
+          credentials: "include",
+        };
+      },
+      invalidatesTags: (result, error, id) =>
+        result
+          ? [
+              { type: "Products", id },
+              { type: "Products", id: "LIST" },
+            ]
+          : [{ type: "Products", id: "LIST" }],
+    }),
     getProduct: builder.query<ProductDto, number>({
       query(id) {
         return {
@@ -82,5 +118,7 @@ export const {
   useCreateProductMutation,
   useDeleteProductMutation,
   useUpdateProductMutation,
+  useUpdateProductImageMutation,
+  useDeleteProductImageMutation,
   useGetAllProductsQuery,
 } = productApi;

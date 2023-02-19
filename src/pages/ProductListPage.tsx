@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { DeleteProductDialog } from "../components/product/DeleteProductDialog";
 import { TagChip } from "../components/product/TagChip";
+import { UpdateProductImageDialog } from "../components/product/UpdateProductImageDialog";
 
 export const ProductListPage = () => {
   const navigate = useNavigate();
@@ -173,6 +174,7 @@ const ProductListRow = (props: {
   categories: string[];
   tags: string[];
 }) => {
+  const [openUpdateImageModal, setOpenUpdateImageModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
@@ -202,11 +204,17 @@ const ProductListRow = (props: {
         </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">
+            <Button onClick={() => setOpenUpdateImageModal(true)}>Image</Button>
             <Button onClick={() => setOpenUpdateModal(true)}>Edit</Button>
             <Button onClick={() => setOpenDeleteModal(true)}>Delete</Button>
           </ButtonGroup>
         </TableCell>
       </TableRow>
+      <UpdateProductImageDialog
+        product={props.product}
+        open={openUpdateImageModal}
+        setOpen={setOpenUpdateImageModal}
+      />
       <UpdateProductDialog
         product={props.product}
         open={openUpdateModal}
