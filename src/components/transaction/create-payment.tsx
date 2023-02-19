@@ -38,7 +38,7 @@ export const CreatePayment = (props: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  const handlePayment = () => {
+  const handleSubmit = () => {
     payment({
       id: props.accountId,
       payment: {
@@ -64,7 +64,7 @@ export const CreatePayment = (props: {
           variant="contained"
           fullWidth
           sx={{ py: "0.8rem" }}
-          onClick={handlePayment}
+          onClick={handleSubmit}
           loading={isLoading}
         >
           Pay

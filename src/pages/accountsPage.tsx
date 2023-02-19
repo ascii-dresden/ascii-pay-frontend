@@ -71,7 +71,7 @@ const HomePage = () => {
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Role</TableCell>
-              <TableCell align="right">Balance</TableCell>
+              <TableCell>Balance</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>

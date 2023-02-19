@@ -1,4 +1,5 @@
 import {
+  Box,
   IconButton,
   Paper,
   Table,
@@ -133,6 +134,9 @@ export const TransactionList = (props: { account: AccountDto }) => {
       toolbar: {
         show: false,
       },
+      animations: {
+        enabled: false,
+      },
     },
     stroke: {
       curve: "stepline",
@@ -186,15 +190,20 @@ export const TransactionList = (props: { account: AccountDto }) => {
           return (val / 100).toFixed(2) + " €";
         },
       },
-      min: Math.floor((min - 500) / 500) * 500,
-      max: Math.ceil((max + 500) / 500) * 500,
+      min: Math.floor((min - 50) / 500) * 500,
+      max: Math.ceil((max + 50) / 500) * 500,
     },
   };
 
   return (
     <>
       <Paper sx={{ p: 2, mb: 2 }}>
-        <CoinAmountView coins={props.account.balance} />
+        <Box sx={{ display: "flex" }}>
+          <Typography sx={{ mx: 1 }} variant="h6">
+            Balance:
+          </Typography>
+          <CoinAmountView coins={props.account.balance} />
+        </Box>
         <div id="chart">
           <Chart options={options} series={series} type="line" height={350} />
         </div>
@@ -213,8 +222,9 @@ export const TransactionList = (props: { account: AccountDto }) => {
         <Table sx={{ minWidth: 650 }} aria-label="Transactions table">
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>Date</TableCell>
-              <TableCell>Price</TableCell>
+              <TableCell>Total</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

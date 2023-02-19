@@ -6,8 +6,7 @@ import { BottleStamp } from "./BottleStamp";
 
 const StyledCoinAmountView = styled.div`
   display: flex;
-  justify-content: end;
-  width: 12rem;
+  width: 10.5rem;
 
   svg {
     font-size: 1.1rem !important;
@@ -17,12 +16,18 @@ const StyledCoinAmountView = styled.div`
 const StyledCoinAmountEntry = styled.div`
   display: flex;
   align-items: center;
+  justify-content: right;
+  width: 3rem;
 
   & > span {
     line-height: 1rem;
     padding-right: 0.2rem;
     min-width: 1rem;
     padding-top: 0.1rem;
+  }
+
+  &:first-of-type {
+    width: 4.5rem;
   }
 
   &:not(:first-of-type) {
