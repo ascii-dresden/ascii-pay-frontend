@@ -1,6 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 
-const AdminPage = () => {
+export const AdminPage = () => {
   return (
     <Container maxWidth="lg">
       <Box
@@ -19,5 +19,3 @@ const AdminPage = () => {
     </Container>
   );
 };
-
-export default AdminPage;

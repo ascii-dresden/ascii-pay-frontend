@@ -134,6 +134,7 @@ export const AccountListPage = () => {
 };
 
 const AccountListRow = (props: { account: AccountDto }) => {
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [deleteAccount, { isLoading, error, isSuccess, isError }] =
     useDeleteAccountMutation();
@@ -184,6 +185,9 @@ const AccountListRow = (props: { account: AccountDto }) => {
         </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">
+            <Button onClick={() => navigate(`/accounts/${props.account.id}`)}>
+              Profile
+            </Button>
             <Button onClick={() => setOpenModal(true)}>Edit</Button>
             <Button onClick={() => onDeleteHandler(props.account.id)}>
               Delete
