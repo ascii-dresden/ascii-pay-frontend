@@ -1,10 +1,10 @@
-import { CoinAmountDto } from "../redux/api/contracts";
+import { CoinAmountDto } from "../../redux/api/contracts";
 import React from "react";
 import { InputAdornment, TextField } from "@mui/material";
 
 import { Euro } from "@mui/icons-material";
-import { BottleStamp } from "./BottleStamp";
-import { CoffeeStamp } from "./CoffeeStamp";
+import { BottleStamp } from "../BottleStamp";
+import { CoffeeStamp } from "../CoffeeStamp";
 import { CoinInput } from "./CoinInput";
 import styled from "@emotion/styled";
 

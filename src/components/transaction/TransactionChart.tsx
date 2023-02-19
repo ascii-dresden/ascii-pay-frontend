@@ -1,31 +1,14 @@
-import {
-  IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { ShoppingCartOutlined } from "@mui/icons-material";
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { useGetAllTransactionsQuery } from "../../redux/api/accountApi";
-import FullScreenLoader from "../FullScreenLoader";
-import TransactionItem, {
-  addCoinAmount,
-  getTransactionSum,
-} from "./transaction.component";
-import { CreatePayment } from "./create-payment";
+import React from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import { CoinAmountView } from "../CoinAmountView";
-import { AccountDto, CoinAmountDto } from "../../redux/api/contracts";
+import { CoinAmountView } from "./CoinAmountView";
+import {
+  AccountDto,
+  CoinAmountDto,
+  TransactionDto,
+} from "../../redux/api/contracts";
 import { renderToString } from "react-dom/server";
+import { addCoinAmount, getTransactionSum } from "./transactionUtils";
 
 type SeriesData = {
   x: Date;
@@ -36,42 +19,16 @@ type SeriesData = {
   isStatic?: boolean;
 };
 
-export const TransactionList = (props: { account: AccountDto }) => {
-  const [openModal, setOpenModal] = useState(false);
-  const {
-    isLoading,
-    isError,
-    error,
-    data: transactions,
-  } = useGetAllTransactionsQuery(props.account.id);
-
-  useEffect(() => {
-    if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error((error as any).data.message, {
-          position: "top-right",
-        });
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading]);
-
-  if (isLoading || transactions === undefined) {
-    return <FullScreenLoader />;
-  }
-
+export const TransactionChart = (props: {
+  account: AccountDto;
+  transactions: TransactionDto[];
+}) => {
   const format = new Intl.DateTimeFormat("de-DE", {
     dateStyle: "full",
     timeStyle: "long",
   });
 
-  let sortedTransactions = [...transactions];
+  let sortedTransactions = [...props.transactions];
   sortedTransactions.reverse();
 
   let seriesData: SeriesData[] = [];
@@ -194,44 +151,5 @@ export const TransactionList = (props: { account: AccountDto }) => {
     },
   };
 
-  return (
-    <>
-      <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
-        <div id="chart">
-          <Chart options={options} series={series} type="line" height={350} />
-        </div>
-      </Paper>
-      <TableContainer component={Paper} elevation={4}>
-        <Toolbar>
-          <Typography sx={{ flex: "1 1 100%" }} variant="h6" component="div">
-            Transactions
-          </Typography>
-          <Tooltip title="Create transaction">
-            <IconButton onClick={() => setOpenModal(true)}>
-              <ShoppingCartOutlined />
-            </IconButton>
-          </Tooltip>
-        </Toolbar>
-        <Table sx={{ minWidth: 650 }} aria-label="Transactions table">
-          <TableHead>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Total</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {sortedTransactions?.map((transaction) => (
-              <TransactionItem key={transaction.id} transaction={transaction} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <CreatePayment
-        accountId={props.account.id}
-        open={openModal}
-        setOpen={setOpenModal}
-      />
-    </>
-  );
+  return <Chart options={options} series={series} type="line" height={350} />;
 };

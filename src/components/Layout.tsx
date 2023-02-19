@@ -3,7 +3,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
-  Divider,
   Drawer,
   List,
   ListItem,
@@ -16,17 +15,12 @@ import { useAppSelector } from "../redux/store";
 import { useLogoutUserMutation } from "../redux/api/authApi";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
-import {
-  AccountCircle,
-  AdminPanelSettings,
-  Coffee,
-  Home,
-} from "@mui/icons-material";
+import { AccountCircle, Coffee, Home } from "@mui/icons-material";
 import logo from "../assets/ascii-pay-logo-wide.svg";
 
 const drawerWidth = 240;
 
-const Layout = () => {
+export const Layout = () => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.userState.user);
 
@@ -134,22 +128,6 @@ const Layout = () => {
               </ListItemButton>
             </ListItem>
           </List>
-
-          {user && user?.role === "Admin" && (
-            <>
-              <Divider />
-              <List>
-                <ListItem disablePadding onClick={() => navigate("/admin")}>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <AdminPanelSettings />
-                    </ListItemIcon>
-                    <ListItemText primary="Admin" />
-                  </ListItemButton>
-                </ListItem>
-              </List>
-            </>
-          )}
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -159,5 +137,3 @@ const Layout = () => {
     </Box>
   );
 };
-
-export default Layout;

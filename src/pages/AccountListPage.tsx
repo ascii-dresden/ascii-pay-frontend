@@ -22,14 +22,14 @@ import {
 } from "../redux/api/accountApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import FullScreenLoader from "../components/FullScreenLoader";
 import { Add } from "@mui/icons-material";
-import { CreateAccountDialog } from "../components/account/createAccountDialog";
+import { CreateAccountDialog } from "../components/account/CreateAccountDialog";
 import { useNavigate } from "react-router-dom";
 import { stringAvatar } from "../components/stringAvatar";
-import { CoinAmountView } from "../components/CoinAmountView";
-import { UpdateAccountDialog } from "../components/account/updateAccountDialog";
+import { CoinAmountView } from "../components/transaction/CoinAmountView";
+import { UpdateAccountDialog } from "../components/account/UpdateAccountDialog";
 import { AccountDto } from "../redux/api/contracts";
+import { PaperScreenLoader } from "../components/PaperScreenLoader";
 
 export const AccountListPage = () => {
   const navigate = useNavigate();
@@ -59,57 +59,54 @@ export const AccountListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
+  const header = (
+    <Paper elevation={0}>
+      <Box sx={{ px: 1, py: 2, mb: 3 }}>
+        <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
+          <div>
+            <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+              Accounts
+            </Typography>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link
+                underline="hover"
+                color="inherit"
+                onClick={() => navigate("/")}
+              >
+                ascii-pay
+              </Link>
+              <Link
+                underline="hover"
+                color="text.primary"
+                aria-current="page"
+                onClick={() => navigate("/accounts")}
+              >
+                Accounts
+              </Link>
+            </Breadcrumbs>
+          </div>
+
+          <Button
+            variant="outlined"
+            size="large"
+            startIcon={<Add />}
+            sx={{ whiteSpace: "nowrap", width: "13rem" }}
+            onClick={() => setOpenModal(true)}
+          >
+            New account
+          </Button>
+        </Toolbar>
+      </Box>
+    </Paper>
+  );
+
   if (isLoading || accounts === undefined) {
-    return <FullScreenLoader />;
+    return <PaperScreenLoader>{header}</PaperScreenLoader>;
   }
 
   return (
     <Container maxWidth="lg">
-      <Paper elevation={0}>
-        <Box sx={{ px: 1, py: 2, mb: 3 }}>
-          <Toolbar
-            disableGutters={true}
-            sx={{ justifyContent: "space-between" }}
-          >
-            <div>
-              <Typography
-                sx={{ flex: "1 1 100%" }}
-                variant="h5"
-                component="div"
-              >
-                Accounts
-              </Typography>
-              <Breadcrumbs aria-label="breadcrumb">
-                <Link
-                  underline="hover"
-                  color="inherit"
-                  onClick={() => navigate("/")}
-                >
-                  ascii-pay
-                </Link>
-                <Link
-                  underline="hover"
-                  color="text.primary"
-                  aria-current="page"
-                  onClick={() => navigate("/accounts")}
-                >
-                  Accounts
-                </Link>
-              </Breadcrumbs>
-            </div>
-
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<Add />}
-              sx={{ whiteSpace: "nowrap", width: "13rem" }}
-              onClick={() => setOpenModal(true)}
-            >
-              New account
-            </Button>
-          </Toolbar>
-        </Box>
-      </Paper>
+      {header}
       <TableContainer component={Paper} elevation={4}>
         <Table sx={{ minWidth: 650 }} aria-label="Account table">
           <TableHead>

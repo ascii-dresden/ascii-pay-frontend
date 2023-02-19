@@ -1,10 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import Layout from "./components/layout";
-import { ProfilePage } from "./pages/profilePage";
-import { LoginPage } from "./pages/loginPage";
-import { UnauthorizedPage } from "./pages/unauthorizedPage";
-import { RequireUser } from "./components/requireUser";
-import { AdminPage } from "./pages/adminPage";
+import { Layout } from "./components/Layout";
+import { ProfilePage } from "./pages/ProfilePage";
+import { LoginPage } from "./pages/LoginPage";
+import { RequireUser } from "./components/RequireUser";
 import {
   createTheme,
   CssBaseline,
@@ -13,11 +11,12 @@ import {
 } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AccountListPage } from "./pages/accountListPage";
-import { ProductListPage } from "./pages/productListPage";
-import { SetupPage } from "./pages/setupPage";
+import { AccountListPage } from "./pages/AccountListPage";
+import { ProductListPage } from "./pages/ProductListPage";
 import React from "react";
-import { AccountDetailsPage } from "./pages/accountDetailsPage";
+import { AccountDetailsPage } from "./pages/AccountDetailsPage";
+import { UnauthorizedPage } from "./pages/UnauthorizedPage";
+import { SetupPage } from "./pages/SetupPage";
 
 export function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -52,7 +51,6 @@ export function App() {
               element={<AccountDetailsPage />}
             />
             <Route path="products" element={<ProductListPage />} />
-            <Route path="admin" element={<AdminPage />} />
           </Route>
           <Route path="unauthorized" element={<UnauthorizedPage />} />
         </Route>

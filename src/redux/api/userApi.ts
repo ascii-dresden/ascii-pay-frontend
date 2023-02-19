@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { setUser } from "../features/userSlice";
-import customFetchBase from "./customFetchBase";
+import { customFetchBase } from "./customFetchBase";
 import { AccountDto } from "./contracts";
 
 export const userApi = createApi({
