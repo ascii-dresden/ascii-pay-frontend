@@ -142,7 +142,7 @@ export const UpdateProductDialog = (props: {
       </DialogContent>
       <DialogActions>
         <LoadingButton
-          variant="outlined"
+          variant="contained"
           fullWidth
           sx={{ mx: 2, py: 1.5 }}
           onClick={handleSubmit}

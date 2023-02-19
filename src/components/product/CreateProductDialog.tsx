@@ -39,6 +39,13 @@ export const CreateProductDialog = (props: {
     if (isSuccess) {
       toast.success("Product created successfully");
       props.setOpen(false);
+      setName("");
+      setNickname("");
+      setCategory("");
+      setBarcode("");
+      setTags([]);
+      setPrice({});
+      setBonus({});
     }
 
     if (isError) {
@@ -124,7 +131,7 @@ export const CreateProductDialog = (props: {
       </DialogContent>
       <DialogActions>
         <LoadingButton
-          variant="outlined"
+          variant="contained"
           fullWidth
           sx={{ mx: 2, py: 1.5 }}
           onClick={handleSubmit}

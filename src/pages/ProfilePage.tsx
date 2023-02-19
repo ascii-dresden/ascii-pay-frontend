@@ -1,7 +1,7 @@
 import { useAppSelector } from "../redux/store";
 import { FullScreenLoader } from "../components/FullScreenLoader";
 import React from "react";
-import { AccountDetailsView } from "../components/account/AccountDetailsView";
+import { AccountDetailsPageView } from "../components/account/AccountDetailsPageView";
 
 export const ProfilePage = () => {
   const user = useAppSelector((state) => state.userState.user);
@@ -10,5 +10,5 @@ export const ProfilePage = () => {
     return <FullScreenLoader />;
   }
 
-  return <AccountDetailsView accountId={user.id} isRoot={true} />;
+  return <AccountDetailsPageView accountId={user.id} isRoot={true} />;
 };

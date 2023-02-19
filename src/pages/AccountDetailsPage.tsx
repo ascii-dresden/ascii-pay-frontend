@@ -1,10 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { AccountDetailsView } from "../components/account/AccountDetailsView";
+import { AccountDetailsPageView } from "../components/account/AccountDetailsPageView";
 
 export const AccountDetailsPage = () => {
   let params = useParams();
 
   let accountId = parseInt(params.accountId ?? "");
-  return <AccountDetailsView accountId={accountId} />;
+  return <AccountDetailsPageView accountId={accountId} />;
 };

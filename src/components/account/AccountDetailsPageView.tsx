@@ -14,12 +14,13 @@ import { TransactionListView } from "../transaction/TransactionListView";
 import React, { useEffect, useState } from "react";
 import { useGetAccountQuery } from "../../redux/api/accountApi";
 import { toast } from "react-toastify";
-import { Edit } from "@mui/icons-material";
+import { Edit, ShoppingCartOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { UpdateAccountDialog } from "./UpdateAccountDialog";
 import { CoinAmountView } from "../transaction/CoinAmountView";
+import { CreatePaymentDialog } from "../transaction/CreatePaymentDialog";
 
-export const AccountDetailsView = (props: {
+export const AccountDetailsPageView = (props: {
   accountId: number;
   isRoot?: boolean;
 }) => {
@@ -31,7 +32,8 @@ export const AccountDetailsView = (props: {
     data: account,
   } = useGetAccountQuery(props.accountId);
 
-  const [openModal, setOpenModal] = useState(false);
+  const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   useEffect(() => {
     if (isError) {
@@ -112,15 +114,26 @@ export const AccountDetailsView = (props: {
               )}
             </div>
 
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<Edit />}
-              sx={{ whiteSpace: "nowrap", width: "7rem" }}
-              onClick={() => setOpenModal(true)}
-            >
-              Edit
-            </Button>
+            <div>
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<ShoppingCartOutlined />}
+                sx={{ whiteSpace: "nowrap", width: "9rem" }}
+                onClick={() => setOpenPaymentModal(true)}
+              >
+                Payment
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<Edit />}
+                sx={{ whiteSpace: "nowrap", width: "7rem", ml: 2 }}
+                onClick={() => setOpenEditModal(true)}
+              >
+                Edit
+              </Button>
+            </div>
           </Toolbar>
         </Box>
       </Paper>
@@ -150,8 +163,14 @@ export const AccountDetailsView = (props: {
 
       <UpdateAccountDialog
         account={account}
-        open={openModal}
-        setOpen={setOpenModal}
+        open={openEditModal}
+        setOpen={setOpenEditModal}
+      />
+
+      <CreatePaymentDialog
+        accountId={props.accountId}
+        open={openPaymentModal}
+        setOpen={setOpenPaymentModal}
       />
     </Container>
   );

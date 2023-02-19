@@ -108,7 +108,7 @@ export const AccountListPage = () => {
     <Container maxWidth="lg">
       {header}
       <TableContainer component={Paper} elevation={4}>
-        <Table sx={{ minWidth: 650 }} aria-label="Account table">
+        <Table aria-label="Account table">
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
