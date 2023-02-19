@@ -10,6 +10,7 @@ import styled from "@emotion/styled";
 
 const StyledDiv = styled.div`
   display: flex;
+  margin-bottom: 1rem;
 
   & > div:first-of-type {
     flex-grow: 4;
@@ -70,6 +71,7 @@ function cloneCoins(coins: CoinAmountDto): CoinAmountDto {
 }
 
 export const CoinAmountEdit = (props: {
+  label?: string;
   coins: CoinAmountDto;
   onChange: (coins: CoinAmountDto) => void;
 }) => {
@@ -106,7 +108,7 @@ export const CoinAmountEdit = (props: {
   return (
     <StyledDiv>
       <TextField
-        label="Money"
+        label={props.label ?? "Money"}
         value={props.coins.Cent ?? 0}
         onChange={setCents as any}
         InputProps={{
@@ -119,7 +121,6 @@ export const CoinAmountEdit = (props: {
         }}
       />
       <TextField
-        label="Coffee stamps"
         value={props.coins.CoffeeStamp ?? 0}
         onChange={setCoffeeStamps as any}
         InputProps={{
@@ -132,7 +133,6 @@ export const CoinAmountEdit = (props: {
         }}
       />
       <TextField
-        label="Bottle stamps"
         value={props.coins.BottleStamp ?? 0}
         onChange={setBottleStamps as any}
         InputProps={{
