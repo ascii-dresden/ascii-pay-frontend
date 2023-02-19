@@ -27,17 +27,12 @@ export const CreatePaymentDialog = (props: {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Payment successfully executed");
+      toast.success("Payment successfully executed!");
       props.setOpen(false);
       setCoins({});
-    }
-
-    if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) => toast.error(el.message));
-      } else {
-        toast.error((error as any).data.message);
-      }
+    } else if (isError) {
+      toast.error("Payment could not be executed!");
+      console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);

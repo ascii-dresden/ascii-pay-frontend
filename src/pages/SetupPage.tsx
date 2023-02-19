@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 import logo from "../assets/ascii-pay-logo-wide.svg";
@@ -24,33 +24,19 @@ export const SetupPage = () => {
     useCreateAdminAccountMutation();
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const from = ((location.state as any)?.from.pathname as string) || "/";
-
   useEffect(() => {
     if (isSuccess) {
       toast.success("Admin account successfully created!");
-      navigate(from);
-    }
-    if (isError) {
-      console.log(error);
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) =>
-          toast.error(el.message, {
-            position: "top-right",
-          })
-        );
-      } else {
-        toast.error((error as any).data.message, {
-          position: "top-right",
-        });
-      }
+      navigate("/");
+    } else if (isError) {
+      toast.error("Could not create admin account!");
+      console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);

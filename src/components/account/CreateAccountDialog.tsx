@@ -29,19 +29,15 @@ export const CreateAccountDialog = (props: {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Account created successfully");
+      toast.success("Account created successfully!");
       props.setOpen(false);
+
       setName("");
       setEmail("");
       setRole("Basic");
-    }
-
-    if (isError) {
-      if (Array.isArray((error as any).data.error)) {
-        (error as any).data.error.forEach((el: any) => toast.error(el.message));
-      } else {
-        toast.error((error as any).data.message);
-      }
+    } else if (isError) {
+      toast.error("Account could not be created!");
+      console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
