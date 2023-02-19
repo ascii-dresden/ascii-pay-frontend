@@ -4,53 +4,43 @@ import {
   Breadcrumbs,
   Button,
   ButtonGroup,
-  Chip,
   Container,
   Link,
   Paper,
-  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Tabs,
   Toolbar,
   Typography,
 } from "@mui/material";
 import {
-  useDeleteProductMutation,
-  useGetAllProductsQuery,
-} from "../redux/api/productApi";
+  useDeleteAccountMutation,
+  useGetAllAccountsQuery,
+} from "../redux/api/accountApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import FullScreenLoader from "../components/FullScreenLoader";
 import { Add } from "@mui/icons-material";
-import { CreateProductDialog } from "../components/product/createProductDialog";
-import { BASE_URL } from "../redux/api/customFetchBase";
+import { CreateAccountDialog } from "../components/account/createAccountDialog";
+import { useNavigate } from "react-router-dom";
 import { stringAvatar } from "../components/stringAvatar";
 import { CoinAmountView } from "../components/CoinAmountView";
-import { UpdateProductDialog } from "../components/product/updateProductDialog";
-import { ProductDto } from "../redux/api/contracts";
-import { useNavigate } from "react-router-dom";
-import styled from "@emotion/styled";
+import { UpdateAccountDialog } from "../components/account/updateAccountDialog";
+import { AccountDto } from "../redux/api/contracts";
 
-const StyledTab = styled(Tab)({
-  textTransform: "none",
-});
-
-export const ProductListPage = () => {
+export const AccountListPage = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
-  const [tabIndex, setTabIndex] = useState(0);
 
   const {
     isLoading,
     isError,
     error,
-    data: products,
-  } = useGetAllProductsQuery();
+    data: accounts,
+  } = useGetAllAccountsQuery();
 
   useEffect(() => {
     if (isError) {
@@ -69,25 +59,8 @@ export const ProductListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  if (isLoading || products === undefined) {
+  if (isLoading || accounts === undefined) {
     return <FullScreenLoader />;
-  }
-
-  let categories = products
-    .map((p) => p.category)
-    .filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
-  let tags = products
-    .flatMap((p) => p.tags)
-    .filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
-
-  let filteredProducts: ProductDto[] = products;
-  if (tabIndex > 0 && tabIndex <= categories.length) {
-    let category = categories[tabIndex - 1];
-    filteredProducts = products.filter((p) => p.category === category);
   }
 
   return (
@@ -104,7 +77,7 @@ export const ProductListPage = () => {
                 variant="h5"
                 component="div"
               >
-                Products
+                Accounts
               </Typography>
               <Breadcrumbs aria-label="breadcrumb">
                 <Link
@@ -118,9 +91,9 @@ export const ProductListPage = () => {
                   underline="hover"
                   color="text.primary"
                   aria-current="page"
-                  onClick={() => navigate("/products")}
+                  onClick={() => navigate("/accounts")}
                 >
-                  Products
+                  Accounts
                 </Link>
               </Breadcrumbs>
             </div>
@@ -132,69 +105,42 @@ export const ProductListPage = () => {
               sx={{ whiteSpace: "nowrap", width: "13rem" }}
               onClick={() => setOpenModal(true)}
             >
-              New Product
+              New account
             </Button>
           </Toolbar>
         </Box>
       </Paper>
       <TableContainer component={Paper} elevation={4}>
-        <Box
-          sx={{
-            borderBottom: 1,
-            borderColor: "divider",
-          }}
-        >
-          <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
-            <StyledTab label="All" />
-            {categories.map((c) => (
-              <StyledTab key={c} label={c} />
-            ))}
-          </Tabs>
-        </Box>
-        <Table sx={{ minWidth: 650 }} aria-label="Products table">
+        <Table sx={{ minWidth: 650 }} aria-label="Account table">
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Bonus</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Balance</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredProducts.map((product) => (
-              <ProductListRow
-                key={product.id}
-                product={product}
-                categories={categories}
-                tags={tags}
-              />
+            {accounts?.map((account) => (
+              <AccountListRow key={account.id} account={account} />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <CreateProductDialog
-        open={openModal}
-        setOpen={setOpenModal}
-        categories={categories}
-        tags={tags}
-      />
+      <CreateAccountDialog open={openModal} setOpen={setOpenModal} />
     </Container>
   );
 };
 
-const ProductListRow = (props: {
-  product: ProductDto;
-  categories: string[];
-  tags: string[];
-}) => {
+const AccountListRow = (props: { account: AccountDto }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [deleteProduct, { isLoading, error, isSuccess, isError }] =
-    useDeleteProductMutation();
+  const [deleteAccount, { isLoading, error, isSuccess, isError }] =
+    useDeleteAccountMutation();
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Product deleted successfully");
+      toast.success("Account deleted successfully");
     }
 
     if (isError) {
@@ -215,7 +161,7 @@ const ProductListRow = (props: {
 
   const onDeleteHandler = (id: number) => {
     if (window.confirm("Are you sure")) {
-      deleteProduct(id);
+      deleteAccount(id);
     }
   };
 
@@ -224,40 +170,31 @@ const ProductListRow = (props: {
       <TableRow>
         <TableCell>
           <Avatar
-            alt={props.product.name}
-            src={`${BASE_URL}/product/${props.product.id}/image`}
-            {...stringAvatar(props.product.name)}
+            alt={props.account.name}
+            {...stringAvatar(props.account.name)}
           />
         </TableCell>
         <TableCell>
-          <Typography>{props.product.name}</Typography>
-          <Typography variant="caption">{props.product.nickname}</Typography>
-
-          {props.product.tags.map((tag) => (
-            <Chip key={tag} size="small" label={tag} sx={{ mr: 1 }} />
-          ))}
+          <Typography>{props.account.name}</Typography>
+          <Typography variant="caption">{props.account.role}</Typography>
         </TableCell>
-        <TableCell align="right">
-          <CoinAmountView coins={props.product.price} />
-        </TableCell>
-        <TableCell align="right">
-          <CoinAmountView coins={props.product.bonus} />
+        <TableCell>{props.account.email}</TableCell>
+        <TableCell>
+          <CoinAmountView coins={props.account.balance} />
         </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">
             <Button onClick={() => setOpenModal(true)}>Edit</Button>
-            <Button onClick={() => onDeleteHandler(props.product.id)}>
+            <Button onClick={() => onDeleteHandler(props.account.id)}>
               Delete
             </Button>
           </ButtonGroup>
         </TableCell>
       </TableRow>
-      <UpdateProductDialog
-        product={props.product}
+      <UpdateAccountDialog
+        account={props.account}
         open={openModal}
         setOpen={setOpenModal}
-        categories={props.categories}
-        tags={props.tags}
       />
     </>
   );

@@ -52,7 +52,7 @@ export const UpdateProductDialog = (props: {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Product created successfully");
+      toast.success("Product updated successfully");
       props.setOpen(false);
     }
 

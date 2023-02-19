@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AccountsPage from "./pages/accountsPage";
+import { AccountListPage } from "./pages/accountListPage";
 import { ProductListPage } from "./pages/productListPage";
 import SetupPage from "./pages/setupPage";
 import React from "react";
@@ -45,7 +45,7 @@ export function App() {
             <Route index element={<ProfilePage />} />
           </Route>
           <Route element={<RequireUser allowedRoles={["Admin"]} />}>
-            <Route path="accounts" element={<AccountsPage />} />
+            <Route path="accounts" element={<AccountListPage />} />
             <Route path="products" element={<ProductListPage />} />
             <Route path="admin" element={<AdminPage />} />
           </Route>
