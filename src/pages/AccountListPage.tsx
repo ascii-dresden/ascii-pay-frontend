@@ -28,6 +28,7 @@ import { UpdateAccountDialog } from "../components/account/UpdateAccountDialog";
 import { AccountDto } from "../redux/api/contracts";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { DeleteAccountDialog } from "../components/account/DeleteAccountDialog";
+import { RoleChip } from "../components/account/RoleChip";
 
 export const AccountListPage = () => {
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ const AccountListRow = (props: { account: AccountDto }) => {
         </TableCell>
         <TableCell>
           <Typography>{props.account.name}</Typography>
-          <Typography variant="caption">{props.account.role}</Typography>
+          <RoleChip role={props.account.role} />
         </TableCell>
         <TableCell>{props.account.email}</TableCell>
         <TableCell>

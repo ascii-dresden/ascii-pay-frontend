@@ -4,7 +4,6 @@ import {
   Breadcrumbs,
   Button,
   ButtonGroup,
-  Chip,
   Container,
   Link,
   Paper,
@@ -32,6 +31,7 @@ import { ProductDto } from "../redux/api/contracts";
 import { useNavigate } from "react-router-dom";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { DeleteProductDialog } from "../components/product/DeleteProductDialog";
+import { TagChip } from "../components/product/TagChip";
 
 export const ProductListPage = () => {
   const navigate = useNavigate();
@@ -200,7 +200,7 @@ const ProductListRow = (props: {
           <Typography variant="caption">{props.product.nickname}</Typography>
 
           {props.product.tags.map((tag) => (
-            <Chip key={tag} size="small" label={tag} sx={{ mr: 1 }} />
+            <TagChip key={tag} tag={tag} />
           ))}
         </TableCell>
         <TableCell align="right">
