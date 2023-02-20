@@ -60,7 +60,7 @@ export function App() {
           <Route path="unauthorized" element={<UnauthorizedPage />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
-        <Route path="create-admin-account" element={<SetupPage />} />
+        <Route path="setup" element={<SetupPage />} />
       </Routes>
     </ThemeProvider>
   );

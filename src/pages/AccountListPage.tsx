@@ -101,7 +101,7 @@ export const AccountListPage = () => {
         <Table aria-label="Account table">
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell width={72}></TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Balance</TableCell>

@@ -11,7 +11,7 @@ export type RoleDto = "Basic" | "Member" | "Admin";
 export type CardTypeDto = "NfcId" | "AsciiMifare";
 
 export type AuthMethodDtoPasswordBased = {
-  type: "passwordBased";
+  type: "PasswordBased";
   username: string;
 };
 
