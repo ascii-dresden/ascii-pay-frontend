@@ -27,8 +27,10 @@ const StyledImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: solid 1px grey;
+  border: solid 1px #666;
+  overflow: hidden;
 `;
+
 const StyledImage = styled.img`
   max-height: 8rem;
   max-width: 8rem;

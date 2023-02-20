@@ -140,7 +140,7 @@ export const ProductListPage = () => {
         <Table aria-label="Products table">
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell width={72}></TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Price</TableCell>
               <TableCell>Bonus</TableCell>

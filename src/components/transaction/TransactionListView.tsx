@@ -75,7 +75,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
         <Table aria-label="Transactions table">
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
+              <TableCell width={72}></TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Total</TableCell>
             </TableRow>

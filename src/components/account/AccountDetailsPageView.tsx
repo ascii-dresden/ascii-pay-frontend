@@ -13,12 +13,13 @@ import { TransactionListView } from "../transaction/TransactionListView";
 import React, { useEffect, useState } from "react";
 import { useGetAccountQuery } from "../../redux/api/accountApi";
 import { toast } from "react-toastify";
-import { Edit, ShoppingCartOutlined } from "@mui/icons-material";
+import { Edit, LockOutlined, ShoppingCartOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { UpdateAccountDialog } from "./UpdateAccountDialog";
 import { CoinAmountView } from "../transaction/CoinAmountView";
 import { CreatePaymentDialog } from "../transaction/CreatePaymentDialog";
 import { RoleChip } from "./RoleChip";
+import { AccountAuthenticationDialog } from "./AccountAuthenticationDialog";
 
 export const AccountDetailsPageView = (props: {
   accountId: number;
@@ -34,6 +35,7 @@ export const AccountDetailsPageView = (props: {
 
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
+  const [openAuthModal, setOpenAuthModal] = useState(false);
 
   useEffect(() => {
     if (isError) {
@@ -117,6 +119,15 @@ export const AccountDetailsPageView = (props: {
               <Button
                 variant="outlined"
                 size="large"
+                startIcon={<LockOutlined />}
+                sx={{ whiteSpace: "nowrap", width: "11rem", ml: 2 }}
+                onClick={() => setOpenAuthModal(true)}
+              >
+                Authentication
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
                 startIcon={<Edit />}
                 sx={{ whiteSpace: "nowrap", width: "7rem", ml: 2 }}
                 onClick={() => setOpenEditModal(true)}
@@ -161,6 +172,12 @@ export const AccountDetailsPageView = (props: {
         accountId={props.accountId}
         open={openPaymentModal}
         setOpen={setOpenPaymentModal}
+      />
+
+      <AccountAuthenticationDialog
+        account={account}
+        open={openAuthModal}
+        setOpen={setOpenAuthModal}
       />
     </Container>
   );
