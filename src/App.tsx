@@ -17,6 +17,7 @@ import React from "react";
 import { AccountDetailsPage } from "./pages/AccountDetailsPage";
 import { UnauthorizedPage } from "./pages/UnauthorizedPage";
 import { SetupPage } from "./pages/SetupPage";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 
 export function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -61,6 +62,7 @@ export function App() {
         </Route>
         <Route path="login" element={<LoginPage />} />
         <Route path="setup" element={<SetupPage />} />
+        <Route path="reset-password" element={<ResetPasswordPage />} />
       </Routes>
     </ThemeProvider>
   );
