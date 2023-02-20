@@ -3,8 +3,11 @@ import { customFetchBase } from "./customFetchBase";
 import {
   AccountDto,
   CreateAdminAccountDto,
+  DeleteAuthNfcDto,
+  PasswordResetTokenDto,
   PaymentDto,
   SaveAccountDto,
+  SaveAuthPasswordDto,
   TransactionDto,
 } from "./contracts";
 
@@ -125,6 +128,100 @@ export const accountApi = createApi({
       },
       invalidatesTags: [{ type: "Accounts", id: "LIST" }],
     }),
+    updateAccountPasswordAuthentication: builder.mutation<
+      AccountDto,
+      { id: number; auth: SaveAuthPasswordDto }
+    >({
+      query({ id, auth }) {
+        return {
+          url: `/account/${id}/password-authentication`,
+          method: "PUT",
+          credentials: "include",
+          body: auth,
+        };
+      },
+      invalidatesTags: (result, error, { id }) =>
+        result ? [{ type: "Accounts", id }] : [],
+    }),
+    deleteAccountPasswordAuthentication: builder.mutation<AccountDto, number>({
+      query(id) {
+        return {
+          url: `/account/${id}/password-authentication`,
+          method: "DELETE",
+          credentials: "include",
+        };
+      },
+      invalidatesTags: (result, error, id) =>
+        result ? [{ type: "Accounts", id }] : [],
+    }),
+    createAccountPasswordResetToken: builder.mutation<
+      PasswordResetTokenDto,
+      number
+    >({
+      query(id) {
+        return {
+          url: `/account/${id}/password-reset-token`,
+          method: "POST",
+          credentials: "include",
+        };
+      },
+      invalidatesTags: (result, error, id) =>
+        result ? [{ type: "Accounts", id }] : [],
+    }),
+    accountPasswordReset: builder.mutation<
+      AccountDto,
+      { token: string; auth: SaveAuthPasswordDto }
+    >({
+      query({ token, auth }) {
+        return {
+          url: `/account-password-reset`,
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: auth,
+        };
+      },
+      invalidatesTags: (result) =>
+        result ? [{ type: "Accounts", id: result.id }] : [],
+    }),
+    updateAccountPublicTabAuthentication: builder.mutation<AccountDto, number>({
+      query(id) {
+        return {
+          url: `/account/${id}/public-tab`,
+          method: "PUT",
+          credentials: "include",
+        };
+      },
+      invalidatesTags: (result, error, id) =>
+        result ? [{ type: "Accounts", id }] : [],
+    }),
+    deleteAccountPublicTabAuthentication: builder.mutation<AccountDto, number>({
+      query(id) {
+        return {
+          url: `/account/${id}/public-tab`,
+          method: "DELETE",
+          credentials: "include",
+        };
+      },
+      invalidatesTags: (result, error, id) =>
+        result ? [{ type: "Accounts", id }] : [],
+    }),
+    deleteAccountNfcAuthentication: builder.mutation<
+      AccountDto,
+      { id: number; auth: DeleteAuthNfcDto }
+    >({
+      query({ id, auth }) {
+        return {
+          url: `/account/${id}/nfc-authentication`,
+          method: "DELETE",
+          credentials: "include",
+          body: auth,
+        };
+      },
+      invalidatesTags: (result, error, { id }) =>
+        result ? [{ type: "Accounts", id }] : [],
+    }),
   }),
 });
 
@@ -137,4 +234,11 @@ export const {
   useCreateAdminAccountMutation,
   usePaymentMutation,
   useGetAllTransactionsQuery,
+  useUpdateAccountPasswordAuthenticationMutation,
+  useDeleteAccountPasswordAuthenticationMutation,
+  useCreateAccountPasswordResetTokenMutation,
+  useAccountPasswordResetMutation,
+  useUpdateAccountPublicTabAuthenticationMutation,
+  useDeleteAccountPublicTabAuthenticationMutation,
+  useDeleteAccountNfcAuthenticationMutation,
 } = accountApi;
