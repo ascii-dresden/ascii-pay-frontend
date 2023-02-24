@@ -110,7 +110,10 @@ export const Layout = () => {
           </IconButton>
           <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
             <img
-              style={{ height: "2rem", marginTop: "0.5rem" }}
+              style={{
+                height: "2rem",
+                marginTop: "0.5rem",
+              }}
               src={logo}
               alt="ascii pay"
             />
