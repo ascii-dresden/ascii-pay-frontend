@@ -24,6 +24,11 @@ const StyledDiv = styled.div`
   }
 `;
 
+const StyledActionDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 interface CustomProps {
   value: number;
   onChange: (value: number) => void;
@@ -74,6 +79,7 @@ export const CoinAmountEdit = (props: {
   label?: string;
   coins: CoinAmountDto;
   onChange: (coins: CoinAmountDto) => void;
+  children?: React.ReactNode | React.ReactNode[];
 }) => {
   function setCents(value: number) {
     let newCoins = cloneCoins(props.coins);
@@ -144,6 +150,9 @@ export const CoinAmountEdit = (props: {
           ),
         }}
       />
+      {props.children ? (
+        <StyledActionDiv>{props.children}</StyledActionDiv>
+      ) : null}
     </StyledDiv>
   );
 };

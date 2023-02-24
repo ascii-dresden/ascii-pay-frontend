@@ -209,7 +209,7 @@ const AuthMethodRowPasswordBasedResetToken = (props: {
         </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">
-            <Button onClick={handleAction}>Delete</Button>
+            <Button onClick={handleAction}>Revoke</Button>
           </ButtonGroup>
         </TableCell>
       </TableRow>
@@ -257,7 +257,7 @@ const AuthMethodRowPasswordBased = (props: {
               loading={isLoading}
               variant="outlined"
             >
-              Delete
+              Revoke
             </LoadingButton>
           </ButtonGroup>
         </TableCell>
