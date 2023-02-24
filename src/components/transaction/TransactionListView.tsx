@@ -99,7 +99,7 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
 
   const format = new Intl.DateTimeFormat("de-DE", {
     dateStyle: "full",
-    timeStyle: "long",
+    timeStyle: "medium",
   });
   return (
     <>
@@ -130,7 +130,7 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell></TableCell>
+                    <TableCell width={72}></TableCell>
                     <TableCell>Product</TableCell>
                     <TableCell>Price</TableCell>
                   </TableRow>
@@ -143,6 +143,7 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
                           <Avatar
                             alt={item.product.name}
                             src={`${BASE_URL}/product/${item.product.id}/image`}
+                            variant="square"
                             {...stringAvatar(item.product.name)}
                           />
                         ) : null}
