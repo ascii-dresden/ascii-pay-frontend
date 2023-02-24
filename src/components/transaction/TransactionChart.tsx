@@ -1,7 +1,6 @@
 import React from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import { CoinAmountView } from "./CoinAmountView";
 import {
   AccountDto,
   CoinAmountDto,
@@ -9,6 +8,8 @@ import {
 } from "../../redux/api/contracts";
 import { renderToString } from "react-dom/server";
 import { addCoinAmount, getTransactionSum } from "./transactionUtils";
+import { Theme, useTheme } from "@mui/material";
+import { CoinAmountView } from "./CoinAmountView";
 
 type SeriesData = {
   x: Date;
@@ -23,9 +24,10 @@ export const TransactionChart = (props: {
   account: AccountDto;
   transactions: TransactionDto[];
 }) => {
+  const theme = useTheme();
   const format = new Intl.DateTimeFormat("de-DE", {
     dateStyle: "full",
-    timeStyle: "long",
+    timeStyle: "medium",
   });
 
   let sortedTransactions = [...props.transactions];
@@ -84,6 +86,9 @@ export const TransactionChart = (props: {
     },
   ];
   let options: ApexOptions = {
+    theme: {
+      mode: theme.palette.mode,
+    },
     chart: {
       type: "line",
       height: 300,
@@ -93,6 +98,7 @@ export const TransactionChart = (props: {
       animations: {
         enabled: false,
       },
+      background: "transparent",
     },
     stroke: {
       curve: "stepline",
@@ -112,22 +118,29 @@ export const TransactionChart = (props: {
         if (entry.isStatic) {
           return renderToString(
             <div className="arrow_box">
-              <div>Balance</div>
-              <CoinAmountView coins={entry.afterBalance} />
+              <Popup
+                theme={theme}
+                items={[{ name: "Balance", coins: entry.afterBalance }]}
+              />
             </div>
           );
         }
 
-        let date = format.format(entry.y);
+        let date = format.format(entry.x);
         return renderToString(
           <div className="arrow_box">
-            <div>{date}</div>
-            <div>Price</div>
-            <CoinAmountView coins={entry.price} />
-            <div>Before balance</div>
-            <CoinAmountView coins={entry.beforeBalance} />
-            <div>After balance</div>
-            <CoinAmountView coins={entry.afterBalance} />
+            <Popup
+              theme={theme}
+              title={date}
+              items={[
+                { name: "Price", coins: entry.price },
+                {
+                  name: "Before balance",
+                  coins: entry.beforeBalance,
+                },
+                { name: "After balance", coins: entry.afterBalance },
+              ]}
+            />
           </div>
         );
       },
@@ -152,4 +165,47 @@ export const TransactionChart = (props: {
   };
 
   return <Chart options={options} series={series} type="line" height={350} />;
+};
+
+const Popup = (props: {
+  theme: Theme;
+  title?: string;
+  items: {
+    name: string;
+    coins: CoinAmountDto;
+  }[];
+}) => {
+  const bg = props.theme.palette.background.default;
+  const fg = props.theme.palette.text.primary;
+  const d = props.theme.palette.divider;
+
+  return (
+    <div style={{ backgroundColor: bg, color: fg }}>
+      {props.title ? (
+        <div
+          style={{
+            padding: "0.8rem 1rem 0.5rem",
+            fontWeight: "bold",
+            borderBottom: `solid 1px ${d}`,
+          }}
+        >
+          {props.title}
+        </div>
+      ) : null}
+      <div
+        style={{
+          padding: props.title ? "0.5rem 1rem 0.8rem" : "0.8rem 1rem",
+        }}
+      >
+        {props.items.map((item) => {
+          return (
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span>{item.name}</span>
+              <CoinAmountView coins={item.coins} />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 };
