@@ -45,3 +45,24 @@ export function substractCoinAmount(
     BottleStamp: (left.BottleStamp ?? 0) - (right.BottleStamp ?? 0),
   };
 }
+
+export function equalCoinAmount(
+  left: CoinAmountDto,
+  right: CoinAmountDto
+): boolean {
+  return (
+    (left.Cent ?? 0) === (right.Cent ?? 0) &&
+    (left.CoffeeStamp ?? 0) === (right.CoffeeStamp ?? 0) &&
+    (left.BottleStamp ?? 0) === (right.BottleStamp ?? 0)
+  );
+}
+
+export function isCoinAmountEmpty(coins: CoinAmountDto): boolean {
+  if (coins.Cent && coins.Cent !== 0) {
+    return false;
+  }
+  if (coins.BottleStamp && coins.BottleStamp !== 0) {
+    return false;
+  }
+  return !(coins.CoffeeStamp && coins.CoffeeStamp !== 0);
+}
