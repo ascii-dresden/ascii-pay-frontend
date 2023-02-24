@@ -88,7 +88,7 @@ export const ProductListPage = () => {
             sx={{ whiteSpace: "nowrap", width: "13rem" }}
             onClick={() => setOpenModal(true)}
           >
-            New Product
+            New product
           </Button>
         </Toolbar>
       </Box>
