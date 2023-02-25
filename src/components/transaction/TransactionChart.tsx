@@ -197,9 +197,12 @@ const Popup = (props: {
           padding: props.title ? "0.5rem 1rem 0.8rem" : "0.8rem 1rem",
         }}
       >
-        {props.items.map((item) => {
+        {props.items.map((item, index) => {
           return (
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div
+              key={index}
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
               <span>{item.name}</span>
               <CoinAmountView coins={item.coins} />
             </div>
