@@ -4,7 +4,7 @@ import Autocomplete, {
   AutocompleteCloseReason,
 } from "@mui/material/Autocomplete";
 import { ProductDto } from "../../redux/api/contracts";
-import { Box, IconButton, Popover, TextField } from "@mui/material";
+import { Box, IconButton, Popover, TextField, Tooltip } from "@mui/material";
 import { Coffee } from "@mui/icons-material";
 import { useGetAllProductsQuery } from "../../redux/api/productApi";
 import { toast } from "react-toastify";
@@ -73,9 +73,11 @@ export const SelectProductPopup = (props: {
 
   return (
     <>
-      <IconButton sx={{ height: "40px" }} onClick={handleClick}>
-        <Coffee />
-      </IconButton>
+      <Tooltip title="Add product to transaction">
+        <IconButton sx={{ height: "40px" }} onClick={handleClick}>
+          <Coffee />
+        </IconButton>
+      </Tooltip>
       <Popover
         id={id}
         open={open}

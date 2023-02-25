@@ -10,6 +10,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -23,7 +24,7 @@ import {
 } from "../../redux/api/contracts";
 import { usePaymentMutation } from "../../redux/api/accountApi";
 import { CoinAmountEdit } from "./CoinAmountEdit";
-import { Add, Close, DeleteOutline } from "@mui/icons-material";
+import { Close, DeleteOutline, PlaylistAdd } from "@mui/icons-material";
 import { BASE_URL } from "../../redux/api/customFetchBase";
 import { stringAvatar } from "../stringAvatar";
 import { CoinAmountView } from "./CoinAmountView";
@@ -238,9 +239,11 @@ export const CreatePaymentDialog = (props: {
             onChange={setCoins}
             isTransaction={true}
           >
-            <IconButton sx={{ height: "40px" }} onClick={handleAddCoins}>
-              <Add />
-            </IconButton>
+            <Tooltip title="Add additional transaction item">
+              <IconButton sx={{ height: "40px" }} onClick={handleAddCoins}>
+                <PlaylistAdd />
+              </IconButton>
+            </Tooltip>
             <SelectProductPopup selectProduct={handleSelectProduct} />
           </CoinAmountEdit>
 
@@ -262,6 +265,11 @@ export const CreatePaymentDialog = (props: {
                     <CoinAmountView
                       coins={item.effective_price}
                       isTransaction={true}
+                      isClickable={
+                        item.product !== undefined &&
+                        item.product !== null &&
+                        getPossiblePrices(item.product).length > 1
+                      }
                     />
                   </TableCell>
                   <TableCell width={72}>
