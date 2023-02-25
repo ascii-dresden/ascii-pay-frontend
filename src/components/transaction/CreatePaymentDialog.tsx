@@ -283,7 +283,7 @@ export const CreatePaymentDialog = (props: {
                 </TableCell>
                 <TableCell width={72}></TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
                 <TableCell height={52.9} width={72}></TableCell>
                 <TableCell>Estimated balance</TableCell>
                 <TableCell width={200}>
