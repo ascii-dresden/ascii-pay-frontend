@@ -16,6 +16,7 @@ import { LoadingButton } from "@mui/lab";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import {
+  AccountDto,
   CoinAmountDto,
   ProductDto,
   TransactionItemDto,
@@ -31,6 +32,7 @@ import {
   addCoinAmount,
   equalCoinAmount,
   isCoinAmountEmpty,
+  subCoinAmount,
 } from "./transactionUtils";
 
 function getPossiblePrices(product: ProductDto): CoinAmountDto[] {
@@ -90,7 +92,7 @@ function selectCoinAmount(
 }
 
 export const CreatePaymentDialog = (props: {
-  accountId: number;
+  account: AccountDto;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
@@ -190,7 +192,7 @@ export const CreatePaymentDialog = (props: {
 
     if (items.length > 0) {
       payment({
-        id: props.accountId,
+        id: props.account.id,
         payment: {
           items: items.map((i) => {
             return {
@@ -205,11 +207,12 @@ export const CreatePaymentDialog = (props: {
     setPaymentItems([]);
   };
 
-  let total: CoinAmountDto = {};
-  total = addCoinAmount(total, coins);
+  let total = addCoinAmount({}, coins);
   for (const item of paymentItems) {
     total = addCoinAmount(total, item.effective_price);
   }
+
+  let balance = subCoinAmount(props.account.balance, total);
 
   return (
     <Dialog open={props.open} onClose={() => props.setOpen(false)}>
@@ -277,6 +280,14 @@ export const CreatePaymentDialog = (props: {
                   <b>
                     <CoinAmountView coins={total} isTransaction={true} />
                   </b>
+                </TableCell>
+                <TableCell width={72}></TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell height={52.9} width={72}></TableCell>
+                <TableCell>Estimated balance</TableCell>
+                <TableCell width={200}>
+                  <CoinAmountView coins={balance} negativeIsError={true} />
                 </TableCell>
                 <TableCell width={72}></TableCell>
               </TableRow>

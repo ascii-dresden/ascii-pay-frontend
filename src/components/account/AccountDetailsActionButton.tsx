@@ -134,7 +134,7 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
       />
 
       <CreatePaymentDialog
-        accountId={props.account.id}
+        account={props.account}
         open={openPaymentModal}
         setOpen={setOpenPaymentModal}
       />

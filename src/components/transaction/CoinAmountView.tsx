@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import { Euro } from "@mui/icons-material";
 import { CoffeeStamp } from "../CoffeeStamp";
 import { BottleStamp } from "../BottleStamp";
+import { useTheme } from "@mui/material";
+import React from "react";
 
 const StyledCoinAmountView = styled.div`
   display: flex;
@@ -62,20 +64,49 @@ function stampsToString(stamps: number, isTransaction?: boolean): string {
 export const CoinAmountView = (props: {
   coins: CoinAmountDto;
   isTransaction?: boolean;
+  negativeIsError?: boolean;
 }) => {
+  const theme = useTheme();
+
+  const errorStyle: React.CSSProperties = {
+    color: theme.palette.error.main,
+    fontWeight: "bold",
+  };
+
+  let centsStyle: React.CSSProperties | undefined = undefined;
+  if (props.negativeIsError && props.coins.Cent && props.coins.Cent < 0) {
+    centsStyle = errorStyle;
+  }
+  let coffeeStampStyle: React.CSSProperties | undefined = undefined;
+  if (
+    props.negativeIsError &&
+    props.coins.CoffeeStamp &&
+    props.coins.CoffeeStamp < 0
+  ) {
+    coffeeStampStyle = errorStyle;
+  }
+  let bottleStampStyle: React.CSSProperties | undefined = undefined;
+  if (
+    props.negativeIsError &&
+    props.coins.BottleStamp &&
+    props.coins.BottleStamp < 0
+  ) {
+    bottleStampStyle = errorStyle;
+  }
+
   return (
     <StyledCoinAmountView>
-      <StyledCoinAmountEntry>
+      <StyledCoinAmountEntry style={centsStyle}>
         <span>{centsToString(props.coins.Cent ?? 0, props.isTransaction)}</span>
         <Euro />
       </StyledCoinAmountEntry>
-      <StyledCoinAmountEntry>
+      <StyledCoinAmountEntry style={coffeeStampStyle}>
         <span>
           {stampsToString(props.coins.CoffeeStamp ?? 0, props.isTransaction)}
         </span>
         <CoffeeStamp />
       </StyledCoinAmountEntry>
-      <StyledCoinAmountEntry>
+      <StyledCoinAmountEntry style={bottleStampStyle}>
         <span>
           {stampsToString(props.coins.BottleStamp ?? 0, props.isTransaction)}
         </span>
