@@ -35,7 +35,7 @@ export function addCoinAmount(
   };
 }
 
-export function substractCoinAmount(
+export function subCoinAmount(
   left: CoinAmountDto,
   right: CoinAmountDto
 ): CoinAmountDto {
@@ -65,4 +65,14 @@ export function isCoinAmountEmpty(coins: CoinAmountDto): boolean {
     return false;
   }
   return !(coins.CoffeeStamp && coins.CoffeeStamp !== 0);
+}
+
+export function isCoinAmountNegative(coins: CoinAmountDto): boolean {
+  if (coins.Cent && coins.Cent < 0) {
+    return true;
+  }
+  if (coins.BottleStamp && coins.BottleStamp < 0) {
+    return true;
+  }
+  return !!(coins.CoffeeStamp && coins.CoffeeStamp < 0);
 }
