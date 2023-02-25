@@ -17,10 +17,12 @@ import {
   LockOutlined,
   MoreVert,
   ShoppingCartOutlined,
+  Token,
 } from "@mui/icons-material";
 import { UpdateAccountDialog } from "./UpdateAccountDialog";
 import { CreatePaymentDialog } from "../transaction/CreatePaymentDialog";
 import { AccountAuthenticationDialog } from "./AccountAuthenticationDialog";
+import { AccountSessionDialog } from "./AccountSessionDialog";
 
 export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
   const [open, setOpen] = React.useState(false);
@@ -29,6 +31,7 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openAuthModal, setOpenAuthModal] = useState(false);
+  const [openSessionModal, setOpenSessionModal] = useState(false);
 
   const handleMenuItemClick = (action: (value: boolean) => void) => {
     action(true);
@@ -109,6 +112,14 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
                     </ListItemIcon>
                     <ListItemText>Authentication methods</ListItemText>
                   </MenuItem>
+                  <MenuItem
+                    onClick={() => handleMenuItemClick(setOpenSessionModal)}
+                  >
+                    <ListItemIcon>
+                      <Token fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Active sessions</ListItemText>
+                  </MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>
@@ -132,6 +143,12 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
         account={props.account}
         open={openAuthModal}
         setOpen={setOpenAuthModal}
+      />
+
+      <AccountSessionDialog
+        account={props.account}
+        open={openSessionModal}
+        setOpen={setOpenSessionModal}
       />
     </>
   );

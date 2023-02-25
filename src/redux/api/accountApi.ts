@@ -8,13 +8,14 @@ import {
   PaymentDto,
   SaveAccountDto,
   SaveAuthPasswordDto,
+  SessionDto,
   TransactionDto,
 } from "./contracts";
 
 export const accountApi = createApi({
   reducerPath: "accountApi",
   baseQuery: customFetchBase,
-  tagTypes: ["Accounts", "Transactions"],
+  tagTypes: ["Accounts", "Transactions", "Sessions"],
   endpoints: (builder) => ({
     createAccount: builder.mutation<AccountDto, SaveAccountDto>({
       query(account) {
@@ -222,6 +223,30 @@ export const accountApi = createApi({
       invalidatesTags: (result, error, { id }) =>
         result ? [{ type: "Accounts", id }] : [],
     }),
+    getAllAccountSessions: builder.query<SessionDto[], number>({
+      query(id) {
+        return {
+          url: `/account/${id}/sessions`,
+          credentials: "include",
+        };
+      },
+      providesTags: (result, error, id) => [{ type: "Sessions", id }],
+    }),
+    deleteAccountSession: builder.mutation<
+      SessionDto[],
+      { id: number; session: SessionDto }
+    >({
+      query({ id, session }) {
+        return {
+          url: `/account/${id}/sessions`,
+          method: "DELETE",
+          credentials: "include",
+          body: session,
+        };
+      },
+      invalidatesTags: (result, error, { id }) =>
+        result ? [{ type: "Sessions", id }] : [],
+    }),
   }),
 });
 
@@ -241,4 +266,6 @@ export const {
   useUpdateAccountPublicTabAuthenticationMutation,
   useDeleteAccountPublicTabAuthenticationMutation,
   useDeleteAccountNfcAuthenticationMutation,
+  useGetAllAccountSessionsQuery,
+  useDeleteAccountSessionMutation,
 } = accountApi;

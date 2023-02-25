@@ -121,3 +121,15 @@ export type UpdateAuthNfcDto = {
 export type DeleteAuthNfcDto = {
   card_id: string;
 };
+
+export type AuthMethodTypeDto =
+  | "PasswordBased"
+  | "NfcBased"
+  | "PublicTab"
+  | "PasswordResetToken";
+
+export type SessionDto = {
+  auth_method: AuthMethodTypeDto;
+  valid_until: string;
+  is_single_use: boolean;
+};
