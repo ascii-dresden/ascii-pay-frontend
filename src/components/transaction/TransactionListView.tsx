@@ -103,7 +103,7 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
   });
   return (
     <>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
+      <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
         <TableCell>
           <IconButton
             aria-label="expand row"
