@@ -27,7 +27,11 @@ import { BASE_URL } from "../../redux/api/customFetchBase";
 import { stringAvatar } from "../stringAvatar";
 import { CoinAmountView } from "./CoinAmountView";
 import { SelectProductPopup } from "./SelectProductPopup";
-import { equalCoinAmount, isCoinAmountEmpty } from "./transactionUtils";
+import {
+  addCoinAmount,
+  equalCoinAmount,
+  isCoinAmountEmpty,
+} from "./transactionUtils";
 
 function getPossiblePrices(product: ProductDto): CoinAmountDto[] {
   let prices: CoinAmountDto[] = [];
@@ -201,6 +205,12 @@ export const CreatePaymentDialog = (props: {
     setPaymentItems([]);
   };
 
+  let total: CoinAmountDto = {};
+  total = addCoinAmount(total, coins);
+  for (const item of paymentItems) {
+    total = addCoinAmount(total, item.effective_price);
+  }
+
   return (
     <Dialog open={props.open} onClose={() => props.setOpen(false)}>
       <DialogTitle component="div">
@@ -220,7 +230,11 @@ export const CreatePaymentDialog = (props: {
       </DialogTitle>
       <DialogContent dividers={true}>
         <Box pt={1}>
-          <CoinAmountEdit coins={coins} onChange={setCoins}>
+          <CoinAmountEdit
+            coins={coins}
+            onChange={setCoins}
+            isTransaction={true}
+          >
             <IconButton sx={{ height: "40px" }} onClick={handleAddCoins}>
               <Add />
             </IconButton>
@@ -242,7 +256,10 @@ export const CreatePaymentDialog = (props: {
                   </TableCell>
                   <TableCell>{item.product?.name ?? "-"}</TableCell>
                   <TableCell width={200} onClick={() => handleNextPrice(index)}>
-                    <CoinAmountView coins={item.effective_price} />
+                    <CoinAmountView
+                      coins={item.effective_price}
+                      isTransaction={true}
+                    />
                   </TableCell>
                   <TableCell width={72}>
                     <IconButton onClick={() => handleRemoveItem(index)}>
@@ -251,6 +268,18 @@ export const CreatePaymentDialog = (props: {
                   </TableCell>
                 </TableRow>
               ))}
+              <TableRow>
+                <TableCell height={52.9} width={72}></TableCell>
+                <TableCell>
+                  <b>Total</b>
+                </TableCell>
+                <TableCell width={200}>
+                  <b>
+                    <CoinAmountView coins={total} isTransaction={true} />
+                  </b>
+                </TableCell>
+                <TableCell width={72}></TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </Box>

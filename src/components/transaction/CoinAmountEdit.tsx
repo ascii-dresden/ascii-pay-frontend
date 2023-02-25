@@ -49,6 +49,22 @@ const CentInputRef = React.forwardRef<HTMLInputElement, CustomProps>(
     );
   }
 );
+const TransactionCentInputRef = React.forwardRef<HTMLInputElement, CustomProps>(
+  function NumericFormatCustom(props, ref) {
+    const { value, onChange, ...other } = props;
+    return (
+      <CoinInput
+        ref={ref}
+        value={value}
+        onChange={onChange}
+        decimalPlaces={2}
+        increment={10}
+        isTransaction={true}
+        {...other}
+      />
+    );
+  }
+);
 
 const StampInputRef = React.forwardRef<HTMLInputElement, CustomProps>(
   function NumericFormatCustom(props, ref) {
@@ -56,6 +72,21 @@ const StampInputRef = React.forwardRef<HTMLInputElement, CustomProps>(
     return <CoinInput ref={ref} value={value} onChange={onChange} {...other} />;
   }
 );
+const TransactionStampInputRef = React.forwardRef<
+  HTMLInputElement,
+  CustomProps
+>(function NumericFormatCustom(props, ref) {
+  const { value, onChange, ...other } = props;
+  return (
+    <CoinInput
+      ref={ref}
+      value={value}
+      onChange={onChange}
+      isTransaction={true}
+      {...other}
+    />
+  );
+});
 
 function cloneCoins(coins: CoinAmountDto): CoinAmountDto {
   let newCoins: CoinAmountDto = {};
@@ -80,6 +111,7 @@ export const CoinAmountEdit = (props: {
   coins: CoinAmountDto;
   onChange: (coins: CoinAmountDto) => void;
   children?: React.ReactNode | React.ReactNode[];
+  isTransaction?: boolean;
 }) => {
   function setCents(value: number) {
     let newCoins = cloneCoins(props.coins);
@@ -118,7 +150,9 @@ export const CoinAmountEdit = (props: {
         value={props.coins.Cent ?? 0}
         onChange={setCents as any}
         InputProps={{
-          inputComponent: CentInputRef as any,
+          inputComponent: props.isTransaction
+            ? (TransactionCentInputRef as any)
+            : (CentInputRef as any),
           endAdornment: (
             <InputAdornment position="end">
               <Euro />
@@ -130,7 +164,9 @@ export const CoinAmountEdit = (props: {
         value={props.coins.CoffeeStamp ?? 0}
         onChange={setCoffeeStamps as any}
         InputProps={{
-          inputComponent: StampInputRef as any,
+          inputComponent: props.isTransaction
+            ? (TransactionStampInputRef as any)
+            : (StampInputRef as any),
           endAdornment: (
             <InputAdornment position="end">
               <CoffeeStamp />
@@ -142,7 +178,9 @@ export const CoinAmountEdit = (props: {
         value={props.coins.BottleStamp ?? 0}
         onChange={setBottleStamps as any}
         InputProps={{
-          inputComponent: StampInputRef as any,
+          inputComponent: props.isTransaction
+            ? (TransactionStampInputRef as any)
+            : (StampInputRef as any),
           endAdornment: (
             <InputAdornment position="end">
               <BottleStamp />

@@ -117,7 +117,10 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
           {format.format(new Date(props.transaction.timestamp))}
         </TableCell>
         <TableCell align="right">
-          <CoinAmountView coins={getTransactionSum(props.transaction)} />
+          <CoinAmountView
+            coins={getTransactionSum(props.transaction)}
+            isTransaction={true}
+          />
         </TableCell>
       </TableRow>
       <TableRow>
@@ -150,7 +153,10 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
                       </TableCell>
                       <TableCell>{item.product?.name ?? "-"}</TableCell>
                       <TableCell>
-                        <CoinAmountView coins={item.effective_price} />
+                        <CoinAmountView
+                          coins={item.effective_price}
+                          isTransaction={true}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
