@@ -133,7 +133,7 @@ export const TransactionChart = (props: {
               theme={theme}
               title={date}
               items={[
-                { name: "Price", coins: entry.price },
+                { name: "Price", coins: entry.price, isTransaction: true },
                 {
                   name: "Before balance",
                   coins: entry.beforeBalance,
@@ -173,6 +173,7 @@ const Popup = (props: {
   items: {
     name: string;
     coins: CoinAmountDto;
+    isTransaction?: boolean;
   }[];
 }) => {
   const bg = props.theme.palette.background.default;
@@ -204,7 +205,10 @@ const Popup = (props: {
               style={{ display: "flex", justifyContent: "space-between" }}
             >
               <span>{item.name}</span>
-              <CoinAmountView coins={item.coins} />
+              <CoinAmountView
+                coins={item.coins}
+                isTransaction={item.isTransaction}
+              />
             </div>
           );
         })}

@@ -6,7 +6,7 @@ import { BottleStamp } from "../BottleStamp";
 
 const StyledCoinAmountView = styled.div`
   display: flex;
-  width: 10.5rem;
+  width: 11.5rem;
 
   svg {
     font-size: 1.1rem !important;
@@ -17,7 +17,7 @@ const StyledCoinAmountEntry = styled.div`
   display: flex;
   align-items: center;
   justify-content: right;
-  width: 3rem;
+  width: 3.5rem;
 
   & > span {
     line-height: 1rem;
@@ -35,23 +35,50 @@ const StyledCoinAmountEntry = styled.div`
   }
 `;
 
-export function centsToString(cents: number): string {
+function centsToString(cents: number, isTransaction?: boolean): string {
+  if (isTransaction) {
+    if (cents > 0) {
+      return `-${(cents / 100).toFixed(2)}`;
+    }
+    if (cents < 0) {
+      return `+${(-cents / 100).toFixed(2)}`;
+    }
+  }
   return (cents / 100).toFixed(2);
 }
 
-export const CoinAmountView = (props: { coins: CoinAmountDto }) => {
+function stampsToString(stamps: number, isTransaction?: boolean): string {
+  if (isTransaction) {
+    if (stamps > 0) {
+      return `-${stamps}`;
+    }
+    if (stamps < 0) {
+      return `+${-stamps}`;
+    }
+  }
+  return stamps.toString();
+}
+
+export const CoinAmountView = (props: {
+  coins: CoinAmountDto;
+  isTransaction?: boolean;
+}) => {
   return (
     <StyledCoinAmountView>
       <StyledCoinAmountEntry>
-        <span>{centsToString(props.coins.Cent ?? 0)}</span>
+        <span>{centsToString(props.coins.Cent ?? 0, props.isTransaction)}</span>
         <Euro />
       </StyledCoinAmountEntry>
       <StyledCoinAmountEntry>
-        <span>{props.coins.CoffeeStamp ?? 0}</span>
+        <span>
+          {stampsToString(props.coins.CoffeeStamp ?? 0, props.isTransaction)}
+        </span>
         <CoffeeStamp />
       </StyledCoinAmountEntry>
       <StyledCoinAmountEntry>
-        <span>{props.coins.BottleStamp ?? 0}</span>
+        <span>
+          {stampsToString(props.coins.BottleStamp ?? 0, props.isTransaction)}
+        </span>
         <BottleStamp />
       </StyledCoinAmountEntry>
     </StyledCoinAmountView>

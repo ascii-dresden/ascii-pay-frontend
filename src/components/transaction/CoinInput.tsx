@@ -41,6 +41,7 @@ export const CoinInput = React.forwardRef<
     onChange: (value: number) => void;
     decimalPlaces?: number;
     increment?: number;
+    isTransaction?: boolean;
   }
 >((props, ref) => {
   const { value, onChange, decimalPlaces, increment, ...other } = props;
@@ -131,13 +132,26 @@ export const CoinInput = React.forwardRef<
     onChange(validateValue(Math.round(newValue)));
   };
 
+  let stringValue;
+  if (props.isTransaction && value > 0) {
+    stringValue =
+      "-" +
+      (value / Math.pow(10, decimalPlaces ?? 0)).toFixed(decimalPlaces ?? 0);
+  } else if (props.isTransaction && value < 0) {
+    stringValue =
+      "+" +
+      (-value / Math.pow(10, decimalPlaces ?? 0)).toFixed(decimalPlaces ?? 0);
+  } else {
+    stringValue = (value / Math.pow(10, decimalPlaces ?? 0)).toFixed(
+      decimalPlaces ?? 0
+    );
+  }
+
   return (
     <StyledInput
       ref={ref}
       {...other}
-      value={(value / Math.pow(10, decimalPlaces ?? 0)).toFixed(
-        decimalPlaces ?? 0
-      )}
+      value={stringValue}
       onChange={(_) => {}}
       onKeyDown={handleKeyDown}
       onPasteCapture={handleOnPaste}
