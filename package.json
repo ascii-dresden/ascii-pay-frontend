@@ -13,10 +13,12 @@
     "apexcharts": "^3.37.0",
     "async-mutex": "^0.4.0",
     "clsx": "^1.2.1",
+    "i18next": "^22.4.10",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
     "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
+    "react-i18next": "^12.2.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.0",
     "react-toastify": "^9.1.1"

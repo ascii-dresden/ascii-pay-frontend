@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
+  Divider,
   Drawer,
   IconButton,
   List,
@@ -16,7 +17,13 @@ import { useAppSelector } from "../redux/store";
 import { useLogoutUserMutation } from "../redux/api/authApi";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
-import { AccountCircle, Coffee, Home, Menu } from "@mui/icons-material";
+import {
+  AccountCircle,
+  Coffee,
+  Home,
+  Menu,
+  Terminal,
+} from "@mui/icons-material";
 import logo from "../assets/ascii-pay-logo-wide.svg";
 
 const drawerWidth = 240;
@@ -85,6 +92,15 @@ export const Layout = () => {
                 <Coffee />
               </ListItemIcon>
               <ListItemText primary="Products" />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+          <ListItem disablePadding onClick={() => navigate("/terminal")}>
+            <ListItemButton>
+              <ListItemIcon>
+                <Terminal />
+              </ListItemIcon>
+              <ListItemText primary="Terminal" />
             </ListItemButton>
           </ListItem>
         </List>
