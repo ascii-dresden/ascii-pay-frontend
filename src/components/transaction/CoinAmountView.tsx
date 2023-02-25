@@ -5,10 +5,48 @@ import { CoffeeStamp } from "../CoffeeStamp";
 import { BottleStamp } from "../BottleStamp";
 import { useTheme } from "@mui/material";
 import React from "react";
+import clsx from "clsx";
 
+type StyledCoinAmountViewProps = {
+  hoverColor: string;
+  successColor: string;
+  errorColor: string;
+};
 const StyledCoinAmountView = styled.div`
   display: flex;
   width: 11.5rem;
+  cursor: default;
+  user-select: none;
+  position: relative;
+  isolation: isolate;
+
+  &.isClickable::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -0.6rem;
+    left: -0.2rem;
+    right: -0.6rem;
+    bottom: -0.6rem;
+    background-color: transparent;
+    z-index: -1;
+    border-radius: 0.2rem;
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+
+  &.isClickable:hover::before {
+    background-color: ${(props: StyledCoinAmountViewProps) => props.hoverColor};
+  }
+
+  .success span {
+    font-weight: bold;
+    color: ${(props: StyledCoinAmountViewProps) => props.successColor};
+  }
+
+  .error {
+    font-weight: bold;
+    color: ${(props: StyledCoinAmountViewProps) => props.errorColor};
+  }
 
   svg {
     font-size: 1.1rem !important;
@@ -65,48 +103,63 @@ export const CoinAmountView = (props: {
   coins: CoinAmountDto;
   isTransaction?: boolean;
   negativeIsError?: boolean;
+  isClickable?: boolean;
 }) => {
   const theme = useTheme();
 
-  const errorStyle: React.CSSProperties = {
-    color: theme.palette.error.main,
-    fontWeight: "bold",
-  };
-
-  let centsStyle: React.CSSProperties | undefined = undefined;
+  let centsStyle: string | undefined = undefined;
   if (props.negativeIsError && props.coins.Cent && props.coins.Cent < 0) {
-    centsStyle = errorStyle;
+    centsStyle = "error";
+  } else if (props.isTransaction && props.coins.Cent && props.coins.Cent < 0) {
+    centsStyle = "success";
   }
-  let coffeeStampStyle: React.CSSProperties | undefined = undefined;
+  let coffeeStampStyle: string | undefined = undefined;
   if (
     props.negativeIsError &&
     props.coins.CoffeeStamp &&
     props.coins.CoffeeStamp < 0
   ) {
-    coffeeStampStyle = errorStyle;
+    coffeeStampStyle = "error";
+  } else if (
+    props.isTransaction &&
+    props.coins.CoffeeStamp &&
+    props.coins.CoffeeStamp < 0
+  ) {
+    coffeeStampStyle = "success";
   }
-  let bottleStampStyle: React.CSSProperties | undefined = undefined;
+  let bottleStampStyle: string | undefined = undefined;
   if (
     props.negativeIsError &&
     props.coins.BottleStamp &&
     props.coins.BottleStamp < 0
   ) {
-    bottleStampStyle = errorStyle;
+    bottleStampStyle = "error";
+  } else if (
+    props.isTransaction &&
+    props.coins.BottleStamp &&
+    props.coins.BottleStamp < 0
+  ) {
+    bottleStampStyle = "success";
   }
 
   return (
-    <StyledCoinAmountView>
-      <StyledCoinAmountEntry style={centsStyle}>
+    <StyledCoinAmountView
+      className={clsx({ isClickable: props.isClickable })}
+      hoverColor={theme.palette.action.hover}
+      successColor={theme.palette.success.main}
+      errorColor={theme.palette.error.main}
+    >
+      <StyledCoinAmountEntry className={centsStyle}>
         <span>{centsToString(props.coins.Cent ?? 0, props.isTransaction)}</span>
         <Euro />
       </StyledCoinAmountEntry>
-      <StyledCoinAmountEntry style={coffeeStampStyle}>
+      <StyledCoinAmountEntry className={coffeeStampStyle}>
         <span>
           {stampsToString(props.coins.CoffeeStamp ?? 0, props.isTransaction)}
         </span>
         <CoffeeStamp />
       </StyledCoinAmountEntry>
-      <StyledCoinAmountEntry style={bottleStampStyle}>
+      <StyledCoinAmountEntry className={bottleStampStyle}>
         <span>
           {stampsToString(props.coins.BottleStamp ?? 0, props.isTransaction)}
         </span>
