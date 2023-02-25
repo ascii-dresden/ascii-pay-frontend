@@ -146,7 +146,7 @@ export const CoinAmountEdit = (props: {
   return (
     <StyledDiv>
       <TextField
-        label={props.label ?? "Money"}
+        label={props.label}
         value={props.coins.Cent ?? 0}
         onChange={setCents as any}
         InputProps={{
