@@ -140,7 +140,10 @@ const AccountListRow = (props: { account: AccountDto }) => {
         </TableCell>
         <TableCell>{props.account.email}</TableCell>
         <TableCell>
-          <CoinAmountView coins={props.account.balance} />
+          <CoinAmountView
+            coins={props.account.balance}
+            negativeIsError={true}
+          />
         </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">

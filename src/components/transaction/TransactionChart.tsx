@@ -120,7 +120,13 @@ export const TransactionChart = (props: {
             <div className="arrow_box">
               <Popup
                 theme={theme}
-                items={[{ name: "Balance", coins: entry.afterBalance }]}
+                items={[
+                  {
+                    name: "Balance",
+                    coins: entry.afterBalance,
+                    negativeIsError: true,
+                  },
+                ]}
               />
             </div>
           );
@@ -133,12 +139,17 @@ export const TransactionChart = (props: {
               theme={theme}
               title={date}
               items={[
-                { name: "Price", coins: entry.price, isTransaction: true },
                 {
                   name: "Before balance",
                   coins: entry.beforeBalance,
+                  negativeIsError: true,
                 },
-                { name: "After balance", coins: entry.afterBalance },
+                { name: "Price", coins: entry.price, isTransaction: true },
+                {
+                  name: "After balance",
+                  coins: entry.afterBalance,
+                  negativeIsError: true,
+                },
               ]}
             />
           </div>
@@ -155,7 +166,7 @@ export const TransactionChart = (props: {
     },
     yaxis: {
       labels: {
-        formatter: function (val: number, opts) {
+        formatter: function (val: number) {
           return (val / 100).toFixed(2) + " €";
         },
       },
@@ -174,6 +185,7 @@ const Popup = (props: {
     name: string;
     coins: CoinAmountDto;
     isTransaction?: boolean;
+    negativeIsError?: boolean;
   }[];
 }) => {
   const bg = props.theme.palette.background.default;
@@ -202,12 +214,17 @@ const Popup = (props: {
           return (
             <div
               key={index}
-              style={{ display: "flex", justifyContent: "space-between" }}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                borderBottom: item.isTransaction ? `solid 1px ${d}` : undefined,
+              }}
             >
               <span>{item.name}</span>
               <CoinAmountView
                 coins={item.coins}
                 isTransaction={item.isTransaction}
+                negativeIsError={item.negativeIsError}
               />
             </div>
           );

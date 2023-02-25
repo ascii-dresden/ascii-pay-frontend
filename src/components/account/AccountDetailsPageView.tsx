@@ -109,7 +109,7 @@ export const AccountDetailsPageView = (props: {
             <Typography gutterBottom variant="h6" component="div">
               Balance
             </Typography>
-            <CoinAmountView coins={account.balance} />
+            <CoinAmountView coins={account.balance} negativeIsError={true} />
           </Box>
         </Paper>
         <Paper sx={{ flex: "1 1 100%" }} elevation={4}>
