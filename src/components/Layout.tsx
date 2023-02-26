@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -24,6 +24,7 @@ const drawerWidth = 240;
 
 export const Layout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useAppSelector((state) => state.userState.user);
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -59,13 +60,24 @@ export const Layout = () => {
     logoutUser();
   };
 
+  let activePage: "home" | "accounts" | "products" | "terminal";
+  if (location.pathname.startsWith("/accounts")) {
+    activePage = "accounts";
+  } else if (location.pathname.startsWith("/products")) {
+    activePage = "products";
+  } else if (location.pathname.startsWith("/terminal")) {
+    activePage = "terminal";
+  } else {
+    activePage = "home";
+  }
+
   const drawerContent = (
     <>
       <Toolbar></Toolbar>
       <Box sx={{ overflow: "auto" }}>
         <List>
           <ListItem disablePadding onClick={() => navigate("/")}>
-            <ListItemButton>
+            <ListItemButton selected={activePage === "home"}>
               <ListItemIcon>
                 <Home />
               </ListItemIcon>
@@ -73,7 +85,7 @@ export const Layout = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding onClick={() => navigate("/accounts")}>
-            <ListItemButton>
+            <ListItemButton selected={activePage === "accounts"}>
               <ListItemIcon>
                 <AccountCircle />
               </ListItemIcon>
@@ -81,7 +93,7 @@ export const Layout = () => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding onClick={() => navigate("/products")}>
-            <ListItemButton>
+            <ListItemButton selected={activePage === "products"}>
               <ListItemIcon>
                 <Coffee />
               </ListItemIcon>
@@ -90,7 +102,7 @@ export const Layout = () => {
           </ListItem>
           <Divider />
           <ListItem disablePadding onClick={() => navigate("/terminal")}>
-            <ListItemButton>
+            <ListItemButton selected={activePage === "terminal"}>
               <ListItemIcon>
                 <Store />
               </ListItemIcon>

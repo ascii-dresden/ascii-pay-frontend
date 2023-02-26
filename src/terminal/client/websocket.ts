@@ -70,7 +70,6 @@ export function dispatchWebSocketMessage(
   let consumeType: boolean | void | undefined;
   switch (message.type) {
     case "FoundSessionToken":
-      console.log("message", message);
       consumeType =
         (handler.onFoundSessionToken &&
           handler.onFoundSessionToken(message.payload.token)) ||
