@@ -28,7 +28,7 @@ import { Close, DeleteOutline, PlaylistAdd } from "@mui/icons-material";
 import { BASE_URL } from "../../redux/api/customFetchBase";
 import { stringAvatar } from "../stringAvatar";
 import { CoinAmountView } from "./CoinAmountView";
-import { SelectProductPopup } from "./SelectProductPopup";
+import { SelectProductPopup } from "../product/SelectProductPopup";
 import {
   addCoinAmount,
   getPossiblePrices,

@@ -1,30 +1,90 @@
 import {
   Box,
   Breadcrumbs,
+  Button,
   Container,
   Link,
+  MenuItem,
   Paper,
   TextField,
   Toolbar,
   Typography,
+  useTheme,
 } from "@mui/material";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TerminalApp, TerminalAppPage } from "../terminal/TerminalApp";
 import { TerminalSettings } from "../terminal/pages/TerminalSettingsPage";
+import { SelectAccountPopup } from "../components/account/SelectAccountPopup";
+import { AccountDto } from "../redux/api/contracts";
+import { BASE_URL } from "../redux/api/customFetchBase";
+import { SimulationClient } from "../terminal/client/SimulationClient";
+import {
+  AsciiPayAuthenticationClient,
+  TerminalDeviceContext,
+} from "../terminal/client/AsciiPayAuthenticationClient";
+
+type ConnectionSimulateState = {
+  connected: boolean;
+  session: string | null;
+};
+
+function requestAccountSession(
+  account: AccountDto,
+  setSession: (session: string | null) => void
+) {
+  fetch(`${BASE_URL}/auth/nfc-simulation`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      account_id: account.id,
+    }),
+  })
+    .then((response) => response.json())
+    .then((response) => setSession(response.token ?? null))
+    .catch(() => setSession(null));
+}
 
 export const TerminalPage = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
-  let params = useParams();
+  const params = useParams();
 
   const [width, setWidth] = React.useState("1000");
   const [height, setHeight] = React.useState("640");
+  const [connectionMode, setConnectionMode] = React.useState("simulate");
+  const [connectionSimulateState, setConnectionSimulateState] =
+    React.useState<ConnectionSimulateState>({
+      connected: true,
+      session: null,
+    });
+
+  const [authClient, setAuthClient] =
+    React.useState<AsciiPayAuthenticationClient>(
+      new SimulationClient(connectionSimulateState)
+    );
 
   const [settings, setSettings] = React.useState<TerminalSettings>({
     language: "en",
-    theme: "dark",
+    theme: theme.palette.mode,
     highlightColor: "green",
   });
+
+  const deviceContext = React.useMemo(() => {
+    let context: TerminalDeviceContext = {
+      wakeUp: () => {},
+    };
+    return context;
+  }, []);
+
+  React.useEffect(() => {
+    if ((authClient as SimulationClient).updateState) {
+      (authClient as SimulationClient).updateState(connectionSimulateState);
+    }
+  }, [connectionSimulateState, authClient]);
 
   let terminalPage: TerminalAppPage = "start";
   switch (params.page) {
@@ -84,6 +144,51 @@ export const TerminalPage = () => {
     </Paper>
   );
 
+  let connectionBox;
+  if (connectionMode === "simulate") {
+    const selectAccount = (account: AccountDto) =>
+      requestAccountSession(account, (token) => {
+        setConnectionSimulateState((s) => {
+          return {
+            ...s,
+            session: token,
+          };
+        });
+      });
+    const removeSession = () =>
+      setConnectionSimulateState((s) => {
+        return {
+          ...s,
+          session: null,
+        };
+      });
+    const toggleConnected = () =>
+      setConnectionSimulateState((s) => {
+        return {
+          ...s,
+          connected: !s.connected,
+        };
+      });
+
+    connectionBox = (
+      <Box sx={{ mt: 2, display: "flex", "& > *": { mr: "8px !important" } }}>
+        {connectionSimulateState.session === null ? (
+          <SelectAccountPopup
+            label="Select account"
+            selectAccount={selectAccount}
+          />
+        ) : (
+          <Button variant="outlined" size="large" onClick={removeSession}>
+            Remove account
+          </Button>
+        )}
+        <Button variant="outlined" size="large" onClick={toggleConnected}>
+          {connectionSimulateState.connected ? "Disconnect" : "Connect"}
+        </Button>
+      </Box>
+    );
+  }
+
   return (
     <>
       <Container maxWidth="lg">
@@ -102,13 +207,25 @@ export const TerminalPage = () => {
             <TextField
               label="Height"
               fullWidth
-              sx={{ ml: "0.4rem" }}
+              sx={{ mx: "0.4rem" }}
               value={height}
               onChange={(e) => setHeight(e.target.value)}
               type="number"
               inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
             />
+            <TextField
+              select
+              label="Connection mode"
+              fullWidth
+              sx={{ ml: "0.4rem" }}
+              value={connectionMode}
+              onChange={(e) => setConnectionMode(e.target.value)}
+            >
+              <MenuItem value="simulate">Simulate terminal</MenuItem>
+              <MenuItem value="connect">Connect to terminal</MenuItem>
+            </TextField>
           </Box>
+          {connectionBox}
         </Paper>
       </Container>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -126,6 +243,8 @@ export const TerminalPage = () => {
             height={parseInt(height)}
             settings={settings}
             setSettings={setSettings}
+            authClient={authClient}
+            deviceContext={deviceContext}
           />
         </Paper>
       </Box>

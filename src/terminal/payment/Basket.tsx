@@ -20,8 +20,8 @@ const StyledBasketEmpty = styled.div`
   position: absolute;
   left: 0;
   width: 100%;
-  top: 4.4rem;
-  bottom: 3.2rem;
+  top: 4.4em;
+  bottom: 3.2em;
 
   display: flex;
   align-items: center;
@@ -44,10 +44,10 @@ const StyledBasket = styled.div`
   position: absolute;
   left: 0;
   width: 100%;
-  top: 4.4rem;
-  bottom: 3.2rem;
+  top: 4.4em;
+  bottom: 3.2em;
 
-  padding: 0.6rem;
+  padding: 0.6em;
   overflow-y: scroll;
   overflow-x: hidden;
 
@@ -61,8 +61,8 @@ const StyledBasket = styled.div`
 `;
 const StyledBasketEntry = styled.div`
   position: relative;
-  height: 3rem;
-  margin-bottom: 0.5rem;
+  height: 3em;
+  margin-bottom: 0.5em;
   overflow: hidden;
 
   &.inactive {
@@ -73,8 +73,8 @@ const StyledBasketEntryImage = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 2.9rem;
-  height: 2.9rem;
+  width: 2.9em;
+  height: 2.9em;
 
   &.bottle,
   &.coffee,
@@ -128,8 +128,8 @@ const StyledBasketEntryImage = styled.div`
       svg {
         position: absolute;
         z-index: 2;
-        width: 2rem;
-        height: 2rem;
+        width: 2em;
+        height: 2em;
       }
     }
   }
@@ -138,8 +138,8 @@ const StyledBasketEntryContent = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 3.6rem;
-  right: 3.6rem;
+  left: 3.6em;
+  right: 3.6em;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -155,10 +155,10 @@ const StyledBasketEntryContent = styled.div`
   }
 `;
 const StyledBasketEntryStamps = styled.div`
-  font-size: 0.8rem;
+  font-size: 0.8em;
   display: flex;
-  line-height: 1.2rem;
-  gap: 0.5rem;
+  line-height: 1.2em;
+  gap: 0.5em;
 
   &:empty {
     display: none;
@@ -173,8 +173,8 @@ const StyledBasketEntryPrice = styled.div`
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 0.6rem;
-  padding-left: 0.2rem;
+  right: 0.6em;
+  padding-left: 0.2em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,13 +183,13 @@ const StyledBasketEntryPrice = styled.div`
 `;
 const StyledBasketDeleteAll = styled.div`
   text-align: center;
-  padding: 0.2rem 0;
+  padding: 0.2em 0;
 
   span {
     display: block;
     border: solid 1px var(--border-color);
     background-color: var(--secondary-background);
-    padding: 0.4rem 2rem;
+    padding: 0.4em 2em;
   }
 `;
 

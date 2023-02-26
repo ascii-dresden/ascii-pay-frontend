@@ -5,8 +5,8 @@ import styled from "@emotion/styled";
 
 const StyledClockIcon = styled.div`
   position: relative;
-  width: 1.9rem;
-  height: 1.9rem;
+  width: 1.9em;
+  height: 1.9em;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -4,21 +4,21 @@ import { Backspace, ForwardOutlined } from "@mui/icons-material";
 import styled from "@emotion/styled";
 
 const StyledKeypadDisplay = styled.div`
-  line-height: 4rem;
-  padding: 0.5rem 0.5rem 0.5rem 1rem;
-  font-size: 1.5rem;
+  line-height: 4em;
+  padding: 0.5em 0.5em 0.5em 1em;
+  font-size: 1.5em;
 `;
 const StyledKeypadSubmit = styled.div`
   position: absolute;
 
   top: 0;
   right: 0;
-  padding-right: 0.5rem;
+  padding-right: 0.5em;
 
   svg {
-    margin: 1.5rem;
-    width: 2rem;
-    height: 2rem;
+    margin: 1.5em;
+    width: 2em;
+    height: 2em;
   }
 `;
 const StyledKeypadKeys = styled.div`
@@ -26,11 +26,11 @@ const StyledKeypadKeys = styled.div`
   grid-template-columns: auto auto auto;
   grid-template-rows: auto auto auto auto;
   position: absolute;
-  left: 0.6rem;
-  top: 5rem;
-  right: 0.6rem;
-  bottom: 0.6rem;
-  gap: 0.6rem;
+  left: 0.6em;
+  top: 5em;
+  right: 0.6em;
+  bottom: 0.6em;
+  gap: 0.6em;
 `;
 const StyledKeypadKey = styled.div`
   display: flex;
@@ -40,11 +40,11 @@ const StyledKeypadKey = styled.div`
 
   background-color: var(--primary-background);
   border: solid 1px var(--border-color);
-  font-size: 1.6rem;
+  font-size: 1.6em;
 
   svg {
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 1.6em;
+    height: 1.6em;
   }
 
   &:hover {

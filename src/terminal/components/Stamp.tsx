@@ -9,9 +9,9 @@ const StyledStamp = styled.div`
   align-items: center;
 
   svg {
-    width: 1rem;
-    height: 1rem;
-    margin-left: 0.4rem;
+    width: 1em;
+    height: 1em;
+    margin-left: 0.4em;
   }
 `;
 

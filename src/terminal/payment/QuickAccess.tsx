@@ -13,16 +13,16 @@ const StyledQuickAccess = styled.div`
   width: 100%;
   height: 100%;
 
-  padding: 0.6rem;
+  padding: 0.6em;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.6em;
 `;
 
 const StyledQuickAccessRow = styled.div`
   display: flex;
   flex: 1 1 0px;
-  gap: 0.6rem;
+  gap: 0.6em;
 
   &:last-child {
     flex-grow: 0.9;
@@ -31,7 +31,7 @@ const StyledQuickAccessRow = styled.div`
 
 const StyledQuickAccessEntry = styled.div`
   flex: 1 1 0px;
-  padding: 0.5rem;
+  padding: 0.5em;
 
   position: relative;
   background-color: var(--primary-background);
@@ -51,8 +51,8 @@ const StyledQuickAccessEntry = styled.div`
   }
 
   img {
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.2em;
+    height: 1.2em;
   }
 
   &.group-bottle::before {
@@ -121,16 +121,16 @@ const StyledQuickAccessEntryCenter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1.2em;
   font-weight: bold;
 `;
 
 const StyledQuickAccessEntryExtra = styled.div`
   position: absolute;
-  right: -0.4rem;
-  bottom: -0.4rem;
-  width: 2rem;
-  height: 2rem;
+  right: -0.4em;
+  bottom: -0.4em;
+  width: 2em;
+  height: 2em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,7 +145,7 @@ const StyledQuickAccessEntryExtra = styled.div`
   }
 
   .quick-access-entry-stamp img {
-    margin-left: 0rem !important;
+    margin-left: 0em !important;
   }
 `;
 const StyledQuickAccessEntryName = styled.div`
@@ -153,10 +153,10 @@ const StyledQuickAccessEntryName = styled.div`
   left: 0;
   top: 0;
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.5em;
   overflow-wrap: break-word;
   white-space: pre-wrap;
-  font-size: 0.9rem;
+  font-size: 0.9em;
   text-align: center;
 `;
 const StyledQuickAccessEntryStamp = styled.div`
@@ -164,7 +164,7 @@ const StyledQuickAccessEntryStamp = styled.div`
   align-items: center;
 
   img {
-    margin-left: 0.4rem;
+    margin-left: 0.4em;
   }
 `;
 

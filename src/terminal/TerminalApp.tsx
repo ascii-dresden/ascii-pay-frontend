@@ -15,6 +15,16 @@ import { createInstance } from "i18next";
 import { ScreensaverClock } from "./components/ScreensaverClock";
 import { TerminalRegisterPage } from "./pages/TerminalRegisterPage";
 import { TerminalPaymentPage } from "./pages/TerminalPaymentPage";
+import { TerminalAccountPage } from "./pages/TerminalAccountPage";
+import { useAppDispatch } from "../redux/store";
+import { checkTimeouts } from "../redux/features/terminalSlice";
+import { AppNotifications } from "./components/AppNotifications";
+import { NotificationManager } from "./components/NotificationManager";
+import { ConnectionIndicator } from "./components/ConnectionIndicator";
+import {
+  AsciiPayAuthenticationClient,
+  TerminalDeviceContext,
+} from "./client/AsciiPayAuthenticationClient";
 
 const StyledTerminalApp = styled.div`
   position: absolute;
@@ -257,97 +267,125 @@ export type TerminalAppPage =
   | "accounts"
   | "settings";
 
-export const TerminalApp = (props: {
-  page: TerminalAppPage;
-  width: number;
-  height: number;
-  settings: TerminalSettings;
-  setSettings: (settings: TerminalSettings) => void;
-}) => {
-  const params = useParams();
-  const [appClass, setAppClass] = React.useState<string | null>(null);
+export const TerminalApp = React.memo(
+  (props: {
+    page: TerminalAppPage;
+    width: number;
+    height: number;
+    settings: TerminalSettings;
+    setSettings: (settings: TerminalSettings) => void;
+    authClient: AsciiPayAuthenticationClient;
+    deviceContext: TerminalDeviceContext;
+  }) => {
+    const params = useParams();
+    const [appClass, setAppClass] = React.useState<string | null>(null);
+    const dispatch = useAppDispatch();
 
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: props.settings.theme,
-        },
-        typography: {
-          button: {
-            textTransform: "none",
+    const theme = React.useMemo(
+      () =>
+        createTheme({
+          palette: {
+            mode: props.settings.theme,
           },
-        },
-      }),
-    [props.settings]
-  );
+          typography: {
+            button: {
+              textTransform: "none",
+            },
+          },
+        }),
+      [props.settings]
+    );
 
-  const fontSize = React.useMemo(() => {
-    const scale = Math.min(props.width / 800, props.height / 480);
-    return Math.round(16 * scale) + "px";
-  }, [props.width, props.height]);
+    const fontSize = React.useMemo(() => {
+      const scale = Math.min(props.width / 800, props.height / 480);
+      return Math.round(16 * scale) + "px";
+    }, [props.width, props.height]);
 
-  let content;
-  switch (params.page) {
-    case "payment":
-      content = <TerminalPaymentPage />;
-      break;
-    case "register":
-      content = <TerminalRegisterPage setAppClass={setAppClass} />;
-      break;
-    case "accounts":
-      content = <span>accounts</span>;
-      break;
-    case "settings":
-      content = (
-        <TerminalSettingsPage
-          width={props.width}
-          height={props.height}
-          settings={props.settings}
-          setSettings={props.setSettings}
-        />
-      );
-      break;
-    default:
-      content = <TerminalStartPage />;
-      break;
+    React.useEffect(() => {
+      const timer = setInterval(() => dispatch(checkTimeouts()));
+      return () => {
+        clearInterval(timer);
+      };
+    }, [dispatch]);
+
+    let content;
+    switch (params.page) {
+      case "payment":
+        content = (
+          <TerminalPaymentPage
+            authClient={props.authClient}
+            deviceContext={props.deviceContext}
+          />
+        );
+        break;
+      case "register":
+        content = <TerminalRegisterPage setAppClass={setAppClass} />;
+        break;
+      case "accounts":
+        content = <TerminalAccountPage />;
+        break;
+      case "settings":
+        content = (
+          <TerminalSettingsPage
+            width={props.width}
+            height={props.height}
+            settings={props.settings}
+            setSettings={props.setSettings}
+          />
+        );
+        break;
+      default:
+        content = (
+          <TerminalStartPage
+            authClient={props.authClient}
+            deviceContext={props.deviceContext}
+          />
+        );
+        break;
+    }
+
+    const resources = {
+      de: {
+        translation: i18n_german,
+      },
+      en: {
+        translation: i18n_english,
+      },
+    };
+
+    const i18nConfig = createInstance({
+      resources,
+      lng: props.settings.language,
+      fallbackLng: "en",
+      debug: false,
+      interpolation: {
+        escapeValue: false,
+      },
+    });
+
+    i18nConfig.use(initReactI18next).init();
+
+    return (
+      <ThemeProvider theme={theme}>
+        <I18nextProvider i18n={i18nConfig}>
+          <StyledTerminalApp
+            id="terminal-app"
+            className={clsx(props.settings.highlightColor, appClass, {
+              dark: props.settings.theme === "dark",
+            })}
+            style={{ fontSize }}
+          >
+            <ConnectionIndicator authClient={props.authClient} />
+            <ScreensaverClock />
+            {content}
+            <AppNotifications
+              authClient={props.authClient}
+              deviceContext={props.deviceContext}
+            />
+            <NotificationManager />
+          </StyledTerminalApp>
+        </I18nextProvider>
+      </ThemeProvider>
+    );
   }
-
-  const resources = {
-    de: {
-      translation: i18n_german,
-    },
-    en: {
-      translation: i18n_english,
-    },
-  };
-
-  const i18nConfig = createInstance({
-    resources,
-    lng: props.settings.language,
-    fallbackLng: "en",
-    debug: false,
-    interpolation: {
-      escapeValue: false,
-    },
-  });
-
-  i18nConfig.use(initReactI18next).init();
-
-  return (
-    <ThemeProvider theme={theme}>
-      <I18nextProvider i18n={i18nConfig}>
-        <StyledTerminalApp
-          id="terminal-app"
-          className={clsx(props.settings.highlightColor, appClass, {
-            dark: props.settings.theme === "dark",
-          })}
-          style={{ fontSize }}
-        >
-          <ScreensaverClock />
-          {content}
-        </StyledTerminalApp>
-      </I18nextProvider>
-    </ThemeProvider>
-  );
-};
+);

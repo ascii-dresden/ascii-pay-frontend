@@ -1,10 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AccountDto, CoinAmountDto, ProductDto } from "../api/contracts";
 import {
   addCoinAmount,
   PseudoProductDto,
   selectNextCoinAmount,
 } from "../../components/transaction/transactionUtils";
+import { BASE_URL } from "../api/customFetchBase";
 
 export type PaymentTransactionItem = {
   product: PseudoProductDto;
@@ -16,6 +17,7 @@ interface PaymentState {
   keypadValue: number;
   storedPaymentItems: PaymentTransactionItem[];
   scannedAccount: AccountDto | null;
+  scannedToken: string | null;
   paymentTotal: CoinAmountDto;
 }
 
@@ -23,6 +25,7 @@ export const initialState: PaymentState = {
   keypadValue: 0,
   storedPaymentItems: [],
   scannedAccount: null,
+  scannedToken: null,
   paymentTotal: {},
 };
 
@@ -35,6 +38,40 @@ function calculateTotal(state: PaymentState): CoinAmountDto {
   }
   return total;
 }
+
+export const receiveAccountSessionToken = createAsyncThunk<
+  {
+    account: AccountDto | null;
+    token: string;
+  },
+  string
+>("payment/receiveAccountSessionToken", async (query) => {
+  console.log(query);
+  try {
+    let response = await fetch(`${BASE_URL}/auth/account`, {
+      method: "GET",
+      credentials: "omit",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${query}`,
+      },
+    });
+    let account = (await response.json()) as AccountDto | null;
+    if (!account?.balance) {
+      account = null;
+    }
+
+    return {
+      account,
+      token: query,
+    };
+  } catch {
+    return {
+      account: null,
+      token: query,
+    };
+  }
+});
 
 export const paymentSlice = createSlice({
   name: "payment",
@@ -82,6 +119,12 @@ export const paymentSlice = createSlice({
     removeAccount: (state) => {
       state.scannedAccount = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(receiveAccountSessionToken.fulfilled, (state, action) => {
+      state.scannedAccount = action.payload.account;
+      state.scannedToken = action.payload.token;
+    });
   },
 });
 
