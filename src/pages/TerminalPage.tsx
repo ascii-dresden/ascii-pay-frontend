@@ -18,7 +18,7 @@ export const TerminalPage = () => {
   let params = useParams();
 
   const [width, setWidth] = React.useState("1000");
-  const [height, setHeight] = React.useState("600");
+  const [height, setHeight] = React.useState("640");
 
   const [settings, setSettings] = React.useState<TerminalSettings>({
     language: "en",

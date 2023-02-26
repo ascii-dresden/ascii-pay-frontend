@@ -6,6 +6,7 @@ import { productApi } from "./api/productApi";
 import { accountApi } from "./api/accountApi";
 import userReducer from "./features/userSlice";
 import terminalReducer from "./features/terminalSlice";
+import registerReducer from "./features/registerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     [productApi.reducerPath]: productApi.reducer,
     userState: userReducer,
     terminalState: terminalReducer,
+    registerState: registerReducer,
   },
   devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
