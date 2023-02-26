@@ -66,6 +66,42 @@ export const TransactionListView = (props: { account: AccountDto }) => {
   let sortedTransactions = [...transactions];
   sortedTransactions.reverse();
 
+  let totalUp = {
+    Cent: 0,
+    CoffeeStamp: 0,
+    BottleStamp: 0,
+  };
+  let totalDown = {
+    Cent: 0,
+    CoffeeStamp: 0,
+    BottleStamp: 0,
+  };
+  for (let transaction of sortedTransactions) {
+    for (let item of transaction.items) {
+      if (item.effective_price.Cent) {
+        if (item.effective_price.Cent > 0) {
+          totalDown.Cent += item.effective_price.Cent;
+        } else if (item.effective_price.Cent < 0) {
+          totalUp.Cent -= item.effective_price.Cent;
+        }
+      }
+      if (item.effective_price.CoffeeStamp) {
+        if (item.effective_price.CoffeeStamp > 0) {
+          totalDown.CoffeeStamp += item.effective_price.CoffeeStamp;
+        } else if (item.effective_price.CoffeeStamp < 0) {
+          totalUp.CoffeeStamp -= item.effective_price.CoffeeStamp;
+        }
+      }
+      if (item.effective_price.BottleStamp) {
+        if (item.effective_price.BottleStamp > 0) {
+          totalDown.BottleStamp += item.effective_price.BottleStamp;
+        } else if (item.effective_price.BottleStamp < 0) {
+          totalUp.BottleStamp -= item.effective_price.BottleStamp;
+        }
+      }
+    }
+  }
+
   return (
     <>
       <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
@@ -90,6 +126,25 @@ export const TransactionListView = (props: { account: AccountDto }) => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Box sx={{ display: "flex", mt: 4 }}>
+        <Paper sx={{ mr: 4, flex: "1 1 100%" }} elevation={4}>
+          <Box sx={{ p: 2 }}>
+            <Typography gutterBottom variant="h6" component="div">
+              Total down
+            </Typography>
+            <CoinAmountView coins={totalDown} isTransaction={true} />
+          </Box>
+        </Paper>
+        <Paper sx={{ flex: "1 1 100%" }} elevation={4}>
+          <Box sx={{ p: 2 }}>
+            <Typography gutterBottom variant="h6" component="div">
+              Total up
+            </Typography>
+            <CoinAmountView coins={totalUp} />
+          </Box>
+        </Paper>
+      </Box>
     </>
   );
 };
