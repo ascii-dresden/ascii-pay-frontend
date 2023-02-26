@@ -15,15 +15,15 @@ const StyledSidebarPage = styled.div`
 const StyledSidebar = styled.div`
   position: absolute;
   left: 0;
-  width: 4rem;
+  width: 4em;
   top: 0;
   height: 100%;
   background-color: var(--primary-background);
   border-right: solid 1px var(--border-color);
 
   & > div > div {
-    width: 4rem;
-    height: 3.5rem;
+    width: 4em;
+    height: 3.5em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,13 +32,13 @@ const StyledSidebar = styled.div`
 
     svg,
     img {
-      width: 1.8rem;
-      height: 1.8rem;
+      width: 1.8em;
+      height: 1.8em;
     }
 
     #sidebar-ascii-logo {
-      width: 2.4rem !important;
-      height: 2.4rem !important;
+      width: 2.4em !important;
+      height: 2.4em !important;
     }
 
     &:hover {
@@ -64,11 +64,11 @@ const StyledSidebarTop = styled.div`
   }
 
   & > div:first-of-type {
-    height: 4.4rem;
+    height: 4.4em;
 
     img {
-      width: 2rem;
-      height: 2rem;
+      width: 2em;
+      height: 2em;
     }
   }
 `;
@@ -84,7 +84,7 @@ const StyledSidebarBottom = styled.div`
 
 const StyledSidebarContent = styled.div`
   position: absolute;
-  left: 4rem;
+  left: 4em;
   right: 0;
   top: 0;
   height: 100%;

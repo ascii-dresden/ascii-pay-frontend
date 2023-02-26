@@ -22,8 +22,8 @@ const StyledClockContainer = styled.div`
   position: relative;
 
   .react-clock {
-    width: 12rem !important;
-    height: 12rem !important;
+    width: 12em !important;
+    height: 12em !important;
   }
 
   .react-clock__face {
@@ -48,13 +48,13 @@ const StyledClockContainer = styled.div`
 `;
 
 const StyledDateDimeString = styled.div`
-  padding-top: 2rem;
+  padding-top: 2em;
   text-align: center;
   color: #ffffff;
-  font-size: 1.2rem;
+  font-size: 1.2em;
 
   span:first-of-type {
-    padding-right: 0.6rem;
+    padding-right: 0.6em;
   }
 `;
 

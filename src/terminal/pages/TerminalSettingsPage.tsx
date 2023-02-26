@@ -9,7 +9,7 @@ import logo from "../../assets/ascii-circle-icon.svg";
 const StyledSettings = styled.div`
   & > span {
     display: block;
-    padding: 1.2rem 1rem 0.8rem;
+    padding: 1.2em 1em 0.8em;
     font-weight: bold;
   }
 `;
@@ -17,14 +17,14 @@ const StyledSettings = styled.div`
 const StyledSettingsColumns = styled.div`
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-gap: 0.4rem;
+  grid-gap: 0.4em;
 
   & > div {
     position: relative;
 
     & > div {
       position: relative;
-      padding: 0 1rem;
+      padding: 0 1em;
 
       div {
         max-width: 100%;
@@ -32,14 +32,14 @@ const StyledSettingsColumns = styled.div`
 
       & > span {
         display: block;
-        padding: 0.5rem 0 0.2rem;
+        padding: 0.5em 0 0.2em;
       }
 
       .form {
         padding: 0;
 
         button {
-          margin-bottom: 0.4rem;
+          margin-bottom: 0.4em;
         }
       }
     }
@@ -50,10 +50,10 @@ const StyledSettingsTheme = styled.div`
   display: flex;
 
   div {
-    width: 10rem;
-    height: 6rem;
-    border: solid 0.2rem var(--secondary-background);
-    margin: 0.2rem;
+    width: 10em;
+    height: 6em;
+    border: solid 0.2em var(--secondary-background);
+    margin: 0.2em;
     position: relative;
 
     &::before {
@@ -62,7 +62,7 @@ const StyledSettingsTheme = styled.div`
       position: absolute;
       left: 0;
       top: 0;
-      width: 2rem;
+      width: 2em;
       height: 100%;
     }
 
@@ -70,17 +70,17 @@ const StyledSettingsTheme = styled.div`
       content: attr(data-name);
       display: block;
       position: absolute;
-      left: 2.4rem;
-      bottom: 0.4rem;
-      font-size: 0.8rem;
+      left: 2.4em;
+      bottom: 0.4em;
+      font-size: 0.8em;
     }
 
     img {
       position: absolute;
-      top: 0.5rem;
-      left: 0.5rem;
-      width: 1rem;
-      height: 1rem;
+      top: 0.5em;
+      left: 0.5em;
+      width: 1em;
+      height: 1em;
     }
   }
 
@@ -116,11 +116,11 @@ const StyledSettingsHighlightColor = styled.div`
   display: flex;
 
   div {
-    width: 2rem;
-    height: 2rem;
-    border: solid 0.2rem var(--border-color);
+    width: 2em;
+    height: 2em;
+    border: solid 0.2em var(--border-color);
     border-radius: 100%;
-    margin: 0.2rem;
+    margin: 0.2em;
   }
 
   .active {

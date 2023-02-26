@@ -25,10 +25,10 @@ const StyledStartPageHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  font-size: 1.4rem;
-  line-height: 4rem;
-  padding: 0.4rem 1rem;
-  padding-right: 1.2rem;
+  font-size: 1.4em;
+  line-height: 4em;
+  padding: 0.4em 1em;
+  padding-right: 1.2em;
 
   & > span {
     display: block;
@@ -39,16 +39,16 @@ const StyledStartPageMenu = styled.div`
   position: absolute;
   left: 0;
   width: 100%;
-  top: 4rem;
+  top: 4em;
   bottom: 0;
   display: grid;
   grid-template:
     "1 2"
     "3 4";
-  grid-gap: 0.6rem;
+  grid-gap: 0.6em;
   grid-auto-columns: minmax(0, 1fr);
   grid-auto-flow: column;
-  padding: 0.4rem;
+  padding: 0.4em;
 `;
 
 const StyledStartPageEntry = styled.div`
@@ -61,14 +61,14 @@ const StyledStartPageEntry = styled.div`
   justify-content: center;
 
   svg {
-    width: 4rem;
-    height: 4rem;
+    width: 4em;
+    height: 4em;
     opacity: 0.87;
   }
 
   span {
-    padding-top: 1rem;
-    font-size: 1.2rem;
+    padding-top: 1em;
+    font-size: 1.2em;
   }
 
   &:hover {

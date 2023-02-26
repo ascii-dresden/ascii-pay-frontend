@@ -13,6 +13,7 @@ import i18n_german from "./locales/de/translation.json";
 import i18n_english from "./locales/en/translation.json";
 import { createInstance } from "i18next";
 import { ScreensaverClock } from "./components/ScreensaverClock";
+import { TerminalRegisterPage } from "./pages/TerminalRegisterPage";
 
 const StyledTerminalApp = styled.div`
   position: absolute;
@@ -54,6 +55,14 @@ const StyledTerminalApp = styled.div`
   --cup-color: #b5cbed;
 
   --active-tab-background: var(--secondary-background);
+
+  &.coin-box-body {
+    --active-tab-background: #003b6f;
+  }
+
+  &.note-box-body {
+    --active-tab-background: #424242;
+  }
 
   &.dark {
     --border-color: #555555;
@@ -140,15 +149,15 @@ const StyledTerminalApp = styled.div`
   }
 
   .form {
-    padding: 1rem;
+    padding: 1em;
 
     & > div {
-      padding-bottom: 1rem;
+      padding-bottom: 1em;
     }
 
     label {
       display: block;
-      padding-bottom: 0.2rem;
+      padding-bottom: 0.2em;
     }
 
     input,
@@ -157,7 +166,7 @@ const StyledTerminalApp = styled.div`
       border: solid 1px var(--border-color);
       border-radius: 0;
       color: var(--primary-text-color);
-      padding: 0.4rem 0.8rem;
+      padding: 0.4em 0.8em;
       font-size: 0.9em;
       background-color: var(--primary-background);
 
@@ -194,7 +203,7 @@ const StyledTerminalApp = styled.div`
       border: solid 1px var(--border-color);
       border-radius: 0;
       color: var(--primary-text-color);
-      padding: 0.4rem 0.8rem;
+      padding: 0.4em 0.8em;
       font-size: 0.9em;
       background-color: var(--tertiary-hover-background);
 
@@ -235,7 +244,7 @@ const StyledTerminalApp = styled.div`
     }
 
     & > :not(:last-child) {
-      margin-right: 0.4rem;
+      margin-right: 0.4em;
     }
   }
 `;
@@ -255,6 +264,7 @@ export const TerminalApp = (props: {
   setSettings: (settings: TerminalSettings) => void;
 }) => {
   const params = useParams();
+  const [appClass, setAppClass] = React.useState<string | null>(null);
 
   const theme = React.useMemo(
     () =>
@@ -271,13 +281,18 @@ export const TerminalApp = (props: {
     [props.settings]
   );
 
+  const fontSize = React.useMemo(() => {
+    const scale = Math.min(props.width / 800, props.height / 480);
+    return Math.round(16 * scale) + "px";
+  }, [props.width, props.height]);
+
   let content;
   switch (params.page) {
     case "payment":
       content = <span>payment</span>;
       break;
     case "register":
-      content = <span>register</span>;
+      content = <TerminalRegisterPage setAppClass={setAppClass} />;
       break;
     case "accounts":
       content = <span>accounts</span>;
@@ -323,9 +338,10 @@ export const TerminalApp = (props: {
       <I18nextProvider i18n={i18nConfig}>
         <StyledTerminalApp
           id="terminal-app"
-          className={clsx(props.settings.highlightColor, {
+          className={clsx(props.settings.highlightColor, appClass, {
             dark: props.settings.theme === "dark",
           })}
+          style={{ fontSize }}
         >
           <ScreensaverClock />
           {content}
