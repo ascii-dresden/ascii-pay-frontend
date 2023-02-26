@@ -142,9 +142,9 @@ export const ProductListPage = () => {
             <TableRow>
               <TableCell width={72}></TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Bonus</TableCell>
-              <TableCell></TableCell>
+              <TableCell width={250}>Price</TableCell>
+              <TableCell width={250}>Bonus</TableCell>
+              <TableCell width={236}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
