@@ -12,6 +12,7 @@ import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n_german from "./locales/de/translation.json";
 import i18n_english from "./locales/en/translation.json";
 import { createInstance } from "i18next";
+import { ScreensaverClock } from "./components/ScreensaverClock";
 
 const StyledTerminalApp = styled.div`
   position: absolute;
@@ -321,10 +322,12 @@ export const TerminalApp = (props: {
     <ThemeProvider theme={theme}>
       <I18nextProvider i18n={i18nConfig}>
         <StyledTerminalApp
+          id="terminal-app"
           className={clsx(props.settings.highlightColor, {
             dark: props.settings.theme === "dark",
           })}
         >
+          <ScreensaverClock />
           {content}
         </StyledTerminalApp>
       </I18nextProvider>

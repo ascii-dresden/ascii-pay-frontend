@@ -6,7 +6,7 @@ type PaymentState = {
   screensaverTimeout: number;
 };
 const initialState: PaymentState = {
-  screensaver: true,
+  screensaver: false,
   screensaverTimeout: 0,
 };
 export const terminalSlice = createSlice({

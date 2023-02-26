@@ -282,7 +282,7 @@ export const TerminalSettingsPage = (props: {
                 </button>
                 <button
                   onClick={() =>
-                    document.getElementById("root")?.requestFullscreen()
+                    document.getElementById("terminal-app")?.requestFullscreen()
                   }
                 >
                   {t("settingsPage.fullscreen")}
