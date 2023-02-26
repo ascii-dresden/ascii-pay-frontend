@@ -3,12 +3,13 @@ import { useEffect } from "react";
 import Autocomplete, {
   AutocompleteCloseReason,
 } from "@mui/material/Autocomplete";
-import { ProductDto } from "../../redux/api/contracts";
-import { Box, IconButton, Popover, TextField, Tooltip } from "@mui/material";
+import { AccountDto } from "../../redux/api/contracts";
+import { Box, Button, IconButton, Popover, TextField } from "@mui/material";
 import { Coffee } from "@mui/icons-material";
-import { useGetAllProductsQuery } from "../../redux/api/productApi";
+import { useGetAllAccountsQuery } from "../../redux/api/accountApi";
 import { toast } from "react-toastify";
-import { CoinAmountView } from "./CoinAmountView";
+import { CoinAmountView } from "../transaction/CoinAmountView";
+import { RoleChip } from "./RoleChip";
 
 const PopperComponent = (props: {
   anchorEl?: any;
@@ -19,8 +20,9 @@ const PopperComponent = (props: {
   return <div {...other} />;
 };
 
-export const SelectProductPopup = (props: {
-  selectProduct: (product: ProductDto) => void;
+export const SelectAccountPopup = (props: {
+  label: string;
+  selectAccount: (account: AccountDto) => void;
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -28,18 +30,18 @@ export const SelectProductPopup = (props: {
     isLoading,
     isError,
     error,
-    data: products,
-  } = useGetAllProductsQuery();
+    data: accounts,
+  } = useGetAllAccountsQuery();
 
   useEffect(() => {
     if (isError) {
-      toast.error("Could not load products!");
+      toast.error("Could not load accounts!");
       console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  if (isLoading || products === undefined) {
+  if (isLoading || accounts === undefined) {
     return (
       <IconButton sx={{ height: "40px" }} disabled={true}>
         <Coffee />
@@ -47,8 +49,8 @@ export const SelectProductPopup = (props: {
     );
   }
 
-  const sortedProducts = [...products];
-  sortedProducts.sort((a, b) => -b.category.localeCompare(a.category));
+  const sortedAccounts = [...accounts];
+  sortedAccounts.sort((a, b) => a.name.localeCompare(b.name));
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -61,35 +63,33 @@ export const SelectProductPopup = (props: {
     setAnchorEl(null);
   };
 
-  const handleSelect = (product: ProductDto | null) => {
-    if (product) {
-      props.selectProduct(product);
+  const handleSelect = (account: AccountDto | null) => {
+    if (account) {
+      props.selectAccount(account);
     }
     handleClose();
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? "select-product-dialog" : undefined;
+  const id = open ? "select-account-dialog" : undefined;
 
   return (
     <>
-      <Tooltip title="Add product to transaction">
-        <IconButton sx={{ height: "40px" }} onClick={handleClick}>
-          <Coffee />
-        </IconButton>
-      </Tooltip>
+      <Button onClick={handleClick} variant="outlined" size="large">
+        {props.label}
+      </Button>
       <Popover
         id={id}
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "center",
+          vertical: "bottom",
           horizontal: "left",
         }}
         transformOrigin={{
-          vertical: "center",
-          horizontal: "right",
+          vertical: "top",
+          horizontal: "left",
         }}
       >
         <Box sx={{ mt: 2, mb: 1, mx: 1 }}>
@@ -106,19 +106,26 @@ export const SelectProductPopup = (props: {
               }
             }}
             value={null}
-            onChange={(event: any, newValue: ProductDto | null) => {
+            onChange={(event: any, newValue: AccountDto | null) => {
               handleSelect(newValue);
             }}
             PopperComponent={PopperComponent}
-            noOptionsText="No products"
-            options={sortedProducts}
+            noOptionsText="No accounts"
+            options={sortedAccounts}
             getOptionLabel={(option) => option?.name ?? "---"}
-            groupBy={(option) => option.category}
             renderOption={(props, option) => (
               <li {...props} style={{ display: "block" }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>{option.name}</span>
-                  <CoinAmountView coins={option.price} />
+                  <div>
+                    <span style={{ paddingRight: "0.5rem" }}>
+                      {option.name}
+                    </span>
+                    <RoleChip role={option.role} />
+                  </div>
+                  <CoinAmountView
+                    coins={option.balance}
+                    negativeIsError={true}
+                  />
                 </Box>
               </li>
             )}
@@ -126,15 +133,15 @@ export const SelectProductPopup = (props: {
               <TextField
                 ref={params.InputProps.ref}
                 inputProps={params.inputProps}
-                label="Select payment product"
+                label="Select account"
                 autoFocus={true}
                 sx={{
-                  width: "24rem",
+                  width: "30rem",
                 }}
               />
             )}
             sx={{
-              width: "24rem",
+              width: "30rem",
             }}
           />
         </Box>

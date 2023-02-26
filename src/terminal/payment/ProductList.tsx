@@ -28,21 +28,21 @@ const StyledProductList = styled.div`
 const StyledProductListTabs = styled.div`
   position: absolute;
   bottom: 0;
-  height: 3.2rem;
+  height: 3.2em;
   left: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  font-size: 1.1rem;
+  font-size: 1.1em;
   background-color: var(--secondary-hover-background);
   border-top: solid 1px var(--border-color);
 
   & > div {
     overflow: hidden;
     flex: 1 1 0px;
-    gap: 0.3rem;
-    font-size: 0.7rem;
+    gap: 0.3em;
+    font-size: 0.7em;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -61,12 +61,12 @@ const StyledProductListTabs = styled.div`
     }
 
     & > svg {
-      font-size: 1.2rem;
-      height: 1.2rem;
+      font-size: 1.2em;
+      height: 1.2em;
       display: block;
 
       &.small {
-        font-size: 0.8rem;
+        font-size: 0.8em;
       }
     }
   }
@@ -77,17 +77,17 @@ const StyledProductListContent = styled.div`
   left: 0;
   width: 100%;
   top: 0;
-  bottom: 3.2rem;
+  bottom: 3.2em;
 
-  padding: 0.6rem;
+  padding: 0.6em;
   overflow-y: scroll;
   overflow-x: hidden;
 
   &.list-layout {
     .product-entry {
       position: relative;
-      height: 3rem;
-      margin-bottom: 0.5rem;
+      height: 3em;
+      margin-bottom: 0.5em;
       overflow: hidden;
     }
 
@@ -95,8 +95,8 @@ const StyledProductListContent = styled.div`
       position: absolute;
       top: 0;
       left: 0;
-      width: 2.9rem;
-      height: 2.9rem;
+      width: 2.9em;
+      height: 2.9em;
 
       &.bottle,
       &.coffee,
@@ -150,8 +150,8 @@ const StyledProductListContent = styled.div`
           svg {
             position: absolute;
             z-index: 2;
-            width: 2rem;
-            height: 2rem;
+            width: 2em;
+            height: 2em;
           }
         }
       }
@@ -161,8 +161,8 @@ const StyledProductListContent = styled.div`
       position: absolute;
       top: 0;
       bottom: 0;
-      left: 3.6rem;
-      right: 3.6rem;
+      left: 3.6em;
+      right: 3.6em;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
@@ -179,10 +179,10 @@ const StyledProductListContent = styled.div`
     }
 
     .product-entry-stamps {
-      font-size: 0.8rem;
+      font-size: 0.8em;
       display: flex;
-      line-height: 1.2rem;
-      gap: 0.5rem;
+      line-height: 1.2em;
+      gap: 0.5em;
 
       &:empty {
         display: none;
@@ -198,7 +198,7 @@ const StyledProductListContent = styled.div`
       position: absolute;
       top: 0;
       bottom: 0;
-      right: 0.6rem;
+      right: 0.6em;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -207,7 +207,7 @@ const StyledProductListContent = styled.div`
 
     .product-entry-name {
       display: flex;
-      gap: 0.2rem;
+      gap: 0.2em;
       align-items: center;
 
       span {
@@ -220,18 +220,18 @@ const StyledProductListContent = styled.div`
     }
 
     .product-entry-vegan {
-      font-size: 0.6rem;
+      font-size: 0.6em;
       font-weight: bold;
       color: var(--success-color);
-      margin-top: -0.4rem;
+      margin-top: -0.4em;
       letter-spacing: -1.5px;
     }
 
     .product-entry-nickname {
       font-style: italic;
       color: var(--secondary-text-color);
-      padding: 0 0.2rem;
-      font-size: 0.8rem;
+      padding: 0 0.2em;
+      font-size: 0.8em;
 
       &::before {
         content: '"';
@@ -246,7 +246,7 @@ const StyledProductListContent = styled.div`
   &.grid-layout {
     display: grid;
     grid-template-columns: auto auto auto auto auto;
-    gap: 0.5rem;
+    gap: 0.5em;
     align-content: start;
 
     .product-entry {
@@ -318,8 +318,8 @@ const StyledProductListContent = styled.div`
           svg {
             position: absolute;
             z-index: 2;
-            width: 2rem;
-            height: 2rem;
+            width: 2em;
+            height: 2em;
           }
         }
       }
@@ -339,9 +339,9 @@ const StyledProductListContent = styled.div`
         display: block;
         z-index: 11;
         position: relative;
-        padding: 0.2rem 0.4rem;
-        margin-bottom: -0.2rem;
-        font-size: 0.8rem;
+        padding: 0.2em 0.4em;
+        margin-bottom: -0.2em;
+        font-size: 0.8em;
       }
 
       &::before {

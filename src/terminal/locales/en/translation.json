@@ -2,7 +2,7 @@
   "general": {
     "enableScreensaver": "Screensaver",
     "terminalConnected": "NFC terminal connected!",
-    "terminalDisconnected": "NFCT terminal disconnected!",
+    "terminalDisconnected": "NFC terminal disconnected!",
     "cancel": "Cancel",
     "or": "or"
   },
@@ -34,13 +34,10 @@
     "languageEnglish": "English"
   },
   "notification": {
-    "onFoundUnknownBarcode": "Found unknown barcode",
-    "onFoundAccountNumber": "Found account number",
-    "onFoundUnknownNfcCard": "Found unknown NFC token",
-    "onFoundProductId": "Product scanned",
-    "onFoundAccountAccessToken": "Account scanned",
-    "onNfcCardRemoved": "NFC token was removed",
-    "onStatusInformation": "Receive status information"
+    "onFoundBarcode": "Found barcode",
+    "onFoundSessionToken": "Found session token",
+    "onFoundNfcCard": "Found NFC card",
+    "onNfcCardRemoved": "NFC token was removed"
   },
   "register": {
     "cashBook": "Cash book",

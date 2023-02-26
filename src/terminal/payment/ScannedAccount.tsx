@@ -5,11 +5,12 @@ import { Cancel, Refresh } from "@mui/icons-material";
 import styled from "@emotion/styled";
 import { CoinAmountView } from "../../components/transaction/CoinAmountView";
 import { removeAccount } from "../../redux/features/paymentSlice";
+import { AsciiPayAuthenticationClient } from "../client/AsciiPayAuthenticationClient";
 
 const StyledScannedAccount = styled.div`
   position: relative;
-  height: 4.4rem;
-  line-height: 4.4rem;
+  height: 4.4em;
+  line-height: 4.4em;
   text-align: center;
 
   background-color: var(--secondary-hover-background);
@@ -17,31 +18,31 @@ const StyledScannedAccount = styled.div`
   border-left: solid 1px var(--border-color);
 `;
 const StyledScannedAccountName = styled.div`
-  line-height: 1.4rem;
+  line-height: 1.4em;
   text-align: left;
-  padding: 0.8rem 1rem 0.4rem;
+  padding: 0.8em 1em 0.4em;
   font-weight: bold;
 `;
 const StyledScannedAccountTags = styled.div`
   display: flex;
-  line-height: 1rem;
-  padding-left: 1rem;
+  line-height: 1em;
+  padding-left: 1em;
 
   div {
     display: flex;
     justify-content: center;
-    margin-left: 1rem;
+    margin-left: 1em;
   }
 `;
 const StyledScannedAccountRemove = styled.div`
   svg {
     position: absolute;
     top: 50%;
-    margin-top: -0.6rem;
-    right: 1rem;
+    margin-top: -0.6em;
+    right: 1em;
 
-    width: 1.2rem;
-    height: 1.2rem;
+    width: 1.2em;
+    height: 1.2em;
   }
 `;
 const StyledScannedAccountEmpty = styled.div`
@@ -52,18 +53,20 @@ const StyledScannedAccountEmpty = styled.div`
 
   & > span {
     display: block;
-    padding-left: 2rem;
+    padding-left: 2em;
   }
 `;
 const StyledScannedAccountRefresh = styled.div`
-  width: 4.5rem;
+  width: 4.5em;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5rem;
+  font-size: 1.5em;
 `;
 
-export const ScannedAccount = () => {
+export const ScannedAccount = (props: {
+  authClient: AsciiPayAuthenticationClient;
+}) => {
   const { t } = useTranslation();
   const scannedAccount = useAppSelector(
     (state) => state.paymentState.scannedAccount
@@ -75,7 +78,9 @@ export const ScannedAccount = () => {
       <StyledScannedAccount>
         <StyledScannedAccountEmpty>
           <span>{t("payment.noAccount")}</span>
-          <StyledScannedAccountRefresh>
+          <StyledScannedAccountRefresh
+            onClick={() => props.authClient.requestNfcRefresh()}
+          >
             <Refresh />
           </StyledScannedAccountRefresh>
         </StyledScannedAccountEmpty>

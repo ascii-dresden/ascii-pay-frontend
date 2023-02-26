@@ -34,13 +34,10 @@
     "languageEnglish": "Englisch"
   },
   "notification": {
-    "onFoundUnknownBarcode": "Unbekannter Barcode gefunden",
-    "onFoundAccountNumber": "Unbekannte Kontonummer gefunden",
-    "onFoundUnknownNfcCard": "Unbekanntes NFC-Token gefunden",
-    "onFoundProductId": "Produkt gefunden",
-    "onFoundAccountAccessToken": "Konto gefunden",
-    "onNfcCardRemoved": "NFC-Token entfernt",
-    "onStatusInformation": "Statusinfomationen"
+    "onFoundBarcode": "Barcode gefunden",
+    "onFoundSessionToken": "Account-Token gefunden",
+    "onFoundNfcCard": "NFC-Karte gefunden",
+    "onNfcCardRemoved": "NFC-Karte entfernt"
   },
   "register": {
     "cashBook": "Kassenbuch",

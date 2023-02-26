@@ -12,6 +12,12 @@ import { setScreensaver } from "../../redux/features/terminalSlice";
 import styled from "@emotion/styled";
 import { useTranslation } from "react-i18next";
 import { ClockIcon } from "../components/ClockIcon";
+import { WebSocketMessageHandler } from "../client/websocket";
+import {
+  AsciiPayAuthenticationClient,
+  TerminalDeviceContext,
+} from "../client/AsciiPayAuthenticationClient";
+import { receiveAccountSessionToken } from "../../redux/features/paymentSlice";
 
 const StyledStartPage = styled.div`
   position: absolute;
@@ -121,12 +127,31 @@ const useDate = (t: (key: string) => string) => {
   };
 };
 
-export const TerminalStartPage = () => {
+export const TerminalStartPage = (props: {
+  authClient: AsciiPayAuthenticationClient;
+  deviceContext: TerminalDeviceContext;
+}) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const { date, wish } = useDate(t);
+
+  const handler: WebSocketMessageHandler = {
+    onFoundSessionToken(token: string) {
+      props.deviceContext.wakeUp();
+      dispatch(setScreensaver(false));
+      dispatch(receiveAccountSessionToken(token));
+      navigate("/terminal/payment");
+      return true;
+    },
+  };
+
+  React.useEffect(() => {
+    props.authClient.addEventHandler(handler);
+    return () => props.authClient.removeEventHandler(handler);
+    // eslint-disable-next-line
+  }, [props.authClient]);
 
   const sidebarActions: SidebarAction[] = [
     {

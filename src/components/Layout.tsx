@@ -17,13 +17,7 @@ import { useAppSelector } from "../redux/store";
 import { useLogoutUserMutation } from "../redux/api/authApi";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
-import {
-  AccountCircle,
-  Coffee,
-  Home,
-  Menu,
-  Terminal,
-} from "@mui/icons-material";
+import { AccountCircle, Coffee, Home, Menu, Store } from "@mui/icons-material";
 import logo from "../assets/ascii-pay-logo-wide.svg";
 
 const drawerWidth = 240;
@@ -98,7 +92,7 @@ export const Layout = () => {
           <ListItem disablePadding onClick={() => navigate("/terminal")}>
             <ListItemButton>
               <ListItemIcon>
-                <Terminal />
+                <Store />
               </ListItemIcon>
               <ListItemText primary="Terminal" />
             </ListItemButton>

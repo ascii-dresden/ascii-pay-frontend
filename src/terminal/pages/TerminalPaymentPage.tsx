@@ -8,6 +8,8 @@ import { Apps, CalculateOutlined, ManageSearch } from "@mui/icons-material";
 import { ClockIcon } from "../components/ClockIcon";
 import { setScreensaver } from "../../redux/features/terminalSlice";
 import {
+  receiveAccountSessionToken,
+  removeAccount,
   setKeypadValue,
   submitKeypadValue,
 } from "../../redux/features/paymentSlice";
@@ -18,6 +20,11 @@ import { Money } from "../components/Money";
 import { Keypad } from "../payment/Keypad";
 import styled from "@emotion/styled";
 import { ProductList } from "../payment/ProductList";
+import { WebSocketMessageHandler } from "../client/websocket";
+import {
+  AsciiPayAuthenticationClient,
+  TerminalDeviceContext,
+} from "../client/AsciiPayAuthenticationClient";
 
 const StyledPaymentPageLeft = styled.div`
   position: absolute;
@@ -36,14 +43,14 @@ const StyledPaymentPageRight = styled.div`
 const StyledPaymentPageSummary = styled.div`
   position: absolute;
   bottom: 0;
-  height: 3.2rem;
-  padding: 0 1rem 0.2rem;
+  height: 3.2em;
+  padding: 0 1em 0.2em;
   left: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1.1em;
   background-color: var(--secondary-hover-background);
   border-top: solid 1px var(--border-color);
   border-left: solid 1px var(--border-color);
@@ -69,7 +76,10 @@ enum Page {
   PRODUCTS,
 }
 
-export const TerminalPaymentPage = () => {
+export const TerminalPaymentPage = (props: {
+  authClient: AsciiPayAuthenticationClient;
+  deviceContext: TerminalDeviceContext;
+}) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const handleGoBack = () => navigate("/terminal");
@@ -82,6 +92,27 @@ export const TerminalPaymentPage = () => {
     (state) => state.paymentState.storedPaymentItems
   );
   const dispatch = useAppDispatch();
+
+  const handler: WebSocketMessageHandler = {
+    onFoundSessionToken(token: string) {
+      console.log(token);
+      props.deviceContext.wakeUp();
+      dispatch(setScreensaver(false));
+      dispatch(receiveAccountSessionToken(token));
+      navigate("/terminal/payment");
+      return true;
+    },
+    onNfcCardRemoved() {
+      dispatch(removeAccount());
+      return true;
+    },
+  };
+
+  React.useEffect(() => {
+    props.authClient.addEventHandler(handler);
+    return () => props.authClient.removeEventHandler(handler);
+    // eslint-disable-next-line
+  }, [props.authClient]);
 
   const [activePage, setActivePage] = useState(Page.QUICK);
   const quickActions: SidebarAction[] = [
@@ -153,7 +184,7 @@ export const TerminalPaymentPage = () => {
     <SidebarLayout defaultAction={handleGoBack} content={quickActions}>
       <StyledPaymentPageLeft>{content}</StyledPaymentPageLeft>
       <StyledPaymentPageRight>
-        <ScannedAccount />
+        <ScannedAccount authClient={props.authClient} />
         <Basket />
         <StyledPaymentPageSummary>
           <Money value={paymentTotal.Cent ?? 0} />
