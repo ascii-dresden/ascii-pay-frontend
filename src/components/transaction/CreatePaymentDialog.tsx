@@ -31,66 +31,11 @@ import { CoinAmountView } from "./CoinAmountView";
 import { SelectProductPopup } from "./SelectProductPopup";
 import {
   addCoinAmount,
-  equalCoinAmount,
+  getPossiblePrices,
   isCoinAmountEmpty,
+  selectNextCoinAmount,
   subCoinAmount,
 } from "./transactionUtils";
-
-function getPossiblePrices(product: ProductDto): CoinAmountDto[] {
-  let prices: CoinAmountDto[] = [];
-
-  if (product.price.Cent && product.price.Cent !== 0) {
-    prices.push({
-      Cent: product.price.Cent,
-      BottleStamp: product.bonus.BottleStamp
-        ? -product.bonus.BottleStamp
-        : undefined,
-      CoffeeStamp: product.bonus.CoffeeStamp
-        ? -product.bonus.CoffeeStamp
-        : undefined,
-    });
-  }
-  if (product.price.BottleStamp && product.price.BottleStamp !== 0) {
-    prices.push({
-      Cent: product.bonus.Cent ? -product.bonus.Cent : undefined,
-      BottleStamp: product.price.BottleStamp,
-      CoffeeStamp: product.bonus.CoffeeStamp
-        ? -product.bonus.CoffeeStamp
-        : undefined,
-    });
-  }
-  if (product.price.CoffeeStamp && product.price.CoffeeStamp !== 0) {
-    prices.push({
-      Cent: product.bonus.Cent ? -product.bonus.Cent : undefined,
-      BottleStamp: product.bonus.BottleStamp
-        ? -product.bonus.BottleStamp
-        : undefined,
-      CoffeeStamp: product.price.CoffeeStamp,
-    });
-  }
-
-  if (prices.length === 0) {
-    prices.push({});
-  }
-
-  return prices;
-}
-
-function selectCoinAmount(
-  product: ProductDto,
-  current: CoinAmountDto
-): CoinAmountDto {
-  let prices = getPossiblePrices(product);
-
-  for (let i = 0; i < prices.length; i++) {
-    if (equalCoinAmount(current, prices[i])) {
-      let next = (i + 1) % prices.length;
-      return prices[next];
-    }
-  }
-
-  return prices[0];
-}
 
 export const CreatePaymentDialog = (props: {
   account: AccountDto;
@@ -138,7 +83,7 @@ export const CreatePaymentDialog = (props: {
         ...items,
         {
           product: product,
-          effective_price: selectCoinAmount(product, {}),
+          effective_price: selectNextCoinAmount(product, {}),
         },
       ];
     });
@@ -157,7 +102,7 @@ export const CreatePaymentDialog = (props: {
       let cloned = [...items];
       cloned[index] = {
         product: current.product,
-        effective_price: selectCoinAmount(
+        effective_price: selectNextCoinAmount(
           current.product,
           current.effective_price
         ),
