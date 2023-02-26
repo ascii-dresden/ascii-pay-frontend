@@ -5,13 +5,13 @@ import React from "react";
 import {
   LocalAtm,
   People,
-  Schedule,
   Settings,
   ShoppingCartOutlined,
 } from "@mui/icons-material";
 import { setScreensaver } from "../../redux/features/terminalSlice";
 import styled from "@emotion/styled";
 import { useTranslation } from "react-i18next";
+import { ClockIcon } from "../components/ClockIcon";
 
 const StyledStartPage = styled.div`
   position: absolute;
@@ -27,8 +27,7 @@ const StyledStartPageHeader = styled.div`
   justify-content: space-between;
   font-size: 1.4em;
   line-height: 4em;
-  padding: 0.4em 1em;
-  padding-right: 1.2em;
+  padding: 0.4em 1.2em 0.4em 1em;
 
   & > span {
     display: block;
@@ -132,7 +131,7 @@ export const TerminalStartPage = () => {
   const sidebarActions: SidebarAction[] = [
     {
       title: t("general.enableScreensaver"),
-      element: <Schedule />,
+      element: <ClockIcon />,
       action: (event) => {
         event.stopPropagation();
         dispatch(setScreensaver(true));

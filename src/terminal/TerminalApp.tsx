@@ -14,6 +14,7 @@ import i18n_english from "./locales/en/translation.json";
 import { createInstance } from "i18next";
 import { ScreensaverClock } from "./components/ScreensaverClock";
 import { TerminalRegisterPage } from "./pages/TerminalRegisterPage";
+import { TerminalPaymentPage } from "./pages/TerminalPaymentPage";
 
 const StyledTerminalApp = styled.div`
   position: absolute;
@@ -289,7 +290,7 @@ export const TerminalApp = (props: {
   let content;
   switch (params.page) {
     case "payment":
-      content = <span>payment</span>;
+      content = <TerminalPaymentPage />;
       break;
     case "register":
       content = <TerminalRegisterPage setAppClass={setAppClass} />;

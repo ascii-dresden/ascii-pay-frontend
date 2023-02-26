@@ -1,5 +1,12 @@
 import { CoinAmountDto, TransactionDto } from "../../redux/api/contracts";
 
+export type PseudoProductDto = {
+  id?: number;
+  name: string;
+  price: CoinAmountDto;
+  bonus: CoinAmountDto;
+};
+
 export function getTransactionSum(transaction: TransactionDto): CoinAmountDto {
   let centAmount = 0;
   let coffeeStampAmount = 0;
@@ -75,4 +82,60 @@ export function isCoinAmountNegative(coins: CoinAmountDto): boolean {
     return true;
   }
   return !!(coins.CoffeeStamp && coins.CoffeeStamp < 0);
+}
+
+export function getPossiblePrices(product: PseudoProductDto): CoinAmountDto[] {
+  let prices: CoinAmountDto[] = [];
+
+  if (product.price.Cent && product.price.Cent !== 0) {
+    prices.push({
+      Cent: product.price.Cent,
+      BottleStamp: product.bonus.BottleStamp
+        ? -product.bonus.BottleStamp
+        : undefined,
+      CoffeeStamp: product.bonus.CoffeeStamp
+        ? -product.bonus.CoffeeStamp
+        : undefined,
+    });
+  }
+  if (product.price.BottleStamp && product.price.BottleStamp !== 0) {
+    prices.push({
+      Cent: product.bonus.Cent ? -product.bonus.Cent : undefined,
+      BottleStamp: product.price.BottleStamp,
+      CoffeeStamp: product.bonus.CoffeeStamp
+        ? -product.bonus.CoffeeStamp
+        : undefined,
+    });
+  }
+  if (product.price.CoffeeStamp && product.price.CoffeeStamp !== 0) {
+    prices.push({
+      Cent: product.bonus.Cent ? -product.bonus.Cent : undefined,
+      BottleStamp: product.bonus.BottleStamp
+        ? -product.bonus.BottleStamp
+        : undefined,
+      CoffeeStamp: product.price.CoffeeStamp,
+    });
+  }
+
+  if (prices.length === 0) {
+    prices.push({});
+  }
+
+  return prices;
+}
+
+export function selectNextCoinAmount(
+  product: PseudoProductDto,
+  current: CoinAmountDto
+): CoinAmountDto {
+  let prices = getPossiblePrices(product);
+
+  for (let i = 0; i < prices.length; i++) {
+    if (equalCoinAmount(current, prices[i])) {
+      let next = (i + 1) % prices.length;
+      return prices[next];
+    }
+  }
+
+  return prices[0];
 }
