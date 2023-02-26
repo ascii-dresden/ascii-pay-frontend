@@ -63,7 +63,6 @@ export class SimulationClient implements AsciiPayAuthenticationClient {
     if (this.state.session !== state.session) {
       this.state.session = state.session;
 
-      console.log("Update state", state);
       if (this.state.session === null) {
         this.dispatch({
           type: "NfcCardRemoved",

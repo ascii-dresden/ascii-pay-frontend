@@ -95,7 +95,6 @@ export const TerminalPaymentPage = (props: {
 
   const handler: WebSocketMessageHandler = {
     onFoundSessionToken(token: string) {
-      console.log(token);
       props.deviceContext.wakeUp();
       dispatch(setScreensaver(false));
       dispatch(receiveAccountSessionToken(token));

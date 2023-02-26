@@ -191,8 +191,28 @@ export const TerminalPage = () => {
 
   return (
     <>
+      <Container maxWidth="lg">{header}</Container>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Paper
+          elevation={4}
+          sx={{
+            width: `${width}px`,
+            height: `${height}px`,
+            position: "relative",
+          }}
+        >
+          <TerminalApp
+            page={terminalPage}
+            width={parseInt(width)}
+            height={parseInt(height)}
+            settings={settings}
+            setSettings={setSettings}
+            authClient={authClient}
+            deviceContext={deviceContext}
+          />
+        </Paper>
+      </Box>
       <Container maxWidth="lg">
-        {header}
         <Paper elevation={4} sx={{ m: 4, px: 1, py: 2 }}>
           <Box sx={{ display: "flex" }}>
             <TextField
@@ -228,26 +248,6 @@ export const TerminalPage = () => {
           {connectionBox}
         </Paper>
       </Container>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
-        <Paper
-          elevation={4}
-          sx={{
-            width: `${width}px`,
-            height: `${height}px`,
-            position: "relative",
-          }}
-        >
-          <TerminalApp
-            page={terminalPage}
-            width={parseInt(width)}
-            height={parseInt(height)}
-            settings={settings}
-            setSettings={setSettings}
-            authClient={authClient}
-            deviceContext={deviceContext}
-          />
-        </Paper>
-      </Box>
     </>
   );
 };

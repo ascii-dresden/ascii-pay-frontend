@@ -363,7 +363,7 @@ export const TerminalApp = React.memo(
       },
     });
 
-    i18nConfig.use(initReactI18next).init();
+    i18nConfig.use(initReactI18next).init().catch(console.error);
 
     return (
       <ThemeProvider theme={theme}>

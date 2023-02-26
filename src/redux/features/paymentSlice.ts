@@ -46,7 +46,6 @@ export const receiveAccountSessionToken = createAsyncThunk<
   },
   string
 >("payment/receiveAccountSessionToken", async (query) => {
-  console.log(query);
   try {
     let response = await fetch(`${BASE_URL}/auth/account`, {
       method: "GET",
