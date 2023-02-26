@@ -632,6 +632,18 @@
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
 
+"@types/lodash.memoize@^4.1.7":
+  version "4.1.7"
+  resolved "https://registry.yarnpkg.com/@types/lodash.memoize/-/lodash.memoize-4.1.7.tgz#aff94ab32813c557cbc1104e127030e3d60a3b27"
+  integrity sha512-lGN7WeO4vO6sICVpf041Q7BX/9k1Y24Zo3FY0aUezr1QlKznpjzsDk3T3wvH8ofYzoK0QupN9TWcFAFZlyPwQQ==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.191"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.191.tgz#09511e7f7cba275acd8b419ddac8da9a6a79e2fa"
+  integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
+
 "@types/minimatch@^3.0.3":
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.5.tgz#1001cc5e6a3704b83c236027e77f2f58ea010f40"
@@ -651,6 +663,11 @@
   version "15.7.5"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
+
+"@types/react-clock@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-clock/-/react-clock-3.0.1.tgz#4d8f8736e1ca95d697f2120b5261bd6e45482d48"
+  integrity sha512-lgtqEGV8StA4yTvXqrZGCD4PJFe90RjSMWdgYzPZX7JsIpqZqum9+Dns+UkcnnFOz6jTKXr7e48yNjYREWDe9w==
 
 "@types/react-dom@^18.0.10":
   version "18.0.10"
@@ -702,6 +719,11 @@
     "@babel/plugin-transform-react-jsx-source" "^7.19.6"
     magic-string "^0.27.0"
     react-refresh "^0.14.0"
+
+"@wojtekmaj/date-utils@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@wojtekmaj/date-utils/-/date-utils-1.1.2.tgz#e22d3b6fe4559cd4b47e439b9f9fc51d1bc1fa64"
+  integrity sha512-06PQad/6pyYDjInBW2ih4Oy30EAg0mtXTCz+b/fGwzN2JB2X2Zsa4QtHl4I8M+IaCKN8bwj61OW3XAWxh+D9hA==
 
 ansi-styles@^3.2.1:
   version "3.2.1"
@@ -1006,6 +1028,14 @@ get-stream@^5.0.0:
   dependencies:
     pump "^3.0.0"
 
+get-user-locale@^2.0.0:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/get-user-locale/-/get-user-locale-2.1.3.tgz#26898ecb732821e047d77dc1ff5709d5d1df3f4a"
+  integrity sha512-2mvzWs9z6qKjw8uvuo2ivpBKg5nHdTe4BERpv+A2POAcfEFaaTkagFKKG9A2tAQjn6NfTVO5V1pTqQbA6AGyog==
+  dependencies:
+    "@types/lodash.memoize" "^4.1.7"
+    lodash.memoize "^4.1.1"
+
 globals@^11.1.0:
   version "11.12.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
@@ -1130,6 +1160,11 @@ locate-path@^5.0.0:
   integrity sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==
   dependencies:
     p-locate "^4.1.0"
+
+lodash.memoize@^4.1.1:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
+  integrity sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==
 
 loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
@@ -1313,7 +1348,7 @@ pretty-quick@^3.1.3:
     mri "^1.1.5"
     multimatch "^4.0.0"
 
-prop-types@^15.5.7, prop-types@^15.6.2, prop-types@^15.8.1:
+prop-types@^15.5.7, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -1336,6 +1371,17 @@ react-apexcharts@^1.4.0:
   integrity sha512-DrcMV4aAMrUG+n6412yzyATWEyCDWlpPBBhVbpzBC4PDeuYU6iF84SmExbck+jx5MUm4U5PM3/T307Mc3kzc9Q==
   dependencies:
     prop-types "^15.5.7"
+
+react-clock@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/react-clock/-/react-clock-4.1.0.tgz#e48313d90e1ba2b8a6167804dc58a6a9cea8945b"
+  integrity sha512-1BxIDxH8PcEBEUZDIXXS2njK5Gb84U5egTKXZDimF4aKO1bq+/bdX+chMNouLmaOSYB1of3DriLb0WhLOr8lAA==
+  dependencies:
+    "@types/react" "*"
+    "@wojtekmaj/date-utils" "^1.1.2"
+    clsx "^1.2.1"
+    get-user-locale "^2.0.0"
+    prop-types "^15.6.0"
 
 react-cookie@^4.1.1:
   version "4.1.1"
