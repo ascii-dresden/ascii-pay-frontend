@@ -44,7 +44,7 @@ export const AccountDetailsPageView = (props: {
   return (
     <Container maxWidth="lg">
       <Paper elevation={0}>
-        <Box sx={{ px: 1, py: 2, mb: 3 }}>
+        <Box sx={{ px: 1, py: 2, mb: 2 }}>
           <Toolbar
             disableGutters={true}
             sx={{ justifyContent: "space-between" }}

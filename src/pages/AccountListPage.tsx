@@ -18,7 +18,9 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
+  TablePagination,
   TableRow,
   Toolbar,
   Typography,
@@ -52,6 +54,9 @@ export const AccountListPage = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
 
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
   const {
     isLoading,
     isError,
@@ -69,7 +74,7 @@ export const AccountListPage = () => {
 
   const header = (
     <Paper elevation={0}>
-      <Box sx={{ px: 1, py: 2, mb: 3 }}>
+      <Box sx={{ px: 1, py: 2, mb: 2 }}>
         <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
@@ -112,6 +117,28 @@ export const AccountListPage = () => {
     return <PaperScreenLoader>{header}</PaperScreenLoader>;
   }
 
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - accounts.length) : 0;
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const slicedAccounts =
+    rowsPerPage > 0
+      ? accounts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      : accounts;
   return (
     <Container maxWidth="lg">
       {header}
@@ -127,10 +154,34 @@ export const AccountListPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {accounts?.map((account) => (
+            {slicedAccounts.map((account) => (
               <AccountListRow key={account.id} account={account} />
             ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 78 * emptyRows }}>
+                <TableCell colSpan={5} />
+              </TableRow>
+            )}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                colSpan={5}
+                count={accounts.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
       <CreateAccountDialog open={openModal} setOpen={setOpenModal} />
@@ -141,7 +192,7 @@ export const AccountListPage = () => {
 const AccountListRow = (props: { account: AccountDto }) => {
   return (
     <>
-      <TableRow>
+      <TableRow style={{ height: 78 }}>
         <TableCell>
           <Avatar
             alt={props.account.name}
