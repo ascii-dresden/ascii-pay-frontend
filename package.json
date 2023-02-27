@@ -13,6 +13,7 @@
     "apexcharts": "^3.37.0",
     "async-mutex": "^0.4.0",
     "clsx": "^1.2.1",
+    "fuse.js": "^6.6.2",
     "i18next": "^22.4.10",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",

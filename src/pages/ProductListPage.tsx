@@ -4,9 +4,16 @@ import {
   Breadcrumbs,
   Button,
   ButtonGroup,
+  ClickAwayListener,
   Container,
+  Grow,
   Link,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  MenuList,
   Paper,
+  Popper,
   Tab,
   Table,
   TableBody,
@@ -23,7 +30,13 @@ import {
 import { useGetAllProductsQuery } from "../redux/api/productApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Add } from "@mui/icons-material";
+import {
+  Add,
+  DeleteOutline,
+  Edit,
+  ImageOutlined,
+  MoreVert,
+} from "@mui/icons-material";
 import { CreateProductDialog } from "../components/product/CreateProductDialog";
 import { BASE_URL } from "../redux/api/customFetchBase";
 import { stringWithoutColorAvatar } from "../components/stringAvatar";
@@ -104,19 +117,13 @@ export const ProductListPage = () => {
     return <PaperScreenLoader>{header}</PaperScreenLoader>;
   }
 
-  let categories = products
-    .map((p) => p.category)
-    .filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
+  let categories =
+    products
+      ?.map((p) => p.category)
+      .filter((value, index, self) => {
+        return self.indexOf(value) === index;
+      }) ?? [];
   categories.sort();
-
-  let tags = products
-    .flatMap((p) => p.tags)
-    .filter((value, index, self) => {
-      return self.indexOf(value) === index;
-    });
-  tags.sort();
 
   let filteredProducts: ProductDto[] = products;
   if (tabIndex < categories.length) {
@@ -183,17 +190,12 @@ export const ProductListPage = () => {
               <TableCell>Name</TableCell>
               <TableCell width={250}>Price</TableCell>
               <TableCell width={250}>Bonus</TableCell>
-              <TableCell width={236}></TableCell>
+              <TableCell width={128}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {slicedProducts.map((product) => (
-              <ProductListRow
-                key={product.id}
-                product={product}
-                categories={categories}
-                tags={tags}
-              />
+              <ProductListRow key={product.id} product={product} />
             ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 78 * emptyRows }}>
@@ -222,25 +224,12 @@ export const ProductListPage = () => {
           </TableFooter>
         </Table>
       </TableContainer>
-      <CreateProductDialog
-        open={openModal}
-        setOpen={setOpenModal}
-        categories={categories}
-        tags={tags}
-      />
+      <CreateProductDialog open={openModal} setOpen={setOpenModal} />
     </Container>
   );
 };
 
-const ProductListRow = (props: {
-  product: ProductDto;
-  categories: string[];
-  tags: string[];
-}) => {
-  const [openUpdateImageModal, setOpenUpdateImageModal] = useState(false);
-  const [openUpdateModal, setOpenUpdateModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
+const ProductListRow = (props: { product: ProductDto }) => {
   return (
     <>
       <TableRow style={{ height: 78 }}>
@@ -268,26 +257,127 @@ const ProductListRow = (props: {
         <TableCell align="right">
           <CoinAmountView coins={props.product.bonus} />
         </TableCell>
-        <TableCell align="right">
-          <ButtonGroup variant="outlined" aria-label="outlined button group">
-            <Button onClick={() => setOpenUpdateImageModal(true)}>Image</Button>
-            <Button onClick={() => setOpenUpdateModal(true)}>Edit</Button>
-            <Button onClick={() => setOpenDeleteModal(true)}>Delete</Button>
-          </ButtonGroup>
+        <TableCell>
+          <ProductListRowActionButton product={props.product} />
         </TableCell>
       </TableRow>
+    </>
+  );
+};
+
+export const ProductListRowActionButton = (props: {
+  product: ProductDto;
+  hidePrimaryAction?: boolean;
+}) => {
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef<HTMLDivElement>(null);
+
+  const [openImageModal, setOpenImageModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const handleMenuItemClick = (action: (value: boolean) => void) => {
+    action(true);
+    setOpen(false);
+  };
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event: Event) => {
+    if (
+      anchorRef.current &&
+      anchorRef.current.contains(event.target as HTMLElement)
+    ) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  return (
+    <>
+      <ButtonGroup
+        variant="outlined"
+        size="large"
+        ref={anchorRef}
+        aria-label="split button"
+      >
+        {props.hidePrimaryAction ? null : (
+          <Button onClick={() => setOpenEditModal(true)}>Edit</Button>
+        )}
+        <Button
+          sx={{ whiteSpace: "nowrap", width: "3.5rem" }}
+          onClick={handleToggle}
+        >
+          <MoreVert />
+        </Button>
+      </ButtonGroup>
+      <Popper
+        sx={{
+          zIndex: 1,
+        }}
+        open={open}
+        anchorEl={anchorRef.current}
+        role={undefined}
+        transition
+        disablePortal
+      >
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin:
+                placement === "bottom" ? "center top" : "center bottom",
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList id="split-button-menu" autoFocusItem>
+                  <MenuItem
+                    onClick={() => handleMenuItemClick(setOpenImageModal)}
+                  >
+                    <ListItemIcon>
+                      <ImageOutlined fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Set product image</ListItemText>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => handleMenuItemClick(setOpenEditModal)}
+                  >
+                    <ListItemIcon>
+                      <Edit fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Edit product details</ListItemText>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => handleMenuItemClick(setOpenDeleteModal)}
+                  >
+                    <ListItemIcon>
+                      <DeleteOutline fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Delete product</ListItemText>
+                  </MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+
       <UpdateProductImageDialog
         product={props.product}
-        open={openUpdateImageModal}
-        setOpen={setOpenUpdateImageModal}
+        open={openImageModal}
+        setOpen={setOpenImageModal}
       />
+
       <UpdateProductDialog
         product={props.product}
-        open={openUpdateModal}
-        setOpen={setOpenUpdateModal}
-        categories={props.categories}
-        tags={props.tags}
+        open={openEditModal}
+        setOpen={setOpenEditModal}
       />
+
       <DeleteProductDialog
         product={props.product}
         open={openDeleteModal}
