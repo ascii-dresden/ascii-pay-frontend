@@ -9,7 +9,9 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
+  TablePagination,
   TableRow,
   Typography,
 } from "@mui/material";
@@ -25,6 +27,9 @@ import { TransactionChart } from "./TransactionChart";
 import { getTransactionSum } from "./transactionUtils";
 
 export const TransactionListView = (props: { account: AccountDto }) => {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
   const {
     isLoading,
     isError,
@@ -102,6 +107,34 @@ export const TransactionListView = (props: { account: AccountDto }) => {
     }
   }
 
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - sortedTransactions.length)
+      : 0;
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const slicedTransactions =
+    rowsPerPage > 0
+      ? sortedTransactions.slice(
+          page * rowsPerPage,
+          page * rowsPerPage + rowsPerPage
+        )
+      : sortedTransactions;
+
   return (
     <>
       <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
@@ -117,13 +150,37 @@ export const TransactionListView = (props: { account: AccountDto }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sortedTransactions?.map((transaction) => (
+            {slicedTransactions?.map((transaction) => (
               <TransactionListRow
                 key={transaction.id}
                 transaction={transaction}
               />
             ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 67 * emptyRows }}>
+                <TableCell colSpan={3} />
+              </TableRow>
+            )}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                colSpan={3}
+                count={sortedTransactions.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
 
@@ -158,7 +215,10 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
   });
   return (
     <>
-      <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
+      <TableRow
+        sx={{ "& > *": { borderBottom: "unset !important" } }}
+        style={{ height: 67 }}
+      >
         <TableCell>
           <IconButton
             aria-label="expand row"

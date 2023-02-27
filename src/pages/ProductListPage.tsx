@@ -12,7 +12,9 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
+  TablePagination,
   TableRow,
   Tabs,
   Toolbar,
@@ -39,6 +41,9 @@ export const ProductListPage = () => {
   const [openModal, setOpenModal] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
 
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
   const {
     isLoading,
     isError,
@@ -56,7 +61,7 @@ export const ProductListPage = () => {
 
   const header = (
     <Paper elevation={0}>
-      <Box sx={{ px: 1, py: 2, mb: 3 }}>
+      <Box sx={{ px: 1, py: 2, mb: 2 }}>
         <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
@@ -121,6 +126,34 @@ export const ProductListPage = () => {
 
   filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
 
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - filteredProducts.length)
+      : 0;
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const slicedProducts =
+    rowsPerPage > 0
+      ? filteredProducts.slice(
+          page * rowsPerPage,
+          page * rowsPerPage + rowsPerPage
+        )
+      : filteredProducts;
+
   return (
     <Container maxWidth="lg">
       {header}
@@ -131,7 +164,13 @@ export const ProductListPage = () => {
             borderColor: "divider",
           }}
         >
-          <Tabs value={tabIndex} onChange={(_, i) => setTabIndex(i)}>
+          <Tabs
+            value={tabIndex}
+            onChange={(_, i) => {
+              setTabIndex(i);
+              setPage(0);
+            }}
+          >
             {categories.map((c) => (
               <Tab key={c} label={c.length > 0 ? c : "Uncategorized"} />
             ))}
@@ -148,7 +187,7 @@ export const ProductListPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredProducts.map((product) => (
+            {slicedProducts.map((product) => (
               <ProductListRow
                 key={product.id}
                 product={product}
@@ -156,7 +195,31 @@ export const ProductListPage = () => {
                 tags={tags}
               />
             ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 78 * emptyRows }}>
+                <TableCell colSpan={5} />
+              </TableRow>
+            )}
           </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                colSpan={5}
+                count={filteredProducts.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </TableRow>
+          </TableFooter>
         </Table>
       </TableContainer>
       <CreateProductDialog
@@ -180,7 +243,7 @@ const ProductListRow = (props: {
 
   return (
     <>
-      <TableRow>
+      <TableRow style={{ height: 78 }}>
         <TableCell>
           <Avatar
             alt={props.product.name}
@@ -193,9 +256,11 @@ const ProductListRow = (props: {
           <Typography>{props.product.name}</Typography>
           <Typography variant="caption">{props.product.nickname}</Typography>
 
-          {props.product.tags.map((tag) => (
-            <TagChip key={tag} tag={tag} />
-          ))}
+          <div style={{ marginBottom: -3 }}>
+            {props.product.tags.map((tag) => (
+              <TagChip key={tag} tag={tag} />
+            ))}
+          </div>
         </TableCell>
         <TableCell align="right">
           <CoinAmountView coins={props.product.price} />

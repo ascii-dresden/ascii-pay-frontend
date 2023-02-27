@@ -104,7 +104,7 @@ export const TerminalPage = () => {
 
   const header = (
     <Paper elevation={0}>
-      <Box sx={{ px: 1, py: 2, mb: 3 }}>
+      <Box sx={{ px: 1, py: 2, mb: 2 }}>
         <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
