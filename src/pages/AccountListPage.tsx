@@ -218,7 +218,10 @@ const AccountListRow = (props: { account: AccountDto }) => {
   );
 };
 
-export const AccountListRowActionButton = (props: { account: AccountDto }) => {
+export const AccountListRowActionButton = (props: {
+  account: AccountDto;
+  hidePrimaryAction?: boolean;
+}) => {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
@@ -257,9 +260,11 @@ export const AccountListRowActionButton = (props: { account: AccountDto }) => {
         ref={anchorRef}
         aria-label="split button"
       >
-        <Button onClick={() => navigate(`/accounts/${props.account.id}`)}>
-          Profile
-        </Button>
+        {props.hidePrimaryAction ? null : (
+          <Button onClick={() => navigate(`/accounts/${props.account.id}`)}>
+            Profile
+          </Button>
+        )}
         <Button
           sx={{ whiteSpace: "nowrap", width: "3.5rem" }}
           onClick={handleToggle}

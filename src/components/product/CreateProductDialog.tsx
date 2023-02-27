@@ -17,21 +17,22 @@ import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
 import { Close } from "@mui/icons-material";
 import { CategoryInput } from "./CategoryInput";
 import { TagsInput } from "./TagsInput";
+import { useProductMetadataHook } from "./useProductMetadataHook";
 
 export const CreateProductDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
-  categories: string[];
-  tags: string[];
 }) => {
   const [createProduct, { isLoading, isError, error, isSuccess }] =
     useCreateProductMutation();
+
+  const { tags, categories } = useProductMetadataHook();
 
   const [name, setName] = React.useState("");
   const [nickname, setNickname] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [barcode, setBarcode] = React.useState("");
-  const [tags, setTags] = React.useState<string[]>([]);
+  const [pTags, setPTags] = React.useState<string[]>([]);
   const [price, setPrice] = React.useState<CoinAmountDto>({});
   const [bonus, setBonus] = React.useState<CoinAmountDto>({});
 
@@ -44,7 +45,7 @@ export const CreateProductDialog = (props: {
       setNickname("");
       setCategory("");
       setBarcode("");
-      setTags([]);
+      setPTags([]);
       setPrice({});
       setBonus({});
     } else if (isError) {
@@ -60,7 +61,7 @@ export const CreateProductDialog = (props: {
       price,
       bonus,
       category,
-      tags,
+      tags: pTags,
     };
     if (nickname.length > 0) {
       saveProduct.nickname = nickname;
@@ -107,7 +108,7 @@ export const CreateProductDialog = (props: {
           <CategoryInput
             value={category}
             setValue={setCategory}
-            possibleValues={props.categories}
+            possibleValues={categories}
           />
           <TextField
             label="Barcode"
@@ -117,9 +118,9 @@ export const CreateProductDialog = (props: {
             onChange={(e) => setBarcode(e.target.value)}
           />
           <TagsInput
-            values={tags}
-            setValues={setTags}
-            possibleValues={props.tags}
+            values={pTags}
+            setValues={setPTags}
+            possibleValues={tags}
           />
           <CoinAmountEdit label="Price" coins={price} onChange={setPrice} />
           <CoinAmountEdit label="Bonus" coins={bonus} onChange={setBonus} />

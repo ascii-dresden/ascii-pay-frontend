@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 import { AccountCircle, Coffee, Home, Menu, Store } from "@mui/icons-material";
 import logo from "../assets/ascii-pay-logo-wide.svg";
+import { SearchButton } from "./search/SearchButton";
 
 const drawerWidth = 240;
 
@@ -140,6 +141,8 @@ export const Layout = () => {
               alt="ascii pay"
             />
           </Box>
+          <SearchButton />
+          <Box sx={{ flexGrow: 1 }} />
           <Box display="flex" sx={{ ml: "auto" }}>
             {!user && (
               <>
