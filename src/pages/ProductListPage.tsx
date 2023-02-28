@@ -237,7 +237,7 @@ const ProductListRow = (props: { product: ProductDto }) => {
           <Avatar
             alt={props.product.name}
             src={`${BASE_URL}/product/${props.product.id}/image`}
-            variant="square"
+            variant="rounded"
             {...stringWithoutColorAvatar(props.product.name)}
           />
         </TableCell>
@@ -269,6 +269,7 @@ export const ProductListRowActionButton = (props: {
   product: ProductDto;
   hidePrimaryAction?: boolean;
 }) => {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -305,7 +306,9 @@ export const ProductListRowActionButton = (props: {
         aria-label="split button"
       >
         {props.hidePrimaryAction ? null : (
-          <Button onClick={() => setOpenEditModal(true)}>Edit</Button>
+          <Button onClick={() => navigate(`/products/${props.product.id}`)}>
+            Details
+          </Button>
         )}
         <Button
           sx={{ whiteSpace: "nowrap", width: "3.5rem" }}

@@ -19,6 +19,7 @@ import { UnauthorizedPage } from "./pages/UnauthorizedPage";
 import { SetupPage } from "./pages/SetupPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { TerminalPage } from "./pages/TerminalPage";
+import { ProductDetailsPage } from "./pages/ProductDetailsPage";
 
 export function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -58,6 +59,10 @@ export function App() {
               element={<AccountDetailsPage />}
             />
             <Route path="products" element={<ProductListPage />} />
+            <Route
+              path="products/:productId"
+              element={<ProductDetailsPage />}
+            />
             <Route path="terminal/:page" element={<TerminalPage />} />
             <Route path="terminal" element={<TerminalPage />} />
           </Route>

@@ -261,7 +261,7 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
                           <Avatar
                             alt={item.product.name}
                             src={`${BASE_URL}/product/${item.product.id}/image`}
-                            variant="square"
+                            variant="rounded"
                             {...stringAvatar(item.product.name)}
                           />
                         ) : null}

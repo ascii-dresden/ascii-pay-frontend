@@ -7,6 +7,7 @@ import Fuse from "fuse.js";
 export type SearchResultAccount = {
   type: "account";
   account: AccountDto;
+  primaryAction?: () => void;
   score?: number;
 };
 export type SearchResultProduct = {

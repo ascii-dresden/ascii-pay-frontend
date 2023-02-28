@@ -273,7 +273,7 @@ export const Basket = () => {
             <Avatar
               alt={value.product.name}
               src={`${BASE_URL}/product/${value.product.id}/image`}
-              variant="square"
+              variant="rounded"
               {...stringWithoutColorAvatar(value.product.name)}
             />
           </div>

@@ -11,16 +11,35 @@ import { RoleChip } from "../account/RoleChip";
 import { useNavigate } from "react-router-dom";
 import { AccountListRowActionButton } from "../../pages/AccountListPage";
 import { ProductListRowActionButton } from "../../pages/ProductListPage";
+import clsx from "clsx";
 
 const StyledRow = styled("div")(({ theme }) => ({
+  position: "relative",
   backgroundColor: theme.palette.background.paper,
   borderBottom: `solid 1px ${theme.palette.divider}`,
   display: "flex",
   alignItems: "center",
-  overflow: "hidden",
   cursor: "pointer",
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
+  height: "5rem",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  "&:hover::before": {
+    backgroundColor: alpha(theme.palette.text.primary, 0.04),
+  },
+  "&.selected::before": {
+    backgroundColor: alpha(theme.palette.primary.main, 0.15),
+  },
+  "&.selected:hover::before": {
+    backgroundColor: alpha(theme.palette.primary.main, 0.25),
+  },
+  "&:last-of-type": {
+    borderBottom: "none",
   },
 }));
 const StyledRowIcon = styled("div")(({ theme }) => ({
@@ -36,12 +55,58 @@ const StyledRowCoins = styled("div")(({ theme }) => ({
 const StyledRowActions = styled("div")(({ theme }) => ({
   padding: theme.spacing(2),
 }));
+const StyledRowEmpty = styled("div")(() => ({
+  height: "5rem",
+  lineHeight: "5rem",
+  textAlign: "center",
+  userSelect: "none",
+}));
 
 export const SearchContent = (props: {
   search: string;
   onClose: () => void;
 }) => {
-  const { isLoading, results } = useSearchHook(props.search, 20);
+  const { results } = useSearchHook(props.search, 6);
+  const [selected, setSelected] = React.useState(0);
+
+  React.useEffect(() => {
+    setSelected(0);
+  }, [props.search]);
+
+  const resultCount = results.length;
+  const handleKeyAction = React.useMemo(
+    () => (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown") {
+        setSelected((s) => {
+          if (s + 1 >= resultCount) {
+            return -1;
+          }
+          return s + 1;
+        });
+      } else if (e.key === "ArrowUp") {
+        setSelected((s) => {
+          if (s < 0) {
+            return resultCount - 1;
+          }
+          return s - 1;
+        });
+      }
+    },
+    [resultCount]
+  );
+
+  React.useEffect(() => {
+    window.addEventListener("keydown", handleKeyAction);
+    return () => window.removeEventListener("keydown", handleKeyAction);
+  }, [handleKeyAction]);
+
+  if (props.search === "") {
+    return <StyledRowEmpty>Type to start searching…</StyledRowEmpty>;
+  }
+
+  if (resultCount === 0) {
+    return <StyledRowEmpty>Nothing found</StyledRowEmpty>;
+  }
 
   const rows = results.map((r, i) => {
     switch (r.type) {
@@ -51,6 +116,7 @@ export const SearchContent = (props: {
             key={i}
             account={r.account}
             onClose={props.onClose}
+            isSelected={i === selected}
           />
         );
       case "product":
@@ -59,27 +125,56 @@ export const SearchContent = (props: {
             key={i}
             product={r.product}
             onClose={props.onClose}
+            isSelected={i === selected}
           />
         );
     }
   });
 
-  return <div>{rows}</div>;
+  return <>{rows}</>;
 };
 
 const SearchAccountRow = (props: {
   account: AccountDto;
   onClose: () => void;
+  isSelected: boolean;
 }) => {
   const navigate = useNavigate();
 
-  const handleAction = () => {
-    props.onClose();
-    navigate(`/accounts/${props.account.id}`);
-  };
+  const onClose = props.onClose;
+  const accountId = props.account.id;
+  const isSelected = props.isSelected;
+  const handleAction = React.useMemo(
+    () => () => {
+      onClose();
+      navigate(`/accounts/${accountId}`);
+    },
+    [onClose, accountId, navigate]
+  );
+
+  const handleKeyAction = React.useMemo(
+    () => (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleAction();
+      }
+    },
+    [handleAction]
+  );
+
+  React.useEffect(() => {
+    if (isSelected) {
+      window.addEventListener("keydown", handleKeyAction);
+      return () => window.removeEventListener("keydown", handleKeyAction);
+    }
+  }, [handleKeyAction, isSelected]);
 
   return (
-    <StyledRow onClick={handleAction}>
+    <StyledRow
+      onClick={handleAction}
+      className={clsx({
+        selected: props.isSelected,
+      })}
+    >
       <StyledRowIcon>
         <Avatar
           alt={props.account.name}
@@ -103,14 +198,48 @@ const SearchAccountRow = (props: {
 const SearchProductRow = (props: {
   product: ProductDto;
   onClose: () => void;
+  isSelected: boolean;
 }) => {
+  const navigate = useNavigate();
+
+  const onClose = props.onClose;
+  const productId = props.product.id;
+  const isSelected = props.isSelected;
+  const handleAction = React.useMemo(
+    () => () => {
+      onClose();
+      navigate(`/products/${productId}`);
+    },
+    [onClose, productId, navigate]
+  );
+
+  const handleKeyAction = React.useMemo(
+    () => (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleAction();
+      }
+    },
+    [handleAction]
+  );
+
+  React.useEffect(() => {
+    if (isSelected) {
+      window.addEventListener("keydown", handleKeyAction);
+      return () => window.removeEventListener("keydown", handleKeyAction);
+    }
+  }, [handleKeyAction, isSelected]);
+
   return (
-    <StyledRow>
+    <StyledRow
+      className={clsx({
+        selected: props.isSelected,
+      })}
+    >
       <StyledRowIcon>
         <Avatar
           alt={props.product.name}
           src={`${BASE_URL}/product/${props.product.id}/image`}
-          variant="square"
+          variant="rounded"
           {...stringWithoutColorAvatar(props.product.name)}
         />
       </StyledRowIcon>
