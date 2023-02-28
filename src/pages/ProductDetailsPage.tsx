@@ -2,18 +2,9 @@ import {
   Avatar,
   Box,
   Breadcrumbs,
-  Button,
-  ButtonGroup,
-  ClickAwayListener,
   Container,
-  Grow,
   Link,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  MenuList,
   Paper,
-  Popper,
   Table,
   TableBody,
   TableCell,
@@ -22,7 +13,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetProductQuery } from "../redux/api/productApi";
@@ -31,17 +22,8 @@ import { TagChip } from "../components/product/TagChip";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { BASE_URL } from "../redux/api/customFetchBase";
 import { stringWithoutColorAvatar } from "../components/stringAvatar";
-import { ProductDto } from "../redux/api/contracts";
-import {
-  DeleteOutline,
-  Edit,
-  ImageOutlined,
-  MoreVert,
-} from "@mui/icons-material";
-import { UpdateProductImageDialog } from "../components/product/UpdateProductImageDialog";
-import { UpdateProductDialog } from "../components/product/UpdateProductDialog";
-import { DeleteProductDialog } from "../components/product/DeleteProductDialog";
 import { BarcodeView } from "../components/product/Barcode";
+import { ProductDetailsActionButton } from "../components/product/ProductDetailsActionButton";
 
 export const ProductDetailsPage = () => {
   const navigate = useNavigate();
@@ -240,121 +222,5 @@ export const ProductDetailsPage = () => {
         </Paper>
       </Box>
     </Container>
-  );
-};
-
-export const ProductDetailsActionButton = (props: {
-  product: ProductDto;
-  hidePrimaryAction?: boolean;
-}) => {
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLDivElement>(null);
-
-  const [openImageModal, setOpenImageModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-  const handleMenuItemClick = (action: (value: boolean) => void) => {
-    action(true);
-    setOpen(false);
-  };
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event: Event) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  return (
-    <>
-      <ButtonGroup
-        variant="outlined"
-        size="large"
-        ref={anchorRef}
-        aria-label="split button"
-      >
-        {props.hidePrimaryAction ? null : (
-          <Button startIcon={<Edit />} onClick={() => setOpenEditModal(true)}>
-            Edit
-          </Button>
-        )}
-        <Button
-          sx={{ whiteSpace: "nowrap", width: "3.5rem" }}
-          onClick={handleToggle}
-        >
-          <MoreVert />
-        </Button>
-      </ButtonGroup>
-      <Popper
-        sx={{
-          zIndex: 1,
-        }}
-        open={open}
-        anchorEl={anchorRef.current}
-        role={undefined}
-        transition
-        disablePortal
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === "bottom" ? "center top" : "center bottom",
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList id="split-button-menu" autoFocusItem>
-                  <MenuItem
-                    onClick={() => handleMenuItemClick(setOpenImageModal)}
-                  >
-                    <ListItemIcon>
-                      <ImageOutlined fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Set product image</ListItemText>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => handleMenuItemClick(setOpenDeleteModal)}
-                  >
-                    <ListItemIcon>
-                      <DeleteOutline fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>Delete product</ListItemText>
-                  </MenuItem>
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-
-      <UpdateProductImageDialog
-        product={props.product}
-        open={openImageModal}
-        setOpen={setOpenImageModal}
-      />
-
-      <UpdateProductDialog
-        product={props.product}
-        open={openEditModal}
-        setOpen={setOpenEditModal}
-      />
-
-      <DeleteProductDialog
-        product={props.product}
-        open={openDeleteModal}
-        setOpen={setOpenDeleteModal}
-      />
-    </>
   );
 };
