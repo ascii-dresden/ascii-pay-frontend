@@ -10,6 +10,13 @@ import { renderToString } from "react-dom/server";
 import { addCoinAmount, getTransactionSum } from "./transactionUtils";
 import { Theme, useTheme } from "@mui/material";
 import { CoinAmountView } from "./CoinAmountView";
+import styled from "@emotion/styled";
+
+const StyledChart = styled.div`
+  .coin-amount-view {
+    display: flex;
+  }
+`;
 
 type SeriesData = {
   x: Date;
@@ -175,7 +182,11 @@ export const TransactionChart = (props: {
     },
   };
 
-  return <Chart options={options} series={series} type="line" height={350} />;
+  return (
+    <StyledChart>
+      <Chart options={options} series={series} type="line" height={350} />
+    </StyledChart>
+  );
 };
 
 const Popup = (props: {
