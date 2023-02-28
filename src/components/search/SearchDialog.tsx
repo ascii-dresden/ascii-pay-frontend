@@ -10,9 +10,6 @@ const StyledSearchDialogWrapper = styled("div")(() => ({
   left: 0,
   right: 0,
   bottom: 0,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
   zIndex: 1290,
 }));
 
@@ -27,13 +24,14 @@ const StyledSearchDialogBackground = styled("div")(({ theme }) => ({
 }));
 
 const StyledSearchDialogWindow = styled("div")(({ theme }) => ({
-  position: "relative",
+  position: "absolute",
   backgroundColor: theme.palette.background.paper,
   borderRadius: "1rem",
   border: `solid 1px ${theme.palette.divider}`,
   boxShadow: theme.shadows[8],
-  width: "55%",
-  height: "70%",
+  left: "22rem",
+  width: "56%",
+  top: "15%",
   overflow: "hidden",
 }));
 
@@ -46,6 +44,7 @@ const StyledSearchBar = styled("div")(({ theme }) => ({
   top: 0,
   left: 0,
   right: 0,
+  zIndex: 1,
 }));
 
 const StyledSearchBarIcon = styled("div")(() => ({
@@ -90,11 +89,8 @@ const StyledSearchBarInput = styled("input")(({ theme }) => ({
 }));
 
 const StyledSearchContent = styled("div")(() => ({
-  position: "absolute",
-  top: "4rem",
-  left: 0,
-  right: 0,
-  bottom: 0,
+  position: "relative",
+  paddingTop: "4rem",
   overflowY: "auto",
   overflowX: "hidden",
 }));
@@ -121,6 +117,12 @@ export const SearchDialog = (props: { setOpen: (open: boolean) => void }) => {
     };
   });
 
+  const preventUpDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown" || e.key === "Enter") {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Portal>
       <StyledSearchDialogWrapper>
@@ -130,6 +132,7 @@ export const SearchDialog = (props: { setOpen: (open: boolean) => void }) => {
             <StyledSearchBarInput
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={preventUpDown}
               placeholder="Search…"
               autoFocus
             />

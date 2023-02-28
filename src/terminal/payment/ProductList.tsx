@@ -511,7 +511,7 @@ function ProductItem(props: { product: ProductDto }) {
         <Avatar
           alt={props.product.name}
           src={`${BASE_URL}/product/${props.product.id}/image`}
-          variant="square"
+          variant="rounded"
           {...stringWithoutColorAvatar(props.product.name)}
         />
       </div>

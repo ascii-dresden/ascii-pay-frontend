@@ -121,4 +121,5 @@ export const {
   useUpdateProductImageMutation,
   useDeleteProductImageMutation,
   useGetAllProductsQuery,
+  useGetProductQuery,
 } = productApi;
