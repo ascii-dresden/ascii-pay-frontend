@@ -15,6 +15,7 @@ import {
   Paper,
   Popper,
   Table,
+  TableBody,
   TableCell,
   TableRow,
   Toolbar,
@@ -40,6 +41,7 @@ import {
 import { UpdateProductImageDialog } from "../components/product/UpdateProductImageDialog";
 import { UpdateProductDialog } from "../components/product/UpdateProductDialog";
 import { DeleteProductDialog } from "../components/product/DeleteProductDialog";
+import { BarcodeView } from "../components/product/Barcode";
 
 export const ProductDetailsPage = () => {
   const navigate = useNavigate();
@@ -135,84 +137,104 @@ export const ProductDetailsPage = () => {
           </Box>
           <Box sx={{ p: 2, flexGrow: 1 }}>
             <Table size="small">
-              <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
-                <TableCell
-                  width={100}
-                  align="right"
-                  sx={{ fontWeight: "bold" }}
+              <TableBody>
+                <TableRow
+                  sx={{ "& > *": { borderBottom: "unset !important" } }}
                 >
-                  Name
-                </TableCell>
-                <TableCell>{product.name}</TableCell>
-              </TableRow>
-              <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
-                <TableCell
-                  width={100}
-                  align="right"
-                  sx={{ fontWeight: "bold" }}
+                  <TableCell
+                    width={100}
+                    align="right"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Name
+                  </TableCell>
+                  <TableCell>{product.name}</TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "& > *": { borderBottom: "unset !important" } }}
                 >
-                  Nickname
-                </TableCell>
-                <TableCell>{product.nickname}</TableCell>
-              </TableRow>
-              <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
-                <TableCell
-                  width={100}
-                  align="right"
-                  sx={{ fontWeight: "bold" }}
+                  <TableCell
+                    width={100}
+                    align="right"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Nickname
+                  </TableCell>
+                  <TableCell>{product.nickname}</TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "& > *": { borderBottom: "unset !important" } }}
                 >
-                  Category
-                </TableCell>
-                <TableCell>{product.category}</TableCell>
-              </TableRow>
-              <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
-                <TableCell
-                  width={100}
-                  align="right"
-                  sx={{ fontWeight: "bold" }}
+                  <TableCell
+                    width={100}
+                    align="right"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Category
+                  </TableCell>
+                  <TableCell>{product.category}</TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "& > *": { borderBottom: "unset !important" } }}
                 >
-                  Barcode
-                </TableCell>
-                <TableCell>{product.barcode}</TableCell>
-              </TableRow>
-              <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
-                <TableCell
-                  width={100}
-                  align="right"
-                  sx={{ fontWeight: "bold" }}
+                  <TableCell
+                    width={100}
+                    align="right"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Tags
+                  </TableCell>
+                  <TableCell>
+                    {product.tags.map((t) => (
+                      <TagChip key={t} tag={t} />
+                    ))}
+                  </TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "& > *": { borderBottom: "unset !important" } }}
                 >
-                  Tags
-                </TableCell>
-                <TableCell>
-                  {product.tags.map((t) => (
-                    <TagChip key={t} tag={t} />
-                  ))}
-                </TableCell>
-              </TableRow>
-              <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
-                <TableCell
-                  width={100}
-                  align="right"
-                  sx={{ fontWeight: "bold" }}
+                  <TableCell
+                    width={100}
+                    align="right"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Price
+                  </TableCell>
+                  <TableCell>
+                    <CoinAmountView coins={product.price} />
+                  </TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "& > *": { borderBottom: "unset !important" } }}
                 >
-                  Price
-                </TableCell>
-                <TableCell>
-                  <CoinAmountView coins={product.price} />
-                </TableCell>
-              </TableRow>
-              <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
-                <TableCell
-                  width={100}
-                  align="right"
-                  sx={{ fontWeight: "bold" }}
+                  <TableCell
+                    width={100}
+                    align="right"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Bonus
+                  </TableCell>
+                  <TableCell>
+                    <CoinAmountView coins={product.bonus} />
+                  </TableCell>
+                </TableRow>
+                <TableRow
+                  sx={{ "& > *": { borderBottom: "unset !important" } }}
                 >
-                  Bonus
-                </TableCell>
-                <TableCell>
-                  <CoinAmountView coins={product.bonus} />
-                </TableCell>
-              </TableRow>
+                  <TableCell
+                    width={100}
+                    align="right"
+                    sx={{ fontWeight: "bold" }}
+                  >
+                    Barcode
+                  </TableCell>
+                  <TableCell>
+                    {product.barcode ? (
+                      <BarcodeView value={product.barcode} />
+                    ) : null}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             </Table>
           </Box>
         </Paper>
