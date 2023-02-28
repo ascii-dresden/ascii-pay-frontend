@@ -144,7 +144,7 @@ export const CoinAmountView = (props: {
 
   return (
     <StyledCoinAmountView
-      className={clsx({ isClickable: props.isClickable })}
+      className={clsx("coin-amount-view", { isClickable: props.isClickable })}
       hoverColor={theme.palette.action.hover}
       successColor={theme.palette.success.main}
       errorColor={theme.palette.error.main}
