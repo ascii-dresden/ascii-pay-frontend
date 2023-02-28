@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSearchHook } from "./useSearchHook";
 import { AccountDto, ProductDto } from "../../redux/api/contracts";
 import { styled } from "@mui/material/styles";
@@ -12,6 +12,9 @@ import { useNavigate } from "react-router-dom";
 import { AccountListRowActionButton } from "../../pages/AccountListPage";
 import { ProductListRowActionButton } from "../../pages/ProductListPage";
 import clsx from "clsx";
+import { Terminal } from "@mui/icons-material";
+import { CreateAccountDialog } from "../account/CreateAccountDialog";
+import { CreateProductDialog } from "../product/CreateProductDialog";
 
 const StyledRow = styled("div")(({ theme }) => ({
   position: "relative",
@@ -145,6 +148,25 @@ export const SearchContent = (props: {
             isSelected={i === selected}
           />
         );
+      case "action":
+        switch (r.action) {
+          case "newAccount":
+            return (
+              <SearchActionNewAccountRow
+                key={i}
+                onClose={props.onClose}
+                isSelected={i === selected}
+              />
+            );
+          case "newProduct":
+            return (
+              <SearchActionNewProductRow
+                key={i}
+                onClose={props.onClose}
+                isSelected={i === selected}
+              />
+            );
+        }
     }
   });
 
@@ -248,6 +270,7 @@ const SearchProductRow = (props: {
 
   return (
     <StyledRow
+      onClick={handleAction}
       className={clsx({
         selected: props.isSelected,
       })}
@@ -275,5 +298,105 @@ const SearchProductRow = (props: {
         <ProductListRowActionButton product={props.product} hidePrimaryAction />
       </StyledRowActions>
     </StyledRow>
+  );
+};
+
+const SearchActionNewAccountRow = (props: {
+  onClose: () => void;
+  isSelected: boolean;
+}) => {
+  const [openModal, setOpenModal] = useState(false);
+
+  const isSelected = props.isSelected;
+  const handleAction = React.useMemo(
+    () => () => setOpenModal(true),
+    [setOpenModal]
+  );
+
+  const handleKeyAction = React.useMemo(
+    () => (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleAction();
+      }
+    },
+    [handleAction]
+  );
+
+  React.useEffect(() => {
+    if (isSelected) {
+      window.addEventListener("keydown", handleKeyAction);
+      return () => window.removeEventListener("keydown", handleKeyAction);
+    }
+  }, [handleKeyAction, isSelected]);
+
+  return (
+    <>
+      <StyledRow
+        onClick={handleAction}
+        className={clsx({
+          selected: props.isSelected,
+        })}
+      >
+        <StyledRowIcon>
+          <Avatar variant="rounded">
+            <Terminal />
+          </Avatar>
+        </StyledRowIcon>
+        <StyledRowContent>
+          <Typography>Action: Create new account</Typography>
+        </StyledRowContent>
+      </StyledRow>
+      <CreateAccountDialog open={openModal} setOpen={setOpenModal} />
+    </>
+  );
+};
+
+const SearchActionNewProductRow = (props: {
+  onClose: () => void;
+  isSelected: boolean;
+}) => {
+  const [openModal, setOpenModal] = useState(false);
+
+  const isSelected = props.isSelected;
+  const handleAction = React.useMemo(
+    () => () => setOpenModal(true),
+    [setOpenModal]
+  );
+
+  const handleKeyAction = React.useMemo(
+    () => (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleAction();
+      }
+    },
+    [handleAction]
+  );
+
+  React.useEffect(() => {
+    if (isSelected) {
+      window.addEventListener("keydown", handleKeyAction);
+      return () => window.removeEventListener("keydown", handleKeyAction);
+    }
+  }, [handleKeyAction, isSelected]);
+
+  return (
+    <>
+      <StyledRow
+        onClick={handleAction}
+        className={clsx({
+          selected: props.isSelected,
+        })}
+      >
+        <StyledRowIcon>
+          <Avatar variant="rounded">
+            <Terminal />
+          </Avatar>
+        </StyledRowIcon>
+        <StyledRowContent>
+          <Typography>Action: Create new product</Typography>
+        </StyledRowContent>
+      </StyledRow>
+      <CreateProductDialog open={openModal} setOpen={setOpenModal} />
+    </>
   );
 };
