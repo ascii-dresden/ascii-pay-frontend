@@ -9,12 +9,12 @@ import { TagChip } from "../product/TagChip";
 import { CoinAmountView } from "../transaction/CoinAmountView";
 import { RoleChip } from "../account/RoleChip";
 import { useNavigate } from "react-router-dom";
-import { AccountListRowActionButton } from "../../pages/AccountListPage";
-import { ProductListRowActionButton } from "../../pages/ProductListPage";
 import clsx from "clsx";
 import { Terminal } from "@mui/icons-material";
 import { CreateAccountDialog } from "../account/CreateAccountDialog";
 import { CreateProductDialog } from "../product/CreateProductDialog";
+import { AccountListRowActionButton } from "../account/AccountListRowActionButton";
+import { ProductListRowActionButton } from "../product/ProductListRowActionButton";
 
 const StyledRow = styled("div")(({ theme }) => ({
   position: "relative",
