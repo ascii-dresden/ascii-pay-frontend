@@ -7,7 +7,6 @@ import Fuse from "fuse.js";
 export type SearchResultAccount = {
   type: "account";
   account: AccountDto;
-  primaryAction?: () => void;
   score?: number;
 };
 export type SearchResultProduct = {
@@ -15,7 +14,17 @@ export type SearchResultProduct = {
   product: ProductDto;
   score?: number;
 };
-export type SearchResult = SearchResultAccount | SearchResultProduct;
+export type SearchResultActionType = "newAccount" | "newProduct";
+export type SearchResultAction = {
+  type: "action";
+  action: SearchResultActionType;
+  label: string;
+  score?: number;
+};
+export type SearchResult =
+  | SearchResultAccount
+  | SearchResultProduct
+  | SearchResultAction;
 
 type SearchHookResult = {
   isLoading: boolean;
@@ -35,6 +44,7 @@ export const useSearchHook = (
   let list = [
     ...(accounts?.map(mapAccount) ?? []),
     ...(products?.map(mapProduct) ?? []),
+    ...getActions(),
   ];
 
   const fuse = new Fuse(list, {
@@ -50,6 +60,7 @@ export const useSearchHook = (
       "product.nickname",
       "product.category",
       "product.tags",
+      "label",
       "type",
     ],
   });
@@ -80,4 +91,19 @@ function mapProduct(product: ProductDto): SearchResultProduct {
     type: "product",
     product,
   };
+}
+
+function getActions(): SearchResultAction[] {
+  return [
+    {
+      type: "action",
+      action: "newAccount",
+      label: "Action: Create new account",
+    },
+    {
+      type: "action",
+      action: "newProduct",
+      label: "Action: Create new product",
+    },
+  ];
 }
