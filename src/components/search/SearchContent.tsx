@@ -2,7 +2,7 @@ import React from "react";
 import { useSearchHook } from "./useSearchHook";
 import { AccountDto, ProductDto } from "../../redux/api/contracts";
 import { styled } from "@mui/material/styles";
-import { alpha, Avatar, Typography } from "@mui/material";
+import { alpha, Avatar, CircularProgress, Typography } from "@mui/material";
 import { stringAvatar, stringWithoutColorAvatar } from "../stringAvatar";
 import { BASE_URL } from "../../redux/api/customFetchBase";
 import { TagChip } from "../product/TagChip";
@@ -57,16 +57,17 @@ const StyledRowActions = styled("div")(({ theme }) => ({
 }));
 const StyledRowEmpty = styled("div")(() => ({
   height: "5rem",
-  lineHeight: "5rem",
-  textAlign: "center",
   userSelect: "none",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
 }));
 
 export const SearchContent = (props: {
   search: string;
   onClose: () => void;
 }) => {
-  const { results } = useSearchHook(props.search, 6);
+  const { isLoading, results } = useSearchHook(props.search, 6);
   const [selected, setSelected] = React.useState(0);
 
   React.useEffect(() => {
@@ -100,12 +101,28 @@ export const SearchContent = (props: {
     return () => window.removeEventListener("keydown", handleKeyAction);
   }, [handleKeyAction]);
 
+  if (isLoading) {
+    return (
+      <StyledRowEmpty>
+        <CircularProgress />
+      </StyledRowEmpty>
+    );
+  }
+
   if (props.search === "") {
-    return <StyledRowEmpty>Type to start searching…</StyledRowEmpty>;
+    return (
+      <StyledRowEmpty>
+        <span>Type to start searching…</span>
+      </StyledRowEmpty>
+    );
   }
 
   if (resultCount === 0) {
-    return <StyledRowEmpty>Nothing found</StyledRowEmpty>;
+    return (
+      <StyledRowEmpty>
+        <span>Nothing found</span>
+      </StyledRowEmpty>
+    );
   }
 
   const rows = results.map((r, i) => {
