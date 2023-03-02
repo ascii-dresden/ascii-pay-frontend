@@ -98,7 +98,6 @@ export const TransactionChart = (props: {
     },
     chart: {
       type: "line",
-      height: 300,
       toolbar: {
         show: false,
       },

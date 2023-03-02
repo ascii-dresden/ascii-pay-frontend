@@ -4,7 +4,7 @@ import { Backspace, ForwardOutlined } from "@mui/icons-material";
 import styled from "@emotion/styled";
 
 const StyledKeypadDisplay = styled.div`
-  line-height: 4em;
+  line-height: 3em;
   padding: 0.5em 0.5em 0.5em 1em;
   font-size: 1.5em;
 `;

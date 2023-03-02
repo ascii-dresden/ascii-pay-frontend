@@ -32,7 +32,7 @@ const StyledStartPageHeader = styled.div`
   flex-direction: row;
   justify-content: space-between;
   font-size: 1.4em;
-  line-height: 4em;
+  line-height: 3em;
   padding: 0.4em 1.2em 0.4em 1em;
 
   & > span {

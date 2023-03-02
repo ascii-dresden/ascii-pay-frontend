@@ -17,7 +17,7 @@ import { TerminalRegisterPage } from "./pages/TerminalRegisterPage";
 import { TerminalPaymentPage } from "./pages/TerminalPaymentPage";
 import { TerminalAccountPage } from "./pages/TerminalAccountPage";
 import { useAppDispatch } from "../redux/store";
-import { checkTimeouts } from "../redux/features/terminalSlice";
+import { checkTimeouts, setScreensaver } from "../redux/features/terminalSlice";
 import { AppNotifications } from "./components/AppNotifications";
 import { NotificationManager } from "./components/NotificationManager";
 import { ConnectionIndicator } from "./components/ConnectionIndicator";
@@ -25,6 +25,7 @@ import {
   AsciiPayAuthenticationClient,
   TerminalDeviceContext,
 } from "./client/AsciiPayAuthenticationClient";
+import { Keyboard } from "./components/Keyboard";
 
 const StyledTerminalApp = styled.div`
   position: absolute;
@@ -298,7 +299,7 @@ export const TerminalApp = React.memo(
 
     const fontSize = React.useMemo(() => {
       const scale = Math.min(props.width / 800, props.height / 480);
-      return Math.round(16 * scale) + "px";
+      return Math.round(16 * scale);
     }, [props.width, props.height]);
 
     React.useEffect(() => {
@@ -322,7 +323,15 @@ export const TerminalApp = React.memo(
         content = <TerminalRegisterPage setAppClass={setAppClass} />;
         break;
       case "accounts":
-        content = <TerminalAccountPage />;
+        content = (
+          <TerminalAccountPage
+            authClient={props.authClient}
+            deviceContext={props.deviceContext}
+            height={props.height}
+            settings={props.settings}
+            fontSize={fontSize}
+          />
+        );
         break;
       case "settings":
         content = (
@@ -373,9 +382,11 @@ export const TerminalApp = React.memo(
             className={clsx(props.settings.highlightColor, appClass, {
               dark: props.settings.theme === "dark",
             })}
-            style={{ fontSize }}
+            style={{ fontSize: `${fontSize}px` }}
+            onClick={() => dispatch(setScreensaver(false))}
           >
             <ConnectionIndicator authClient={props.authClient} />
+            <Keyboard />
             <ScreensaverClock />
             {content}
             <AppNotifications

@@ -139,10 +139,10 @@ export const Envelope = () => {
 
   if (!previousCoinBox || !previousNoteBox) {
     return (
-      <div className="envelope empty">
+      <StyledEnvelope className="empty">
         <ArrowBack />
         <span>{t("register.start")}</span>
-      </div>
+      </StyledEnvelope>
     );
   }
 

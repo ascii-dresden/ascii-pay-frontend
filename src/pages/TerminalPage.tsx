@@ -54,7 +54,7 @@ export const TerminalPage = () => {
   const params = useParams();
 
   const [width, setWidth] = React.useState("1000");
-  const [height, setHeight] = React.useState("640");
+  const [height, setHeight] = React.useState("625");
   const [connectionMode, setConnectionMode] = React.useState("simulate");
   const [connectionSimulateState, setConnectionSimulateState] =
     React.useState<ConnectionSimulateState>({

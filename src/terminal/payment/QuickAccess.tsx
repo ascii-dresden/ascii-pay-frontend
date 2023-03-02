@@ -21,7 +21,7 @@ const StyledQuickAccess = styled.div`
 
 const StyledQuickAccessRow = styled.div`
   display: flex;
-  flex: 1 1 0px;
+  flex: 1 1 0;
   gap: 0.6em;
 
   &:last-child {
@@ -30,7 +30,7 @@ const StyledQuickAccessRow = styled.div`
 `;
 
 const StyledQuickAccessEntry = styled.div`
-  flex: 1 1 0px;
+  flex: 1 1 0;
   padding: 0.5em;
 
   position: relative;
@@ -144,8 +144,8 @@ const StyledQuickAccessEntryExtra = styled.div`
     display: none;
   }
 
-  .quick-access-entry-stamp img {
-    margin-left: 0em !important;
+  .quick-access-entry-stamp svg {
+    margin-left: 0 !important;
   }
 `;
 const StyledQuickAccessEntryName = styled.div`
@@ -158,12 +158,14 @@ const StyledQuickAccessEntryName = styled.div`
   white-space: pre-wrap;
   font-size: 0.9em;
   text-align: center;
+  line-height: 1.2em;
 `;
+
 const StyledQuickAccessEntryStamp = styled.div`
   display: flex;
   align-items: center;
 
-  img {
+  svg {
     margin-left: 0.4em;
   }
 `;
@@ -343,7 +345,10 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
   let stamp: any | null = null;
   if (props.entry.price.CoffeeStamp && props.entry.price.CoffeeStamp > 0) {
     stamp = (
-      <StyledQuickAccessEntryStamp key="coffee-10">
+      <StyledQuickAccessEntryStamp
+        key="coffee-10"
+        className="quick-access-entry-stamp"
+      >
         <span>-{props.entry.price.CoffeeStamp}</span>
         <CoffeeStamp />
       </StyledQuickAccessEntryStamp>
@@ -353,7 +358,10 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
     props.entry.price.BottleStamp > 0
   ) {
     stamp = (
-      <StyledQuickAccessEntryStamp key="bottle-10">
+      <StyledQuickAccessEntryStamp
+        key="bottle-10"
+        className="quick-access-entry-stamp"
+      >
         <span>-{props.entry.price.BottleStamp}</span>
         <CoffeeStamp />
       </StyledQuickAccessEntryStamp>
@@ -361,7 +369,10 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
   }
   if (props.entry.bonus.CoffeeStamp && props.entry.bonus.CoffeeStamp > 0) {
     stamp = (
-      <StyledQuickAccessEntryStamp key="coffee-1">
+      <StyledQuickAccessEntryStamp
+        key="coffee-1"
+        className="quick-access-entry-stamp"
+      >
         <span>+</span>
         <CoffeeStamp />
       </StyledQuickAccessEntryStamp>
@@ -371,17 +382,20 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
     props.entry.bonus.BottleStamp > 0
   ) {
     stamp = (
-      <StyledQuickAccessEntryStamp key="bottle-1">
+      <StyledQuickAccessEntryStamp
+        key="bottle-1"
+        className="quick-access-entry-stamp"
+      >
         <span>+</span>
         <BottleStamp />
       </StyledQuickAccessEntryStamp>
     );
   }
 
-  let center: any | null = null;
+  let center: any | null;
   let extra: any | null = null;
 
-  if (props.entry.price) {
+  if (props.entry.price.Cent || props.entry.bonus.Cent) {
     center = (
       <Money
         value={(props.entry.price.Cent ?? 0) + (props.entry.bonus.Cent ?? 0)}
@@ -408,14 +422,18 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
 
   return (
     <StyledQuickAccessEntry className={props.entry.className} onClick={onClick}>
-      <StyledQuickAccessEntryName>
+      <StyledQuickAccessEntryName className="quick-access-entry-name">
         {props.entry.name}
       </StyledQuickAccessEntryName>
       {center ? (
-        <StyledQuickAccessEntryCenter>{center}</StyledQuickAccessEntryCenter>
+        <StyledQuickAccessEntryCenter className="quick-access-entry-center">
+          {center}
+        </StyledQuickAccessEntryCenter>
       ) : null}
       {extra ? (
-        <StyledQuickAccessEntryExtra>{extra}</StyledQuickAccessEntryExtra>
+        <StyledQuickAccessEntryExtra className="quick-access-entry-extra">
+          {extra}
+        </StyledQuickAccessEntryExtra>
       ) : null}
     </StyledQuickAccessEntry>
   );
