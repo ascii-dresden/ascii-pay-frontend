@@ -9,7 +9,7 @@ import {
   setKeypadValue,
 } from "../../redux/features/paymentSlice";
 import { equalCoinAmount } from "../../components/transaction/transactionUtils";
-import { EuroSymbol, Photo, RedeemOutlined } from "@mui/icons-material";
+import { EuroSymbol, RedeemOutlined } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import { BASE_URL } from "../../redux/api/customFetchBase";
 import { stringWithoutColorAvatar } from "../../components/stringAvatar";
@@ -281,7 +281,7 @@ export const Basket = () => {
       } else {
         image = (
           <div className="basket-entry-image-shadow">
-            <Photo />
+            <EuroSymbol />
           </div>
         );
       }

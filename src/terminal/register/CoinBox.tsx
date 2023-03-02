@@ -132,17 +132,17 @@ const StyledCoinBox = styled.div`
   }
 
   .coin-group-5 .coin {
-    height: 0.315em;
+    height: 0.313em;
     background-color: #f3c1a0;
   }
 
   .coin-group-2 .coin {
-    height: 0.32em;
+    height: 0.31em;
     background-color: #f3c1a0;
   }
 
   .coin-group-1 .coin {
-    height: 0.315em;
+    height: 0.31em;
     background-color: #f3c1a0;
   }
 
