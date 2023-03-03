@@ -23,6 +23,7 @@ import {
   AsciiPayAuthenticationClient,
   TerminalDeviceContext,
 } from "../terminal/client/AsciiPayAuthenticationClient";
+import { useAppSelector } from "../redux/store";
 
 type ConnectionSimulateState = {
   connected: boolean;
@@ -30,6 +31,7 @@ type ConnectionSimulateState = {
 };
 
 function requestAccountSession(
+  token: string | null,
   account: AccountDto,
   setSession: (session: string | null) => void
 ) {
@@ -38,6 +40,7 @@ function requestAccountSession(
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       account_id: account.id,
@@ -52,6 +55,7 @@ export const TerminalPage = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const params = useParams();
+  const token = useAppSelector((state) => state.userState.token);
 
   const [width, setWidth] = React.useState("1000");
   const [height, setHeight] = React.useState("625");
@@ -147,7 +151,7 @@ export const TerminalPage = () => {
   let connectionBox;
   if (connectionMode === "simulate") {
     const selectAccount = (account: AccountDto) =>
-      requestAccountSession(account, (token) => {
+      requestAccountSession(token, account, (token) => {
         setConnectionSimulateState((s) => {
           return {
             ...s,

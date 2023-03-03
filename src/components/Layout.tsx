@@ -13,13 +13,14 @@ import {
   ListItemText,
   Toolbar,
 } from "@mui/material";
-import { useAppSelector } from "../redux/store";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 import { useLogoutUserMutation } from "../redux/api/authApi";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 import { AccountCircle, Coffee, Home, Menu, Store } from "@mui/icons-material";
 import logo from "../assets/ascii-pay-logo-wide.svg";
 import { SearchButton } from "./search/SearchButton";
+import { logout } from "../redux/features/userSlice";
 
 const drawerWidth = 240;
 
@@ -27,6 +28,7 @@ export const Layout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAppSelector((state) => state.userState.user);
+  const dispatch = useAppDispatch();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleDrawerToggle = () => {
@@ -38,7 +40,8 @@ export const Layout = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      window.location.href = "/login";
+      dispatch(logout());
+      navigate("/");
     }
 
     if (isError) {
@@ -144,16 +147,6 @@ export const Layout = () => {
           <SearchButton />
           <Box sx={{ flexGrow: 1 }} />
           <Box display="flex" sx={{ ml: "auto" }}>
-            {!user && (
-              <>
-                <LoadingButton
-                  onClick={() => navigate("/login")}
-                  color="inherit"
-                >
-                  Login
-                </LoadingButton>
-              </>
-            )}
             {user && (
               <LoadingButton
                 onClick={onLogoutHandler}

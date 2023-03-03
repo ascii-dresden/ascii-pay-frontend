@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 import { useLoginUserMutation } from "../redux/api/authApi";
@@ -20,20 +20,15 @@ const LoadingButton = styled(_LoadingButton)`
 `;
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
   const [loginUser, { isLoading, isError, error, isSuccess }] =
     useLoginUserMutation();
-
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const from = ((location.state as any)?.from.pathname as string) || "/";
-
   useEffect(() => {
     if (isSuccess) {
-      navigate(from);
     } else if (isError) {
       toast.error("Username or password wrong!");
       console.error(error);

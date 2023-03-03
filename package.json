@@ -11,7 +11,6 @@
     "@mui/material": "^5.11.8",
     "@reduxjs/toolkit": "^1.9.2",
     "apexcharts": "^3.37.0",
-    "async-mutex": "^0.4.0",
     "clsx": "^1.2.1",
     "fuse.js": "^6.6.2",
     "i18next": "^22.4.10",

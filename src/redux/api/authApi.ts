@@ -1,7 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { customFetchBase } from "./customFetchBase";
-import { userApi } from "./userApi";
 import { AuthPasswordBasedDto, AuthTokenDto } from "./contracts";
+import { setToken } from "../features/userSlice";
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -18,8 +18,8 @@ export const authApi = createApi({
       },
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
-          await queryFulfilled;
-          await dispatch(userApi.endpoints.getMe.initiate(null));
+          const { data } = await queryFulfilled;
+          dispatch(setToken(data.token ?? null));
         } catch (error) {}
       },
     }),

@@ -51,7 +51,7 @@ const StyledKeyboard = styled.div`
       white-space: pre;
     }
 
-    & > span:first-child::after {
+    & > span:first-of-type::after {
       content: "";
       height: 100%;
       border-right: solid 1px var(--theme-color);
