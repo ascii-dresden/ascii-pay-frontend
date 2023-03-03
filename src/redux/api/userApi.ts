@@ -1,5 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { setUser } from "../features/userSlice";
+import { logout, setUser } from "../features/userSlice";
 import { customFetchBase } from "./customFetchBase";
 import { AccountDto } from "./contracts";
 
@@ -8,7 +8,7 @@ export const userApi = createApi({
   baseQuery: customFetchBase,
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    getMe: builder.query<AccountDto, null>({
+    getMe: builder.query<AccountDto, string | null>({
       query() {
         return {
           url: "auth/account",
@@ -19,8 +19,12 @@ export const userApi = createApi({
         try {
           const { data } = await queryFulfilled;
           dispatch(setUser(data));
-        } catch (error) {}
+        } catch (error) {
+          dispatch(logout());
+        }
       },
     }),
   }),
 });
+
+export const { useGetMeQuery } = userApi;

@@ -1,8 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { ProfilePage } from "./pages/ProfilePage";
-import { LoginPage } from "./pages/LoginPage";
-import { RequireUser } from "./components/RequireUser";
+import { RequireUserUnauthorized } from "./components/RequireUserUnauthorized";
 import {
   createTheme,
   CssBaseline,
@@ -15,11 +14,11 @@ import { AccountListPage } from "./pages/AccountListPage";
 import { ProductListPage } from "./pages/ProductListPage";
 import React from "react";
 import { AccountDetailsPage } from "./pages/AccountDetailsPage";
-import { UnauthorizedPage } from "./pages/UnauthorizedPage";
 import { SetupPage } from "./pages/SetupPage";
 import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { TerminalPage } from "./pages/TerminalPage";
 import { ProductDetailsPage } from "./pages/ProductDetailsPage";
+import { RequireUserLogin } from "./components/RequireUserLogin";
 
 export function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -44,31 +43,27 @@ export function App() {
       <CssBaseline />
       <ToastContainer />
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route
-            element={
-              <RequireUser allowedRoles={["Basic", "Member", "Admin"]} />
-            }
-          >
+        <Route element={<RequireUserLogin />}>
+          <Route path="/" element={<Layout />}>
             <Route index element={<ProfilePage />} />
-          </Route>
-          <Route element={<RequireUser allowedRoles={["Admin"]} />}>
-            <Route path="accounts" element={<AccountListPage />} />
             <Route
-              path="accounts/:accountId"
-              element={<AccountDetailsPage />}
-            />
-            <Route path="products" element={<ProductListPage />} />
-            <Route
-              path="products/:productId"
-              element={<ProductDetailsPage />}
-            />
-            <Route path="terminal/:page" element={<TerminalPage />} />
-            <Route path="terminal" element={<TerminalPage />} />
+              element={<RequireUserUnauthorized allowedRoles={["Admin"]} />}
+            >
+              <Route path="accounts" element={<AccountListPage />} />
+              <Route
+                path="accounts/:accountId"
+                element={<AccountDetailsPage />}
+              />
+              <Route path="products" element={<ProductListPage />} />
+              <Route
+                path="products/:productId"
+                element={<ProductDetailsPage />}
+              />
+              <Route path="terminal/:page" element={<TerminalPage />} />
+              <Route path="terminal" element={<TerminalPage />} />
+            </Route>
           </Route>
-          <Route path="unauthorized" element={<UnauthorizedPage />} />
         </Route>
-        <Route path="login" element={<LoginPage />} />
         <Route path="setup" element={<SetupPage />} />
         <Route path="reset-password" element={<ResetPasswordPage />} />
       </Routes>
