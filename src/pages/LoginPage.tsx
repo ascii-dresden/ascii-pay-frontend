@@ -26,12 +26,15 @@ export const LoginPage = () => {
 
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [hasErrors, setHasErrors] = React.useState(false);
 
   useEffect(() => {
     if (isSuccess) {
+      setHasErrors(false);
     } else if (isError) {
       toast.error("Username or password wrong!");
       console.error(error);
+      setHasErrors(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
@@ -97,6 +100,7 @@ export const LoginPage = () => {
 
           <Box maxWidth="27rem" width="100%">
             <TextField
+              error={hasErrors}
               label="Username"
               fullWidth
               sx={{ mb: "1rem" }}
@@ -104,6 +108,7 @@ export const LoginPage = () => {
               onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
+              error={hasErrors}
               label="Password"
               fullWidth
               sx={{ mb: "1rem" }}
