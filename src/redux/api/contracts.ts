@@ -8,7 +8,7 @@ export type CoinAmountDto = {
 
 export type RoleDto = "Basic" | "Member" | "Admin";
 
-export type CardTypeDto = "NfcId" | "AsciiMifare";
+export type CardTypeDto = "NfcId" | "AsciiMifare" | "HostCardEmulation";
 
 export type AuthMethodDtoPasswordBased = {
   type: "PasswordBased";

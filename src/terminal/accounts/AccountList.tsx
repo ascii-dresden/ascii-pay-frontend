@@ -25,12 +25,7 @@ export const AccountList = (props: {
   id: number | null;
   onSelect: (id: number) => void;
 }) => {
-  const {
-    isLoading,
-    isError,
-    error,
-    data: accounts,
-  } = useGetAllAccountsQuery();
+  const { isLoading, data: accounts } = useGetAllAccountsQuery();
 
   if (isLoading || !accounts) {
     return <></>;

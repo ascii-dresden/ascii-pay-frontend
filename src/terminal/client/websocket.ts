@@ -1,35 +1,100 @@
-type RequestNfcRefresh = {
-  type: "RequestNfcRefresh";
-};
-export type WebSocketRequest = RequestNfcRefresh;
+import { CardTypeDto } from "../../redux/api/contracts";
 
-type FoundBarcode = {
-  type: "FoundBarcode";
+type NfcIdentifyResponse = {
+  type: "NfcIdentifyResponse";
   payload: {
-    code: string;
+    card_id: string;
+    card_type: CardTypeDto;
   };
 };
-type FoundSessionToken = {
-  type: "FoundSessionToken";
+type NfcChallengeResponse = {
+  type: "NfcChallengeResponse";
   payload: {
-    token: string;
+    card_id: string;
+    challenge: string;
   };
 };
-type FoundNfcCard = {
-  type: "FoundNfcCard";
+type NfcResponseResponse = {
+  type: "NfcResponseResponse";
   payload: {
-    id: string;
+    card_id: string;
+    session_key: string;
+  };
+};
+type NfcRegister = {
+  type: "NfcRegister";
+  payload: {
+    card_id: string;
+  };
+};
+type NfcReauthenticate = {
+  type: "NfcReauthenticate";
+};
+export type WebSocketRequest =
+  | NfcIdentifyResponse
+  | NfcChallengeResponse
+  | NfcResponseResponse
+  | NfcRegister
+  | NfcReauthenticate;
+
+type BarcodeIdentifyRequest = {
+  type: "BarcodeIdentifyRequest";
+  payload: {
+    barcode: string;
+  };
+};
+type NfcIdentifyRequest = {
+  type: "NfcIdentifyRequest";
+  payload: {
+    card_id: string;
     name: string;
+  };
+};
+type NfcChallengeRequest = {
+  type: "NfcChallengeRequest";
+  payload: {
+    card_id: string;
+    request: string;
+  };
+};
+type NfcResponseRequest = {
+  type: "NfcResponseRequest";
+  payload: {
+    card_id: string;
+    challenge: string;
+    response: string;
   };
 };
 type NfcCardRemoved = {
   type: "NfcCardRemoved";
+};
+type NfcRegisterRequest = {
+  type: "NfcRegisterRequest";
+  payload: {
+    name: string;
+    card_id: string;
+    card_type: CardTypeDto;
+    data?: string | null | undefined;
+  };
 };
 type Error = {
   type: "Error";
   payload: {
     source: string;
     message: string;
+  };
+};
+type ReceiveSessionToken = {
+  type: "ReceiveSessionToken";
+  payload: {
+    token: string;
+  };
+};
+type ReceiveUnregisteredNfcCard = {
+  type: "ReceiveUnregisteredNfcCard";
+  payload: {
+    card_id: string;
+    name: string;
   };
 };
 type ConnectionStateChange = {
@@ -39,62 +104,125 @@ type ConnectionStateChange = {
   };
 };
 export type WebSocketResponse =
-  | FoundSessionToken
-  | FoundBarcode
-  | FoundNfcCard
+  | BarcodeIdentifyRequest
+  | NfcIdentifyRequest
+  | NfcChallengeRequest
+  | NfcResponseRequest
   | NfcCardRemoved
+  | NfcRegisterRequest
   | Error
-  | ConnectionStateChange;
+  | ConnectionStateChange
+  | ReceiveSessionToken
+  | ReceiveUnregisteredNfcCard;
 
-export interface WebSocketMessageHandler {
+export interface TerminalClientMessageHandler {
   onMessage?(message: WebSocketResponse): void | boolean;
 
   onConnectionStateChange?(connected: boolean): void | boolean;
 
-  onFoundSessionToken?(token: string): void | boolean;
+  onReceiveSessionToken?(token: string): void | boolean;
 
-  onFoundBarcode?(code: string): void | boolean;
+  onReceiveUnregisteredNfcCard?(name: string, card_id: string): void | boolean;
 
-  onFoundNfcCard?(id: string, name: string): void | boolean;
+  onError?(source: string, message: string): void | boolean;
+
+  onBarcodeIdentifyRequest?(barcode: string): void | boolean;
+
+  onNfcIdentifyRequest?(card_id: string, name: string): void | boolean;
+
+  onNfcChallengeRequest?(card_id: string, request: string): void | boolean;
+
+  onNfcResponseRequest?(
+    card_id: string,
+    challenge: string,
+    response: string
+  ): void | boolean;
 
   onNfcCardRemoved?(): void | boolean;
 
-  onError?(source: string, message: string): void | boolean;
+  onNfcRegisterRequest?(
+    name: string,
+    card_id: string,
+    card_type: CardTypeDto,
+    data: string | null | undefined
+  ): void | boolean;
 }
 
-export function dispatchWebSocketMessage(
+export function dispatchClientMessage(
   message: WebSocketResponse,
-  handler: WebSocketMessageHandler
+  handler: TerminalClientMessageHandler
 ) {
   let consumeMessage = handler.onMessage && handler.onMessage(message);
   let consumeType: boolean | void | undefined;
   switch (message.type) {
-    case "FoundSessionToken":
+    case "BarcodeIdentifyRequest":
       consumeType =
-        (handler.onFoundSessionToken &&
-          handler.onFoundSessionToken(message.payload.token)) ||
+        (handler.onBarcodeIdentifyRequest &&
+          handler.onBarcodeIdentifyRequest(message.payload.barcode)) ||
         consumeType;
       break;
-    case "FoundBarcode":
+    case "NfcIdentifyRequest":
       consumeType =
-        (handler.onFoundBarcode &&
-          handler.onFoundBarcode(message.payload.code)) ||
+        (handler.onNfcIdentifyRequest &&
+          handler.onNfcIdentifyRequest(
+            message.payload.card_id,
+            message.payload.name
+          )) ||
         consumeType;
       break;
-    case "FoundNfcCard":
+    case "NfcChallengeRequest":
       consumeType =
-        (handler.onFoundNfcCard &&
-          handler.onFoundNfcCard(message.payload.id, message.payload.name)) ||
+        (handler.onNfcChallengeRequest &&
+          handler.onNfcChallengeRequest(
+            message.payload.card_id,
+            message.payload.request
+          )) ||
+        consumeType;
+      break;
+    case "NfcResponseRequest":
+      consumeType =
+        (handler.onNfcResponseRequest &&
+          handler.onNfcResponseRequest(
+            message.payload.card_id,
+            message.payload.challenge,
+            message.payload.response
+          )) ||
         consumeType;
       break;
     case "NfcCardRemoved":
       consumeType =
         (handler.onNfcCardRemoved && handler.onNfcCardRemoved()) || consumeType;
       break;
+    case "NfcRegisterRequest":
+      consumeType =
+        (handler.onNfcRegisterRequest &&
+          handler.onNfcRegisterRequest(
+            message.payload.name,
+            message.payload.card_id,
+            message.payload.card_type,
+            message.payload.data
+          )) ||
+        consumeType;
+      break;
     case "Error":
       consumeType =
         (handler.onError &&
           handler.onError(message.payload.source, message.payload.message)) ||
+        consumeType;
+      break;
+    case "ReceiveSessionToken":
+      consumeType =
+        (handler.onReceiveSessionToken &&
+          handler.onReceiveSessionToken(message.payload.token)) ||
+        consumeType;
+      break;
+    case "ReceiveUnregisteredNfcCard":
+      consumeType =
+        (handler.onReceiveUnregisteredNfcCard &&
+          handler.onReceiveUnregisteredNfcCard(
+            message.payload.name,
+            message.payload.card_id
+          )) ||
         consumeType;
       break;
     case "ConnectionStateChange":

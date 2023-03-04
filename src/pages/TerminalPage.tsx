@@ -24,6 +24,7 @@ import {
   TerminalDeviceContext,
 } from "../terminal/client/AsciiPayAuthenticationClient";
 import { useAppSelector } from "../redux/store";
+import { WebSocketClient } from "../terminal/client/WebsocketClient";
 
 type ConnectionSimulateState = {
   connected: boolean;
@@ -35,7 +36,7 @@ function requestAccountSession(
   account: AccountDto,
   setSession: (session: string | null) => void
 ) {
-  fetch(`${BASE_URL}/auth/nfc-simulation`, {
+  fetch(`${BASE_URL}/auth/nfc/simulation`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -65,11 +66,29 @@ export const TerminalPage = () => {
       connected: true,
       session: null,
     });
+  const [connectionWebSocketUrl, setConnectionWebSocketUrl] = React.useState(
+    "ws://localhost:9001/"
+  );
 
   const [authClient, setAuthClient] =
     React.useState<AsciiPayAuthenticationClient>(
       new SimulationClient(connectionSimulateState)
     );
+
+  React.useEffect(() => {
+    if (
+      connectionMode === "simulate" &&
+      !(authClient as SimulationClient).updateState
+    ) {
+      setAuthClient(new SimulationClient(connectionSimulateState));
+    }
+    if (
+      connectionMode !== "simulate" &&
+      (authClient as SimulationClient).updateState
+    ) {
+      setAuthClient(new WebSocketClient(connectionWebSocketUrl));
+    }
+  }, [connectionMode, connectionWebSocketUrl]);
 
   const [settings, setSettings] = React.useState<TerminalSettings>({
     language: "en",
@@ -188,6 +207,23 @@ export const TerminalPage = () => {
         )}
         <Button variant="outlined" size="large" onClick={toggleConnected}>
           {connectionSimulateState.connected ? "Disconnect" : "Connect"}
+        </Button>
+      </Box>
+    );
+  } else {
+    const connectWebSocket = () => {
+      setAuthClient(new WebSocketClient(connectionWebSocketUrl));
+    };
+
+    connectionBox = (
+      <Box sx={{ mt: 2, display: "flex", "& > *": { mr: "8px !important" } }}>
+        <TextField
+          label="WebSocket address"
+          value={connectionWebSocketUrl}
+          onChange={(e) => setConnectionWebSocketUrl(e.target.value)}
+        />
+        <Button variant="outlined" size="large" onClick={connectWebSocket}>
+          Connect
         </Button>
       </Box>
     );
