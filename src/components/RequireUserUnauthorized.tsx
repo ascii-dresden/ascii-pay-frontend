@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { RoleDto } from "../redux/api/contracts";
 import React from "react";
 import { useAppSelector } from "../redux/store";
@@ -13,6 +13,6 @@ export const RequireUserUnauthorized = ({
   return user && allowedRoles.includes(user?.role) ? (
     <Outlet />
   ) : (
-    <div>Unauthorized</div>
+    <Navigate to="/" />
   );
 };

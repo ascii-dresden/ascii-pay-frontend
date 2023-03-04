@@ -26,6 +26,13 @@ import {
   TerminalDeviceContext,
 } from "./client/AsciiPayAuthenticationClient";
 import { Keyboard } from "./components/Keyboard";
+import { TerminalClientMessageHandler } from "./client/websocket";
+import {
+  receiveAccountSessionToken,
+  removeAccount,
+} from "../redux/features/paymentSlice";
+import { CardTypeDto } from "../redux/api/contracts";
+import { createTerminalProxyHandler } from "./client/TerminalProxyHandler";
 
 const StyledTerminalApp = styled.div`
   position: absolute;
@@ -281,6 +288,13 @@ export const TerminalApp = React.memo(
     const params = useParams();
     const [appClass, setAppClass] = React.useState<string | null>(null);
     const dispatch = useAppDispatch();
+
+    React.useEffect(() => {
+      const handler = createTerminalProxyHandler(dispatch, props.authClient);
+      props.authClient.addEventHandler(handler);
+      return () => props.authClient.removeEventHandler(handler);
+      // eslint-disable-next-line
+    }, [props.authClient]);
 
     const theme = React.useMemo(
       () =>

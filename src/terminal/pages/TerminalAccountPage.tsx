@@ -13,7 +13,7 @@ import { ExitToApp, People, ShowChartOutlined } from "@mui/icons-material";
 import { AccountOverview } from "../accounts/AccountOverview";
 import { AccountList } from "../accounts/AccountList";
 import { AccountDetails } from "../accounts/AccountDetails";
-import { WebSocketMessageHandler } from "../client/websocket";
+import { TerminalClientMessageHandler } from "../client/websocket";
 import { setScreensaver } from "../../redux/features/terminalSlice";
 import { receiveAccountSessionToken } from "../../redux/features/paymentSlice";
 import { TerminalSettings } from "./TerminalSettingsPage";
@@ -71,8 +71,8 @@ export const TerminalAccountPage = (props: {
   };
   const dispatch = useAppDispatch();
 
-  const handler: WebSocketMessageHandler = {
-    onFoundSessionToken(token: string) {
+  const handler: TerminalClientMessageHandler = {
+    onReceiveSessionToken(token: string) {
       props.deviceContext.wakeUp();
       dispatch(setScreensaver(false));
       dispatch(receiveAccountSessionToken(token));

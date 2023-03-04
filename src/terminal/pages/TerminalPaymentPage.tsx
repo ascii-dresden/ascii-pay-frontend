@@ -20,7 +20,7 @@ import { Money } from "../components/Money";
 import { Keypad } from "../payment/Keypad";
 import styled from "@emotion/styled";
 import { ProductList } from "../payment/ProductList";
-import { WebSocketMessageHandler } from "../client/websocket";
+import { TerminalClientMessageHandler } from "../client/websocket";
 import {
   AsciiPayAuthenticationClient,
   TerminalDeviceContext,
@@ -93,8 +93,8 @@ export const TerminalPaymentPage = (props: {
   );
   const dispatch = useAppDispatch();
 
-  const handler: WebSocketMessageHandler = {
-    onFoundSessionToken(token: string) {
+  const handler: TerminalClientMessageHandler = {
+    onReceiveSessionToken(token: string) {
       props.deviceContext.wakeUp();
       dispatch(setScreensaver(false));
       dispatch(receiveAccountSessionToken(token));

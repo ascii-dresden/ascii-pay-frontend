@@ -10,7 +10,7 @@ import {
   AsciiPayAuthenticationClient,
   TerminalDeviceContext,
 } from "../client/AsciiPayAuthenticationClient";
-import { WebSocketMessageHandler } from "../client/websocket";
+import { TerminalClientMessageHandler } from "../client/websocket";
 
 export const AppNotifications = React.memo(
   (props: {
@@ -20,7 +20,7 @@ export const AppNotifications = React.memo(
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
 
-    const handler: WebSocketMessageHandler = {
+    const handler: TerminalClientMessageHandler = {
       onMessage() {
         props.deviceContext.wakeUp();
       },

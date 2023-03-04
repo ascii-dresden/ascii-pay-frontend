@@ -12,7 +12,7 @@ import { setScreensaver } from "../../redux/features/terminalSlice";
 import styled from "@emotion/styled";
 import { useTranslation } from "react-i18next";
 import { ClockIcon } from "../components/ClockIcon";
-import { WebSocketMessageHandler } from "../client/websocket";
+import { TerminalClientMessageHandler } from "../client/websocket";
 import {
   AsciiPayAuthenticationClient,
   TerminalDeviceContext,
@@ -137,8 +137,8 @@ export const TerminalStartPage = (props: {
   const dispatch = useAppDispatch();
   const { date, wish } = useDate(t);
 
-  const handler: WebSocketMessageHandler = {
-    onFoundSessionToken(token: string) {
+  const handler: TerminalClientMessageHandler = {
+    onReceiveSessionToken(token: string) {
       props.deviceContext.wakeUp();
       dispatch(setScreensaver(false));
       dispatch(receiveAccountSessionToken(token));

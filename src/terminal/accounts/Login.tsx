@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { AsciiPayAuthenticationClient } from "../client/AsciiPayAuthenticationClient";
 import styled from "@emotion/styled";
 import { ContactlessPayment } from "../../components/ContactlessPayment";
+import { BASE_URL } from "../../redux/api/customFetchBase";
 
 const StyledLogin = styled.div`
   & > span {
@@ -68,6 +69,31 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const [loading, setLoading] = React.useState(false);
+
+  const login = () => {
+    setLoading(true);
+    fetch(`${BASE_URL}/auth/password`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        setLoading(false);
+        if (response.token) {
+          props.authClient.receiveSessionToken(response.token ?? "");
+        }
+      })
+      .catch(() => setLoading(false));
+  };
+
   const usernameInput = React.useRef<HTMLInputElement>(null);
   const passwordInput = React.useRef<HTMLInputElement>(null);
 
@@ -95,7 +121,9 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button>{t("account.login")}</button>
+          <button disabled={loading} onClick={login}>
+            {t("account.login")}
+          </button>
         </div>
         <div>
           <ContactlessPayment />

@@ -79,7 +79,7 @@ export const ScannedAccount = (props: {
         <StyledScannedAccountEmpty>
           <span>{t("payment.noAccount")}</span>
           <StyledScannedAccountRefresh
-            onClick={() => props.authClient.requestNfcRefresh()}
+            onClick={() => props.authClient.requestNfcReauthenticate()}
           >
             <Refresh />
           </StyledScannedAccountRefresh>

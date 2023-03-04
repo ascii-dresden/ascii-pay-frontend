@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "@emotion/styled";
-import { WebSocketMessageHandler } from "../client/websocket";
+import { TerminalClientMessageHandler } from "../client/websocket";
 import { AsciiPayAuthenticationClient } from "../client/AsciiPayAuthenticationClient";
 
 const StyledConnectionIndicator = styled.div`
@@ -67,7 +67,7 @@ export const ConnectionIndicator = React.memo(
       props.authClient.isConnected()
     );
 
-    const handler: WebSocketMessageHandler = {
+    const handler: TerminalClientMessageHandler = {
       onConnectionStateChange(connected: boolean) {
         setIsConnected(connected);
       },
