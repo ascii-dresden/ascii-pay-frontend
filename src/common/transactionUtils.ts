@@ -1,0 +1,141 @@
+import { CoinAmountDto, TransactionDto } from "./contracts";
+
+export type PseudoProductDto = {
+  id?: number;
+  name: string;
+  price: CoinAmountDto;
+  bonus: CoinAmountDto;
+};
+
+export function getTransactionSum(transaction: TransactionDto): CoinAmountDto {
+  let centAmount = 0;
+  let coffeeStampAmount = 0;
+  let bottleStampAmount = 0;
+
+  for (const item of transaction.items) {
+    if (item.effective_price.Cent) {
+      centAmount += item.effective_price.Cent;
+    }
+    if (item.effective_price.CoffeeStamp) {
+      coffeeStampAmount += item.effective_price.CoffeeStamp;
+    }
+    if (item.effective_price.BottleStamp) {
+      bottleStampAmount += item.effective_price.BottleStamp;
+    }
+  }
+
+  return {
+    Cent: centAmount,
+    CoffeeStamp: coffeeStampAmount,
+    BottleStamp: bottleStampAmount,
+  };
+}
+
+export function addCoinAmount(
+  left: CoinAmountDto,
+  right: CoinAmountDto
+): CoinAmountDto {
+  return {
+    Cent: (left.Cent ?? 0) + (right.Cent ?? 0),
+    CoffeeStamp: (left.CoffeeStamp ?? 0) + (right.CoffeeStamp ?? 0),
+    BottleStamp: (left.BottleStamp ?? 0) + (right.BottleStamp ?? 0),
+  };
+}
+
+export function subCoinAmount(
+  left: CoinAmountDto,
+  right: CoinAmountDto
+): CoinAmountDto {
+  return {
+    Cent: (left.Cent ?? 0) - (right.Cent ?? 0),
+    CoffeeStamp: (left.CoffeeStamp ?? 0) - (right.CoffeeStamp ?? 0),
+    BottleStamp: (left.BottleStamp ?? 0) - (right.BottleStamp ?? 0),
+  };
+}
+
+export function equalCoinAmount(
+  left: CoinAmountDto,
+  right: CoinAmountDto
+): boolean {
+  return (
+    (left.Cent ?? 0) === (right.Cent ?? 0) &&
+    (left.CoffeeStamp ?? 0) === (right.CoffeeStamp ?? 0) &&
+    (left.BottleStamp ?? 0) === (right.BottleStamp ?? 0)
+  );
+}
+
+export function isCoinAmountEmpty(coins: CoinAmountDto): boolean {
+  if (coins.Cent && coins.Cent !== 0) {
+    return false;
+  }
+  if (coins.BottleStamp && coins.BottleStamp !== 0) {
+    return false;
+  }
+  return !(coins.CoffeeStamp && coins.CoffeeStamp !== 0);
+}
+
+export function isCoinAmountNegative(coins: CoinAmountDto): boolean {
+  if (coins.Cent && coins.Cent < 0) {
+    return true;
+  }
+  if (coins.BottleStamp && coins.BottleStamp < 0) {
+    return true;
+  }
+  return !!(coins.CoffeeStamp && coins.CoffeeStamp < 0);
+}
+
+export function getPossiblePrices(product: PseudoProductDto): CoinAmountDto[] {
+  let prices: CoinAmountDto[] = [];
+
+  if (product.price.Cent && product.price.Cent !== 0) {
+    prices.push({
+      Cent: product.price.Cent,
+      BottleStamp: product.bonus.BottleStamp
+        ? -product.bonus.BottleStamp
+        : undefined,
+      CoffeeStamp: product.bonus.CoffeeStamp
+        ? -product.bonus.CoffeeStamp
+        : undefined,
+    });
+  }
+  if (product.price.BottleStamp && product.price.BottleStamp !== 0) {
+    prices.push({
+      Cent: product.bonus.Cent ? -product.bonus.Cent : undefined,
+      BottleStamp: product.price.BottleStamp,
+      CoffeeStamp: product.bonus.CoffeeStamp
+        ? -product.bonus.CoffeeStamp
+        : undefined,
+    });
+  }
+  if (product.price.CoffeeStamp && product.price.CoffeeStamp !== 0) {
+    prices.push({
+      Cent: product.bonus.Cent ? -product.bonus.Cent : undefined,
+      BottleStamp: product.bonus.BottleStamp
+        ? -product.bonus.BottleStamp
+        : undefined,
+      CoffeeStamp: product.price.CoffeeStamp,
+    });
+  }
+
+  if (prices.length === 0) {
+    prices.push({});
+  }
+
+  return prices;
+}
+
+export function selectNextCoinAmount(
+  product: PseudoProductDto,
+  current: CoinAmountDto
+): CoinAmountDto {
+  let prices = getPossiblePrices(product);
+
+  for (let i = 0; i < prices.length; i++) {
+    if (equalCoinAmount(current, prices[i])) {
+      let next = (i + 1) % prices.length;
+      return prices[next];
+    }
+  }
+
+  return prices[0];
+}

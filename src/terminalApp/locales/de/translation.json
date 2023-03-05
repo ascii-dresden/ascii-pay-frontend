@@ -1,0 +1,98 @@
+{
+  "general": {
+    "enableScreensaver": "Bildschirmschoner",
+    "terminalConnected": "NFC-Terminal verbunden!",
+    "terminalDisconnected": "NFC-Terminal nicht verbunden!",
+    "cancel": "Abbrechen",
+    "or": "oder"
+  },
+  "startPage": {
+    "greeting": {
+      "morning": "Guten Morgen",
+      "day": "Guten Tag",
+      "evening": "Guten Abend"
+    },
+    "openPayment": "Bezahlen",
+    "openRegister": "Kasse zählen",
+    "openAccount": "Kontoverwaltung",
+    "openSettings": "Einstellungen"
+  },
+  "settingsPage": {
+    "name": "Einstellungen",
+    "theme": "Darstellung",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
+    "highlightColor": "Akzentfarbe",
+    "actions": "Aktionen",
+    "reload": "App neu laden",
+    "restart": "NFC-Terminal neu starten",
+    "fullscreen": "Vollbildmodus öffnen",
+    "windowSize": "Fenstergröße",
+    "terminal": "NFC-Terminal",
+    "language": "Sprache",
+    "languageGerman": "Deutsch",
+    "languageEnglish": "Englisch"
+  },
+  "notification": {
+    "onFoundBarcode": "Barcode gefunden",
+    "onFoundSessionToken": "Account-Token gefunden",
+    "onFoundNfcCard": "NFC-Karte gefunden",
+    "onNfcCardRemoved": "NFC-Karte entfernt"
+  },
+  "register": {
+    "cashBook": "Kassenbuch",
+    "envelope": "Briefumschlag",
+    "name": "Name",
+    "yourName": "Dein Name",
+    "date": "Datum",
+    "total": "Summe",
+    "coins": "Münzen",
+    "notes": "Scheine",
+    "start": "Starte Berechnung um Übersicht zu sehen!",
+    "enterCoins": "Münzeingabe",
+    "enterNotes": "Scheineingabe",
+    "overview": "Übersicht",
+    "calculate": "Berechnungsmodus"
+  },
+  "payment": {
+    "basket": {
+      "empty": "Warenkorb leer!",
+      "emptyAction": "Warenkorb leeren",
+      "keypadValuePositive": "Eigener Betrag",
+      "keypadValueNegative": "Guthaben aufladen"
+    },
+    "products": {
+      "coffee": "Kaffee",
+      "bottle_500": "Flasche 0,5l",
+      "bottle_330": "Flasche 0,33l",
+      "snacks": "Snacks",
+      "payable": "Bezahlbar mit"
+    },
+    "redeemStamps": "Stempel einlösen",
+    "proceedWithoutStamps": "Fortsetzen",
+    "proceedWithStamps": "Stempel einlösen",
+    "pay": "Bezahlen",
+    "quickAccess": "Übersicht",
+    "keypad": "Handeingabe",
+    "productList": "Produkte",
+    "noAccount": "Kein Konto erkannt!"
+  },
+  "account": {
+    "overview": "Übersicht",
+    "accountList": "Kontolist",
+    "registerNfcToken": "NFC-Token registrieren",
+    "foundNewNfcToken": "Neues NFC-Token gefunden",
+    "accountNumber": "Kontonummer",
+    "nfcToken": "NFC-Token",
+    "login": "Login",
+    "loginFailed": "Login fehlgeschlagen!",
+    "loginMessage": "Bitte melden Sie sich an!",
+    "name": "Name",
+    "username": "Nutzername",
+    "password": "Passwort",
+    "permission": "Berechtigung",
+    "registerAccountNumber": "Kontonummer registrieren",
+    "foundNewAccountNumber": "Neue Kontonummer gefunden",
+    "balance": "Guthaben"
+  }
+}
