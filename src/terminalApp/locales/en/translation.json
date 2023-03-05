@@ -1,0 +1,98 @@
+{
+  "general": {
+    "enableScreensaver": "Screensaver",
+    "terminalConnected": "NFC terminal connected!",
+    "terminalDisconnected": "NFC terminal disconnected!",
+    "cancel": "Cancel",
+    "or": "or"
+  },
+  "startPage": {
+    "greeting": {
+      "morning": "Goog morning",
+      "day": "Good day",
+      "evening": "Good evening"
+    },
+    "openPayment": "Payment",
+    "openRegister": "Count register",
+    "openAccount": "Acount management",
+    "openSettings": "Settings"
+  },
+  "settingsPage": {
+    "name": "Settings",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "highlightColor": "Highlight color",
+    "actions": "Actions",
+    "reload": "Reload app",
+    "restart": "Restart NFC terminal",
+    "fullscreen": "Open fullscreen mode",
+    "windowSize": "Window size",
+    "terminal": "NFC terminal",
+    "language": "Language",
+    "languageGerman": "German",
+    "languageEnglish": "English"
+  },
+  "notification": {
+    "onFoundBarcode": "Found barcode",
+    "onFoundSessionToken": "Found session token",
+    "onFoundNfcCard": "Found NFC card",
+    "onNfcCardRemoved": "NFC token was removed"
+  },
+  "register": {
+    "cashBook": "Cash book",
+    "envelope": "Envelope",
+    "name": "Name",
+    "yourName": "Your name",
+    "date": "Date",
+    "total": "Total",
+    "coins": "Coins",
+    "notes": "Notes",
+    "start": "Start calculation to view overview!",
+    "enterCoins": "Enter coin count",
+    "enterNotes": "Enter note count",
+    "overview": "Overview",
+    "calculate": "Calculate"
+  },
+  "payment": {
+    "basket": {
+      "empty": "Basket empty!",
+      "emptyAction": "Empty basket",
+      "keypadValuePositive": "Custom payment",
+      "keypadValueNegative": "Recharge credit"
+    },
+    "products": {
+      "coffee": "Coffee",
+      "bottle_500": "Bottle 0,5l",
+      "bottle_330": "Bottle 0,33l",
+      "snacks": "Snacks",
+      "payable": "Payable with"
+    },
+    "redeemStamps": "Redeem stamps",
+    "proceedWithoutStamps": "Continue",
+    "proceedWithStamps": "Redeem stamps",
+    "pay": "Pay",
+    "quickAccess": "Overview",
+    "keypad": "Keypad",
+    "productList": "Products",
+    "noAccount": "No account scanned!"
+  },
+  "account": {
+    "overview": "Overview",
+    "accountList": "Account list",
+    "registerNfcToken": "Register NFC token",
+    "foundNewNfcToken": "Found new NFC token",
+    "accountNumber": "Account number",
+    "nfcToken": "NFC token",
+    "login": "Login",
+    "loginFailed": "Login failed!",
+    "loginMessage": "Please login to access the account list!",
+    "name": "Name",
+    "username": "Username",
+    "password": "Password",
+    "permission": "Permission",
+    "registerAccountNumber": "Register account number",
+    "foundNewAccountNumber": "Found new account number",
+    "balance": "Balance"
+  }
+}
