@@ -118,6 +118,15 @@ export const accountApi = createApi({
       },
       providesTags: [{ type: "Transactions", id: "LIST" }],
     }),
+    getGlobalTransactions: builder.query<TransactionDto[], void>({
+      query() {
+        return {
+          url: `/transactions`,
+          credentials: "include",
+        };
+      },
+      providesTags: [{ type: "Transactions", id: "GLOBAL" }],
+    }),
     createAdminAccount: builder.mutation<AccountDto, CreateAdminAccountDto>({
       query(account) {
         return {
@@ -259,6 +268,7 @@ export const {
   useCreateAdminAccountMutation,
   usePaymentMutation,
   useGetAllTransactionsQuery,
+  useGetGlobalTransactionsQuery,
   useUpdateAccountPasswordAuthenticationMutation,
   useDeleteAccountPasswordAuthenticationMutation,
   useCreateAccountPasswordResetTokenMutation,

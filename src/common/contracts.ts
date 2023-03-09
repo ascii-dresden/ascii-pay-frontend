@@ -104,6 +104,11 @@ export type PaymentDto = {
   items: PaymentItemDto[];
 };
 
+export type PaymentResponseDto = {
+  account: AccountDto;
+  transaction: TransactionDto;
+};
+
 export type SaveAuthPasswordDto = {
   username: string;
   password: string;

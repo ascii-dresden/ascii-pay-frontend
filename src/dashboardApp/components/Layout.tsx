@@ -20,7 +20,14 @@ import {
 import { useLogoutUserMutation } from "../redux/api/authApi";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
-import { AccountCircle, Coffee, Home, Menu, Store } from "@mui/icons-material";
+import {
+  AccountCircle,
+  Coffee,
+  Home,
+  Menu,
+  PublicOutlined,
+  Store,
+} from "@mui/icons-material";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
 import { SearchButton } from "./search/SearchButton";
 import { logout } from "../redux/features/userSlice";
@@ -67,11 +74,18 @@ export const Layout = () => {
     logoutUser();
   };
 
-  let activePage: "home" | "accounts" | "products" | "terminal";
+  let activePage:
+    | "home"
+    | "accounts"
+    | "products"
+    | "transactions"
+    | "terminal";
   if (location.pathname.startsWith("/accounts")) {
     activePage = "accounts";
   } else if (location.pathname.startsWith("/products")) {
     activePage = "products";
+  } else if (location.pathname.startsWith("/transactions")) {
+    activePage = "transactions";
   } else if (location.pathname.startsWith("/terminal")) {
     activePage = "terminal";
   } else {
@@ -105,6 +119,14 @@ export const Layout = () => {
                 <Coffee />
               </ListItemIcon>
               <ListItemText primary="Products" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding onClick={() => navigate("/transactions")}>
+            <ListItemButton selected={activePage === "transactions"}>
+              <ListItemIcon>
+                <PublicOutlined />
+              </ListItemIcon>
+              <ListItemText primary="Transactions" />
             </ListItemButton>
           </ListItem>
           <Divider />

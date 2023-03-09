@@ -11,6 +11,8 @@ import { Apps, CalculateOutlined, ManageSearch } from "@mui/icons-material";
 import { ClockIcon } from "../components/ClockIcon";
 import { setScreensaver } from "../redux/features/terminalSlice";
 import {
+  cancelPayment,
+  payment,
   receiveAccountSessionToken,
   removeAccount,
   setKeypadValue,
@@ -28,6 +30,7 @@ import {
   AsciiPayAuthenticationClient,
   TerminalDeviceContext,
 } from "../client/AsciiPayAuthenticationClient";
+import { PaymentDialog } from "../payment/PaymentDialog";
 
 const StyledPaymentPageLeft = styled.div`
   position: absolute;
@@ -96,6 +99,9 @@ export const TerminalPaymentPage = (props: {
   const storedPaymentItems = useTerminalSelector(
     (state) => state.paymentState.storedPaymentItems
   );
+  const paymentPayment = useTerminalSelector(
+    (state) => state.paymentState.payment
+  );
   const dispatch = useTerminalDispatch();
 
   const handler: TerminalClientMessageHandler = {
@@ -157,6 +163,9 @@ export const TerminalPaymentPage = (props: {
           : t("payment.basket.keypadValueNegative");
       dispatch(submitKeypadValue([keypadValue, label]));
     }
+
+    dispatch(payment());
+    props.authClient.requestNfcReauthenticate();
   };
 
   let content;
@@ -206,6 +215,14 @@ export const TerminalPaymentPage = (props: {
           </span>
         </StyledPaymentPageSummary>
       </StyledPaymentPageRight>
+      {paymentPayment ? (
+        <PaymentDialog
+          payment={paymentPayment}
+          onClose={() => dispatch(cancelPayment())}
+        />
+      ) : (
+        <></>
+      )}
     </SidebarLayout>
   );
 };
