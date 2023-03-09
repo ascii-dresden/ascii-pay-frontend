@@ -26,13 +26,13 @@ const StyledDialogBody = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 20rem;
-  margin-left: -10rem;
-  height: 24rem;
-  margin-top: -12rem;
+  width: 20em;
+  margin-left: -10em;
+  height: 24em;
+  margin-top: -12em;
   background-color: var(--secondary-background);
   border: solid 1px var(--border-color);
-  padding: 1rem;
+  padding: 1em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,14 +43,14 @@ const StyledDialogBody = styled.div`
   }
 
   &.dialog-width {
-    width: 36rem;
-    margin-left: -18rem;
+    width: 36em;
+    margin-left: -18em;
   }
 `;
 const StyledDialogTitle = styled.div`
-  font-size: 1.2rem;
+  font-size: 1.2em;
   font-weight: bold;
-  line-height: 3rem;
+  line-height: 3em;
   text-align: center;
 `;
 const StyledDialogContent = styled.div`
@@ -58,7 +58,7 @@ const StyledDialogContent = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 16rem;
+  height: 16em;
 
   & > div {
     width: 100%;
@@ -69,7 +69,7 @@ const StyledDialogActions = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.5em;
 `;
 
 const StyledDialogAction = styled.button`

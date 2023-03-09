@@ -28,6 +28,7 @@ import { createTerminalProxyHandler } from "./client/TerminalProxyHandler";
 import { Provider } from "react-redux";
 import { TerminalDispatch, terminalStore } from "./redux/terminalStore";
 import { checkTimeouts, setScreensaver } from "./redux/features/terminalSlice";
+import { checkPaymentTimeout } from "./redux/features/paymentSlice";
 
 const StyledTerminalApp = styled.div`
   position: absolute;
@@ -319,7 +320,10 @@ export const TerminalApp = React.memo(
     }, [props.width, props.height]);
 
     React.useEffect(() => {
-      const timer = setInterval(() => dispatch(checkTimeouts()));
+      const timer = setInterval(() => {
+        dispatch(checkTimeouts());
+        dispatch(checkPaymentTimeout());
+      });
       return () => {
         clearInterval(timer);
       };

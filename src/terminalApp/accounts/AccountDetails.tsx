@@ -232,7 +232,7 @@ export const AccountDetails = (props: {
               }
             />
             <button
-              style={{ width: "4rem" }}
+              style={{ width: "4em" }}
               onClick={() =>
                 deleteNfcCard(
                   dispatch,

@@ -23,6 +23,7 @@ import { dashboardStore } from "./redux/dashboardStore";
 import { Provider } from "react-redux";
 import { GlobalStyle } from "./globalStyle";
 import { Global } from "@emotion/react";
+import { TransactionListPage } from "./pages/TransactionListPage";
 
 export function DashboardApp() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -65,6 +66,7 @@ export function DashboardApp() {
                   path="products/:productId"
                   element={<ProductDetailsPage />}
                 />
+                <Route path="transactions" element={<TransactionListPage />} />
                 <Route path="terminal/:page" element={<TerminalPage />} />
                 <Route path="terminal" element={<TerminalPage />} />
               </Route>
