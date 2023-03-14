@@ -9,6 +9,11 @@ import styled from "@emotion/styled";
 import { removeAccount } from "../redux/features/paymentSlice";
 import { AsciiPayAuthenticationClient } from "../client/AsciiPayAuthenticationClient";
 import { CoinAmountView } from "../../dashboardApp/components/transaction/CoinAmountView";
+import {
+  NotificationColor,
+  NotificationType,
+  showNotification,
+} from "../redux/features/terminalSlice";
 
 const StyledScannedAccount = styled.div`
   position: relative;
@@ -82,7 +87,17 @@ export const ScannedAccount = (props: {
         <StyledScannedAccountEmpty>
           <span>{t("payment.noAccount")}</span>
           <StyledScannedAccountRefresh
-            onClick={() => props.authClient.requestNfcReauthenticate()}
+            onClick={() => {
+              dispatch(
+                showNotification({
+                  type: NotificationType.NFC,
+                  title: "Identify ...",
+                  color: NotificationColor.INFO,
+                  key: "nfc-proxy",
+                })
+              );
+              props.authClient.requestNfcReauthenticate();
+            }}
           >
             <Refresh />
           </StyledScannedAccountRefresh>

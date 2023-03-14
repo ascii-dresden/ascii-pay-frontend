@@ -21,6 +21,7 @@ export interface Notification {
   title: string;
   description: string;
   timeout: number;
+  key: string;
 }
 
 type PaymentState = {
@@ -60,19 +61,28 @@ export const terminalSlice = createSlice({
       state,
       action: PayloadAction<{
         type: NotificationType;
-        title: string;
+        title: string | null;
         color?: NotificationColor;
         description?: string;
+        key?: string;
       }>
     ) => {
       let list = state.notifications.slice();
-      list.push({
-        type: action.payload.type,
-        title: action.payload.title,
-        color: action.payload.color ?? NotificationColor.INFO,
-        description: action.payload.description ?? "",
-        timeout: Date.now() + NOTIFICATION_TIMEOUT,
-      });
+
+      if (action.payload.key) {
+        list = list.filter((n) => n.key !== action.payload.key);
+      }
+
+      if (action.payload.title !== null) {
+        list.push({
+          type: action.payload.type,
+          title: action.payload.title,
+          color: action.payload.color ?? NotificationColor.INFO,
+          description: action.payload.description ?? "",
+          timeout: Date.now() + NOTIFICATION_TIMEOUT,
+          key: action.payload.key ?? "",
+        });
+      }
       state.notifications = list;
     },
     hideNotification: (state, action: PayloadAction<Notification>) => {

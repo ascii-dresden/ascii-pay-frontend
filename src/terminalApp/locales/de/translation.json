@@ -81,6 +81,7 @@
     "overview": "Übersicht",
     "accountList": "Kontolist",
     "registerNfcToken": "NFC-Token registrieren",
+    "registerNfcTokenInProgress": "Bitte warten ...",
     "foundNewNfcToken": "Neues NFC-Token gefunden",
     "accountNumber": "Kontonummer",
     "nfcToken": "NFC-Token",

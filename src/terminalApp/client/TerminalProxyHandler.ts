@@ -14,6 +14,14 @@ export function createTerminalProxyHandler(
 ): TerminalClientMessageHandler {
   return {
     onNfcIdentifyRequest(card_id: string, name: string): void | boolean {
+      dispatch(
+        showNotification({
+          type: NotificationType.NFC,
+          title: "Identify ...",
+          color: NotificationColor.INFO,
+          key: "nfc-proxy",
+        })
+      );
       fetch(`${BASE_URL}/auth/nfc/identify`, {
         method: "POST",
         headers: {
@@ -26,10 +34,18 @@ export function createTerminalProxyHandler(
       })
         .then((response) => response.json())
         .then((response) => {
-          if (response.card_type) {
+          if (response.card_id && response.card_type) {
+            dispatch(
+              showNotification({
+                type: NotificationType.NFC,
+                title: "Challenge ...",
+                color: NotificationColor.INFO,
+                key: "nfc-proxy",
+              })
+            );
             authClient.requestNfcIdentifyResponse(
-              response.card_id ?? "",
-              response.card_type ?? ""
+              response.card_id,
+              response.card_type
             );
           } else {
             authClient.receiveUnregisteredNfcCard(name, card_id);
@@ -41,11 +57,20 @@ export function createTerminalProxyHandler(
               type: NotificationType.NFC,
               title: "Communication error!",
               color: NotificationColor.ERROR,
+              key: "nfc-proxy",
             })
           )
         );
     },
     onNfcChallengeRequest(card_id: string, request: string): void | boolean {
+      dispatch(
+        showNotification({
+          type: NotificationType.NFC,
+          title: "Challenge ...",
+          color: NotificationColor.INFO,
+          key: "nfc-proxy",
+        })
+      );
       fetch(`${BASE_URL}/auth/nfc/challenge`, {
         method: "POST",
         headers: {
@@ -59,10 +84,29 @@ export function createTerminalProxyHandler(
       })
         .then((response) => response.json())
         .then((response) => {
-          authClient.requestNfcChallengeResponse(
-            response.card_id ?? "",
-            response.challenge ?? ""
-          );
+          if (response.card_id && response.challenge) {
+            dispatch(
+              showNotification({
+                type: NotificationType.NFC,
+                title: "Response ...",
+                color: NotificationColor.INFO,
+                key: "nfc-proxy",
+              })
+            );
+            authClient.requestNfcChallengeResponse(
+              response.card_id ?? "",
+              response.challenge ?? ""
+            );
+          } else {
+            dispatch(
+              showNotification({
+                type: NotificationType.NFC,
+                title: "Communication error!",
+                color: NotificationColor.ERROR,
+                key: "nfc-proxy",
+              })
+            );
+          }
         })
         .catch(() =>
           dispatch(
@@ -70,6 +114,7 @@ export function createTerminalProxyHandler(
               type: NotificationType.NFC,
               title: "Communication error!",
               color: NotificationColor.ERROR,
+              key: "nfc-proxy",
             })
           )
         );
@@ -79,6 +124,14 @@ export function createTerminalProxyHandler(
       challenge: string,
       response: string
     ): void | boolean {
+      dispatch(
+        showNotification({
+          type: NotificationType.NFC,
+          title: "Response ...",
+          color: NotificationColor.INFO,
+          key: "nfc-proxy",
+        })
+      );
       fetch(`${BASE_URL}/auth/nfc/response`, {
         method: "POST",
         headers: {
@@ -93,6 +146,14 @@ export function createTerminalProxyHandler(
       })
         .then((response) => response.json())
         .then((response) => {
+          dispatch(
+            showNotification({
+              type: NotificationType.NFC,
+              title: null,
+              color: NotificationColor.INFO,
+              key: "nfc-proxy",
+            })
+          );
           authClient.requestNfcResponseResponse(
             response.card_id ?? "",
             response.session_key ?? ""
@@ -107,6 +168,7 @@ export function createTerminalProxyHandler(
               type: NotificationType.NFC,
               title: "Communication error!",
               color: NotificationColor.ERROR,
+              key: "nfc-proxy",
             })
           )
         );
