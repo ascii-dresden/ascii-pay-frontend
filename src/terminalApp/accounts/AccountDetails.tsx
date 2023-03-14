@@ -124,7 +124,6 @@ export const AccountDetails = (props: {
   const dispatch = useTerminalDispatch();
   const { t } = useTranslation();
   const token = useTerminalSelector((state) => state.accountState.token);
-  const [isRegistering, setIsRegistering] = React.useState(false);
 
   const {
     isLoading,
@@ -135,6 +134,7 @@ export const AccountDetails = (props: {
   const [registerCard, setRegisterCard] = React.useState<{
     name: string;
     card_id: string;
+    isRegistering: boolean;
   } | null>(null);
 
   React.useEffect(() => {
@@ -143,7 +143,7 @@ export const AccountDetails = (props: {
         name: string,
         card_id: string
       ): void | boolean {
-        setRegisterCard({ name, card_id });
+        setRegisterCard({ name, card_id, isRegistering: false });
         return true;
       },
       onNfcCardRemoved(): void | boolean {
@@ -186,12 +186,16 @@ export const AccountDetails = (props: {
   if (registerCard && account.id) {
     let action = [
       {
-        label: isRegistering
+        label: registerCard.isRegistering
           ? t("account.registerNfcTokenInProgress")
           : t("account.registerNfcToken"),
         action: () => {
           if (account.id) {
-            setIsRegistering(true);
+            setRegisterCard((c) => ({
+              card_id: c?.card_id ?? "",
+              name: c?.name ?? "",
+              isRegistering: true,
+            }));
             props.authClient.requestNfcRegister(registerCard.card_id);
           }
         },

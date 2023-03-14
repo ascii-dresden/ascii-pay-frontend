@@ -16,6 +16,7 @@ import {
 } from "../../../common/transactionUtils";
 import { BASE_URL } from "../api/customFetchBase";
 import { TerminalDispatch, TerminalState } from "../terminalStore";
+import { accountApi } from "../api/accountApi";
 
 const PAYMENT_WAITING_TIMEOUT = 30_000;
 const PAYMENT_INPROGRESS_TIMEOUT = 3_000;
@@ -344,6 +345,16 @@ export const paymentSlice = createSlice({
       state.scannedAccount = action.payload.account;
       state.scannedToken = action.payload.token;
       state.payment = action.payload.payment;
+
+      if (action.payload.payment) {
+        state.payment = action.payload.payment;
+
+        if (state.payment.type === "Success") {
+          state.keypadValue = 0;
+          state.storedPaymentItems = [];
+          state.paymentTotal = calculateTotal(state);
+        }
+      }
     });
   },
 });

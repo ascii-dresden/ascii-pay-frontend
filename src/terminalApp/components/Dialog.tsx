@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { createPortal } from "react-dom";
 
 const StyledDialog = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   height: 100%;
@@ -74,7 +74,34 @@ const StyledDialogActions = styled.div`
 `;
 
 const StyledDialogAction = styled.button`
-  flex: 1 1 auto;
+  flex: 1 1 0;
+
+  width: 100%;
+  border: solid 1px var(--border-color);
+  border-radius: 0;
+  color: var(--primary-text-color);
+  padding: 0.4em 0.8em;
+  font-size: 0.9em;
+  background-color: var(--tertiary-hover-background);
+
+  &:hover {
+    background-color: var(--secondary-background);
+  }
+
+  &:focus {
+    background-color: var(--secondary-background);
+    border-color: var(--theme-color);
+    box-shadow: 0 0 0 1px var(--theme-color);
+    outline: none;
+  }
+
+  &:disabled {
+    background-color: var(--tertiary-background);
+
+    &:hover {
+      background-color: var(--tertiary-hover-background);
+    }
+  }
 `;
 
 export const Dialog = (props: {
