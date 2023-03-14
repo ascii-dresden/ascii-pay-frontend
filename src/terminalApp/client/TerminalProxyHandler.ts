@@ -48,6 +48,14 @@ export function createTerminalProxyHandler(
               response.card_type
             );
           } else {
+            dispatch(
+              showNotification({
+                type: NotificationType.NFC,
+                title: null,
+                color: NotificationColor.INFO,
+                key: "nfc-proxy",
+              })
+            );
             authClient.receiveUnregisteredNfcCard(name, card_id);
           }
         })

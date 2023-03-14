@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "@emotion/styled";
 import clsx from "clsx";
 import { createPortal } from "react-dom";
+import { Close } from "@mui/icons-material";
 
 const StyledDialog = styled.div`
   position: absolute;
@@ -48,6 +49,15 @@ const StyledDialogBody = styled.div`
     margin-left: -18em;
   }
 `;
+const StyledDialogCancel = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4em !important;
+  height: 3em;
+  line-height: 3em;
+  text-align: center;
+`;
 const StyledDialogTitle = styled.div`
   font-size: 1.2em;
   font-weight: bold;
@@ -74,6 +84,9 @@ const StyledDialogActions = styled.div`
 `;
 
 const StyledDialogAction = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex: 1 1 0;
 
   width: 100%;
@@ -104,18 +117,47 @@ const StyledDialogAction = styled.button`
   }
 `;
 
+const StyledSpinner = styled.div`
+  padding: 0 0.5em;
+
+  div {
+    border: solid 0.1em var(--primary-text-color);
+    border-right-color: transparent;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    animation: rotate 1s infinite linear;
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
 export const Dialog = (props: {
   title: string;
   children: any;
   actions: {
     label: string;
+    isLoading?: boolean;
     action: () => void;
   }[];
   large?: boolean;
+  onClose?: () => void;
 }) => {
-  let actions = props.actions.map(({ label, action }) => {
+  let actions = props.actions.map(({ label, action, isLoading }) => {
     return (
       <StyledDialogAction key={label} onClick={() => action()}>
+        {isLoading ? (
+          <StyledSpinner>
+            <div></div>
+          </StyledSpinner>
+        ) : null}
         {label}
       </StyledDialogAction>
     );
@@ -128,6 +170,11 @@ export const Dialog = (props: {
           "dialog-width": props.large,
         })}
       >
+        {props.onClose ? (
+          <StyledDialogCancel onClick={props.onClose}>
+            <Close />
+          </StyledDialogCancel>
+        ) : null}
         <StyledDialogTitle>{props.title}</StyledDialogTitle>
         <StyledDialogContent>{props.children}</StyledDialogContent>
         <StyledDialogActions>{actions}</StyledDialogActions>

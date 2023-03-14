@@ -189,6 +189,7 @@ export const AccountDetails = (props: {
         label: registerCard.isRegistering
           ? t("account.registerNfcTokenInProgress")
           : t("account.registerNfcToken"),
+        isLoading: registerCard.isRegistering,
         action: () => {
           if (account.id) {
             setRegisterCard((c) => ({
@@ -200,15 +201,15 @@ export const AccountDetails = (props: {
           }
         },
       },
-      {
-        label: t("general.cancel"),
-        action: () => {
-          setRegisterCard(null);
-        },
-      },
     ];
     addView = (
-      <Dialog title={t("account.foundNewNfcToken")} actions={action}>
+      <Dialog
+        title={t("account.registerNfcToken")}
+        actions={action}
+        onClose={() => {
+          setRegisterCard(null);
+        }}
+      >
         <div className="form">
           <div>
             <label>NFC Type</label>
