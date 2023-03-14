@@ -415,6 +415,7 @@ export const TerminalApp = React.memo(
                 deviceContext={props.deviceContext}
               />
               <NotificationManager />
+              <div id="terminal-dialog-portal"></div>
             </StyledTerminalApp>
           </I18nextProvider>
         </ThemeProvider>

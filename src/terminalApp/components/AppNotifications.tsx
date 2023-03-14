@@ -41,9 +41,16 @@ export const AppNotifications = React.memo(
           dispatch(
             showNotification({
               type: NotificationType.NFC,
-              title: t("notification.onFoundNfcCard"),
+              title: null,
               description: name,
               key: "nfc-proxy",
+            })
+          );
+          dispatch(
+            showNotification({
+              type: NotificationType.NFC,
+              title: t("notification.onFoundNfcCard"),
+              description: name,
             })
           );
         },

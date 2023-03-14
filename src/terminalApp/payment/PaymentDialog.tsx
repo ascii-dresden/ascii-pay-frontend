@@ -12,6 +12,7 @@ import {
   receiveAccountSessionToken,
 } from "../redux/features/paymentSlice";
 import { Money } from "../components/Money";
+import { createPortal } from "react-dom";
 
 const StyledPaymentDialog = styled.div`
   position: absolute;
@@ -252,7 +253,8 @@ export const PaymentDialog = (props: {
       </StyledPaymentDialogContent>
     );
   }
-  return (
+
+  const content = (
     <StyledPaymentDialog>
       <StyledPaymentDialogBackground
         onClick={props.onClose}
@@ -269,4 +271,7 @@ export const PaymentDialog = (props: {
       </StyledPaymentDialogWindow>
     </StyledPaymentDialog>
   );
+
+  const container = document.getElementById("terminal-dialog-portal");
+  return createPortal(content, container!);
 };

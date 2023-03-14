@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "@emotion/styled";
 import clsx from "clsx";
+import { createPortal } from "react-dom";
 
 const StyledDialog = styled.div`
   position: fixed;
@@ -93,7 +94,7 @@ export const Dialog = (props: {
     );
   });
 
-  return (
+  const content = (
     <StyledDialog>
       <StyledDialogBody
         className={clsx({
@@ -106,4 +107,7 @@ export const Dialog = (props: {
       </StyledDialogBody>
     </StyledDialog>
   );
+
+  const container = document.getElementById("terminal-dialog-portal");
+  return createPortal(content, container!);
 };
