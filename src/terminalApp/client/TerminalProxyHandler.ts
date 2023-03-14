@@ -112,7 +112,7 @@ export function createTerminalProxyHandler(
           dispatch(
             showNotification({
               type: NotificationType.NFC,
-              title: "Communication error!",
+              title: "challenge",
               color: NotificationColor.ERROR,
               key: "nfc-proxy",
             })

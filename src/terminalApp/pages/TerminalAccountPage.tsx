@@ -20,6 +20,7 @@ import { TerminalClientMessageHandler } from "../client/websocket";
 import { setScreensaver } from "../redux/features/terminalSlice";
 import { TerminalSettings } from "./TerminalSettingsPage";
 import { terminalLogin, terminalLogout } from "../redux/features/accountSlice";
+import { accountApi } from "../redux/api/accountApi";
 
 const StyledLoggedAccountHeader = styled.div`
   position: absolute;
@@ -73,6 +74,7 @@ export const TerminalAccountPage = (props: {
   const [mode, setMode] = React.useState(Mode.SELF);
 
   const handleGoBack = () => {
+    dispatch(accountApi.util.resetApiState());
     dispatch(terminalLogout());
     navigate("/terminal");
   };
@@ -151,7 +153,7 @@ export const TerminalAccountPage = (props: {
       <StyledLoggedAccountHeader>
         <span>{account.name}</span>
         <span>{account.role}</span>
-        <div onClick={() => dispatch(terminalLogout())}>
+        <div onClick={handleGoBack}>
           <ExitToApp />
         </div>
       </StyledLoggedAccountHeader>

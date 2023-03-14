@@ -13,6 +13,7 @@ import {
 } from "../redux/features/paymentSlice";
 import { Money } from "../components/Money";
 import { createPortal } from "react-dom";
+import { accountApi } from "../redux/api/accountApi";
 
 const StyledPaymentDialog = styled.div`
   position: absolute;
@@ -153,6 +154,7 @@ export const PaymentDialog = (props: {
 
   switch (props.payment.type) {
     case "Success":
+      dispatch(accountApi.util.resetApiState());
       status = (
         <StyledPaymentStatus className="success">
           <Done />
