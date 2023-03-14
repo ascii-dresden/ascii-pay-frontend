@@ -123,7 +123,8 @@ export const AccountDetails = (props: {
 }) => {
   const dispatch = useTerminalDispatch();
   const { t } = useTranslation();
-  const token = useTerminalSelector((state) => state.paymentState.scannedToken);
+  const token = useTerminalSelector((state) => state.accountState.token);
+  const [isRegistering, setIsRegistering] = React.useState(false);
 
   const {
     isLoading,
@@ -185,9 +186,12 @@ export const AccountDetails = (props: {
   if (registerCard && account.id) {
     let action = [
       {
-        label: t("account.registerNfcToken"),
+        label: isRegistering
+          ? t("account.registerNfcTokenInProgress")
+          : t("account.registerNfcToken"),
         action: () => {
           if (account.id) {
+            setIsRegistering(true);
             props.authClient.requestNfcRegister(registerCard.card_id);
           }
         },
