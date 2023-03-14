@@ -17,7 +17,7 @@ export function createTerminalProxyHandler(
       dispatch(
         showNotification({
           type: NotificationType.NFC,
-          title: "Identify ...",
+          title: "identify",
           color: NotificationColor.INFO,
           key: "nfc-proxy",
         })
@@ -38,7 +38,7 @@ export function createTerminalProxyHandler(
             dispatch(
               showNotification({
                 type: NotificationType.NFC,
-                title: "Challenge ...",
+                title: "challenge",
                 color: NotificationColor.INFO,
                 key: "nfc-proxy",
               })
@@ -55,7 +55,7 @@ export function createTerminalProxyHandler(
           dispatch(
             showNotification({
               type: NotificationType.NFC,
-              title: "Communication error!",
+              title: "identify",
               color: NotificationColor.ERROR,
               key: "nfc-proxy",
             })
@@ -66,7 +66,7 @@ export function createTerminalProxyHandler(
       dispatch(
         showNotification({
           type: NotificationType.NFC,
-          title: "Challenge ...",
+          title: "challenge",
           color: NotificationColor.INFO,
           key: "nfc-proxy",
         })
@@ -88,7 +88,7 @@ export function createTerminalProxyHandler(
             dispatch(
               showNotification({
                 type: NotificationType.NFC,
-                title: "Response ...",
+                title: "response",
                 color: NotificationColor.INFO,
                 key: "nfc-proxy",
               })
@@ -101,7 +101,7 @@ export function createTerminalProxyHandler(
             dispatch(
               showNotification({
                 type: NotificationType.NFC,
-                title: "Communication error!",
+                title: "challenge",
                 color: NotificationColor.ERROR,
                 key: "nfc-proxy",
               })
@@ -127,7 +127,7 @@ export function createTerminalProxyHandler(
       dispatch(
         showNotification({
           type: NotificationType.NFC,
-          title: "Response ...",
+          title: "response",
           color: NotificationColor.INFO,
           key: "nfc-proxy",
         })
@@ -166,7 +166,7 @@ export function createTerminalProxyHandler(
           dispatch(
             showNotification({
               type: NotificationType.NFC,
-              title: "Communication error!",
+              title: "response",
               color: NotificationColor.ERROR,
               key: "nfc-proxy",
             })

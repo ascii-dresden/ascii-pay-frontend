@@ -255,7 +255,10 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
                 </TableHead>
                 <TableBody>
                   {props.transaction.items.map((item, index) => (
-                    <TableRow key={index}>
+                    <TableRow
+                      key={index}
+                      sx={{ "& > *": { borderBottom: "unset !important" } }}
+                    >
                       <TableCell>
                         {item.product ? (
                           <Avatar

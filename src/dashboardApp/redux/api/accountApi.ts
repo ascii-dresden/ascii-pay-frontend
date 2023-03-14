@@ -103,10 +103,12 @@ export const accountApi = createApi({
               { type: "Accounts", id },
               { type: "Accounts", id: "LIST" },
               { type: "Transactions", id: "LIST" },
+              { type: "Transactions", id: "GLOBAL" },
             ]
           : [
               { type: "Accounts", id: "LIST" },
               { type: "Transactions", id: "LIST" },
+              { type: "Transactions", id: "GLOBAL" },
             ],
     }),
     getAllTransactions: builder.query<TransactionDto[], number>({

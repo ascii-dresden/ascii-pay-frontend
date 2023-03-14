@@ -91,7 +91,7 @@ export const ScannedAccount = (props: {
               dispatch(
                 showNotification({
                   type: NotificationType.NFC,
-                  title: "Identify ...",
+                  title: "identify",
                   color: NotificationColor.INFO,
                   key: "nfc-proxy",
                 })
