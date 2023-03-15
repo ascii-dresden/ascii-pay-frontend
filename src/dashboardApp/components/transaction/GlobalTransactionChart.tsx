@@ -16,28 +16,36 @@ type SeriesData = {
   y: number;
 };
 
+function dateToGrouping(date: Date): number {
+  date.setUTCHours(2, 0, 0, 0);
+  return date.getTime();
+}
+
+function transactionToGrouping(transaction: TransactionDto): number {
+  return dateToGrouping(new Date(transaction.timestamp));
+}
+
 export const GlobalTransactionChart = (props: {
   transactions: TransactionDto[];
+  startDate?: Date | null;
+  endDate?: Date | null;
 }) => {
   const theme = useTheme();
   let groupedTransactions = new Map<number, TransactionDto[]>();
 
   const timeDiff = 24 * 60 * 60 * 1000;
 
-  function toGrouping(transaction: TransactionDto): number {
-    let date = new Date(transaction.timestamp);
-    date.setUTCHours(2, 0, 0, 0);
-    return date.getTime();
-  }
-
-  let minKey = Date.now();
-  let maxKey = minKey;
+  let minKey = props.startDate ? props.startDate.getTime() : Date.now();
+  let maxKey = props.endDate ? props.endDate.getTime() : Date.now();
 
   for (let transaction of props.transactions) {
-    let key = toGrouping(transaction);
+    let key = transactionToGrouping(transaction);
 
     if (key < minKey) {
       minKey = key;
+    }
+    if (key > maxKey) {
+      maxKey = key;
     }
 
     if (!groupedTransactions.has(key)) {
@@ -45,6 +53,15 @@ export const GlobalTransactionChart = (props: {
     }
     groupedTransactions.get(key)?.push(transaction);
   }
+
+  let minDate = new Date(minKey);
+  if (minDate.getFullYear() < 2020) {
+    minDate.setFullYear(2022);
+    minKey = minDate.getTime();
+  }
+
+  minKey = dateToGrouping(new Date(minKey));
+  maxKey = dateToGrouping(new Date(maxKey));
 
   let keys = [...groupedTransactions.keys()];
   keys.sort();
@@ -87,17 +104,17 @@ export const GlobalTransactionChart = (props: {
 
   let series = [
     {
-      name: "Up",
+      name: "Total deposit",
       type: "column",
       data: upSeries,
     },
     {
-      name: "Down",
+      name: "Total payout",
       type: "column",
       data: downSeries,
     },
     {
-      name: "Sum",
+      name: "System balance",
       type: "line",
       data: sumSeries,
     },
@@ -112,6 +129,9 @@ export const GlobalTransactionChart = (props: {
       stacked: true,
       toolbar: {
         show: false,
+      },
+      zoom: {
+        enabled: false,
       },
       animations: {
         enabled: false,

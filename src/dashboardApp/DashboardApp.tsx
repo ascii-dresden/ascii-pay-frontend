@@ -24,6 +24,8 @@ import { Provider } from "react-redux";
 import { GlobalStyle } from "./globalStyle";
 import { Global } from "@emotion/react";
 import { TransactionListPage } from "./pages/TransactionListPage";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 export function DashboardApp() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -45,37 +47,42 @@ export function DashboardApp() {
 
   return (
     <Provider store={dashboardStore}>
-      <ThemeProvider theme={theme}>
-        <Global styles={GlobalStyle} />
-        <CssBaseline />
-        <ToastContainer />
-        <Routes>
-          <Route element={<RequireUserLogin />}>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<ProfilePage />} />
-              <Route
-                element={<RequireUserUnauthorized allowedRoles={["Admin"]} />}
-              >
-                <Route path="accounts" element={<AccountListPage />} />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <ThemeProvider theme={theme}>
+          <Global styles={GlobalStyle} />
+          <CssBaseline />
+          <ToastContainer />
+          <Routes>
+            <Route element={<RequireUserLogin />}>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<ProfilePage />} />
                 <Route
-                  path="accounts/:accountId"
-                  element={<AccountDetailsPage />}
-                />
-                <Route path="products" element={<ProductListPage />} />
-                <Route
-                  path="products/:productId"
-                  element={<ProductDetailsPage />}
-                />
-                <Route path="transactions" element={<TransactionListPage />} />
-                <Route path="terminal/:page" element={<TerminalPage />} />
-                <Route path="terminal" element={<TerminalPage />} />
+                  element={<RequireUserUnauthorized allowedRoles={["Admin"]} />}
+                >
+                  <Route path="accounts" element={<AccountListPage />} />
+                  <Route
+                    path="accounts/:accountId"
+                    element={<AccountDetailsPage />}
+                  />
+                  <Route path="products" element={<ProductListPage />} />
+                  <Route
+                    path="products/:productId"
+                    element={<ProductDetailsPage />}
+                  />
+                  <Route
+                    path="transactions"
+                    element={<TransactionListPage />}
+                  />
+                  <Route path="terminal/:page" element={<TerminalPage />} />
+                  <Route path="terminal" element={<TerminalPage />} />
+                </Route>
               </Route>
             </Route>
-          </Route>
-          <Route path="setup" element={<SetupPage />} />
-          <Route path="reset-password" element={<ResetPasswordPage />} />
-        </Routes>
-      </ThemeProvider>
+            <Route path="setup" element={<SetupPage />} />
+            <Route path="reset-password" element={<ResetPasswordPage />} />
+          </Routes>
+        </ThemeProvider>
+      </LocalizationProvider>
     </Provider>
   );
 }

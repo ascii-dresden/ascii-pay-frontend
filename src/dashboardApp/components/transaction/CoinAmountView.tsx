@@ -51,6 +51,15 @@ const StyledCoinAmountView = styled.div`
   svg {
     font-size: 1.1rem !important;
   }
+
+  &.large {
+    width: 100%;
+  }
+
+  &.large > div {
+    width: auto !important;
+    flex: 1 1 0;
+  }
 `;
 
 const StyledCoinAmountEntry = styled.div`
@@ -104,6 +113,7 @@ export const CoinAmountView = (props: {
   isTransaction?: boolean;
   negativeIsError?: boolean;
   isClickable?: boolean;
+  large?: boolean;
 }) => {
   const theme = useTheme();
 
@@ -144,7 +154,10 @@ export const CoinAmountView = (props: {
 
   return (
     <StyledCoinAmountView
-      className={clsx("coin-amount-view", { isClickable: props.isClickable })}
+      className={clsx("coin-amount-view", {
+        isClickable: props.isClickable,
+        large: props.large,
+      })}
       hoverColor={theme.palette.action.hover}
       successColor={theme.palette.success.main}
       errorColor={theme.palette.error.main}
