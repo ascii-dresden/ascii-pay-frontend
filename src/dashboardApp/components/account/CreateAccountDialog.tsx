@@ -4,8 +4,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControlLabel,
+  FormGroup,
   IconButton,
   MenuItem,
+  Switch,
   TextField,
   Typography,
 } from "@mui/material";
@@ -26,6 +29,10 @@ export const CreateAccountDialog = (props: {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [role, setRole] = React.useState<RoleDto>("Basic");
+  const [enableMonthlyMailReport, setEnableMonthlyMailReport] =
+    React.useState(false);
+  const [enableAutomaticStampUsage, setEnableAutomaticStampUsage] =
+    React.useState(true);
 
   useEffect(() => {
     if (isSuccess) {
@@ -35,6 +42,8 @@ export const CreateAccountDialog = (props: {
       setName("");
       setEmail("");
       setRole("Basic");
+      setEnableMonthlyMailReport(false);
+      setEnableAutomaticStampUsage(true);
     } else if (isError) {
       toast.error("Account could not be created!");
       console.error(error);
@@ -47,6 +56,8 @@ export const CreateAccountDialog = (props: {
       name,
       email,
       role,
+      enable_monthly_mail_report: enableMonthlyMailReport,
+      enable_automatic_stamp_usage: enableAutomaticStampUsage,
     };
     createAccount(saveAccount);
   };
@@ -96,6 +107,29 @@ export const CreateAccountDialog = (props: {
             <MenuItem value="Member">Member</MenuItem>
             <MenuItem value="Admin">Admin</MenuItem>
           </TextField>
+
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={enableMonthlyMailReport}
+                  onChange={(e) => setEnableMonthlyMailReport(e.target.checked)}
+                />
+              }
+              label="Receive monthly reports by email"
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={enableAutomaticStampUsage}
+                  onChange={(e) =>
+                    setEnableAutomaticStampUsage(e.target.checked)
+                  }
+                />
+              }
+              label="Automatically use available stamps during payment"
+            />
+          </FormGroup>
         </Box>
       </DialogContent>
       <DialogActions>

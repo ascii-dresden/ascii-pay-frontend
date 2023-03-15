@@ -16,7 +16,6 @@ import {
 } from "../../../common/transactionUtils";
 import { BASE_URL } from "../api/customFetchBase";
 import { TerminalDispatch, TerminalState } from "../terminalStore";
-import { accountApi } from "../api/accountApi";
 
 const PAYMENT_WAITING_TIMEOUT = 30_000;
 const PAYMENT_INPROGRESS_TIMEOUT = 3_000;
@@ -164,7 +163,11 @@ export const receiveAccountSessionToken = createAsyncThunk<
         account,
         payment.items
       );
-      if (payment.stopIfStampPaymentIsPossible && stampPaymentItems) {
+      if (
+        payment.stopIfStampPaymentIsPossible &&
+        stampPaymentItems &&
+        account.enable_automatic_stamp_usage
+      ) {
         return {
           account: account,
           token: query,
