@@ -7,7 +7,7 @@ export const customFetchBase = fetchBaseQuery({
   baseUrl: BASE_URL,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as DashboardState).userState.token;
-    if (token) {
+    if (token && !headers.has("authorization")) {
       headers.set("authorization", `Bearer ${token}`);
     }
     return headers;
