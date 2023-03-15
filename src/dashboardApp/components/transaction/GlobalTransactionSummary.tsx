@@ -5,6 +5,7 @@ import { TransactionDto } from "../../../common/contracts";
 
 export const GlobalTransactionSummary = (props: {
   transactions: TransactionDto[];
+  previousTransactions: TransactionDto[];
 }) => {
   let totalUpCent = 0;
   let totalUpBottleStamp = 0;
@@ -12,6 +13,20 @@ export const GlobalTransactionSummary = (props: {
   let totalDownCent = 0;
   let totalDownBottleStamp = 0;
   let totalDownCoffeeStamp = 0;
+
+  let previousUpCent = 0;
+  let previousDownCent = 0;
+
+  for (let transaction of props.previousTransactions) {
+    for (let item of transaction.items) {
+      if (item.effective_price.Cent && item.effective_price.Cent > 0) {
+        previousDownCent -= item.effective_price.Cent;
+      }
+      if (item.effective_price.Cent && item.effective_price.Cent < 0) {
+        previousUpCent -= item.effective_price.Cent;
+      }
+    }
+  }
 
   for (let transaction of props.transactions) {
     for (let item of transaction.items) {
@@ -89,7 +104,8 @@ export const GlobalTransactionSummary = (props: {
           <CoinAmountView
             large
             coins={{
-              Cent: totalUpCent + totalDownCent,
+              Cent:
+                previousUpCent + totalUpCent + previousDownCent + totalDownCent,
               BottleStamp: totalUpBottleStamp + totalDownBottleStamp,
               CoffeeStamp: totalUpCoffeeStamp + totalDownCoffeeStamp,
             }}
