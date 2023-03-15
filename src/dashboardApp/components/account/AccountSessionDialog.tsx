@@ -19,7 +19,7 @@ import React, { useEffect } from "react";
 import { Close, Token } from "@mui/icons-material";
 import {
   useDeleteAccountSessionMutation,
-  useGetAllAccountSessionsQuery,
+  useLazyGetAllAccountSessionsQuery,
 } from "../../redux/api/accountApi";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
@@ -29,13 +29,8 @@ export const AccountSessionDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
-  const {
-    isLoading,
-    isError,
-    error,
-    data: sessions,
-    refetch,
-  } = useGetAllAccountSessionsQuery(props.account.id);
+  const [trigger, { isLoading, isError, error, data: sessions }] =
+    useLazyGetAllAccountSessionsQuery();
 
   useEffect(() => {
     if (isError) {
@@ -47,7 +42,7 @@ export const AccountSessionDialog = (props: {
 
   useEffect(() => {
     if (props.open) {
-      refetch();
+      trigger(props.account.id);
     }
   }, [props.open]);
 
@@ -93,7 +88,7 @@ export const AccountSessionDialog = (props: {
   return (
     <Dialog open={props.open} onClose={() => props.setOpen(false)}>
       <DialogTitle component="div">
-        <Typography variant="h5" onClick={refetch}>
+        <Typography variant="h5" onClick={() => trigger(props.account.id)}>
           Active sessions
         </Typography>
         <IconButton
