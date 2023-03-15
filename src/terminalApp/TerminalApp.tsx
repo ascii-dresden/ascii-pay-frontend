@@ -227,6 +227,7 @@ const StyledTerminalApp = styled.div`
       color: var(--primary-text-color);
       padding: 0.4em 0.8em;
       font-size: 0.9em;
+      height: 2.2em;
       background-color: var(--tertiary-hover-background);
 
       &:hover {

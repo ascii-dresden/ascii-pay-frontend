@@ -34,6 +34,15 @@ const StyledLoggedAccountHeader = styled.div`
   span {
     display: block;
     line-height: 1.2em;
+
+    &:nth-child(1) {
+      font-weight: bold;
+    }
+
+    &:nth-child(2) {
+      line-height: 1.4em;
+      font-size: 0.9em;
+    }
   }
 
   div {

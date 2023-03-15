@@ -97,9 +97,14 @@ export const AccountListPage = () => {
     return <PaperScreenLoader>{header}</PaperScreenLoader>;
   }
 
+  const sortedAccounts = [...accounts];
+  sortedAccounts.sort((a, b) => a.name.localeCompare(b.name));
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - accounts.length) : 0;
+    page > 0
+      ? Math.max(0, (1 + page) * rowsPerPage - sortedAccounts.length)
+      : 0;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -117,8 +122,11 @@ export const AccountListPage = () => {
 
   const slicedAccounts =
     rowsPerPage > 0
-      ? accounts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      : accounts;
+      ? sortedAccounts.slice(
+          page * rowsPerPage,
+          page * rowsPerPage + rowsPerPage
+        )
+      : sortedAccounts;
   return (
     <Container maxWidth="lg">
       {header}

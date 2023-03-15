@@ -20,18 +20,13 @@ export const GlobalTransactionChart = (props: {
   transactions: TransactionDto[];
 }) => {
   const theme = useTheme();
-  const format = new Intl.DateTimeFormat("de-DE", {
-    dateStyle: "full",
-    timeStyle: "medium",
-  });
-
   let groupedTransactions = new Map<number, TransactionDto[]>();
 
   const timeDiff = 24 * 60 * 60 * 1000;
 
   function toGrouping(transaction: TransactionDto): number {
     let date = new Date(transaction.timestamp);
-    date.setHours(2, 0, 0, 0);
+    date.setUTCHours(2, 0, 0, 0);
     return date.getTime();
   }
 

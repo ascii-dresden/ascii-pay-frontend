@@ -18,7 +18,7 @@ import {
 } from "../redux/terminalStore";
 import { Dialog } from "../components/Dialog";
 import { base64ToHex } from "../../common/nfcUtils";
-import { Delete } from "@mui/icons-material";
+import { DeleteOutline } from "@mui/icons-material";
 import { CoinAmountView } from "../../dashboardApp/components/transaction/CoinAmountView";
 
 const StyledAccountDetails = styled.div`
@@ -252,7 +252,7 @@ export const AccountDetails = (props: {
                 )
               }
             >
-              <Delete />
+              <DeleteOutline />
             </button>
           </div>
         </div>
