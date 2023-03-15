@@ -15,12 +15,14 @@ import { toast } from "react-toastify";
 import { useUpdateAccountMutation } from "../../redux/api/accountApi";
 import { AccountDto, RoleDto, SaveAccountDto } from "../../../common/contracts";
 import { Close } from "@mui/icons-material";
+import { useDashboardSelector } from "../../redux/dashboardStore";
 
 export const UpdateAccountDialog = (props: {
   account: AccountDto;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const user = useDashboardSelector((state) => state.userState.user);
   const [updateAccount, { isLoading, isError, error, isSuccess }] =
     useUpdateAccountMutation();
 
@@ -90,18 +92,20 @@ export const UpdateAccountDialog = (props: {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <TextField
-            label="Role"
-            fullWidth
-            select
-            sx={{ mb: "1rem" }}
-            value={role}
-            onChange={(e) => setRole(e.target.value as RoleDto)}
-          >
-            <MenuItem value="Basic">Basic</MenuItem>
-            <MenuItem value="Member">Member</MenuItem>
-            <MenuItem value="Admin">Admin</MenuItem>
-          </TextField>
+          {user?.role === "Admin" ? (
+            <TextField
+              label="Role"
+              fullWidth
+              select
+              sx={{ mb: "1rem" }}
+              value={role}
+              onChange={(e) => setRole(e.target.value as RoleDto)}
+            >
+              <MenuItem value="Basic">Basic</MenuItem>
+              <MenuItem value="Member">Member</MenuItem>
+              <MenuItem value="Admin">Admin</MenuItem>
+            </TextField>
+          ) : null}
         </Box>
       </DialogContent>
       <DialogActions>

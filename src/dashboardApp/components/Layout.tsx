@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
+  Container,
   Divider,
   Drawer,
   IconButton,
@@ -90,6 +91,48 @@ export const Layout = () => {
     activePage = "terminal";
   } else {
     activePage = "home";
+  }
+
+  if (user?.role !== "Admin") {
+    return (
+      <Box sx={{ display: "flex" }}>
+        <AppBar
+          position="fixed"
+          sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        >
+          <Container maxWidth="lg">
+            <Toolbar disableGutters>
+              <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
+                <img
+                  style={{
+                    height: "2rem",
+                    marginTop: "0.5rem",
+                  }}
+                  src={logo}
+                  alt="ascii pay"
+                />
+              </Box>
+              <Box sx={{ flexGrow: 1 }} />
+              <Box display="flex" sx={{ ml: "auto" }}>
+                {user && (
+                  <LoadingButton
+                    onClick={onLogoutHandler}
+                    loading={isLoading}
+                    color="inherit"
+                  >
+                    Logout
+                  </LoadingButton>
+                )}
+              </Box>
+            </Toolbar>
+          </Container>
+        </AppBar>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Toolbar />
+          <Outlet />
+        </Box>
+      </Box>
+    );
   }
 
   const drawerContent = (
