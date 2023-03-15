@@ -120,6 +120,7 @@ export const TransactionListPage = () => {
   }
 
   let filteredTransactions = transactions;
+  let previousTransactions: TransactionDto[] = [];
   if (startDate || endDate) {
     filteredTransactions = transactions.filter((transaction) => {
       let date = new Date(transaction.timestamp);
@@ -133,6 +134,15 @@ export const TransactionListPage = () => {
       }
 
       return true;
+    });
+    previousTransactions = transactions.filter((transaction) => {
+      let date = new Date(transaction.timestamp);
+
+      if (startDate && startDate.getTime() > date.getTime()) {
+        return true;
+      }
+
+      return false;
     });
   }
 
@@ -172,12 +182,16 @@ export const TransactionListPage = () => {
       {header}
 
       <Box sx={{ display: "flex", mb: 4 }}>
-        <GlobalTransactionSummary transactions={filteredTransactions} />
+        <GlobalTransactionSummary
+          transactions={filteredTransactions}
+          previousTransactions={previousTransactions}
+        />
       </Box>
 
       <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
         <GlobalTransactionChart
           transactions={filteredTransactions}
+          previousTransactions={previousTransactions}
           startDate={startDate}
           endDate={endDate}
         />

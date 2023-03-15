@@ -27,11 +27,26 @@ function transactionToGrouping(transaction: TransactionDto): number {
 
 export const GlobalTransactionChart = (props: {
   transactions: TransactionDto[];
+  previousTransactions: TransactionDto[];
   startDate?: Date | null;
   endDate?: Date | null;
 }) => {
   const theme = useTheme();
   let groupedTransactions = new Map<number, TransactionDto[]>();
+
+  let previousUpCent = 0;
+  let previousDownCent = 0;
+
+  for (let transaction of props.previousTransactions) {
+    for (let item of transaction.items) {
+      if (item.effective_price.Cent && item.effective_price.Cent > 0) {
+        previousDownCent -= item.effective_price.Cent;
+      }
+      if (item.effective_price.Cent && item.effective_price.Cent < 0) {
+        previousUpCent -= item.effective_price.Cent;
+      }
+    }
+  }
 
   const timeDiff = 24 * 60 * 60 * 1000;
 
@@ -70,6 +85,9 @@ export const GlobalTransactionChart = (props: {
   let downSeries: SeriesData[] = [];
   let sumSeries: SeriesData[] = [];
 
+  let totalUpCent = 0;
+  let totalDownCent = 0;
+
   for (let key = minKey; key <= maxKey; key += timeDiff) {
     let date = new Date(key);
     let transactions = groupedTransactions.get(key) ?? [];
@@ -88,6 +106,9 @@ export const GlobalTransactionChart = (props: {
       }
     }
 
+    totalUpCent += up;
+    totalDownCent += down;
+
     upSeries.push({
       x: date,
       y: up,
@@ -98,7 +119,7 @@ export const GlobalTransactionChart = (props: {
     });
     sumSeries.push({
       x: date,
-      y: up + down,
+      y: previousUpCent + totalUpCent + previousDownCent + totalDownCent,
     });
   }
 
