@@ -18,7 +18,10 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useGetGlobalTransactionsQuery } from "../redux/api/accountApi";
+import {
+  useGetAccountQuery,
+  useGetGlobalTransactionsQuery,
+} from "../redux/api/accountApi";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import {
@@ -36,6 +39,7 @@ import { BASE_URL } from "../redux/api/customFetchBase";
 import { GlobalTransactionChart } from "../components/transaction/GlobalTransactionChart";
 import { GlobalTransactionSummary } from "../components/transaction/GlobalTransactionSummary";
 import { DatePicker } from "@mui/x-date-pickers";
+import { RoleChip } from "../components/account/RoleChip";
 
 export const TransactionListPage = () => {
   const navigate = useNavigate();
@@ -226,13 +230,14 @@ export const TransactionListPage = () => {
   );
 };
 
+const format = new Intl.DateTimeFormat("de-DE", {
+  dateStyle: "full",
+  timeStyle: "medium",
+});
+
 const TransactionListRow = (props: { transaction: TransactionDto }) => {
   const [open, setOpen] = React.useState(false);
 
-  const format = new Intl.DateTimeFormat("de-DE", {
-    dateStyle: "full",
-    timeStyle: "medium",
-  });
   return (
     <>
       <TableRow
@@ -262,9 +267,11 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Items
-              </Typography>
+              {props.transaction.account_id ? (
+                <TransactionListRowAccount
+                  accountId={props.transaction.account_id}
+                />
+              ) : null}
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
@@ -275,7 +282,10 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
                 </TableHead>
                 <TableBody>
                   {props.transaction.items.map((item, index) => (
-                    <TableRow key={index}>
+                    <TableRow
+                      key={index}
+                      sx={{ "& > *": { borderBottom: "unset !important" } }}
+                    >
                       <TableCell>
                         {item.product ? (
                           <Avatar
@@ -302,5 +312,28 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
         </TableCell>
       </TableRow>
     </>
+  );
+};
+
+const TransactionListRowAccount = (props: { accountId: number }) => {
+  const { isLoading, data: account } = useGetAccountQuery(props.accountId);
+
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
+  if (!account) {
+    return <span>Error...</span>;
+  }
+
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Avatar
+        alt={account.name}
+        {...stringAvatar(account.name)}
+        sx={{ mr: 2 }}
+      />
+      <Typography sx={{ mr: 2 }}>{account.name}</Typography>
+      <RoleChip role={account.role} />
+    </Box>
   );
 };

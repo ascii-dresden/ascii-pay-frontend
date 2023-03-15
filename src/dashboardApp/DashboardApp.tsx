@@ -26,6 +26,7 @@ import { Global } from "@emotion/react";
 import { TransactionListPage } from "./pages/TransactionListPage";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import enGB from "date-fns/locale/en-GB";
 
 export function DashboardApp() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -47,7 +48,7 @@ export function DashboardApp() {
 
   return (
     <Provider store={dashboardStore}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
         <ThemeProvider theme={theme}>
           <Global styles={GlobalStyle} />
           <CssBaseline />
