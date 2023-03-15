@@ -38,12 +38,16 @@ export type AccountDto = {
   email: string;
   role: RoleDto;
   auth_methods: AuthMethodDto[];
+  enable_monthly_mail_report: boolean;
+  enable_automatic_stamp_usage: boolean;
 };
 
 export type SaveAccountDto = {
   name: string;
   email: string;
   role: RoleDto;
+  enable_monthly_mail_report: boolean;
+  enable_automatic_stamp_usage: boolean;
 };
 
 export type CreateAdminAccountDto = {
