@@ -278,6 +278,6 @@ export const {
   useUpdateAccountPublicTabAuthenticationMutation,
   useDeleteAccountPublicTabAuthenticationMutation,
   useDeleteAccountNfcAuthenticationMutation,
-  useGetAllAccountSessionsQuery,
+  useLazyGetAllAccountSessionsQuery,
   useDeleteAccountSessionMutation,
 } = accountApi;

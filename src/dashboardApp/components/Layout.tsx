@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
+  Button,
   Container,
   Divider,
   Drawer,
@@ -20,7 +21,6 @@ import {
 } from "../redux/dashboardStore";
 import { useLogoutUserMutation } from "../redux/api/authApi";
 import { toast } from "react-toastify";
-import { LoadingButton } from "@mui/lab";
 import {
   AccountCircle,
   Coffee,
@@ -30,10 +30,16 @@ import {
   Store,
 } from "@mui/icons-material";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
-import { SearchButton } from "./search/SearchButton";
 import { logout } from "../redux/features/userSlice";
+import { PaperScreenLoader } from "./PaperScreenLoader";
 
 const drawerWidth = 240;
+
+const SearchButton = React.lazy(() =>
+  import("./search/SearchButton").then((module) => ({
+    default: module.SearchButton,
+  }))
+);
 
 export const Layout = () => {
   const navigate = useNavigate();
@@ -115,13 +121,9 @@ export const Layout = () => {
               <Box sx={{ flexGrow: 1 }} />
               <Box display="flex" sx={{ ml: "auto" }}>
                 {user && (
-                  <LoadingButton
-                    onClick={onLogoutHandler}
-                    loading={isLoading}
-                    color="inherit"
-                  >
+                  <Button onClick={onLogoutHandler} color="inherit">
                     Logout
-                  </LoadingButton>
+                  </Button>
                 )}
               </Box>
             </Toolbar>
@@ -129,7 +131,12 @@ export const Layout = () => {
         </AppBar>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Toolbar />
-          <Outlet />
+
+          <React.Suspense
+            fallback={<PaperScreenLoader hidePaper></PaperScreenLoader>}
+          >
+            <Outlet />
+          </React.Suspense>
         </Box>
       </Box>
     );
@@ -212,17 +219,15 @@ export const Layout = () => {
               alt="ascii pay"
             />
           </Box>
-          <SearchButton />
+          <React.Suspense>
+            <SearchButton />
+          </React.Suspense>
           <Box sx={{ flexGrow: 1 }} />
           <Box display="flex" sx={{ ml: "auto" }}>
             {user && (
-              <LoadingButton
-                onClick={onLogoutHandler}
-                loading={isLoading}
-                color="inherit"
-              >
+              <Button onClick={onLogoutHandler} color="inherit">
                 Logout
-              </LoadingButton>
+              </Button>
             )}
           </Box>
         </Toolbar>
@@ -259,7 +264,12 @@ export const Layout = () => {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        <Outlet />
+
+        <React.Suspense
+          fallback={<PaperScreenLoader hidePaper></PaperScreenLoader>}
+        >
+          <Outlet />
+        </React.Suspense>
       </Box>
     </Box>
   );

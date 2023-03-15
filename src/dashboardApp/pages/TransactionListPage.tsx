@@ -38,8 +38,10 @@ import { getTransactionSum } from "../../common/transactionUtils";
 import { BASE_URL } from "../redux/api/customFetchBase";
 import { GlobalTransactionChart } from "../components/transaction/GlobalTransactionChart";
 import { GlobalTransactionSummary } from "../components/transaction/GlobalTransactionSummary";
-import { DatePicker } from "@mui/x-date-pickers";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { RoleChip } from "../components/account/RoleChip";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import enGB from "date-fns/locale/en-GB";
 
 export const TransactionListPage = () => {
   const navigate = useNavigate();
@@ -133,7 +135,11 @@ export const TransactionListPage = () => {
   );
 
   if (isLoading || transactions === undefined) {
-    return <PaperScreenLoader>{header}</PaperScreenLoader>;
+    return (
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
+        <PaperScreenLoader>{header}</PaperScreenLoader>
+      </LocalizationProvider>
+    );
   }
 
   let filteredTransactions = transactions;
@@ -195,70 +201,72 @@ export const TransactionListPage = () => {
       : sortedTransactions;
 
   return (
-    <Container maxWidth="lg">
-      {header}
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
+      <Container maxWidth="lg">
+        {header}
 
-      <Box sx={{ display: "flex", mb: 4 }}>
-        <GlobalTransactionSummary
-          transactions={filteredTransactions}
-          previousTransactions={previousTransactions}
-        />
-      </Box>
+        <Box sx={{ display: "flex", mb: 4 }}>
+          <GlobalTransactionSummary
+            transactions={filteredTransactions}
+            previousTransactions={previousTransactions}
+          />
+        </Box>
 
-      <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
-        <GlobalTransactionChart
-          transactions={filteredTransactions}
-          previousTransactions={previousTransactions}
-          startDate={startDate}
-          endDate={endDate}
-          onRequestZoom={onRequestZoomHandler}
-        />
-      </Paper>
+        <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
+          <GlobalTransactionChart
+            transactions={filteredTransactions}
+            previousTransactions={previousTransactions}
+            startDate={startDate}
+            endDate={endDate}
+            onRequestZoom={onRequestZoomHandler}
+          />
+        </Paper>
 
-      <TableContainer component={Paper} elevation={4}>
-        <Table aria-label="Transactions table">
-          <TableHead>
-            <TableRow>
-              <TableCell width={72}></TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Total</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {slicedTransactions?.map((transaction) => (
-              <TransactionListRow
-                key={transaction.id}
-                transaction={transaction}
-              />
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 67 * emptyRows }}>
-                <TableCell colSpan={3} />
+        <TableContainer component={Paper} elevation={4}>
+          <Table aria-label="Transactions table">
+            <TableHead>
+              <TableRow>
+                <TableCell width={72}></TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Total</TableCell>
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={3}
-                count={sortedTransactions.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-    </Container>
+            </TableHead>
+            <TableBody>
+              {slicedTransactions?.map((transaction) => (
+                <TransactionListRow
+                  key={transaction.id}
+                  transaction={transaction}
+                />
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 67 * emptyRows }}>
+                  <TableCell colSpan={3} />
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  colSpan={3}
+                  count={sortedTransactions.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: {
+                      "aria-label": "rows per page",
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </Container>
+    </LocalizationProvider>
   );
 };
 
