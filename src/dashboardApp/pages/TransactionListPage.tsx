@@ -51,6 +51,14 @@ export const TransactionListPage = () => {
   );
   const [endDate, setEndDate] = React.useState<Date | null>(new Date());
 
+  const onRequestZoomHandler = React.useMemo(
+    () => (s: Date, e: Date) => {
+      setStartDate(s);
+      setEndDate(e);
+    },
+    [setStartDate, setEndDate]
+  );
+
   const {
     isLoading,
     isError,
@@ -66,18 +74,27 @@ export const TransactionListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
+  const rangePickerDisabled = isLoading || transactions === undefined;
   const rangePicker = (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        opacity: rangePickerDisabled ? 0.5 : 1,
+      }}
+    >
       <DatePicker
         label="Start date"
         value={startDate}
         onChange={(v) => setStartDate(v)}
+        disabled={rangePickerDisabled}
       />
-      <Remove sx={{ mx: 1 }} />
+      <Remove sx={{ mx: 1, opacity: rangePickerDisabled ? 0.4 : 1 }} />
       <DatePicker
         label="End date"
         value={endDate}
         onChange={(v) => setEndDate(v)}
+        disabled={rangePickerDisabled}
       />
     </Box>
   );
@@ -109,7 +126,7 @@ export const TransactionListPage = () => {
             </Breadcrumbs>
           </div>
 
-          {isLoading || transactions === undefined ? null : rangePicker}
+          {rangePicker}
         </Toolbar>
       </Box>
     </Paper>
@@ -194,6 +211,7 @@ export const TransactionListPage = () => {
           previousTransactions={previousTransactions}
           startDate={startDate}
           endDate={endDate}
+          onRequestZoom={onRequestZoomHandler}
         />
       </Paper>
 

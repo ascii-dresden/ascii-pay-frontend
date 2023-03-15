@@ -30,6 +30,7 @@ export const GlobalTransactionChart = (props: {
   previousTransactions: TransactionDto[];
   startDate?: Date | null;
   endDate?: Date | null;
+  onRequestZoom: (startDate: Date, endDate: Date) => void;
 }) => {
   const theme = useTheme();
   let groupedTransactions = new Map<number, TransactionDto[]>();
@@ -152,12 +153,29 @@ export const GlobalTransactionChart = (props: {
         show: false,
       },
       zoom: {
-        enabled: false,
+        enabled: true,
       },
       animations: {
         enabled: false,
       },
       background: "transparent",
+      events: {
+        beforeZoom(chart: any, options?: any) {
+          let start = new Date(options.xaxis.min);
+          start.setUTCHours(2, 0, 0, 0);
+          let end = new Date(options.xaxis.max);
+          end.setUTCHours(2, 0, 0, 0);
+
+          props.onRequestZoom(start, end);
+
+          return {
+            xaxis: {
+              min: null,
+              max: null,
+            },
+          };
+        },
+      },
     },
     plotOptions: {
       bar: {
