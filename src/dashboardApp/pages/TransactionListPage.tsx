@@ -21,7 +21,11 @@ import {
 import { useGetGlobalTransactionsQuery } from "../redux/api/accountApi";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import {
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  Remove,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { stringAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
@@ -30,11 +34,18 @@ import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { getTransactionSum } from "../../common/transactionUtils";
 import { BASE_URL } from "../redux/api/customFetchBase";
 import { GlobalTransactionChart } from "../components/transaction/GlobalTransactionChart";
+import { GlobalTransactionSummary } from "../components/transaction/GlobalTransactionSummary";
+import { DatePicker } from "@mui/x-date-pickers";
 
 export const TransactionListPage = () => {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const [startDate, setStartDate] = React.useState<Date | null>(
+    new Date(Date.now() - 3 * 30 * 24 * 60 * 60 * 1000)
+  );
+  const [endDate, setEndDate] = React.useState<Date | null>(new Date());
 
   const {
     isLoading,
@@ -50,6 +61,22 @@ export const TransactionListPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
+
+  const rangePicker = (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <DatePicker
+        label="Start date"
+        value={startDate}
+        onChange={(v) => setStartDate(v)}
+      />
+      <Remove sx={{ mx: 1 }} />
+      <DatePicker
+        label="End date"
+        value={endDate}
+        onChange={(v) => setEndDate(v)}
+      />
+    </Box>
+  );
 
   const header = (
     <Paper elevation={0}>
@@ -77,6 +104,8 @@ export const TransactionListPage = () => {
               </Link>
             </Breadcrumbs>
           </div>
+
+          {isLoading || transactions === undefined ? null : rangePicker}
         </Toolbar>
       </Box>
     </Paper>
@@ -86,7 +115,24 @@ export const TransactionListPage = () => {
     return <PaperScreenLoader>{header}</PaperScreenLoader>;
   }
 
-  let sortedTransactions = [...transactions];
+  let filteredTransactions = transactions;
+  if (startDate || endDate) {
+    filteredTransactions = transactions.filter((transaction) => {
+      let date = new Date(transaction.timestamp);
+
+      if (startDate && startDate.getTime() > date.getTime()) {
+        return false;
+      }
+
+      if (endDate && endDate.getTime() < date.getTime()) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  let sortedTransactions = [...filteredTransactions];
   sortedTransactions.reverse();
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -121,8 +167,16 @@ export const TransactionListPage = () => {
     <Container maxWidth="lg">
       {header}
 
+      <Box sx={{ display: "flex", mb: 4 }}>
+        <GlobalTransactionSummary transactions={filteredTransactions} />
+      </Box>
+
       <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
-        <GlobalTransactionChart transactions={transactions} />
+        <GlobalTransactionChart
+          transactions={filteredTransactions}
+          startDate={startDate}
+          endDate={endDate}
+        />
       </Paper>
 
       <TableContainer component={Paper} elevation={4}>

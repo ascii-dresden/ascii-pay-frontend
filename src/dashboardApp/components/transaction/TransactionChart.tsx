@@ -104,6 +104,9 @@ export const TransactionChart = (props: {
       toolbar: {
         show: false,
       },
+      zoom: {
+        enabled: false,
+      },
       animations: {
         enabled: false,
       },
