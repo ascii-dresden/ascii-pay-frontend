@@ -55,21 +55,27 @@ export const AccountDetailsPageView = (props: {
                 component="div"
               >
                 <span style={{ marginRight: "0.6rem" }}>{account.name}</span>
-                <RoleChip role={account.role} />
+                {props.isRoot && account.role !== "Admin" ? null : (
+                  <RoleChip role={account.role} />
+                )}
               </Typography>
 
               {props.isRoot ? (
-                <Breadcrumbs aria-label="breadcrumb">
-                  <Link
-                    underline="hover"
-                    color="text.primary"
-                    aria-current="page"
-                    component={RLink}
-                    to="/"
-                  >
-                    ascii-pay
-                  </Link>
-                </Breadcrumbs>
+                account.role !== "Admin" ? (
+                  <RoleChip role={account.role} />
+                ) : (
+                  <Breadcrumbs aria-label="breadcrumb">
+                    <Link
+                      underline="hover"
+                      color="text.primary"
+                      aria-current="page"
+                      component={RLink}
+                      to="/"
+                    >
+                      ascii-pay
+                    </Link>
+                  </Breadcrumbs>
+                )
               ) : (
                 <Breadcrumbs aria-label="breadcrumb">
                   <Link
