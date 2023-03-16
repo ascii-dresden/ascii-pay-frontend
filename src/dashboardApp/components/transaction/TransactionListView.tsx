@@ -184,7 +184,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
-      <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
+      <Paper sx={{ px: 2, pt: 2, pb: 1, mb: 4 }} elevation={4}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ p: 1 }}>
             <Typography gutterBottom variant="h6" component="div">
@@ -209,12 +209,14 @@ export const TransactionListView = (props: { account: AccountDto }) => {
             }}
           >
             <DatePicker
+              views={["year", "month", "day"]}
               label="Start date"
               value={startDate}
               onChange={(v) => setStartDate(v)}
             />
             <Remove sx={{ mx: 1 }} />
             <DatePicker
+              views={["year", "month", "day"]}
               label="End date"
               value={endDate}
               onChange={(v) => setEndDate(v)}

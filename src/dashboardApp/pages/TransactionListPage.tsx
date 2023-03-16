@@ -85,6 +85,7 @@ export const TransactionListPage = () => {
       }}
     >
       <DatePicker
+        views={["year", "month", "day"]}
         label="Start date"
         value={startDate}
         onChange={(v) => setStartDate(v)}
@@ -92,6 +93,7 @@ export const TransactionListPage = () => {
       />
       <Remove sx={{ mx: 1, opacity: rangePickerDisabled ? 0.4 : 1 }} />
       <DatePicker
+        views={["year", "month", "day"]}
         label="End date"
         value={endDate}
         onChange={(v) => setEndDate(v)}
@@ -208,7 +210,7 @@ export const TransactionListPage = () => {
           />
         </Box>
 
-        <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
+        <Paper sx={{ px: 2, pt: 2, pb: 1, mb: 4 }} elevation={4}>
           <GlobalTransactionChart
             transactions={filteredTransactions}
             previousTransactions={previousTransactions}
