@@ -15,7 +15,11 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import {
+  KeyboardArrowDown,
+  KeyboardArrowUp,
+  Remove,
+} from "@mui/icons-material";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useGetAllTransactionsQuery } from "../../redux/api/accountApi";
@@ -25,10 +29,26 @@ import { BASE_URL } from "../../redux/api/customFetchBase";
 import { stringAvatar } from "../../../common/stringAvatar";
 import { TransactionChart } from "./TransactionChart";
 import { getTransactionSum } from "../../../common/transactionUtils";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import enGB from "date-fns/locale/en-GB";
 
 export const TransactionListView = (props: { account: AccountDto }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const [startDate, setStartDate] = React.useState<Date | null>(
+    new Date(Date.now() - 3 * 30 * 24 * 60 * 60 * 1000)
+  );
+  const [endDate, setEndDate] = React.useState<Date | null>(new Date());
+
+  const onRequestZoomHandler = React.useMemo(
+    () => (s: Date, e: Date) => {
+      setStartDate(s);
+      setEndDate(e);
+    },
+    [setStartDate, setEndDate]
+  );
 
   const {
     isLoading,
@@ -68,7 +88,34 @@ export const TransactionListView = (props: { account: AccountDto }) => {
     );
   }
 
-  let sortedTransactions = [...transactions];
+  let filteredTransactions = transactions;
+  let previousTransactions: TransactionDto[] = [];
+  if (startDate || endDate) {
+    filteredTransactions = transactions.filter((transaction) => {
+      let date = new Date(transaction.timestamp);
+
+      if (startDate && startDate.getTime() > date.getTime()) {
+        return false;
+      }
+
+      if (endDate && endDate.getTime() < date.getTime()) {
+        return false;
+      }
+
+      return true;
+    });
+    previousTransactions = transactions.filter((transaction) => {
+      let date = new Date(transaction.timestamp);
+
+      if (startDate && startDate.getTime() > date.getTime()) {
+        return true;
+      }
+
+      return false;
+    });
+  }
+
+  let sortedTransactions = [...filteredTransactions];
   sortedTransactions.reverse();
 
   let totalUp = {
@@ -136,9 +183,52 @@ export const TransactionListView = (props: { account: AccountDto }) => {
       : sortedTransactions;
 
   return (
-    <>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
       <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
-        <TransactionChart account={props.account} transactions={transactions} />
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ p: 1 }}>
+            <Typography gutterBottom variant="h6" component="div">
+              Used credit
+            </Typography>
+            <CoinAmountView coins={totalDown} isTransaction={true} />
+          </Box>
+          <Box sx={{ p: 1 }}>
+            <Typography gutterBottom variant="h6" component="div">
+              Loaded credit
+            </Typography>
+            <CoinAmountView coins={totalUp} />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "right",
+              mt: 1,
+              mr: 1,
+            }}
+          >
+            <DatePicker
+              label="Start date"
+              value={startDate}
+              onChange={(v) => setStartDate(v)}
+            />
+            <Remove sx={{ mx: 1 }} />
+            <DatePicker
+              label="End date"
+              value={endDate}
+              onChange={(v) => setEndDate(v)}
+            />
+          </Box>
+        </Box>
+        <TransactionChart
+          account={props.account}
+          transactions={filteredTransactions}
+          previousTransactions={previousTransactions}
+          startDate={startDate}
+          endDate={endDate}
+          onRequestZoom={onRequestZoomHandler}
+        />
       </Paper>
       <TableContainer component={Paper} elevation={4}>
         <Table aria-label="Transactions table">
@@ -183,26 +273,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
           </TableFooter>
         </Table>
       </TableContainer>
-
-      <Box sx={{ display: "flex", mt: 4 }}>
-        <Paper sx={{ mr: 4, flex: "1 1 100%" }} elevation={4}>
-          <Box sx={{ p: 2 }}>
-            <Typography gutterBottom variant="h6" component="div">
-              Total down
-            </Typography>
-            <CoinAmountView coins={totalDown} isTransaction={true} />
-          </Box>
-        </Paper>
-        <Paper sx={{ flex: "1 1 100%" }} elevation={4}>
-          <Box sx={{ p: 2 }}>
-            <Typography gutterBottom variant="h6" component="div">
-              Total up
-            </Typography>
-            <CoinAmountView coins={totalUp} />
-          </Box>
-        </Paper>
-      </Box>
-    </>
+    </LocalizationProvider>
   );
 };
 

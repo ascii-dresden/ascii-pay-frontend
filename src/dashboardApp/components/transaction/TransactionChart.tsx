@@ -8,8 +8,8 @@ import {
 } from "../../../common/contracts";
 import { renderToString } from "react-dom/server";
 import {
-  addCoinAmount,
   getTransactionSum,
+  subCoinAmount,
 } from "../../../common/transactionUtils";
 import { Theme, useTheme } from "@mui/material";
 import { CoinAmountView } from "./CoinAmountView";
@@ -33,6 +33,10 @@ type SeriesData = {
 export const TransactionChart = (props: {
   account: AccountDto;
   transactions: TransactionDto[];
+  previousTransactions: TransactionDto[];
+  startDate?: Date | null;
+  endDate?: Date | null;
+  onRequestZoom: (startDate: Date, endDate: Date) => void;
 }) => {
   const theme = useTheme();
   const format = new Intl.DateTimeFormat("de-DE", {
@@ -41,18 +45,36 @@ export const TransactionChart = (props: {
   });
 
   let sortedTransactions = [...props.transactions];
-  sortedTransactions.reverse();
+  // sortedTransactions.reverse();
 
   let seriesData: SeriesData[] = [];
 
-  let latest: SeriesData = {
-    x: new Date(),
-    y: props.account.balance.Cent ?? 0,
-    price: {},
-    beforeBalance: props.account.balance,
-    afterBalance: props.account.balance,
-    isStatic: true,
-  };
+  let latest: SeriesData;
+  if (props.previousTransactions.length > 0) {
+    let balance: CoinAmountDto = {};
+    for (let transaction of props.previousTransactions) {
+      let price = getTransactionSum(transaction);
+      balance = subCoinAmount(balance, price);
+    }
+
+    latest = {
+      x: props.startDate ?? new Date(),
+      y: balance.Cent ?? 0,
+      price: {},
+      beforeBalance: balance,
+      afterBalance: balance,
+      isStatic: true,
+    };
+  } else {
+    latest = {
+      x: props.startDate ?? new Date(),
+      y: props.account.balance.Cent ?? 0,
+      price: {},
+      beforeBalance: {},
+      afterBalance: {},
+      isStatic: true,
+    };
+  }
   seriesData.push(latest);
 
   let min = props.account.balance.Cent ?? 0;
@@ -60,8 +82,8 @@ export const TransactionChart = (props: {
 
   for (let transaction of sortedTransactions) {
     let price = getTransactionSum(transaction);
-    let afterBalance = latest.beforeBalance;
-    let beforeBalance = addCoinAmount(afterBalance, price);
+    let beforeBalance = latest.afterBalance;
+    let afterBalance = subCoinAmount(beforeBalance, price);
     latest = {
       x: new Date(transaction.timestamp),
       y: afterBalance.Cent ?? 0,
@@ -80,15 +102,13 @@ export const TransactionChart = (props: {
   }
 
   seriesData.push({
-    x: new Date(latest.x.getTime() - 60 * 60 * 1000),
-    y: 0,
+    x: props.endDate ?? new Date(),
+    y: latest.afterBalance.Cent ?? 0,
     price: {},
-    beforeBalance: {},
-    afterBalance: {},
+    beforeBalance: latest.afterBalance,
+    afterBalance: latest.afterBalance,
     isStatic: true,
   });
-
-  seriesData.reverse();
 
   let series = [
     {
@@ -105,12 +125,31 @@ export const TransactionChart = (props: {
         show: false,
       },
       zoom: {
-        enabled: false,
+        enabled: true,
       },
       animations: {
         enabled: false,
       },
       background: "transparent",
+      events: {
+        beforeZoom(chart: any, options?: any) {
+          let start = new Date(options.xaxis.min);
+          start.setUTCHours(2, 0, 0, 0);
+          let end = new Date(options.xaxis.max);
+          end.setUTCHours(2, 0, 0, 0);
+
+          if (props.onRequestZoom) {
+            props.onRequestZoom(start, end);
+          }
+
+          return {
+            xaxis: {
+              min: null,
+              max: null,
+            },
+          };
+        },
+      },
     },
     stroke: {
       curve: "stepline",
