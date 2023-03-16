@@ -24,7 +24,12 @@ import {
 } from "../../../common/contracts";
 import { usePaymentMutation } from "../../redux/api/accountApi";
 import { CoinAmountEdit } from "./CoinAmountEdit";
-import { Close, DeleteOutline, PlaylistAdd } from "@mui/icons-material";
+import {
+  Close,
+  DeleteOutline,
+  PlaylistAdd,
+  SwitchLeft,
+} from "@mui/icons-material";
 import { BASE_URL } from "../../redux/api/customFetchBase";
 import { stringAvatar } from "../../../common/stringAvatar";
 import { CoinAmountView } from "./CoinAmountView";
@@ -224,45 +229,69 @@ export const CreatePaymentDialog = (props: {
 
           <Table size="small">
             <TableBody>
-              {paymentItems.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell width={72}>
-                    {item.product ? (
-                      <Avatar
-                        alt={item.product.name}
-                        src={`${BASE_URL}/product/${item.product.id}/image`}
-                        {...stringAvatar(item.product.name)}
-                      />
-                    ) : null}
-                  </TableCell>
-                  <TableCell>{item.product?.name ?? "-"}</TableCell>
-                  <TableCell width={200} onClick={() => handleNextPrice(index)}>
-                    <CoinAmountView
-                      coins={item.effective_price}
-                      isTransaction={true}
-                      isClickable={
-                        item.product !== undefined &&
-                        item.product !== null &&
-                        getPossiblePrices(item.product).length > 1
-                      }
-                    />
-                  </TableCell>
-                  <TableCell width={72}>
-                    <IconButton onClick={() => handleRemoveItem(index)}>
-                      <DeleteOutline />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {paymentItems.map((item, index) => {
+                const isClickable =
+                  item.product !== undefined &&
+                  item.product !== null &&
+                  getPossiblePrices(item.product).length > 1;
+                return (
+                  <TableRow key={index}>
+                    <TableCell width={72}>
+                      {item.product ? (
+                        <Avatar
+                          alt={item.product.name}
+                          src={`${BASE_URL}/product/${item.product.id}/image`}
+                          {...stringAvatar(item.product.name)}
+                        />
+                      ) : null}
+                    </TableCell>
+                    <TableCell>{item.product?.name ?? "-"}</TableCell>
+                    <TableCell
+                      width={200}
+                      onClick={() => handleNextPrice(index)}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "right",
+                          alignItems: "center",
+                        }}
+                      >
+                        {isClickable ? (
+                          <SwitchLeft sx={{ opacity: 0.5 }} />
+                        ) : null}
+                        <CoinAmountView
+                          coins={item.effective_price}
+                          isTransaction={true}
+                          isClickable={isClickable}
+                        />
+                      </Box>
+                    </TableCell>
+                    <TableCell width={72}>
+                      <IconButton onClick={() => handleRemoveItem(index)}>
+                        <DeleteOutline />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
               <TableRow>
                 <TableCell height={52.9} width={72}></TableCell>
                 <TableCell>
                   <b>Total</b>
                 </TableCell>
                 <TableCell width={200}>
-                  <b>
-                    <CoinAmountView coins={total} isTransaction={true} />
-                  </b>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "right",
+                      alignItems: "center",
+                    }}
+                  >
+                    <b>
+                      <CoinAmountView coins={total} isTransaction={true} />
+                    </b>
+                  </Box>
                 </TableCell>
                 <TableCell width={72}></TableCell>
               </TableRow>
@@ -270,7 +299,15 @@ export const CreatePaymentDialog = (props: {
                 <TableCell height={52.9} width={72}></TableCell>
                 <TableCell>Estimated balance</TableCell>
                 <TableCell width={200}>
-                  <CoinAmountView coins={balance} negativeIsError={true} />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "right",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CoinAmountView coins={balance} negativeIsError={true} />
+                  </Box>
                 </TableCell>
                 <TableCell width={72}></TableCell>
               </TableRow>

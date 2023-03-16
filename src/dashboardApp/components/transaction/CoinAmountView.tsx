@@ -25,7 +25,7 @@ const StyledCoinAmountView = styled.div`
     display: block;
     position: absolute;
     top: -0.6rem;
-    left: -0.2rem;
+    left: -1.8rem;
     right: -0.6rem;
     bottom: -0.6rem;
     background-color: transparent;

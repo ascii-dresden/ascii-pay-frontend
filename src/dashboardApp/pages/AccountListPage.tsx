@@ -17,12 +17,12 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import { Link as RLink } from "react-router-dom";
 import { useGetAllAccountsQuery } from "../redux/api/accountApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Add } from "@mui/icons-material";
 import { CreateAccountDialog } from "../components/account/CreateAccountDialog";
-import { useNavigate } from "react-router-dom";
 import { stringAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { AccountDto } from "../../common/contracts";
@@ -31,7 +31,6 @@ import { RoleChip } from "../components/account/RoleChip";
 import { AccountListRowActionButton } from "../components/account/AccountListRowActionButton";
 
 export const AccountListPage = () => {
-  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
 
   const [page, setPage] = React.useState(0);
@@ -61,18 +60,15 @@ export const AccountListPage = () => {
               Accounts
             </Typography>
             <Breadcrumbs aria-label="breadcrumb">
-              <Link
-                underline="hover"
-                color="inherit"
-                onClick={() => navigate("/")}
-              >
+              <Link underline="hover" color="inherit" component={RLink} to="/">
                 ascii-pay
               </Link>
               <Link
                 underline="hover"
                 color="text.primary"
                 aria-current="page"
-                onClick={() => navigate("/accounts")}
+                component={RLink}
+                to="/accounts"
               >
                 Accounts
               </Link>

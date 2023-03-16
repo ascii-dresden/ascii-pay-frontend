@@ -22,7 +22,6 @@ export const accountApi = createApi({
         return {
           url: "/accounts",
           method: "POST",
-          credentials: "include",
           body: account,
         };
       },
@@ -36,7 +35,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}`,
           method: "PUT",
-          credentials: "include",
           body: account,
         };
       },
@@ -52,7 +50,6 @@ export const accountApi = createApi({
       query(id) {
         return {
           url: `/account/${id}`,
-          credentials: "include",
         };
       },
       providesTags: (result, error, id) => [{ type: "Accounts", id }],
@@ -61,7 +58,6 @@ export const accountApi = createApi({
       query() {
         return {
           url: `/accounts`,
-          credentials: "include",
         };
       },
       providesTags: (result) =>
@@ -80,7 +76,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}`,
           method: "DELETE",
-          credentials: "include",
         };
       },
       invalidatesTags: [{ type: "Accounts", id: "LIST" }],
@@ -93,7 +88,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}/payment`,
           method: "POST",
-          credentials: "include",
           body: payment,
         };
       },
@@ -115,7 +109,6 @@ export const accountApi = createApi({
       query(id) {
         return {
           url: `/account/${id}/transactions`,
-          credentials: "include",
         };
       },
       providesTags: [{ type: "Transactions", id: "LIST" }],
@@ -124,7 +117,6 @@ export const accountApi = createApi({
       query() {
         return {
           url: `/transactions`,
-          credentials: "include",
         };
       },
       providesTags: [{ type: "Transactions", id: "GLOBAL" }],
@@ -134,7 +126,6 @@ export const accountApi = createApi({
         return {
           url: "/create-admin-account",
           method: "POST",
-          credentials: "include",
           body: account,
         };
       },
@@ -148,7 +139,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}/password-authentication`,
           method: "PUT",
-          credentials: "include",
           body: auth,
         };
       },
@@ -160,7 +150,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}/password-authentication`,
           method: "DELETE",
-          credentials: "include",
         };
       },
       invalidatesTags: (result, error, id) =>
@@ -174,7 +163,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}/password-reset-token`,
           method: "POST",
-          credentials: "include",
         };
       },
       invalidatesTags: (result, error, id) =>
@@ -202,7 +190,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}/public-tab`,
           method: "PUT",
-          credentials: "include",
         };
       },
       invalidatesTags: (result, error, id) =>
@@ -213,7 +200,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}/public-tab`,
           method: "DELETE",
-          credentials: "include",
         };
       },
       invalidatesTags: (result, error, id) =>
@@ -227,7 +213,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}/nfc-authentication`,
           method: "DELETE",
-          credentials: "include",
           body: auth,
         };
       },
@@ -238,7 +223,6 @@ export const accountApi = createApi({
       query(id) {
         return {
           url: `/account/${id}/sessions`,
-          credentials: "include",
         };
       },
       providesTags: (result, error, id) => [{ type: "Sessions", id }],
@@ -251,7 +235,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}/sessions`,
           method: "DELETE",
-          credentials: "include",
           body: session,
         };
       },

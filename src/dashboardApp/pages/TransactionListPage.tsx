@@ -29,7 +29,7 @@ import {
   KeyboardArrowUp,
   Remove,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { Link as RLink } from "react-router-dom";
 import { stringAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { TransactionDto } from "../../common/contracts";
@@ -44,7 +44,6 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import enGB from "date-fns/locale/en-GB";
 
 export const TransactionListPage = () => {
-  const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -110,18 +109,15 @@ export const TransactionListPage = () => {
               Transactions
             </Typography>
             <Breadcrumbs aria-label="breadcrumb">
-              <Link
-                underline="hover"
-                color="inherit"
-                onClick={() => navigate("/")}
-              >
+              <Link underline="hover" color="inherit" component={RLink} to="/">
                 ascii-pay
               </Link>
               <Link
                 underline="hover"
                 color="text.primary"
                 aria-current="page"
-                onClick={() => navigate("/transactions")}
+                component={RLink}
+                to="/transactions"
               >
                 Transactions
               </Link>

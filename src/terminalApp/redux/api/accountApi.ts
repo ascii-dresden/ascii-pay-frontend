@@ -15,7 +15,6 @@ export const accountApi = createApi({
       query(id) {
         return {
           url: `/account/${id}`,
-          credentials: "include",
         };
       },
       providesTags: (result, error, id) => [{ type: "Accounts", id }],
@@ -24,7 +23,6 @@ export const accountApi = createApi({
       query() {
         return {
           url: `/accounts`,
-          credentials: "include",
         };
       },
       providesTags: (result) =>
@@ -46,7 +44,6 @@ export const accountApi = createApi({
         return {
           url: `/account/${id}/payment`,
           method: "POST",
-          credentials: "include",
           body: payment,
         };
       },
@@ -66,7 +63,6 @@ export const accountApi = createApi({
       query(id) {
         return {
           url: `/account/${id}/transactions`,
-          credentials: "include",
         };
       },
       providesTags: [{ type: "Transactions", id: "LIST" }],

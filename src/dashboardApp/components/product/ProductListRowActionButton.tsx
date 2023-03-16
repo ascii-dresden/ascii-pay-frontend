@@ -1,5 +1,5 @@
 import { ProductDto } from "../../../common/contracts";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import {
   Button,
@@ -27,7 +27,6 @@ export const ProductListRowActionButton = (props: {
   product: ProductDto;
   hidePrimaryAction?: boolean;
 }) => {
-  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -64,11 +63,12 @@ export const ProductListRowActionButton = (props: {
         aria-label="split button"
       >
         {props.hidePrimaryAction ? null : (
-          <Button onClick={() => navigate(`/products/${props.product.id}`)}>
+          <Button component={Link} to={`/products/${props.product.id}`}>
             Details
           </Button>
         )}
         <Button
+          component="a"
           sx={{ whiteSpace: "nowrap", width: "3.5rem" }}
           onClick={handleToggle}
         >

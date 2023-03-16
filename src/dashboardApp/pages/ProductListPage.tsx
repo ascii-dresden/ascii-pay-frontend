@@ -28,13 +28,12 @@ import { BASE_URL } from "../redux/api/customFetchBase";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { ProductDto } from "../../common/contracts";
-import { useNavigate } from "react-router-dom";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { TagChip } from "../components/product/TagChip";
 import { ProductListRowActionButton } from "../components/product/ProductListRowActionButton";
+import { Link as RLink } from "react-router-dom";
 
 export const ProductListPage = () => {
-  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -65,18 +64,15 @@ export const ProductListPage = () => {
               Products
             </Typography>
             <Breadcrumbs aria-label="breadcrumb">
-              <Link
-                underline="hover"
-                color="inherit"
-                onClick={() => navigate("/")}
-              >
+              <Link underline="hover" color="inherit" component={RLink} to="/">
                 ascii-pay
               </Link>
               <Link
                 underline="hover"
                 color="text.primary"
                 aria-current="page"
-                onClick={() => navigate("/products")}
+                component={RLink}
+                to="/products"
               >
                 Products
               </Link>
