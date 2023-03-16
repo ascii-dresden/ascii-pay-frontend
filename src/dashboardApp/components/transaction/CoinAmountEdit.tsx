@@ -112,9 +112,16 @@ export const CoinAmountEdit = (props: {
   onChange: (coins: CoinAmountDto) => void;
   children?: React.ReactNode | React.ReactNode[];
   isTransaction?: boolean;
+  preventNegate?: boolean;
 }) => {
   function setCents(value: number) {
     let newCoins = cloneCoins(props.coins);
+    if (props.preventNegate && value < 0 && (newCoins.Cent ?? 0) == 0) {
+      value = 0;
+    }
+    if (props.preventNegate && value < 0) {
+      value *= -1;
+    }
     if (value == 0) {
       delete newCoins.Cent;
     } else {
@@ -125,6 +132,12 @@ export const CoinAmountEdit = (props: {
 
   function setCoffeeStamps(value: number) {
     let newCoins = cloneCoins(props.coins);
+    if (props.preventNegate && value < 0 && (newCoins.CoffeeStamp ?? 0) == 0) {
+      value = 0;
+    }
+    if (props.preventNegate && value < 0) {
+      value *= -1;
+    }
     if (value == 0) {
       delete newCoins.CoffeeStamp;
     } else {
@@ -135,6 +148,12 @@ export const CoinAmountEdit = (props: {
 
   function setBottleStamps(value: number) {
     let newCoins = cloneCoins(props.coins);
+    if (props.preventNegate && value < 0 && (newCoins.BottleStamp ?? 0) == 0) {
+      value = 0;
+    }
+    if (props.preventNegate && value < 0) {
+      value *= -1;
+    }
     if (value == 0) {
       delete newCoins.BottleStamp;
     } else {
