@@ -36,12 +36,16 @@ import {
   selectNextCoinAmount,
   subCoinAmount,
 } from "../../../common/transactionUtils";
+import { useDashboardSelector } from "../../redux/dashboardStore";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 export const CreatePaymentDialog = (props: {
   account: AccountDto;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const user = useDashboardSelector((state) => state.userState.user);
+
   const [payment, { isLoading, isError, error, isSuccess }] =
     usePaymentMutation();
 
@@ -55,9 +59,16 @@ export const CreatePaymentDialog = (props: {
       toast.success("Payment successfully executed!");
       props.setOpen(false);
       setCoins({});
+      setPaymentItems([]);
     } else if (isError) {
-      toast.error("Payment could not be executed!");
-      console.error(error);
+      if ((error as FetchBaseQueryError)?.status === 409) {
+        let e = error as FetchBaseQueryError;
+        let data = e.data as { cause: string[] };
+        toast.error(`Insufficient balance: [${data.cause.join(", ")}]!`);
+      } else {
+        toast.error("Payment could not be executed!");
+        console.error(error);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
@@ -149,8 +160,6 @@ export const CreatePaymentDialog = (props: {
         },
       });
     }
-    setCoins({});
-    setPaymentItems([]);
   };
 
   let total = addCoinAmount({}, coins);
@@ -159,6 +168,26 @@ export const CreatePaymentDialog = (props: {
   }
 
   let balance = subCoinAmount(props.account.balance, total);
+
+  let cannotPay = false;
+  if (
+    (balance.Cent ?? 0) < 0 &&
+    (balance.Cent ?? 0) < (props.account.balance.Cent ?? 0)
+  ) {
+    cannotPay = true;
+  }
+  if (
+    (balance.BottleStamp ?? 0) < 0 &&
+    (balance.BottleStamp ?? 0) < (props.account.balance.BottleStamp ?? 0)
+  ) {
+    cannotPay = true;
+  }
+  if (
+    (balance.CoffeeStamp ?? 0) < 0 &&
+    (balance.CoffeeStamp ?? 0) < (props.account.balance.CoffeeStamp ?? 0)
+  ) {
+    cannotPay = true;
+  }
 
   return (
     <Dialog open={props.open} onClose={() => props.setOpen(false)}>
@@ -183,6 +212,7 @@ export const CreatePaymentDialog = (props: {
             coins={coins}
             onChange={setCoins}
             isTransaction={true}
+            preventNegate={user?.role !== "Admin"}
           >
             <Tooltip title="Add additional transaction item">
               <IconButton sx={{ height: "40px" }} onClick={handleAddCoins}>
@@ -255,6 +285,7 @@ export const CreatePaymentDialog = (props: {
           sx={{ mx: 2, py: 1.5 }}
           onClick={handleSubmit}
           loading={isLoading}
+          color={cannotPay ? "error" : undefined}
         >
           Pay
         </LoadingButton>

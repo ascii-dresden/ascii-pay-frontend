@@ -19,6 +19,10 @@ const PopperComponent = (props: {
   return <div {...other} />;
 };
 
+const PaperComponent = (props: any) => {
+  return <div {...props} />;
+};
+
 export const SelectProductPopup = (props: {
   selectProduct: (product: ProductDto) => void;
 }) => {
@@ -109,6 +113,7 @@ export const SelectProductPopup = (props: {
             onChange={(event: any, newValue: ProductDto | null) => {
               handleSelect(newValue);
             }}
+            PaperComponent={PaperComponent}
             PopperComponent={PopperComponent}
             noOptionsText="No products"
             options={sortedProducts}
