@@ -61,15 +61,17 @@ export const ResetPasswordPage = () => {
         position="fixed"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
-        <Toolbar>
-          <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
-            <img
-              style={{ height: "2rem", marginTop: "0.5rem" }}
-              src={logo}
-              alt="ascii pay"
-            />
-          </Box>
-        </Toolbar>
+        <Container maxWidth="lg">
+          <Toolbar disableGutters>
+            <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
+              <img
+                style={{ height: "2rem", marginTop: "0.5rem" }}
+                src={logo}
+                alt="ascii pay"
+              />
+            </Box>
+          </Toolbar>
+        </Container>
       </AppBar>
       <Container
         maxWidth={false}

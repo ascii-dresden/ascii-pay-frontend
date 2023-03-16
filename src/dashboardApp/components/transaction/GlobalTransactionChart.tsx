@@ -166,7 +166,9 @@ export const GlobalTransactionChart = (props: {
           let end = new Date(options.xaxis.max);
           end.setUTCHours(2, 0, 0, 0);
 
-          props.onRequestZoom(start, end);
+          if (props.onRequestZoom) {
+            props.onRequestZoom(start, end);
+          }
 
           return {
             xaxis: {
