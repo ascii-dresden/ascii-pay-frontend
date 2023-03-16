@@ -12,7 +12,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link as RLink, useParams } from "react-router-dom";
 import { TerminalApp, TerminalAppPage } from "../../terminalApp/TerminalApp";
 import { TerminalSettings } from "../../terminalApp/pages/TerminalSettingsPage";
 import { SelectAccountPopup } from "../components/account/SelectAccountPopup";
@@ -54,7 +54,6 @@ function requestAccountSession(
 
 export const TerminalPage = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
   const params = useParams();
   const token = useDashboardSelector((state) => state.userState.token);
 
@@ -134,18 +133,15 @@ export const TerminalPage = () => {
               Terminal emulator
             </Typography>
             <Breadcrumbs aria-label="breadcrumb">
-              <Link
-                underline="hover"
-                color="inherit"
-                onClick={() => navigate("/")}
-              >
+              <Link underline="hover" color="inherit" component={RLink} to="/">
                 ascii-pay
               </Link>
               <Link
                 underline="hover"
                 color={terminalPage === "start" ? "text.primary" : "inherit"}
                 aria-current={terminalPage === "start" ? "page" : undefined}
-                onClick={() => navigate("/terminal")}
+                component={RLink}
+                to="/terminal"
               >
                 Terminal
               </Link>
@@ -154,7 +150,8 @@ export const TerminalPage = () => {
                   underline="hover"
                   color="text.primary"
                   aria-current="page"
-                  onClick={() => navigate("/terminal")}
+                  component={RLink}
+                  to={`/terminal/${terminalPage}`}
                 >
                   {terminalPage.charAt(0).toUpperCase() +
                     terminalPage.substr(1).toLowerCase()}

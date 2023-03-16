@@ -11,7 +11,6 @@ export const productApi = createApi({
       query(id) {
         return {
           url: `/product/${id}`,
-          credentials: "include",
         };
       },
       providesTags: (result, error, id) => [{ type: "Products", id }],
@@ -20,7 +19,6 @@ export const productApi = createApi({
       query() {
         return {
           url: `/products`,
-          credentials: "include",
         };
       },
       providesTags: (result) =>

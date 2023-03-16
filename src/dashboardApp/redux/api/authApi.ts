@@ -13,7 +13,6 @@ export const authApi = createApi({
           url: "auth/password",
           method: "POST",
           body: data,
-          credentials: "include",
         };
       },
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
@@ -28,7 +27,6 @@ export const authApi = createApi({
         return {
           url: "auth",
           method: "DELETE",
-          credentials: "include",
         };
       },
     }),

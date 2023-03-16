@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 import { useLoginUserMutation } from "../redux/api/authApi";
@@ -20,7 +20,6 @@ const LoadingButton = styled(_LoadingButton)`
 `;
 
 export const LoginPage = () => {
-  const navigate = useNavigate();
   const [loginUser, { isLoading, isError, error, isSuccess }] =
     useLoginUserMutation();
 
@@ -56,7 +55,7 @@ export const LoginPage = () => {
       >
         <Container maxWidth="lg">
           <Toolbar disableGutters>
-            <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
+            <Box component={Link} to="/" sx={{ cursor: "pointer" }}>
               <img
                 style={{ height: "2rem", marginTop: "0.5rem" }}
                 src={logo}

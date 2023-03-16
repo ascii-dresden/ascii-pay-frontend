@@ -12,7 +12,6 @@ export const userApi = createApi({
       query() {
         return {
           url: "auth/account",
-          credentials: "include",
         };
       },
       async onQueryStarted(args, { dispatch, queryFulfilled }) {

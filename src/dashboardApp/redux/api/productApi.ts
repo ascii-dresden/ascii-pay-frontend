@@ -12,7 +12,6 @@ export const productApi = createApi({
         return {
           url: "/products",
           method: "POST",
-          credentials: "include",
           body: product,
         };
       },
@@ -26,7 +25,6 @@ export const productApi = createApi({
         return {
           url: `/product/${id}`,
           method: "PUT",
-          credentials: "include",
           body: product,
         };
       },
@@ -46,7 +44,6 @@ export const productApi = createApi({
         return {
           url: `/product/${id}/image`,
           method: "PUT",
-          credentials: "include",
           body: content,
         };
       },
@@ -63,7 +60,6 @@ export const productApi = createApi({
         return {
           url: `/product/${id}/image`,
           method: "DELETE",
-          credentials: "include",
         };
       },
       invalidatesTags: (result, error, id) =>
@@ -78,7 +74,6 @@ export const productApi = createApi({
       query(id) {
         return {
           url: `/product/${id}`,
-          credentials: "include",
         };
       },
       providesTags: (result, error, id) => [{ type: "Products", id }],
@@ -87,7 +82,6 @@ export const productApi = createApi({
       query() {
         return {
           url: `/products`,
-          credentials: "include",
         };
       },
       providesTags: (result) =>
@@ -106,7 +100,6 @@ export const productApi = createApi({
         return {
           url: `/product/${id}`,
           method: "DELETE",
-          credentials: "include",
         };
       },
       invalidatesTags: [{ type: "Products", id: "LIST" }],

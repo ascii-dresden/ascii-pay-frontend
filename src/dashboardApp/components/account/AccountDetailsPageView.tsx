@@ -7,12 +7,12 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import { Link as RLink } from "react-router-dom";
 import { FullScreenLoader } from "../FullScreenLoader";
 import { TransactionListView } from "../transaction/TransactionListView";
 import React, { useEffect } from "react";
 import { useGetAccountQuery } from "../../redux/api/accountApi";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { CoinAmountView } from "../transaction/CoinAmountView";
 import { RoleChip } from "./RoleChip";
 import { AccountDetailsActionButton } from "./AccountDetailsActionButton";
@@ -21,7 +21,6 @@ export const AccountDetailsPageView = (props: {
   accountId: number;
   isRoot?: boolean;
 }) => {
-  const navigate = useNavigate();
   const {
     isLoading,
     isError,
@@ -65,7 +64,8 @@ export const AccountDetailsPageView = (props: {
                     underline="hover"
                     color="text.primary"
                     aria-current="page"
-                    onClick={() => navigate("/")}
+                    component={RLink}
+                    to="/"
                   >
                     ascii-pay
                   </Link>
@@ -75,14 +75,16 @@ export const AccountDetailsPageView = (props: {
                   <Link
                     underline="hover"
                     color="inherit"
-                    onClick={() => navigate("/")}
+                    component={RLink}
+                    to="/"
                   >
                     ascii-pay
                   </Link>
                   <Link
                     underline="hover"
                     color="inherit"
-                    onClick={() => navigate("/accounts")}
+                    component={RLink}
+                    to="/accounts"
                   >
                     Accounts
                   </Link>
@@ -90,7 +92,8 @@ export const AccountDetailsPageView = (props: {
                     underline="hover"
                     color="text.primary"
                     aria-current="page"
-                    onClick={() => navigate(`/accounts/${props.accountId}/`)}
+                    component={RLink}
+                    to={`/accounts/${props.accountId}/`}
                   >
                     {account.name}
                   </Link>

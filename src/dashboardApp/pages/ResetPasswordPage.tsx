@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
@@ -63,7 +63,7 @@ export const ResetPasswordPage = () => {
       >
         <Container maxWidth="lg">
           <Toolbar disableGutters>
-            <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
+            <Box component={Link} to="/" sx={{ cursor: "pointer" }}>
               <img
                 style={{ height: "2rem", marginTop: "0.5rem" }}
                 src={logo}

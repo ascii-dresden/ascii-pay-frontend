@@ -1,5 +1,5 @@
 import { AccountDto } from "../../../common/contracts";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import {
   Button,
@@ -31,7 +31,6 @@ export const AccountListRowActionButton = (props: {
   account: AccountDto;
   hidePrimaryAction?: boolean;
 }) => {
-  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -70,11 +69,12 @@ export const AccountListRowActionButton = (props: {
         aria-label="split button"
       >
         {props.hidePrimaryAction ? null : (
-          <Button onClick={() => navigate(`/accounts/${props.account.id}`)}>
+          <Button component={Link} to={`/accounts/${props.account.id}`}>
             Profile
           </Button>
         )}
         <Button
+          component="a"
           sx={{ whiteSpace: "nowrap", width: "3.5rem" }}
           onClick={handleToggle}
         >

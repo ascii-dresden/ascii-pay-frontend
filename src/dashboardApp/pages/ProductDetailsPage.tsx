@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link as RLink, useParams } from "react-router-dom";
 import { useGetProductQuery } from "../redux/api/productApi";
 import { FullScreenLoader } from "../components/FullScreenLoader";
 import { TagChip } from "../components/product/TagChip";
@@ -26,7 +26,6 @@ import { BarcodeView } from "../components/product/Barcode";
 import { ProductDetailsActionButton } from "../components/product/ProductDetailsActionButton";
 
 export const ProductDetailsPage = () => {
-  const navigate = useNavigate();
   const theme = useTheme();
 
   let params = useParams();
@@ -75,14 +74,16 @@ export const ProductDetailsPage = () => {
                 <Link
                   underline="hover"
                   color="inherit"
-                  onClick={() => navigate("/")}
+                  component={RLink}
+                  to="/"
                 >
                   ascii-pay
                 </Link>
                 <Link
                   underline="hover"
                   color="inherit"
-                  onClick={() => navigate("/products")}
+                  component={RLink}
+                  to="/products"
                 >
                   Products
                 </Link>
@@ -90,7 +91,8 @@ export const ProductDetailsPage = () => {
                   underline="hover"
                   color="text.primary"
                   aria-current="page"
-                  onClick={() => navigate(`/products/${productId}/`)}
+                  component={RLink}
+                  to={`/products/${productId}/`}
                 >
                   {product.name}
                 </Link>

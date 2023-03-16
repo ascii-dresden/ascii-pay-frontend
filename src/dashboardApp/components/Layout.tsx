@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -108,7 +108,7 @@ export const Layout = () => {
         >
           <Container maxWidth="lg">
             <Toolbar disableGutters>
-              <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
+              <Box component={Link} to="/" sx={{ cursor: "pointer" }}>
                 <img
                   style={{
                     height: "2rem",
