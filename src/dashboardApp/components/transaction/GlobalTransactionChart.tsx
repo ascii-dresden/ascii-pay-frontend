@@ -129,16 +129,28 @@ export const GlobalTransactionChart = (props: {
       name: "Total deposit",
       type: "column",
       data: upSeries,
+      color:
+        theme.palette.mode === "light"
+          ? theme.palette.success.light
+          : theme.palette.success.dark,
     },
     {
       name: "Total payout",
       type: "column",
       data: downSeries,
+      color:
+        theme.palette.mode === "light"
+          ? theme.palette.error.light
+          : theme.palette.error.dark,
     },
     {
       name: "System balance",
       type: "line",
       data: sumSeries,
+      color:
+        theme.palette.mode === "light"
+          ? theme.palette.info.light
+          : theme.palette.info.dark,
     },
   ];
 
