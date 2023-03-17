@@ -49,7 +49,7 @@ export const TransactionListRowAuthorization = (props: {
 
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
-      <span>Authorization:</span>
+      <Typography>Authorization:</Typography>
       <Avatar
         alt={account.name}
         {...stringAvatar(account.name)}

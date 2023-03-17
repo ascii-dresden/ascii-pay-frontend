@@ -276,6 +276,9 @@ export const CreatePaymentDialog = (props: {
                 );
               })}
               <TableRow>
+                <TableCell colSpan={4} sx={{ p: 0, pt: 0.2 }}></TableCell>
+              </TableRow>
+              <TableRow>
                 <TableCell height={52.9} width={72}></TableCell>
                 <TableCell>
                   <b>Total</b>
