@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import { useParams } from "react-router-dom";
 import React from "react";
 import { TerminalStartPage } from "./pages/TerminalStartPage";
 import { createTheme, ThemeProvider } from "@mui/material";
@@ -289,7 +288,6 @@ export const TerminalApp = React.memo(
     authClient: AsciiPayAuthenticationClient;
     deviceContext: TerminalDeviceContext;
   }) => {
-    const params = useParams();
     const [appClass, setAppClass] = React.useState<string | null>(null);
     const dispatch = terminalStore.dispatch as TerminalDispatch;
 
@@ -331,7 +329,7 @@ export const TerminalApp = React.memo(
     }, [dispatch]);
 
     let content;
-    switch (params.page) {
+    switch (props.page) {
       case "payment":
         content = (
           <TerminalPaymentPage
