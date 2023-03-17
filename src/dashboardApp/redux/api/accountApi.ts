@@ -96,12 +96,11 @@ export const accountApi = createApi({
           ? [
               { type: "Accounts", id },
               { type: "Accounts", id: "LIST" },
-              { type: "Transactions", id: "LIST" },
+              { type: "Transactions", id },
               { type: "Transactions", id: "GLOBAL" },
             ]
           : [
               { type: "Accounts", id: "LIST" },
-              { type: "Transactions", id: "LIST" },
               { type: "Transactions", id: "GLOBAL" },
             ],
     }),
@@ -111,7 +110,7 @@ export const accountApi = createApi({
           url: `/account/${id}/transactions`,
         };
       },
-      providesTags: [{ type: "Transactions", id: "LIST" }],
+      providesTags: (result, error, id) => [{ type: "Transactions", id }],
     }),
     getGlobalTransactions: builder.query<TransactionDto[], void>({
       query() {
