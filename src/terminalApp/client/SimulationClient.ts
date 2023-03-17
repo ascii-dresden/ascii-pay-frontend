@@ -17,8 +17,11 @@ export class SimulationClient implements AsciiPayAuthenticationClient {
   fallbackHandlerList: TerminalClientMessageHandler[];
   queue: (() => void)[];
 
-  constructor(state: SimulationClientState) {
-    this.state = state;
+  constructor(state?: SimulationClientState) {
+    this.state = state ?? {
+      connected: true,
+      session: null,
+    };
     this.handlerList = [];
     this.fallbackHandlerList = [];
     this.queue = [];
