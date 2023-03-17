@@ -18,10 +18,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import {
-  useGetAccountQuery,
-  useGetGlobalTransactionsQuery,
-} from "../redux/api/accountApi";
+import { useGetGlobalTransactionsQuery } from "../redux/api/accountApi";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import {
@@ -36,12 +33,16 @@ import { TransactionDto } from "../../common/contracts";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { getTransactionSum } from "../../common/transactionUtils";
 import { BASE_URL } from "../redux/api/customFetchBase";
-import { GlobalTransactionChart } from "../components/transaction/GlobalTransactionChart";
+import {
+  dateToGrouping,
+  GlobalTransactionChart,
+} from "../components/transaction/GlobalTransactionChart";
 import { GlobalTransactionSummary } from "../components/transaction/GlobalTransactionSummary";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { RoleChip } from "../components/account/RoleChip";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import enGB from "date-fns/locale/en-GB";
+import { TransactionListRowAccount } from "../components/transaction/TransactionListRowAccount";
+import { TransactionListRowAuthorization } from "../components/transaction/TransactionListRowAuthorization";
 
 export const TransactionListPage = () => {
   const [page, setPage] = React.useState(0);
@@ -146,11 +147,11 @@ export const TransactionListPage = () => {
     filteredTransactions = transactions.filter((transaction) => {
       let date = new Date(transaction.timestamp);
 
-      if (startDate && startDate.getTime() > date.getTime()) {
+      if (startDate && dateToGrouping(startDate) > dateToGrouping(date)) {
         return false;
       }
 
-      if (endDate && endDate.getTime() < date.getTime()) {
+      if (endDate && dateToGrouping(endDate) < dateToGrouping(date)) {
         return false;
       }
 
@@ -159,7 +160,7 @@ export const TransactionListPage = () => {
     previousTransactions = transactions.filter((transaction) => {
       let date = new Date(transaction.timestamp);
 
-      if (startDate && startDate.getTime() > date.getTime()) {
+      if (startDate && dateToGrouping(startDate) > dateToGrouping(date)) {
         return true;
       }
 
@@ -305,11 +306,21 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              {props.transaction.account_id ? (
-                <TransactionListRowAccount
-                  accountId={props.transaction.account_id}
-                />
-              ) : null}
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                {props.transaction.account_id ? (
+                  <TransactionListRowAccount
+                    accountId={props.transaction.account_id}
+                  />
+                ) : null}
+                {props.transaction.authorized_by_account_id ? (
+                  <TransactionListRowAuthorization
+                    accountId={props.transaction.authorized_by_account_id}
+                    auth_method={
+                      props.transaction.authorized_with_method ?? null
+                    }
+                  />
+                ) : null}
+              </Box>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
@@ -350,28 +361,5 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
         </TableCell>
       </TableRow>
     </>
-  );
-};
-
-const TransactionListRowAccount = (props: { accountId: number }) => {
-  const { isLoading, data: account } = useGetAccountQuery(props.accountId);
-
-  if (isLoading) {
-    return <span>Loading...</span>;
-  }
-  if (!account) {
-    return <span>Error...</span>;
-  }
-
-  return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Avatar
-        alt={account.name}
-        {...stringAvatar(account.name)}
-        sx={{ mr: 2 }}
-      />
-      <Typography sx={{ mr: 2 }}>{account.name}</Typography>
-      <RoleChip role={account.role} />
-    </Box>
   );
 };

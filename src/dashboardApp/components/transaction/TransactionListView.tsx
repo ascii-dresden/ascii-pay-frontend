@@ -32,6 +32,8 @@ import { getTransactionSum } from "../../../common/transactionUtils";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import enGB from "date-fns/locale/en-GB";
+import { dateToGrouping } from "./GlobalTransactionChart";
+import { TransactionListRowAuthorization } from "./TransactionListRowAuthorization";
 
 export const TransactionListView = (props: { account: AccountDto }) => {
   const [page, setPage] = React.useState(0);
@@ -94,11 +96,11 @@ export const TransactionListView = (props: { account: AccountDto }) => {
     filteredTransactions = transactions.filter((transaction) => {
       let date = new Date(transaction.timestamp);
 
-      if (startDate && startDate.getTime() > date.getTime()) {
+      if (startDate && dateToGrouping(startDate) > dateToGrouping(date)) {
         return false;
       }
 
-      if (endDate && endDate.getTime() < date.getTime()) {
+      if (endDate && dateToGrouping(endDate) < dateToGrouping(date)) {
         return false;
       }
 
@@ -107,7 +109,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
     previousTransactions = transactions.filter((transaction) => {
       let date = new Date(transaction.timestamp);
 
-      if (startDate && startDate.getTime() > date.getTime()) {
+      if (startDate && dateToGrouping(startDate) > dateToGrouping(date)) {
         return true;
       }
 
@@ -315,6 +317,16 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
+              <Box sx={{ display: "flex", justifyContent: "right" }}>
+                {props.transaction.authorized_by_account_id ? (
+                  <TransactionListRowAuthorization
+                    accountId={props.transaction.authorized_by_account_id}
+                    auth_method={
+                      props.transaction.authorized_with_method ?? null
+                    }
+                  />
+                ) : null}
+              </Box>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>

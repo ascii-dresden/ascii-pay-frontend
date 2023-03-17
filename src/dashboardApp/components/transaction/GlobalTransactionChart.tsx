@@ -16,7 +16,7 @@ type SeriesData = {
   y: number;
 };
 
-function dateToGrouping(date: Date): number {
+export function dateToGrouping(date: Date): number {
   date.setUTCHours(2, 0, 0, 0);
   return date.getTime();
 }

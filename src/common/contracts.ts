@@ -96,6 +96,8 @@ export type TransactionDto = {
   id: number;
   timestamp: string;
   account_id?: number | null;
+  authorized_by_account_id?: number | null;
+  authorized_with_method?: AuthMethodTypeDto | null;
   items: TransactionItemDto[];
 };
 
