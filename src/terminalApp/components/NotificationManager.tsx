@@ -21,6 +21,7 @@ import {
 } from "@mui/icons-material";
 import styled from "@emotion/styled";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 const StyledNotifications = styled.div`
   position: absolute;
@@ -253,6 +254,8 @@ const StyledNotificationNfcProxyProgress = styled.div`
 `;
 
 const NotificationNfcProxy = (props: { phase: string; hasError?: boolean }) => {
+  const { t } = useTranslation();
+
   let phaseId = 0;
   let progress = 0;
   switch (props.phase) {
@@ -288,7 +291,7 @@ const NotificationNfcProxy = (props: { phase: string; hasError?: boolean }) => {
           <div>
             <PageviewOutlined />
           </div>
-          <span>Identify</span>
+          <span>{t("notification.nfcIdentify")}</span>
           <NotificationNfcProxyOverlay
             phase={1}
             currentPhase={phaseId}
@@ -304,7 +307,7 @@ const NotificationNfcProxy = (props: { phase: string; hasError?: boolean }) => {
           <div>
             <VpnKeyOutlined />
           </div>
-          <span>Challenge</span>
+          <span>{t("notification.nfcChallenge")}</span>
           <NotificationNfcProxyOverlay
             phase={2}
             currentPhase={phaseId}
@@ -320,7 +323,7 @@ const NotificationNfcProxy = (props: { phase: string; hasError?: boolean }) => {
           <div>
             <VerifiedOutlined />
           </div>
-          <span>Response</span>
+          <span>{t("notification.nfcResponse")}</span>
           <NotificationNfcProxyOverlay
             phase={3}
             currentPhase={phaseId}

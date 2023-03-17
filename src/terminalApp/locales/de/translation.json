@@ -37,7 +37,10 @@
     "onFoundBarcode": "Barcode gefunden",
     "onFoundSessionToken": "Account-Token gefunden",
     "onFoundNfcCard": "NFC-Karte gefunden",
-    "onNfcCardRemoved": "NFC-Karte entfernt"
+    "onNfcCardRemoved": "NFC-Karte entfernt",
+    "nfcIdentify": "Identify",
+    "nfcChallenge": "Challenge",
+    "nfcResponse": "Response"
   },
   "register": {
     "cashBook": "Kassenbuch",
