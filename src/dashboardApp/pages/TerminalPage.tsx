@@ -29,7 +29,6 @@ import { WebSocketClient } from "../../terminalApp/client/WebsocketClient";
 import { ReceiveKeyboardEventKey } from "../../terminalApp/client/websocket";
 import {
   BackspaceOutlined,
-  KeyboardBackspaceOutlined,
   KeyboardReturnOutlined,
   Remove,
 } from "@mui/icons-material";
