@@ -2,6 +2,7 @@ import {
   Box,
   Breadcrumbs,
   Container,
+  Grid,
   Link,
   Paper,
   Toolbar,
@@ -112,26 +113,26 @@ export const AccountDetailsPageView = (props: {
         </Box>
       </Paper>
 
-      <Box sx={{ display: "flex", mb: 4 }}>
-        <Paper sx={{ mr: 4, flex: "1 1 100%" }} elevation={4}>
-          <Box sx={{ p: 2 }}>
+      <Grid container spacing={4} sx={{ mb: 4 }}>
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ height: "100%", p: 2 }} elevation={4}>
             <Typography gutterBottom variant="h6" component="div">
               Balance
             </Typography>
             <CoinAmountView coins={account.balance} negativeIsError={true} />
-          </Box>
-        </Paper>
-        <Paper sx={{ flex: "1 1 100%" }} elevation={4}>
-          <Box sx={{ p: 2 }}>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ height: "100%", p: 2 }} elevation={4}>
             <Typography gutterBottom variant="h6" component="div">
               Email
             </Typography>
             <Typography variant="body1" color="text.secondary">
               {account.email}
             </Typography>
-          </Box>
-        </Paper>
-      </Box>
+          </Paper>
+        </Grid>
+      </Grid>
 
       <TransactionListView account={account} />
     </Container>

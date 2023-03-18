@@ -7,6 +7,8 @@ import {
   IconButton,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import React, { useEffect } from "react";
@@ -28,6 +30,9 @@ export const UpdateProductDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [updateProduct, { isLoading, isError, error, isSuccess }] =
     useUpdateProductMutation();
 
@@ -83,7 +88,11 @@ export const UpdateProductDialog = (props: {
   };
 
   return (
-    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+    <Dialog
+      open={props.open}
+      onClose={() => props.setOpen(false)}
+      fullScreen={fullScreen}
+    >
       <DialogTitle component="div">
         <Typography variant="h5">Edit product</Typography>
         <IconButton

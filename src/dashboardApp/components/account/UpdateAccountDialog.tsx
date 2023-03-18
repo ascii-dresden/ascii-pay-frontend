@@ -11,6 +11,8 @@ import {
   Switch,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import React, { useEffect } from "react";
@@ -25,6 +27,9 @@ export const UpdateAccountDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const user = useDashboardSelector((state) => state.userState.user);
   const [updateAccount, { isLoading, isError, error, isSuccess }] =
     useUpdateAccountMutation();
@@ -71,7 +76,11 @@ export const UpdateAccountDialog = (props: {
   };
 
   return (
-    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+    <Dialog
+      open={props.open}
+      onClose={() => props.setOpen(false)}
+      fullScreen={fullScreen}
+    >
       <DialogTitle component="div">
         <Typography variant="h5">Edit account</Typography>
         <IconButton

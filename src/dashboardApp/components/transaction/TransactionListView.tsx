@@ -70,13 +70,13 @@ export const TransactionListView = (props: { account: AccountDto }) => {
   if (isLoading || transactions === undefined) {
     return (
       <>
-        <Paper sx={{ p: 2, mb: 4 }} elevation={4}>
+        <Paper sx={{ p: 2, mb: 4, overflowX: "auto" }} elevation={4}>
           <Box display="flex" alignItems="center" justifyContent="center">
             <div style={{ height: "365px" }}></div>
             <CircularProgress />
           </Box>
         </Paper>
-        <Paper elevation={4}>
+        <Paper sx={{ overflowX: "auto" }} elevation={4}>
           <Box
             display="flex"
             alignItems="center"
@@ -186,7 +186,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
-      <Paper sx={{ px: 2, pt: 2, pb: 1, mb: 4 }} elevation={4}>
+      <Paper sx={{ px: 2, pt: 2, pb: 1, mb: 4, width: "100%" }} elevation={4}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ p: 1 }}>
             <Typography gutterBottom variant="h6" component="div">
@@ -234,12 +234,14 @@ export const TransactionListView = (props: { account: AccountDto }) => {
           onRequestZoom={onRequestZoomHandler}
         />
       </Paper>
-      <TableContainer component={Paper} elevation={4}>
+      <TableContainer component={Paper} elevation={4} sx={{ width: "100%" }}>
         <Table aria-label="Transactions table">
           <TableHead>
             <TableRow>
               <TableCell width={72}></TableCell>
-              <TableCell>Date</TableCell>
+              <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+                Date
+              </TableCell>
               <TableCell>Total</TableCell>
             </TableRow>
           </TableHead>
@@ -303,7 +305,7 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell>
+        <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
           {format.format(new Date(props.transaction.timestamp))}
         </TableCell>
         <TableCell align="right">
@@ -316,7 +318,10 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            <Box sx={{ margin: 1, width: "100%", overflowX: "hidden" }}>
+              <Typography sx={{ display: { xs: "block", sm: "none" } }}>
+                {format.format(new Date(props.transaction.timestamp))}
+              </Typography>
               <Box sx={{ display: "flex", justifyContent: "right" }}>
                 {props.transaction.authorized_by_account_id ? (
                   <TransactionListRowAuthorization

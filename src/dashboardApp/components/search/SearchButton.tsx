@@ -23,6 +23,7 @@ const SearchContainer = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
     width: "auto",
+    minWidth: "15rem",
   },
 }));
 
