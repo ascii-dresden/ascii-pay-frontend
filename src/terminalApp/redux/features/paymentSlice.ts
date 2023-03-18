@@ -16,6 +16,8 @@ import {
 } from "../../../common/transactionUtils";
 import { BASE_URL } from "../api/customFetchBase";
 import { TerminalDispatch, TerminalState } from "../terminalStore";
+import { ReceiveKeyboardEventKey } from "../../client/websocket";
+import { validateKeypadValue } from "../../payment/Keypad";
 
 const PAYMENT_WAITING_TIMEOUT = 30_000;
 const PAYMENT_INPROGRESS_TIMEOUT = 3_000;
@@ -244,6 +246,71 @@ export const paymentSlice = createSlice({
   name: "payment",
   initialState,
   reducers: {
+    receiveKeyEvent: (
+      state,
+      action: PayloadAction<ReceiveKeyboardEventKey>
+    ) => {
+      switch (action.payload) {
+        case "NUM_0":
+          state.keypadValue = validateKeypadValue(state.keypadValue * 10);
+          break;
+        case "NUM_1":
+          state.keypadValue = validateKeypadValue(
+            state.keypadValue * 10 + Math.sign(state.keypadValue) || 1
+          );
+          break;
+        case "NUM_2":
+          state.keypadValue = validateKeypadValue(
+            state.keypadValue * 10 + (Math.sign(state.keypadValue) || 1) * 2
+          );
+          break;
+        case "NUM_3":
+          state.keypadValue = validateKeypadValue(
+            state.keypadValue * 10 + (Math.sign(state.keypadValue) || 1) * 3
+          );
+          break;
+        case "NUM_4":
+          state.keypadValue = validateKeypadValue(
+            state.keypadValue * 10 + (Math.sign(state.keypadValue) || 1) * 4
+          );
+          break;
+        case "NUM_5":
+          state.keypadValue = validateKeypadValue(
+            state.keypadValue * 10 + (Math.sign(state.keypadValue) || 1) * 5
+          );
+          break;
+        case "NUM_6":
+          state.keypadValue = validateKeypadValue(
+            state.keypadValue * 10 + (Math.sign(state.keypadValue) || 1) * 6
+          );
+          break;
+        case "NUM_7":
+          state.keypadValue = validateKeypadValue(
+            state.keypadValue * 10 + (Math.sign(state.keypadValue) || 1) * 7
+          );
+          break;
+        case "NUM_8":
+          state.keypadValue = validateKeypadValue(
+            state.keypadValue * 10 + (Math.sign(state.keypadValue) || 1) * 8
+          );
+          break;
+        case "NUM_9":
+          state.keypadValue = validateKeypadValue(
+            state.keypadValue * 10 + (Math.sign(state.keypadValue) || 1) * 9
+          );
+          break;
+        case "NEGATE":
+          state.keypadValue = validateKeypadValue(-state.keypadValue);
+          break;
+        case "BACKSPACE":
+          state.keypadValue = validateKeypadValue(
+            Math.sign(state.keypadValue) *
+              Math.floor(Math.abs(state.keypadValue / 10))
+          );
+          break;
+      }
+      state.paymentTotal = calculateTotal(state);
+    },
     setKeypadValue: (state, action: PayloadAction<number>) => {
       state.keypadValue = action.payload;
       state.paymentTotal = calculateTotal(state);
@@ -286,7 +353,27 @@ export const paymentSlice = createSlice({
     removeAccount: (state) => {
       state.scannedAccount = null;
     },
-    payment: (state) => {
+    payment: (state, action: PayloadAction<[string, string]>) => {
+      if (state.keypadValue !== 0) {
+        let label =
+          state.keypadValue >= 0 ? action.payload[0] : action.payload[1];
+
+        state.storedPaymentItems.push({
+          product: {
+            name: label,
+            price: {
+              Cent: state.keypadValue,
+            },
+            bonus: {},
+          },
+          effective_price: {
+            Cent: state.keypadValue,
+          },
+        });
+        state.keypadValue = 0;
+        state.paymentTotal = calculateTotal(state);
+      }
+
       if (state.payment) return;
       if (state.storedPaymentItems.length <= 0) return;
 
@@ -363,6 +450,7 @@ export const paymentSlice = createSlice({
 });
 
 export const {
+  receiveKeyEvent,
   setKeypadValue,
   submitKeypadValue,
   addProduct,

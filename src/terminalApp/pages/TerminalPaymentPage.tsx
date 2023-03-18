@@ -13,6 +13,7 @@ import {
   cancelPayment,
   payment,
   receiveAccountSessionToken,
+  receiveKeyEvent,
   removeAccount,
   setKeypadValue,
   submitKeypadValue,
@@ -24,7 +25,10 @@ import { Money } from "../components/Money";
 import { Keypad } from "../payment/Keypad";
 import styled from "@emotion/styled";
 import { ProductList } from "../payment/ProductList";
-import { TerminalClientMessageHandler } from "../client/websocket";
+import {
+  ReceiveKeyboardEventKey,
+  TerminalClientMessageHandler,
+} from "../client/websocket";
 import {
   AsciiPayAuthenticationClient,
   TerminalDeviceContext,
@@ -95,6 +99,8 @@ export const TerminalPaymentPage = (props: {
   const { t } = useTranslation();
   const handleGoBack = () => props.navigate("start");
 
+  const [activePage, setActivePage] = useState(Page.QUICK);
+
   const keypadValue = useTerminalSelector(
     (state) => state.paymentState.keypadValue
   );
@@ -109,16 +115,35 @@ export const TerminalPaymentPage = (props: {
   );
   const dispatch = useTerminalDispatch();
 
+  const payAction = () => {
+    dispatch(
+      payment([
+        t("payment.basket.keypadValuePositive"),
+        t("payment.basket.keypadValueNegative"),
+      ])
+    );
+    props.authClient.requestNfcReauthenticate();
+  };
+
   const handler: TerminalClientMessageHandler = {
     onReceiveSessionToken(token: string) {
       props.deviceContext.wakeUp();
       dispatch(setScreensaver(false));
       dispatch(receiveAccountSessionToken(token));
-      props.navigate("payment");
       return true;
     },
     onNfcCardRemoved() {
       dispatch(removeAccount());
+      return true;
+    },
+    onReceiveKeyboardEvent(key: ReceiveKeyboardEventKey) {
+      props.deviceContext.wakeUp();
+      dispatch(setScreensaver(false));
+      if (key === "ENTER") {
+        payAction();
+      } else {
+        dispatch(receiveKeyEvent(key));
+      }
       return true;
     },
   };
@@ -129,7 +154,6 @@ export const TerminalPaymentPage = (props: {
     // eslint-disable-next-line
   }, [props.authClient]);
 
-  const [activePage, setActivePage] = useState(Page.QUICK);
   const quickActions: SidebarAction[] = [
     {
       title: t("payment.quickAccess"),
@@ -159,19 +183,6 @@ export const TerminalPaymentPage = (props: {
       bottom: true,
     },
   ];
-
-  const payAction = () => {
-    if (keypadValue !== 0) {
-      let label =
-        keypadValue >= 0
-          ? t("payment.basket.keypadValuePositive")
-          : t("payment.basket.keypadValueNegative");
-      dispatch(submitKeypadValue([keypadValue, label]));
-    }
-
-    dispatch(payment());
-    props.authClient.requestNfcReauthenticate();
-  };
 
   let content;
   switch (activePage) {

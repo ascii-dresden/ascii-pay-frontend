@@ -2,6 +2,7 @@ import {
   Box,
   Breadcrumbs,
   Button,
+  ButtonGroup,
   Container,
   Link,
   MenuItem,
@@ -25,6 +26,13 @@ import {
 } from "../../terminalApp/client/AsciiPayAuthenticationClient";
 import { useDashboardSelector } from "../redux/dashboardStore";
 import { WebSocketClient } from "../../terminalApp/client/WebsocketClient";
+import { ReceiveKeyboardEventKey } from "../../terminalApp/client/websocket";
+import {
+  BackspaceOutlined,
+  KeyboardBackspaceOutlined,
+  KeyboardReturnOutlined,
+  Remove,
+} from "@mui/icons-material";
 
 type ConnectionSimulateState = {
   connected: boolean;
@@ -51,6 +59,22 @@ function requestAccountSession(
     .then((response) => setSession(response.token ?? null))
     .catch(() => setSession(null));
 }
+
+const keys: ReceiveKeyboardEventKey[] = [
+  "NUM_1",
+  "NUM_2",
+  "NUM_3",
+  "NUM_4",
+  "NUM_5",
+  "NUM_6",
+  "NUM_7",
+  "NUM_8",
+  "NUM_9",
+  "NUM_0",
+  "NEGATE",
+  "BACKSPACE",
+  "ENTER",
+];
 
 export const TerminalPage = () => {
   const theme = useTheme();
@@ -199,6 +223,35 @@ export const TerminalPage = () => {
         };
       });
 
+    const sendKeyboardEvent = (key: ReceiveKeyboardEventKey) => {
+      if (
+        connectionMode === "simulate" &&
+        (authClient as SimulationClient).updateState
+      ) {
+        (authClient as SimulationClient).sendKeyboardEvent(key);
+      }
+    };
+
+    const numpad = keys.map((k) => {
+      let name: any = k.replace("NUM_", "");
+      switch (k) {
+        case "ENTER":
+          name = <KeyboardReturnOutlined />;
+          break;
+        case "BACKSPACE":
+          name = <BackspaceOutlined />;
+          break;
+        case "NEGATE":
+          name = <Remove />;
+          break;
+      }
+      return (
+        <Button variant="outlined" key={k} onClick={() => sendKeyboardEvent(k)}>
+          {name}
+        </Button>
+      );
+    });
+
     connectionBox = (
       <Box sx={{ mt: 2, display: "flex", "& > *": { mr: "8px !important" } }}>
         {connectionSimulateState.session === null ? (
@@ -214,6 +267,7 @@ export const TerminalPage = () => {
         <Button variant="outlined" size="large" onClick={toggleConnected}>
           {connectionSimulateState.connected ? "Disconnect" : "Connect"}
         </Button>
+        <ButtonGroup>{numpad}</ButtonGroup>
       </Box>
     );
   } else {

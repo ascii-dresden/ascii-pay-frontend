@@ -1,5 +1,6 @@
 import {
   dispatchClientMessage,
+  ReceiveKeyboardEventKey,
   TerminalClientMessageHandler,
   WebSocketResponse,
 } from "./websocket";
@@ -168,5 +169,14 @@ export class SimulationClient implements AsciiPayAuthenticationClient {
       },
       true
     );
+  }
+
+  sendKeyboardEvent(key: ReceiveKeyboardEventKey) {
+    this.dispatch({
+      type: "ReceiveKeyboardEvent",
+      payload: {
+        key: key,
+      },
+    });
   }
 }
