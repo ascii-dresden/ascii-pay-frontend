@@ -277,6 +277,7 @@ export type TerminalAppPage =
   | "register"
   | "accounts"
   | "settings";
+export type TerminalNavigateHandler = (page: TerminalAppPage) => void;
 
 export const TerminalApp = React.memo(
   (props: {
@@ -287,6 +288,7 @@ export const TerminalApp = React.memo(
     setSettings: (settings: TerminalSettings) => void;
     authClient: AsciiPayAuthenticationClient;
     deviceContext: TerminalDeviceContext;
+    navigate: TerminalNavigateHandler;
   }) => {
     const [appClass, setAppClass] = React.useState<string | null>(null);
     const dispatch = terminalStore.dispatch as TerminalDispatch;
@@ -335,11 +337,17 @@ export const TerminalApp = React.memo(
           <TerminalPaymentPage
             authClient={props.authClient}
             deviceContext={props.deviceContext}
+            navigate={props.navigate}
           />
         );
         break;
       case "register":
-        content = <TerminalRegisterPage setAppClass={setAppClass} />;
+        content = (
+          <TerminalRegisterPage
+            setAppClass={setAppClass}
+            navigate={props.navigate}
+          />
+        );
         break;
       case "accounts":
         content = (
@@ -349,6 +357,7 @@ export const TerminalApp = React.memo(
             height={props.height}
             settings={props.settings}
             fontSize={fontSize}
+            navigate={props.navigate}
           />
         );
         break;
@@ -359,6 +368,7 @@ export const TerminalApp = React.memo(
             height={props.height}
             settings={props.settings}
             setSettings={props.setSettings}
+            navigate={props.navigate}
           />
         );
         break;
@@ -367,6 +377,7 @@ export const TerminalApp = React.memo(
           <TerminalStartPage
             authClient={props.authClient}
             deviceContext={props.deviceContext}
+            navigate={props.navigate}
           />
         );
         break;

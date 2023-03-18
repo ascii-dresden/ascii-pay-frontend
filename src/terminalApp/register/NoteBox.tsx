@@ -11,7 +11,6 @@ import {
   setNote50,
 } from "../redux/features/registerSlice";
 import { Money, moneyToString } from "../components/Money";
-import Hammer from "react-hammerjs";
 import styled from "@emotion/styled";
 import note5 from "../../assets/register/note5.png";
 import note10 from "../../assets/register/note10.png";
@@ -297,9 +296,13 @@ export const NoteBox = (props: {
       });
     }
   };
-  const handlePanStart = (event: HammerInput) => {
+
+  const handlePointerDown = (event: React.PointerEvent) => {
+    const target: HTMLDivElement = event.target as HTMLDivElement;
+    target.setPointerCapture(event.pointerId);
+
     if (previousNoteBox) return;
-    let currentElement: HTMLElement | null = event.target;
+    let currentElement: HTMLElement | null = event.target as HTMLElement;
     let targetCents = 0;
     let targetTop = 0;
     let targetHeight = 0;
@@ -320,7 +323,7 @@ export const NoteBox = (props: {
       let noteHeight = document.getElementsByClassName("note")[0].clientHeight;
       let currentCount = getNoteCount(targetCents);
       let newCount = Math.round(
-        (targetHeight - (event.center.y - targetTop) - noteHeight * 0.5) /
+        (targetHeight - (event.clientY - targetTop) - noteHeight * 0.5) /
           (noteHeight * 0.25)
       );
 
@@ -333,14 +336,15 @@ export const NoteBox = (props: {
       });
     }
   };
-  const handlePan = (event: HammerInput) => {
+
+  const handlePointerMove = (event: React.PointerEvent) => {
     if (previousNoteBox) return;
 
     if (selectedGroup) {
       let newCount =
         Math.round(
           (selectedGroup.height -
-            (event.center.y - selectedGroup.top) -
+            (event.clientY - selectedGroup.top) -
             selectedGroup.noteHeight * 0.5) /
             (selectedGroup.noteHeight * 0.25)
         ) - selectedGroup.offset;
@@ -349,65 +353,69 @@ export const NoteBox = (props: {
     }
   };
 
+  const handlePointerUp = (event: React.PointerEvent) => {
+    if (previousNoteBox) return;
+
+    if (selectedGroup) {
+      setSelectedGroup(null);
+    }
+  };
+
   return (
-    <Hammer
-      direction={"DIRECTION_ALL"}
-      onTap={handleTab}
-      onPress={handlePress}
-      onPanStart={handlePanStart}
-      onPan={handlePan}
+    <StyledNoteBox
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
     >
-      <StyledNoteBox>
-        <div>
-          <NoteGroup
-            name="100 EURO"
-            image={note100}
-            centValue={10000}
-            count={noteBox.note100}
-            previousCount={previousNoteBox?.note100 ?? 0}
-          />
-        </div>
+      <div>
+        <NoteGroup
+          name="100 EURO"
+          image={note100}
+          centValue={10000}
+          count={noteBox.note100}
+          previousCount={previousNoteBox?.note100 ?? 0}
+        />
+      </div>
 
-        <div>
-          <NoteGroup
-            name="50 EURO"
-            image={note50}
-            centValue={5000}
-            count={noteBox.note50}
-            previousCount={previousNoteBox?.note50 ?? 0}
-          />
-        </div>
+      <div>
+        <NoteGroup
+          name="50 EURO"
+          image={note50}
+          centValue={5000}
+          count={noteBox.note50}
+          previousCount={previousNoteBox?.note50 ?? 0}
+        />
+      </div>
 
-        <div>
-          <NoteGroup
-            name="20 EURO"
-            image={note20}
-            centValue={2000}
-            count={noteBox.note20}
-            previousCount={previousNoteBox?.note20 ?? 0}
-          />
-        </div>
+      <div>
+        <NoteGroup
+          name="20 EURO"
+          image={note20}
+          centValue={2000}
+          count={noteBox.note20}
+          previousCount={previousNoteBox?.note20 ?? 0}
+        />
+      </div>
 
-        <div>
-          <NoteGroup
-            name="10 EURO"
-            image={note10}
-            centValue={1000}
-            count={noteBox.note10}
-            previousCount={previousNoteBox?.note10 ?? 0}
-          />
-        </div>
+      <div>
+        <NoteGroup
+          name="10 EURO"
+          image={note10}
+          centValue={1000}
+          count={noteBox.note10}
+          previousCount={previousNoteBox?.note10 ?? 0}
+        />
+      </div>
 
-        <div>
-          <NoteGroup
-            name="5 EURO"
-            image={note5}
-            centValue={500}
-            count={noteBox.note5}
-            previousCount={previousNoteBox?.note5 ?? 0}
-          />
-        </div>
-      </StyledNoteBox>
-    </Hammer>
+      <div>
+        <NoteGroup
+          name="5 EURO"
+          image={note5}
+          centValue={500}
+          count={noteBox.note5}
+          previousCount={previousNoteBox?.note5 ?? 0}
+        />
+      </div>
+    </StyledNoteBox>
   );
 };

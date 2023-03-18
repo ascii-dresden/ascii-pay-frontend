@@ -1,10 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { SidebarLayout } from "../components/SidebarLayout";
 import logo from "../../assets/ascii-circle-icon.svg";
+import { TerminalNavigateHandler } from "../TerminalApp";
 
 const StyledSettings = styled.div`
   & > span {
@@ -190,10 +190,10 @@ export const TerminalSettingsPage = (props: {
   height: number;
   settings: TerminalSettings;
   setSettings: (settings: TerminalSettings) => void;
+  navigate: TerminalNavigateHandler;
 }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const handleGoBack = () => navigate("/terminal");
+  const handleGoBack = () => props.navigate("start");
 
   const highlightColorViews = highlightColors.map((c) => (
     <div

@@ -106,7 +106,7 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
             <label>{t("account.username")}</label>
             <input
               ref={usernameInput}
-              placeholder={t("account.username")}
+              placeholder={t("account.username") ?? undefined}
               inputMode="none"
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -115,7 +115,7 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
             <label>{t("account.password")}</label>
             <input
               ref={passwordInput}
-              placeholder={t("account.password")}
+              placeholder={t("account.password") ?? undefined}
               inputMode="none"
               type="password"
               onChange={(e) => setPassword(e.target.value)}

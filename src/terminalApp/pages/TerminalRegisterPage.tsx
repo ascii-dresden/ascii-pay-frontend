@@ -12,16 +12,16 @@ import {
   useTerminalDispatch,
   useTerminalSelector,
 } from "../redux/terminalStore";
-import { useNavigate } from "react-router-dom";
 import { SidebarAction, SidebarLayout } from "../components/SidebarLayout";
 import { Done, EuroSymbol, LocalAtm, MailOutline } from "@mui/icons-material";
+import { TerminalNavigateHandler } from "../TerminalApp";
 
 export const TerminalRegisterPage = (props: {
   setAppClass: (appClass: string | null) => void;
+  navigate: TerminalNavigateHandler;
 }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const handleGoBack = () => navigate("/terminal");
+  const handleGoBack = () => props.navigate("start");
 
   const registerMode = useTerminalSelector(
     (state) => state.registerState.registerMode

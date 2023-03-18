@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { SidebarAction, SidebarLayout } from "../components/SidebarLayout";
 import { Login } from "../accounts/Login";
 import {
@@ -21,6 +20,7 @@ import { setScreensaver } from "../redux/features/terminalSlice";
 import { TerminalSettings } from "./TerminalSettingsPage";
 import { terminalLogin, terminalLogout } from "../redux/features/accountSlice";
 import { accountApi } from "../redux/api/accountApi";
+import { TerminalNavigateHandler } from "../TerminalApp";
 
 const StyledLoggedAccountHeader = styled.div`
   position: absolute;
@@ -73,8 +73,8 @@ export const TerminalAccountPage = (props: {
   height: number;
   fontSize: number;
   settings: TerminalSettings;
+  navigate: TerminalNavigateHandler;
 }) => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const dispatch = useTerminalDispatch();
 
@@ -85,7 +85,7 @@ export const TerminalAccountPage = (props: {
   const handleGoBack = () => {
     dispatch(accountApi.util.resetApiState());
     dispatch(terminalLogout());
-    navigate("/terminal");
+    props.navigate("start");
   };
 
   const handler: TerminalClientMessageHandler = {

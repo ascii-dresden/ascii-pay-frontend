@@ -14,7 +14,6 @@ import {
   setCoin50,
 } from "../redux/features/registerSlice";
 import { Money } from "../components/Money";
-import Hammer from "react-hammerjs";
 import styled from "@emotion/styled";
 
 const StyledCoinBox = styled.div`
@@ -344,9 +343,12 @@ export const CoinBox = (props: {
     }
   };
 
-  const handlePanStart = (event: HammerInput) => {
+  const handlePointerDown = (event: React.PointerEvent) => {
+    const target: HTMLDivElement = event.target as HTMLDivElement;
+    target.setPointerCapture(event.pointerId);
+
     if (previousCoinBox) return;
-    let currentElement: HTMLElement | null = event.target;
+    let currentElement: HTMLElement | null = event.target as HTMLElement;
     let targetCents = 0;
     let targetCentCount = 0;
     let targetTop = 0;
@@ -370,7 +372,7 @@ export const CoinBox = (props: {
       let newCount =
         targetCentCount -
         Math.round(
-          ((event.center.y - targetTop) / targetHeight) * targetCentCount
+          ((event.clientY - targetTop) / targetHeight) * targetCentCount
         );
 
       setSelectedGroup({
@@ -383,14 +385,14 @@ export const CoinBox = (props: {
     }
   };
 
-  const handlePan = (event: HammerInput) => {
+  const handlePointerMove = (event: React.PointerEvent) => {
     if (previousCoinBox) return;
 
     if (selectedGroup) {
       let newCount =
         selectedGroup.count -
         Math.round(
-          ((event.center.y - selectedGroup.top) / selectedGroup.height) *
+          ((event.clientY - selectedGroup.top) / selectedGroup.height) *
             selectedGroup.count
         ) -
         selectedGroup.offset;
@@ -399,93 +401,97 @@ export const CoinBox = (props: {
     }
   };
 
+  const handlePointerUp = (event: React.PointerEvent) => {
+    if (previousCoinBox) return;
+
+    if (selectedGroup) {
+      setSelectedGroup(null);
+    }
+  };
+
   return (
-    <Hammer
-      direction={"DIRECTION_ALL"}
-      onTap={handleTab}
-      onPress={handlePress}
-      onPanStart={handlePanStart}
-      onPan={handlePan}
+    <StyledCoinBox
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
     >
-      <StyledCoinBox>
-        <div>
-          <CoinGroup
-            name="2 EURO"
-            stackCount={12}
-            centValue={200}
-            count={coinBox.coin200}
-            previousCount={previousCoinBox?.coin200 ?? 0}
-          />
-        </div>
+      <div>
+        <CoinGroup
+          name="2 EURO"
+          stackCount={12}
+          centValue={200}
+          count={coinBox.coin200}
+          previousCount={previousCoinBox?.coin200 ?? 0}
+        />
+      </div>
 
-        <div>
-          <CoinGroup
-            name="1 EURO"
-            stackCount={11}
-            centValue={100}
-            count={coinBox.coin100}
-            previousCount={previousCoinBox?.coin100 ?? 0}
-          />
-        </div>
+      <div>
+        <CoinGroup
+          name="1 EURO"
+          stackCount={11}
+          centValue={100}
+          count={coinBox.coin100}
+          previousCount={previousCoinBox?.coin100 ?? 0}
+        />
+      </div>
 
-        <div>
-          <CoinGroup
-            name="50 CENT"
-            stackCount={11}
-            centValue={50}
-            count={coinBox.coin50}
-            previousCount={previousCoinBox?.coin50 ?? 0}
-          />
-        </div>
+      <div>
+        <CoinGroup
+          name="50 CENT"
+          stackCount={11}
+          centValue={50}
+          count={coinBox.coin50}
+          previousCount={previousCoinBox?.coin50 ?? 0}
+        />
+      </div>
 
-        <div>
-          <CoinGroup
-            name="20 CENT"
-            stackCount={12}
-            centValue={20}
-            count={coinBox.coin20}
-            previousCount={previousCoinBox?.coin20 ?? 0}
-          />
-        </div>
+      <div>
+        <CoinGroup
+          name="20 CENT"
+          stackCount={12}
+          centValue={20}
+          count={coinBox.coin20}
+          previousCount={previousCoinBox?.coin20 ?? 0}
+        />
+      </div>
 
-        <div>
-          <CoinGroup
-            name="10 CENT"
-            stackCount={13}
-            centValue={10}
-            count={coinBox.coin10}
-            previousCount={previousCoinBox?.coin10 ?? 0}
-          />
-        </div>
+      <div>
+        <CoinGroup
+          name="10 CENT"
+          stackCount={13}
+          centValue={10}
+          count={coinBox.coin10}
+          previousCount={previousCoinBox?.coin10 ?? 0}
+        />
+      </div>
 
-        <div>
-          <CoinGroup
-            name="5 CENT"
-            stackCount={15}
-            centValue={5}
-            count={coinBox.coin5}
-            previousCount={previousCoinBox?.coin5 ?? 0}
-          />
-        </div>
+      <div>
+        <CoinGroup
+          name="5 CENT"
+          stackCount={15}
+          centValue={5}
+          count={coinBox.coin5}
+          previousCount={previousCoinBox?.coin5 ?? 0}
+        />
+      </div>
 
-        <div>
-          <CoinGroup
-            name="2 CENT"
-            stackCount={6}
-            centValue={2}
-            count={coinBox.coin2}
-            previousCount={previousCoinBox?.coin2 ?? 0}
-          />
-          <CoinGroup
-            name="1 CENT"
-            stackCount={7}
-            centValue={1}
-            count={coinBox.coin1}
-            previousCount={previousCoinBox?.coin1 ?? 0}
-          />
-        </div>
-      </StyledCoinBox>
-    </Hammer>
+      <div>
+        <CoinGroup
+          name="2 CENT"
+          stackCount={6}
+          centValue={2}
+          count={coinBox.coin2}
+          previousCount={previousCoinBox?.coin2 ?? 0}
+        />
+        <CoinGroup
+          name="1 CENT"
+          stackCount={7}
+          centValue={1}
+          count={coinBox.coin1}
+          previousCount={previousCoinBox?.coin1 ?? 0}
+        />
+      </div>
+    </StyledCoinBox>
   );
 };
 
