@@ -229,6 +229,11 @@ const StyledTerminalApp = styled.div`
       height: 2.2em;
       background-color: var(--tertiary-hover-background);
 
+      svg {
+        width: 0.6em !important;
+        height: 0.6em !important;
+      }
+
       &:hover {
         background-color: var(--secondary-background);
       }
@@ -300,6 +305,11 @@ export const TerminalApp = React.memo(
       // eslint-disable-next-line
     }, [props.authClient]);
 
+    const fontSize = React.useMemo(() => {
+      const scale = Math.min(props.width / 800, props.height / 480);
+      return Math.round(16 * scale);
+    }, [props.width, props.height]);
+
     const theme = React.useMemo(
       () =>
         createTheme({
@@ -310,15 +320,11 @@ export const TerminalApp = React.memo(
             button: {
               textTransform: "none",
             },
+            fontSize: fontSize,
           },
         }),
-      [props.settings]
+      [props.settings, fontSize]
     );
-
-    const fontSize = React.useMemo(() => {
-      const scale = Math.min(props.width / 800, props.height / 480);
-      return Math.round(16 * scale);
-    }, [props.width, props.height]);
 
     React.useEffect(() => {
       const timer = setInterval(() => {

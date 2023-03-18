@@ -192,6 +192,11 @@ const StyledProductListContent = styled.div`
         display: flex;
         align-items: center;
       }
+
+      svg {
+        width: 0.8em !important;
+        height: 0.8em !important;
+      }
     }
 
     .product-entry-price {

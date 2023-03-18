@@ -46,11 +46,11 @@ const StyledScannedAccountRemove = styled.div`
   svg {
     position: absolute;
     top: 50%;
-    margin-top: -0.6em;
+    margin-top: -0.5em;
     right: 1em;
 
-    width: 1.2em;
-    height: 1.2em;
+    width: 1em;
+    height: 1em;
   }
 `;
 const StyledScannedAccountEmpty = styled.div`
@@ -62,6 +62,7 @@ const StyledScannedAccountEmpty = styled.div`
   & > span {
     display: block;
     padding-left: 2em;
+    white-space: nowrap;
   }
 `;
 const StyledScannedAccountRefresh = styled.div`

@@ -71,6 +71,11 @@ const StyledPaymentPageSummary = styled.div`
     font-weight: bold;
   }
 
+  & svg {
+    width: 0.7em !important;
+    height: 0.7em !important;
+  }
+
   .disabled {
     color: var(--secondary-text-color) !important;
   }
