@@ -129,7 +129,10 @@ export const Layout = () => {
             </Toolbar>
           </Container>
         </AppBar>
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, p: { xs: 0, md: 3 }, position: "relative" }}
+        >
           <Toolbar />
 
           <React.Suspense
@@ -262,7 +265,10 @@ export const Layout = () => {
       >
         {drawerContent}
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: { xs: 0, md: 3 }, position: "relative" }}
+      >
         <Toolbar />
 
         <React.Suspense

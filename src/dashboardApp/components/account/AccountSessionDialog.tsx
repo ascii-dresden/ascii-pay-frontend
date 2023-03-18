@@ -14,6 +14,8 @@ import {
   TableContainer,
   TableRow,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { Close, Token } from "@mui/icons-material";
@@ -29,6 +31,9 @@ export const AccountSessionDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [trigger, { isLoading, isError, error, data: sessions }] =
     useLazyGetAllAccountSessionsQuery();
 
@@ -86,7 +91,11 @@ export const AccountSessionDialog = (props: {
   });
 
   return (
-    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+    <Dialog
+      open={props.open}
+      onClose={() => props.setOpen(false)}
+      fullScreen={fullScreen}
+    >
       <DialogTitle component="div">
         <Typography variant="h5" onClick={() => trigger(props.account.id)}>
           Active sessions

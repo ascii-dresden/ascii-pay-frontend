@@ -19,6 +19,8 @@ import {
   TableContainer,
   TableRow,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { Close, CreditCardOutlined, List, VpnKey } from "@mui/icons-material";
@@ -37,6 +39,9 @@ export const AccountAuthenticationDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [resetToken, setResetToken] = React.useState<string | null>(null);
   const tableRows: React.ReactNode[] = [];
 
@@ -99,7 +104,11 @@ export const AccountAuthenticationDialog = (props: {
   }
 
   return (
-    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+    <Dialog
+      open={props.open}
+      onClose={() => props.setOpen(false)}
+      fullScreen={fullScreen}
+    >
       <DialogTitle component="div">
         <Typography variant="h5">Authentication methods</Typography>
         <IconButton

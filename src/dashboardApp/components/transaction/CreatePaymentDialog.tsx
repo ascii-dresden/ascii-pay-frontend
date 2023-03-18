@@ -12,6 +12,8 @@ import {
   TableRow,
   Tooltip,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import React, { useEffect } from "react";
@@ -49,6 +51,8 @@ export const CreatePaymentDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const user = useDashboardSelector((state) => state.userState.user);
 
   const [payment, { isLoading, isError, error, isSuccess }] =
@@ -195,7 +199,11 @@ export const CreatePaymentDialog = (props: {
   }
 
   return (
-    <Dialog open={props.open} onClose={() => props.setOpen(false)}>
+    <Dialog
+      open={props.open}
+      onClose={() => props.setOpen(false)}
+      fullScreen={fullScreen}
+    >
       <DialogTitle component="div">
         <Typography variant="h5">Payment</Typography>
         <IconButton
