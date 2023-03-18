@@ -46,11 +46,10 @@ const StyledPaymentDialogWindow = styled.div`
 `;
 const StyledPaymentDialogCancel = styled.div`
   position: absolute;
-  top: 0;
   right: 0;
   width: 4em;
-  height: 3em;
-  line-height: 3em;
+  height: 4em;
+  line-height: 4em;
   text-align: center;
 `;
 const StyledPaymentDialogTitle = styled.div`
@@ -76,8 +75,8 @@ const StyledPaymentDialogStatus = styled.div`
   align-items: center;
 
   svg {
-    width: 8em;
-    height: 8em;
+    width: 6em;
+    height: 6em;
   }
 `;
 const StyledPaymentDialogMessage = styled.div`

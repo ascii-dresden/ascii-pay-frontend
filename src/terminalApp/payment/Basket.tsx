@@ -131,8 +131,8 @@ const StyledBasketEntryImage = styled.div`
       svg {
         position: absolute;
         z-index: 2;
-        width: 2em;
-        height: 2em;
+        width: 1.2em;
+        height: 1.2em;
       }
     }
   }

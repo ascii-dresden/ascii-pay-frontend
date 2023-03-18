@@ -146,6 +146,8 @@ const StyledQuickAccessEntryExtra = styled.div`
 
   .quick-access-entry-stamp svg {
     margin-left: 0 !important;
+    width: 0.9em;
+    height: 0.9em;
   }
 `;
 const StyledQuickAccessEntryName = styled.div`
@@ -167,6 +169,8 @@ const StyledQuickAccessEntryStamp = styled.div`
 
   svg {
     margin-left: 0.4em;
+    width: 0.8em;
+    height: 0.8em;
   }
 `;
 

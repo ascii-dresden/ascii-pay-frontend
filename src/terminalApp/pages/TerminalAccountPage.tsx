@@ -56,8 +56,8 @@ const StyledLoggedAccountHeader = styled.div`
     align-items: center;
 
     svg {
-      width: 1.8em;
-      height: 1.8em;
+      width: 1.2em;
+      height: 1.2em;
     }
   }
 `;

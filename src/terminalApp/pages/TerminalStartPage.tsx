@@ -66,8 +66,8 @@ const StyledStartPageEntry = styled.div`
   justify-content: center;
 
   svg {
-    width: 4em;
-    height: 4em;
+    width: 3em;
+    height: 3em;
     opacity: 0.87;
   }
 

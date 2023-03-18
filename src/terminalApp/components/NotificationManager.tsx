@@ -44,6 +44,11 @@ const StyledNotification = styled.div`
     padding: 0.4em 0.2em;
   }
 
+  svg {
+    width: 0.8em;
+    height: 0.8em;
+  }
+
   &.notification-warn {
     svg {
       color: var(--warn-color);

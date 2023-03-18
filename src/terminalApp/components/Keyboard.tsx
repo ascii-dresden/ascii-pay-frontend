@@ -118,6 +118,11 @@ const StyledKeyboard = styled.div`
       font-size: 0.6em;
       line-height: 1.2em;
     }
+
+    svg {
+      width: 0.7em;
+      height: 0.7em;
+    }
   }
 
   .keyboard-mode-default {

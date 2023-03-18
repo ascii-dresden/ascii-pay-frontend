@@ -11,7 +11,7 @@ const StyledSvg = styled.svg`
   height: 1em;
   display: inline-block;
   flex-shrink: 0;
-  font-size: 1.5rem;
+  font-size: 1.5em;
   fill: currentColor;
   stroke: currentColor;
 `;

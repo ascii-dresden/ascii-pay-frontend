@@ -16,7 +16,7 @@ const StyledKeypadSubmit = styled.div`
   padding-right: 0.5em;
 
   svg {
-    margin: 1.5em;
+    margin: 0.6em;
     width: 2em;
     height: 2em;
   }
@@ -43,8 +43,8 @@ const StyledKeypadKey = styled.div`
   font-size: 1.6em;
 
   svg {
-    width: 1.6em;
-    height: 1.6em;
+    width: 1em;
+    height: 1em;
   }
 
   &:hover {
