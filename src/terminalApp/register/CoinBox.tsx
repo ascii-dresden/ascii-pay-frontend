@@ -273,75 +273,75 @@ export const CoinBox = (props: {
     }
   };
 
-  const handleTab = (event: HammerInput) => {
-    if (previousCoinBox) return;
-    let currentElement: HTMLElement | null = event.target;
-    let targetCents = 0;
-    let targetCentCount = 0;
-    let targetTop = 0;
-    let targetHeight = 0;
-
-    while (currentElement != null) {
-      if (currentElement.classList.contains("coin-stack-group")) {
-        targetTop = currentElement.offsetTop;
-        targetHeight = currentElement.clientHeight;
-        targetCentCount = currentElement.getElementsByClassName("coin").length;
-      }
-      if (currentElement.classList.contains("coin-group")) {
-        targetCents = parseInt(currentElement.dataset["value"] ?? "0");
-        break;
-      }
-      currentElement = currentElement.parentElement;
-    }
-
-    if (targetCents !== 0 && targetHeight !== 0) {
-      let newCount =
-        targetCentCount -
-        Math.round(
-          ((event.center.y - targetTop) / targetHeight) * targetCentCount
-        );
-      setCoinCount(targetCents, newCount);
-    }
-  };
-
-  const handlePress = (event: HammerInput) => {
-    if (previousCoinBox) return;
-    let currentElement: HTMLElement | null = event.target;
-    let targetCents = 0;
-    let targetCentCount = 0;
-    let targetTop = 0;
-    let targetHeight = 0;
-
-    while (currentElement != null) {
-      if (currentElement.classList.contains("coin-stack-group")) {
-        targetTop = currentElement.offsetTop;
-        targetHeight = currentElement.clientHeight;
-        targetCentCount = currentElement.getElementsByClassName("coin").length;
-      }
-      if (currentElement.classList.contains("coin-group")) {
-        targetCents = parseInt(currentElement.dataset["value"] ?? "0");
-        break;
-      }
-      currentElement = currentElement.parentElement;
-    }
-
-    if (targetCents !== 0 && targetHeight !== 0) {
-      let newCount =
-        targetCentCount -
-        Math.round(
-          ((event.center.y - targetTop) / targetHeight) * targetCentCount
-        );
-      setCoinCount(targetCents, newCount);
-
-      setSelectedGroup({
-        cents: targetCents,
-        count: targetCentCount,
-        top: targetTop,
-        height: targetHeight,
-        offset: 0,
-      });
-    }
-  };
+  // const handleTab = (event: HammerInput) => {
+  //   if (previousCoinBox) return;
+  //   let currentElement: HTMLElement | null = event.target;
+  //   let targetCents = 0;
+  //   let targetCentCount = 0;
+  //   let targetTop = 0;
+  //   let targetHeight = 0;
+  //
+  //   while (currentElement != null) {
+  //     if (currentElement.classList.contains("coin-stack-group")) {
+  //       targetTop = currentElement.offsetTop;
+  //       targetHeight = currentElement.clientHeight;
+  //       targetCentCount = currentElement.getElementsByClassName("coin").length;
+  //     }
+  //     if (currentElement.classList.contains("coin-group")) {
+  //       targetCents = parseInt(currentElement.dataset["value"] ?? "0");
+  //       break;
+  //     }
+  //     currentElement = currentElement.parentElement;
+  //   }
+  //
+  //   if (targetCents !== 0 && targetHeight !== 0) {
+  //     let newCount =
+  //       targetCentCount -
+  //       Math.round(
+  //         ((event.center.y - targetTop) / targetHeight) * targetCentCount
+  //       );
+  //     setCoinCount(targetCents, newCount);
+  //   }
+  // };
+  //
+  // const handlePress = (event: HammerInput) => {
+  //   if (previousCoinBox) return;
+  //   let currentElement: HTMLElement | null = event.target;
+  //   let targetCents = 0;
+  //   let targetCentCount = 0;
+  //   let targetTop = 0;
+  //   let targetHeight = 0;
+  //
+  //   while (currentElement != null) {
+  //     if (currentElement.classList.contains("coin-stack-group")) {
+  //       targetTop = currentElement.offsetTop;
+  //       targetHeight = currentElement.clientHeight;
+  //       targetCentCount = currentElement.getElementsByClassName("coin").length;
+  //     }
+  //     if (currentElement.classList.contains("coin-group")) {
+  //       targetCents = parseInt(currentElement.dataset["value"] ?? "0");
+  //       break;
+  //     }
+  //     currentElement = currentElement.parentElement;
+  //   }
+  //
+  //   if (targetCents !== 0 && targetHeight !== 0) {
+  //     let newCount =
+  //       targetCentCount -
+  //       Math.round(
+  //         ((event.center.y - targetTop) / targetHeight) * targetCentCount
+  //       );
+  //     setCoinCount(targetCents, newCount);
+  //
+  //     setSelectedGroup({
+  //       cents: targetCents,
+  //       count: targetCentCount,
+  //       top: targetTop,
+  //       height: targetHeight,
+  //       offset: 0,
+  //     });
+  //   }
+  // };
 
   const handlePointerDown = (event: React.PointerEvent) => {
     const target: HTMLDivElement = event.target as HTMLDivElement;
