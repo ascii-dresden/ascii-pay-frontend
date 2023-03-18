@@ -12,7 +12,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React from "react";
-import { Link as RLink, useParams } from "react-router-dom";
+import { Link as RLink, useNavigate, useParams } from "react-router-dom";
 import { TerminalApp, TerminalAppPage } from "../../terminalApp/TerminalApp";
 import { TerminalSettings } from "../../terminalApp/pages/TerminalSettingsPage";
 import { SelectAccountPopup } from "../components/account/SelectAccountPopup";
@@ -54,6 +54,7 @@ function requestAccountSession(
 
 export const TerminalPage = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const params = useParams();
   const token = useDashboardSelector((state) => state.userState.token);
 
@@ -123,6 +124,14 @@ export const TerminalPage = () => {
       terminalPage = "settings";
       break;
   }
+
+  const setTerminalPage = (page: TerminalAppPage) => {
+    if (page === "start") {
+      navigate("/terminal");
+    } else {
+      navigate(`/terminal/${page}`);
+    }
+  };
 
   const header = (
     <Paper elevation={0}>
@@ -246,6 +255,7 @@ export const TerminalPage = () => {
             setSettings={setSettings}
             authClient={authClient}
             deviceContext={deviceContext}
+            navigate={setTerminalPage}
           />
         </Paper>
       </Box>

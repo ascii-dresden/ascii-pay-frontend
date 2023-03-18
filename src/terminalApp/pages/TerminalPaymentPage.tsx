@@ -5,7 +5,6 @@ import {
   useTerminalDispatch,
   useTerminalSelector,
 } from "../redux/terminalStore";
-import { useNavigate } from "react-router-dom";
 import { SidebarAction, SidebarLayout } from "../components/SidebarLayout";
 import { Apps, CalculateOutlined, ManageSearch } from "@mui/icons-material";
 import { ClockIcon } from "../components/ClockIcon";
@@ -31,6 +30,7 @@ import {
   TerminalDeviceContext,
 } from "../client/AsciiPayAuthenticationClient";
 import { PaymentDialog } from "../payment/PaymentDialog";
+import { TerminalNavigateHandler } from "../TerminalApp";
 
 const StyledPaymentPageLeft = styled.div`
   position: absolute;
@@ -85,10 +85,10 @@ enum Page {
 export const TerminalPaymentPage = (props: {
   authClient: AsciiPayAuthenticationClient;
   deviceContext: TerminalDeviceContext;
+  navigate: TerminalNavigateHandler;
 }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const handleGoBack = () => navigate("/terminal");
+  const handleGoBack = () => props.navigate("start");
 
   const keypadValue = useTerminalSelector(
     (state) => state.paymentState.keypadValue
@@ -109,7 +109,7 @@ export const TerminalPaymentPage = (props: {
       props.deviceContext.wakeUp();
       dispatch(setScreensaver(false));
       dispatch(receiveAccountSessionToken(token));
-      navigate("/terminal/payment");
+      props.navigate("payment");
       return true;
     },
     onNfcCardRemoved() {

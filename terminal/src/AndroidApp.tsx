@@ -8,13 +8,14 @@ import {
   AsciiPayAuthenticationClient,
   TerminalDeviceContext,
 } from "../../src/terminalApp/client/AsciiPayAuthenticationClient";
-import { useLocation } from "react-router-dom";
+import { AndroidFullScreen } from "@awesome-cordova-plugins/android-full-screen";
 
 export const AndroidApp = (props: {
   authClient: AsciiPayAuthenticationClient;
   deviceContext: TerminalDeviceContext;
 }) => {
-  let location = useLocation();
+  const [terminalPage, setTerminalPage] =
+    React.useState<TerminalAppPage>("start");
 
   const [width, setWidth] = React.useState("1000");
   const [height, setHeight] = React.useState("625");
@@ -24,6 +25,16 @@ export const AndroidApp = (props: {
     theme: localStorage["theme"] ?? "light",
     highlightColor: localStorage["highlightColor"] ?? "green",
   });
+
+  (async () => {
+    try {
+      if (await AndroidFullScreen.isImmersiveModeSupported()) {
+        await AndroidFullScreen.immersiveMode();
+      }
+    } catch (e) {
+      console.error("AndroidFullScreen is not available", e);
+    }
+  })();
 
   React.useEffect(() => {
     localStorage["language"] = settings.language;
@@ -44,28 +55,10 @@ export const AndroidApp = (props: {
     };
   }, []);
 
-  let terminalPage: TerminalAppPage = "start";
-  let splitLocation = location.pathname.split("/");
-  let lastLocation =
-    splitLocation.length > 0 ? splitLocation[splitLocation.length - 1] : null;
-  switch (lastLocation) {
-    case "payment":
-      terminalPage = "payment";
-      break;
-    case "register":
-      terminalPage = "register";
-      break;
-    case "accounts":
-      terminalPage = "accounts";
-      break;
-    case "settings":
-      terminalPage = "settings";
-      break;
-  }
-
   return (
     <TerminalApp
       page={terminalPage}
+      navigate={setTerminalPage}
       width={parseInt(width)}
       height={parseInt(height)}
       settings={settings}

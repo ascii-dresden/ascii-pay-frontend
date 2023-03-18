@@ -1,5 +1,4 @@
 import { SidebarAction, SidebarLayout } from "../components/SidebarLayout";
-import { useNavigate } from "react-router-dom";
 import { useTerminalDispatch } from "../redux/terminalStore";
 import React from "react";
 import {
@@ -18,6 +17,7 @@ import {
   TerminalDeviceContext,
 } from "../client/AsciiPayAuthenticationClient";
 import { receiveAccountSessionToken } from "../redux/features/paymentSlice";
+import { TerminalNavigateHandler } from "../TerminalApp";
 
 const StyledStartPage = styled.div`
   position: absolute;
@@ -130,9 +130,9 @@ const useDate = (t: (key: string) => string) => {
 export const TerminalStartPage = (props: {
   authClient: AsciiPayAuthenticationClient;
   deviceContext: TerminalDeviceContext;
+  navigate: TerminalNavigateHandler;
 }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const dispatch = useTerminalDispatch();
   const { date, wish } = useDate(t);
@@ -142,7 +142,7 @@ export const TerminalStartPage = (props: {
       props.deviceContext.wakeUp();
       dispatch(setScreensaver(false));
       dispatch(receiveAccountSessionToken(token));
-      navigate("/terminal/payment");
+      props.navigate("payment");
       return true;
     },
   };
@@ -172,19 +172,19 @@ export const TerminalStartPage = (props: {
           <span>{date}</span>
         </StyledStartPageHeader>
         <StyledStartPageMenu>
-          <StyledStartPageEntry onClick={() => navigate("/terminal/payment")}>
+          <StyledStartPageEntry onClick={() => props.navigate("payment")}>
             <ShoppingCartOutlined />
             <span>{t("startPage.openPayment")}</span>
           </StyledStartPageEntry>
-          <StyledStartPageEntry onClick={() => navigate("/terminal/register")}>
+          <StyledStartPageEntry onClick={() => props.navigate("register")}>
             <LocalAtm />
             <span>{t("startPage.openRegister")}</span>
           </StyledStartPageEntry>
-          <StyledStartPageEntry onClick={() => navigate("/terminal/accounts")}>
+          <StyledStartPageEntry onClick={() => props.navigate("accounts")}>
             <People />
             <span>{t("startPage.openAccount")}</span>
           </StyledStartPageEntry>
-          <StyledStartPageEntry onClick={() => navigate("/terminal/settings")}>
+          <StyledStartPageEntry onClick={() => props.navigate("settings")}>
             <Settings />
             <span>{t("startPage.openSettings")}</span>
           </StyledStartPageEntry>
