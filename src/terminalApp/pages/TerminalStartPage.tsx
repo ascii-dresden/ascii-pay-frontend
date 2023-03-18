@@ -11,12 +11,18 @@ import { setScreensaver } from "../redux/features/terminalSlice";
 import styled from "@emotion/styled";
 import { useTranslation } from "react-i18next";
 import { ClockIcon } from "../components/ClockIcon";
-import { TerminalClientMessageHandler } from "../client/websocket";
+import {
+  ReceiveKeyboardEventKey,
+  TerminalClientMessageHandler,
+} from "../client/websocket";
 import {
   AsciiPayAuthenticationClient,
   TerminalDeviceContext,
 } from "../client/AsciiPayAuthenticationClient";
-import { receiveAccountSessionToken } from "../redux/features/paymentSlice";
+import {
+  receiveAccountSessionToken,
+  receiveKeyEvent,
+} from "../redux/features/paymentSlice";
 import { TerminalNavigateHandler } from "../TerminalApp";
 
 const StyledStartPage = styled.div`
@@ -143,6 +149,16 @@ export const TerminalStartPage = (props: {
       dispatch(setScreensaver(false));
       dispatch(receiveAccountSessionToken(token));
       props.navigate("payment");
+      return true;
+    },
+    onReceiveKeyboardEvent(key: ReceiveKeyboardEventKey) {
+      props.deviceContext.wakeUp();
+      dispatch(setScreensaver(false));
+      props.navigate("payment");
+      if (key === "ENTER") {
+      } else {
+        dispatch(receiveKeyEvent(key));
+      }
       return true;
     },
   };

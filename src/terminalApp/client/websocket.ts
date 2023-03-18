@@ -97,6 +97,26 @@ type ReceiveUnregisteredNfcCard = {
     name: string;
   };
 };
+export type ReceiveKeyboardEventKey =
+  | "NUM_0"
+  | "NUM_1"
+  | "NUM_2"
+  | "NUM_3"
+  | "NUM_4"
+  | "NUM_5"
+  | "NUM_6"
+  | "NUM_7"
+  | "NUM_8"
+  | "NUM_9"
+  | "NEGATE"
+  | "BACKSPACE"
+  | "ENTER";
+type ReceiveKeyboardEvent = {
+  type: "ReceiveKeyboardEvent";
+  payload: {
+    key: ReceiveKeyboardEventKey;
+  };
+};
 type ConnectionStateChange = {
   type: "ConnectionStateChange";
   payload: {
@@ -113,6 +133,7 @@ export type WebSocketResponse =
   | Error
   | ConnectionStateChange
   | ReceiveSessionToken
+  | ReceiveKeyboardEvent
   | ReceiveUnregisteredNfcCard;
 
 export interface TerminalClientMessageHandler {
@@ -146,6 +167,8 @@ export interface TerminalClientMessageHandler {
     card_type: CardTypeDto,
     data: string | null | undefined
   ): void | boolean;
+
+  onReceiveKeyboardEvent?(key: ReceiveKeyboardEventKey): void | boolean;
 }
 
 export function dispatchClientMessage(
@@ -214,6 +237,12 @@ export function dispatchClientMessage(
       consumeType =
         (handler.onReceiveSessionToken &&
           handler.onReceiveSessionToken(message.payload.token)) ||
+        consumeType;
+      break;
+    case "ReceiveKeyboardEvent":
+      consumeType =
+        (handler.onReceiveKeyboardEvent &&
+          handler.onReceiveKeyboardEvent(message.payload.key)) ||
         consumeType;
       break;
     case "ReceiveUnregisteredNfcCard":

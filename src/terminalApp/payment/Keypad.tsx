@@ -55,7 +55,7 @@ const StyledKeypadKey = styled.div`
 const MAX = 999_999;
 const MIN = -999_999;
 
-function validateValue(value: number): number {
+export function validateKeypadValue(value: number): number {
   return Math.max(MIN, Math.min(MAX, value));
 }
 
@@ -66,18 +66,18 @@ export const Keypad = (props: {
 }) => {
   const onDigitPressed = (digit: number) => {
     let newValue = props.value * 10 + (Math.sign(props.value) || 1) * digit;
-    props.onChange(validateValue(newValue));
+    props.onChange(validateKeypadValue(newValue));
   };
 
   const onBackspace = () => {
     let newValue =
       Math.sign(props.value) * Math.floor(Math.abs(props.value / 10));
-    props.onChange(validateValue(newValue));
+    props.onChange(validateKeypadValue(newValue));
   };
 
   const onNegate = () => {
     let newValue = -props.value;
-    props.onChange(validateValue(newValue));
+    props.onChange(validateKeypadValue(newValue));
   };
 
   const onSubmit = () => {
