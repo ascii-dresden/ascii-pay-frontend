@@ -5,6 +5,7 @@ import {
   Collapse,
   IconButton,
   Paper,
+  Tab,
   Table,
   TableBody,
   TableCell,
@@ -13,6 +14,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tabs,
   Typography,
 } from "@mui/material";
 import {
@@ -34,8 +36,14 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import enGB from "date-fns/locale/en-GB";
 import { dateToGrouping } from "./GlobalTransactionChart";
 import { TransactionListRowAuthorization } from "./TransactionListRowAuthorization";
+import { TransactionHeatmap } from "./TransactionHeatmap";
 
 export const TransactionListView = (props: { account: AccountDto }) => {
+  const [tabIndex, setTabIndex] = React.useState(
+    isNaN(parseInt(localStorage["ascii-pay-profile-tab-index"]))
+      ? 0
+      : parseInt(localStorage["ascii-pay-profile-tab-index"])
+  );
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -186,8 +194,16 @@ export const TransactionListView = (props: { account: AccountDto }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
-      <Paper sx={{ px: 2, pt: 2, pb: 1, mb: 4, width: "100%" }} elevation={4}>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Paper sx={{ mb: 4, width: "100%" }} elevation={4}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            px: 2,
+            pb: 1,
+            pt: 2,
+          }}
+        >
           <Box sx={{ p: 1 }}>
             <Typography gutterBottom variant="h6" component="div">
               Used credit
@@ -225,14 +241,36 @@ export const TransactionListView = (props: { account: AccountDto }) => {
             />
           </Box>
         </Box>
-        <TransactionChart
-          account={props.account}
-          transactions={filteredTransactions}
-          previousTransactions={previousTransactions}
-          startDate={startDate}
-          endDate={endDate}
-          onRequestZoom={onRequestZoomHandler}
-        />
+        <Tabs
+          sx={{ px: 2 }}
+          value={tabIndex}
+          onChange={(event, newValue) => {
+            setTabIndex(newValue);
+            localStorage["ascii-pay-profile-tab-index"] = newValue;
+          }}
+        >
+          <Tab label="Balance trend" />
+          <Tab label="Heatmap" />
+        </Tabs>
+        <Box sx={{ px: 2, pb: 1 }}>
+          {tabIndex === 0 ? (
+            <TransactionChart
+              account={props.account}
+              transactions={filteredTransactions}
+              previousTransactions={previousTransactions}
+              startDate={startDate}
+              endDate={endDate}
+              onRequestZoom={onRequestZoomHandler}
+            />
+          ) : null}
+          {tabIndex === 1 ? (
+            <TransactionHeatmap
+              transactions={filteredTransactions}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          ) : null}
+        </Box>
       </Paper>
       <TableContainer component={Paper} elevation={4} sx={{ width: "100%" }}>
         <Table aria-label="Transactions table">

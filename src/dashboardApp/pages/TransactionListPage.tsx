@@ -7,6 +7,7 @@ import {
   IconButton,
   Link,
   Paper,
+  Tab,
   Table,
   TableBody,
   TableCell,
@@ -15,6 +16,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tabs,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -43,8 +45,14 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import enGB from "date-fns/locale/en-GB";
 import { TransactionListRowAccount } from "../components/transaction/TransactionListRowAccount";
 import { TransactionListRowAuthorization } from "../components/transaction/TransactionListRowAuthorization";
+import { TransactionHeatmap } from "../components/transaction/TransactionHeatmap";
 
 export const TransactionListPage = () => {
+  const [tabIndex, setTabIndex] = React.useState(
+    isNaN(parseInt(localStorage["ascii-pay-transactions-tab-index"]))
+      ? 0
+      : parseInt(localStorage["ascii-pay-transactions-tab-index"])
+  );
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -211,14 +219,36 @@ export const TransactionListPage = () => {
           />
         </Box>
 
-        <Paper sx={{ px: 2, pt: 2, pb: 1, mb: 4 }} elevation={4}>
-          <GlobalTransactionChart
-            transactions={filteredTransactions}
-            previousTransactions={previousTransactions}
-            startDate={startDate}
-            endDate={endDate}
-            onRequestZoom={onRequestZoomHandler}
-          />
+        <Paper sx={{ mb: 4 }} elevation={4}>
+          <Tabs
+            sx={{ px: 2, pt: 1 }}
+            value={tabIndex}
+            onChange={(event, newValue) => {
+              setTabIndex(newValue);
+              localStorage["ascii-pay-transactions-tab-index"] = newValue;
+            }}
+          >
+            <Tab label="Balance trend" />
+            <Tab label="Heatmap" />
+          </Tabs>
+          <Box sx={{ px: 2, pb: 1 }}>
+            {tabIndex === 0 ? (
+              <GlobalTransactionChart
+                transactions={filteredTransactions}
+                previousTransactions={previousTransactions}
+                startDate={startDate}
+                endDate={endDate}
+                onRequestZoom={onRequestZoomHandler}
+              />
+            ) : null}
+            {tabIndex === 1 ? (
+              <TransactionHeatmap
+                transactions={filteredTransactions}
+                startDate={startDate}
+                endDate={endDate}
+              />
+            ) : null}
+          </Box>
         </Paper>
 
         <TableContainer component={Paper} elevation={4}>
