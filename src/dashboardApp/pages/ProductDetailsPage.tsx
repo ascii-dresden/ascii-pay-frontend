@@ -20,11 +20,11 @@ import { useGetProductQuery } from "../redux/api/productApi";
 import { FullScreenLoader } from "../components/FullScreenLoader";
 import { TagChip } from "../components/product/TagChip";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
-import { BASE_URL } from "../redux/api/customFetchBase";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { BarcodeView } from "../components/product/Barcode";
 import { ProductDetailsActionButton } from "../components/product/ProductDetailsActionButton";
 import { usePageTitle } from "../components/usePageTitle";
+import { BASE_URL } from "../../const";
 
 export const ProductDetailsPage = () => {
   const theme = useTheme();

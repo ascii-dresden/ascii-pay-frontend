@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AccountDto } from "../../../common/contracts";
-import { BASE_URL } from "../api/customFetchBase";
+import { BASE_URL } from "../../../const";
 
 interface UserState {
   token: string | null;

@@ -34,7 +34,6 @@ import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { TransactionDto } from "../../common/contracts";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { getTransactionSum } from "../../common/transactionUtils";
-import { BASE_URL } from "../redux/api/customFetchBase";
 import {
   dateToGrouping,
   GlobalTransactionChart,
@@ -47,6 +46,7 @@ import { TransactionListRowAccount } from "../components/transaction/Transaction
 import { TransactionListRowAuthorization } from "../components/transaction/TransactionListRowAuthorization";
 import { TransactionHeatmap } from "../components/transaction/TransactionHeatmap";
 import { usePageTitle } from "../components/usePageTitle";
+import { BASE_URL } from "../../const";
 
 export const TransactionListPage = () => {
   const [tabIndex, setTabIndex] = React.useState(

@@ -6,9 +6,7 @@ import {
 } from "@reduxjs/toolkit/query";
 import { DashboardState } from "../dashboardStore";
 import { logout } from "../features/userSlice";
-
-// export const BASE_URL = `${window.origin}/api/v1`;
-export const BASE_URL = `http://localhost:3000/api/v1`;
+import { BASE_URL } from "../../../const";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,

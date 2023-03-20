@@ -14,10 +14,10 @@ import {
 import { equalCoinAmount } from "../../common/transactionUtils";
 import { EuroSymbol, RedeemOutlined } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
-import { BASE_URL } from "../redux/api/customFetchBase";
 import Stamp from "../components/Stamp";
 import styled from "@emotion/styled";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
+import { BASE_URL } from "../../const";
 
 const StyledBasketEmpty = styled.div`
   position: absolute;

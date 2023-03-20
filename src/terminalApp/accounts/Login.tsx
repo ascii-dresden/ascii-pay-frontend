@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { AsciiPayAuthenticationClient } from "../client/AsciiPayAuthenticationClient";
 import styled from "@emotion/styled";
 import { ContactlessPayment } from "../../assets/ContactlessPayment";
-import { BASE_URL } from "../redux/api/customFetchBase";
+import { BASE_URL } from "../../const";
 
 const StyledLogin = styled.div`
   & > span {
