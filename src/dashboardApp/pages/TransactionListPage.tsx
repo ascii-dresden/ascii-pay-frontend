@@ -46,6 +46,7 @@ import enGB from "date-fns/locale/en-GB";
 import { TransactionListRowAccount } from "../components/transaction/TransactionListRowAccount";
 import { TransactionListRowAuthorization } from "../components/transaction/TransactionListRowAuthorization";
 import { TransactionHeatmap } from "../components/transaction/TransactionHeatmap";
+import { usePageTitle } from "../components/usePageTitle";
 
 export const TransactionListPage = () => {
   const [tabIndex, setTabIndex] = React.useState(
@@ -75,6 +76,8 @@ export const TransactionListPage = () => {
     error,
     data: transactions,
   } = useGetGlobalTransactionsQuery();
+
+  usePageTitle("Transactions");
 
   useEffect(() => {
     if (isError) {

@@ -29,6 +29,7 @@ import { AccountDto } from "../../common/contracts";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { RoleChip } from "../components/account/RoleChip";
 import { AccountListRowActionButton } from "../components/account/AccountListRowActionButton";
+import { usePageTitle } from "../components/usePageTitle";
 
 export const AccountListPage = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -42,6 +43,8 @@ export const AccountListPage = () => {
     error,
     data: accounts,
   } = useGetAllAccountsQuery();
+
+  usePageTitle("Accounts");
 
   useEffect(() => {
     if (isError) {

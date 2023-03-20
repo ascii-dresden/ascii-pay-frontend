@@ -24,6 +24,7 @@ import { BASE_URL } from "../redux/api/customFetchBase";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { BarcodeView } from "../components/product/Barcode";
 import { ProductDetailsActionButton } from "../components/product/ProductDetailsActionButton";
+import { usePageTitle } from "../components/usePageTitle";
 
 export const ProductDetailsPage = () => {
   const theme = useTheme();
@@ -37,6 +38,8 @@ export const ProductDetailsPage = () => {
     error,
     data: product,
   } = useGetProductQuery(productId);
+
+  usePageTitle(["Products", product?.name ?? "Loading ..."]);
 
   useEffect(() => {
     if (isError) {

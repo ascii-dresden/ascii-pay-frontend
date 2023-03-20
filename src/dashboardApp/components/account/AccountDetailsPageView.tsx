@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { CoinAmountView } from "../transaction/CoinAmountView";
 import { RoleChip } from "./RoleChip";
 import { AccountDetailsActionButton } from "./AccountDetailsActionButton";
+import { usePageTitle } from "../usePageTitle";
 
 export const AccountDetailsPageView = (props: {
   accountId: number;
@@ -28,6 +29,10 @@ export const AccountDetailsPageView = (props: {
     error,
     data: account,
   } = useGetAccountQuery(props.accountId);
+
+  usePageTitle(
+    props.isRoot ? [] : ["Accounts", account?.name ?? "Loading ..."]
+  );
 
   useEffect(() => {
     if (isError) {

@@ -13,6 +13,7 @@ import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
 import { useAccountPasswordResetMutation } from "../redux/api/accountApi";
+import { usePageTitle } from "../components/usePageTitle";
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.8rem 0;
@@ -29,6 +30,8 @@ export const ResetPasswordPage = () => {
   const [password, setPassword] = React.useState("");
 
   let [searchParams] = useSearchParams();
+
+  usePageTitle("Reset password");
 
   useEffect(() => {
     if (isSuccess) {

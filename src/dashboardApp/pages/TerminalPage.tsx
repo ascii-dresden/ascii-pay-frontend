@@ -32,6 +32,7 @@ import {
   KeyboardReturnOutlined,
   Remove,
 } from "@mui/icons-material";
+import { usePageTitle } from "../components/usePageTitle";
 
 type ConnectionSimulateState = {
   connected: boolean;
@@ -92,6 +93,8 @@ export const TerminalPage = () => {
   const [connectionWebSocketUrl, setConnectionWebSocketUrl] = React.useState(
     "ws://localhost:9001/"
   );
+
+  usePageTitle("Terminal");
 
   const [authClient, setAuthClient] =
     React.useState<AsciiPayAuthenticationClient>(
