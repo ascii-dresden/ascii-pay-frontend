@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -14,6 +14,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  useTheme,
 } from "@mui/material";
 import {
   useDashboardDispatch,
@@ -43,7 +44,7 @@ const SearchButton = React.lazy(() =>
 
 export const Layout = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const theme = useTheme();
   const user = useDashboardSelector((state) => state.userState.user);
   const dispatch = useDashboardDispatch();
 
@@ -80,24 +81,6 @@ export const Layout = () => {
   const onLogoutHandler = async () => {
     logoutUser();
   };
-
-  let activePage:
-    | "home"
-    | "accounts"
-    | "products"
-    | "transactions"
-    | "terminal";
-  if (location.pathname.startsWith("/accounts")) {
-    activePage = "accounts";
-  } else if (location.pathname.startsWith("/products")) {
-    activePage = "products";
-  } else if (location.pathname.startsWith("/transactions")) {
-    activePage = "transactions";
-  } else if (location.pathname.startsWith("/terminal")) {
-    activePage = "terminal";
-  } else {
-    activePage = "home";
-  }
 
   if (user?.role !== "Admin") {
     return (
@@ -150,46 +133,101 @@ export const Layout = () => {
       <Toolbar></Toolbar>
       <Box sx={{ overflow: "auto" }}>
         <List>
-          <ListItem disablePadding onClick={() => navigate("/")}>
-            <ListItemButton selected={activePage === "home"}>
-              <ListItemIcon>
-                <Home />
-              </ListItemIcon>
-              <ListItemText primary="Profile" />
-            </ListItemButton>
+          <ListItem disablePadding>
+            <NavLink
+              to="/"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <Home />
+                  </ListItemIcon>
+                  <ListItemText primary="Profile" />
+                </ListItemButton>
+              )}
+            </NavLink>
           </ListItem>
-          <ListItem disablePadding onClick={() => navigate("/accounts")}>
-            <ListItemButton selected={activePage === "accounts"}>
-              <ListItemIcon>
-                <AccountCircle />
-              </ListItemIcon>
-              <ListItemText primary="Accounts" />
-            </ListItemButton>
+          <ListItem disablePadding>
+            <NavLink
+              to="/accounts"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <AccountCircle />
+                  </ListItemIcon>
+                  <ListItemText primary="Accounts" />
+                </ListItemButton>
+              )}
+            </NavLink>
           </ListItem>
-          <ListItem disablePadding onClick={() => navigate("/products")}>
-            <ListItemButton selected={activePage === "products"}>
-              <ListItemIcon>
-                <Coffee />
-              </ListItemIcon>
-              <ListItemText primary="Products" />
-            </ListItemButton>
+          <ListItem disablePadding>
+            <NavLink
+              to="/products"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <Coffee />
+                  </ListItemIcon>
+                  <ListItemText primary="Products" />
+                </ListItemButton>
+              )}
+            </NavLink>
           </ListItem>
-          <ListItem disablePadding onClick={() => navigate("/transactions")}>
-            <ListItemButton selected={activePage === "transactions"}>
-              <ListItemIcon>
-                <PublicOutlined />
-              </ListItemIcon>
-              <ListItemText primary="Transactions" />
-            </ListItemButton>
+          <ListItem disablePadding>
+            <NavLink
+              to="/transactions"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <PublicOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary="Transactions" />
+                </ListItemButton>
+              )}
+            </NavLink>
           </ListItem>
           <Divider />
-          <ListItem disablePadding onClick={() => navigate("/terminal")}>
-            <ListItemButton selected={activePage === "terminal"}>
-              <ListItemIcon>
-                <Store />
-              </ListItemIcon>
-              <ListItemText primary="Terminal" />
-            </ListItemButton>
+          <ListItem disablePadding>
+            <NavLink
+              to="/terminal"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <Store />
+                  </ListItemIcon>
+                  <ListItemText primary="Terminal" />
+                </ListItemButton>
+              )}
+            </NavLink>
           </ListItem>
         </List>
       </Box>
@@ -212,16 +250,18 @@ export const Layout = () => {
           >
             <Menu />
           </IconButton>
-          <Box onClick={() => navigate("/")} sx={{ cursor: "pointer" }}>
-            <img
-              style={{
-                height: "2rem",
-                marginTop: "0.5rem",
-              }}
-              src={logo}
-              alt="ascii pay"
-            />
-          </Box>
+          <Link to="/">
+            <Box sx={{ cursor: "pointer" }}>
+              <img
+                style={{
+                  height: "2rem",
+                  marginTop: "0.5rem",
+                }}
+                src={logo}
+                alt="ascii pay"
+              />
+            </Box>
+          </Link>
           <React.Suspense>
             <SearchButton />
           </React.Suspense>

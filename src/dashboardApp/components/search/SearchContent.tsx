@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { useSearchHook } from "./useSearchHook";
 import { AccountDto, ProductDto } from "../../../common/contracts";
 import { styled } from "@mui/material/styles";
-import { alpha, Avatar, CircularProgress, Typography } from "@mui/material";
+import {
+  alpha,
+  Avatar,
+  CircularProgress,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import {
   stringAvatar,
   stringWithoutColorAvatar,
@@ -11,7 +17,7 @@ import { BASE_URL } from "../../redux/api/customFetchBase";
 import { TagChip } from "../product/TagChip";
 import { CoinAmountView } from "../transaction/CoinAmountView";
 import { RoleChip } from "../account/RoleChip";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Terminal } from "@mui/icons-material";
 import { CreateAccountDialog } from "../account/CreateAccountDialog";
@@ -181,15 +187,20 @@ const SearchAccountRow = (props: {
   onClose: () => void;
   isSelected: boolean;
 }) => {
+  const theme = useTheme();
   const navigate = useNavigate();
 
   const onClose = props.onClose;
   const accountId = props.account.id;
   const isSelected = props.isSelected;
   const handleAction = React.useMemo(
-    () => () => {
+    () => (e?: React.MouseEvent) => {
+      if (e?.ctrlKey || e?.metaKey) {
+        return false;
+      }
       onClose();
       navigate(`/accounts/${accountId}`);
+      return true;
     },
     [onClose, accountId, navigate]
   );
@@ -211,29 +222,43 @@ const SearchAccountRow = (props: {
   }, [handleKeyAction, isSelected]);
 
   return (
-    <StyledRow
+    <Link
+      to={`/accounts/${accountId}`}
+      style={{
+        textDecoration: "none",
+        color: theme.palette.text.primary,
+      }}
       onClick={handleAction}
-      className={clsx({
-        selected: props.isSelected,
-      })}
     >
-      <StyledRowIcon>
-        <Avatar
-          alt={props.account.name}
-          {...stringAvatar(props.account.name)}
-        />
-      </StyledRowIcon>
-      <StyledRowContent>
-        <Typography>{props.account.name}</Typography>
-        <RoleChip role={props.account.role} />
-      </StyledRowContent>
-      <StyledRowCoins>
-        <CoinAmountView coins={props.account.balance} negativeIsError={true} />
-      </StyledRowCoins>
-      <StyledRowActions onClick={(e) => e.stopPropagation()}>
-        <AccountListRowActionButton account={props.account} hidePrimaryAction />
-      </StyledRowActions>
-    </StyledRow>
+      <StyledRow
+        className={clsx({
+          selected: props.isSelected,
+        })}
+      >
+        <StyledRowIcon>
+          <Avatar
+            alt={props.account.name}
+            {...stringAvatar(props.account.name)}
+          />
+        </StyledRowIcon>
+        <StyledRowContent>
+          <Typography>{props.account.name}</Typography>
+          <RoleChip role={props.account.role} />
+        </StyledRowContent>
+        <StyledRowCoins>
+          <CoinAmountView
+            coins={props.account.balance}
+            negativeIsError={true}
+          />
+        </StyledRowCoins>
+        <StyledRowActions onClick={(e) => e.stopPropagation()}>
+          <AccountListRowActionButton
+            account={props.account}
+            hidePrimaryAction
+          />
+        </StyledRowActions>
+      </StyledRow>
+    </Link>
   );
 };
 
@@ -242,15 +267,20 @@ const SearchProductRow = (props: {
   onClose: () => void;
   isSelected: boolean;
 }) => {
+  const theme = useTheme();
   const navigate = useNavigate();
 
   const onClose = props.onClose;
   const productId = props.product.id;
   const isSelected = props.isSelected;
   const handleAction = React.useMemo(
-    () => () => {
+    () => (e?: React.MouseEvent) => {
+      if (e?.ctrlKey || e?.metaKey) {
+        return false;
+      }
       onClose();
       navigate(`/products/${productId}`);
+      return true;
     },
     [onClose, productId, navigate]
   );
@@ -272,35 +302,46 @@ const SearchProductRow = (props: {
   }, [handleKeyAction, isSelected]);
 
   return (
-    <StyledRow
+    <Link
+      to={`/products/${productId}`}
+      style={{
+        textDecoration: "none",
+        color: theme.palette.text.primary,
+      }}
       onClick={handleAction}
-      className={clsx({
-        selected: props.isSelected,
-      })}
     >
-      <StyledRowIcon>
-        <Avatar
-          alt={props.product.name}
-          src={`${BASE_URL}/product/${props.product.id}/image`}
-          variant="rounded"
-          {...stringWithoutColorAvatar(props.product.name)}
-        />
-      </StyledRowIcon>
-      <StyledRowContent>
-        <Typography>{props.product.name}</Typography>
-        <Typography variant="caption">{props.product.nickname}</Typography>
+      <StyledRow
+        className={clsx({
+          selected: props.isSelected,
+        })}
+      >
+        <StyledRowIcon>
+          <Avatar
+            alt={props.product.name}
+            src={`${BASE_URL}/product/${props.product.id}/image`}
+            variant="rounded"
+            {...stringWithoutColorAvatar(props.product.name)}
+          />
+        </StyledRowIcon>
+        <StyledRowContent>
+          <Typography>{props.product.name}</Typography>
+          <Typography variant="caption">{props.product.nickname}</Typography>
 
-        {props.product.tags.map((tag) => (
-          <TagChip key={tag} tag={tag} />
-        ))}
-      </StyledRowContent>
-      <StyledRowCoins>
-        <CoinAmountView coins={props.product.price} />
-      </StyledRowCoins>
-      <StyledRowActions onClick={(e) => e.stopPropagation()}>
-        <ProductListRowActionButton product={props.product} hidePrimaryAction />
-      </StyledRowActions>
-    </StyledRow>
+          {props.product.tags.map((tag) => (
+            <TagChip key={tag} tag={tag} />
+          ))}
+        </StyledRowContent>
+        <StyledRowCoins>
+          <CoinAmountView coins={props.product.price} />
+        </StyledRowCoins>
+        <StyledRowActions onClick={(e) => e.stopPropagation()}>
+          <ProductListRowActionButton
+            product={props.product}
+            hidePrimaryAction
+          />
+        </StyledRowActions>
+      </StyledRow>
+    </Link>
   );
 };
 
