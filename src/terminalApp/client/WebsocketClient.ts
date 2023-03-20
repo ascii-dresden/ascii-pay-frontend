@@ -24,87 +24,6 @@ export class WebSocketClient implements AsciiPayAuthenticationClient {
     this.queue = [];
   }
 
-  private createWebSocket(): WebSocket {
-    let self = this;
-    const socket = new WebSocket(this.url);
-
-    socket.addEventListener("open", function () {
-      self.connected = true;
-
-      let message: WebSocketResponse = {
-        type: "ConnectionStateChange",
-        payload: {
-          connected: true,
-        },
-      };
-      let useFallbackHandler = true;
-      for (const handler of self.handlerList) {
-        if (dispatchClientMessage(message, handler)) {
-          useFallbackHandler = false;
-        }
-      }
-
-      if (useFallbackHandler) {
-        for (const handler of self.fallbackHandlerList) {
-          dispatchClientMessage(message, handler);
-        }
-      }
-
-      for (let q of self.queue) {
-        q();
-      }
-
-      self.queue = [];
-    });
-
-    socket.addEventListener("close", function () {
-      self.queue = [];
-      self.connected = false;
-
-      let message: WebSocketResponse = {
-        type: "ConnectionStateChange",
-        payload: {
-          connected: false,
-        },
-      };
-      let useFallbackHandler = true;
-      for (const handler of self.handlerList) {
-        if (dispatchClientMessage(message, handler)) {
-          useFallbackHandler = false;
-        }
-      }
-
-      if (useFallbackHandler) {
-        for (const handler of self.fallbackHandlerList) {
-          dispatchClientMessage(message, handler);
-        }
-      }
-
-      setTimeout(() => {
-        self.socket = self.createWebSocket();
-      }, 1000);
-    });
-
-    socket.addEventListener("message", function (event) {
-      let message: WebSocketResponse = JSON.parse(event.data);
-
-      let useFallbackHandler = true;
-      for (const handler of self.handlerList) {
-        if (dispatchClientMessage(message, handler)) {
-          useFallbackHandler = false;
-        }
-      }
-
-      if (useFallbackHandler) {
-        for (const handler of self.fallbackHandlerList) {
-          dispatchClientMessage(message, handler);
-        }
-      }
-    });
-
-    return socket;
-  }
-
   dispatch(message: WebSocketResponse) {
     let self = this;
     let useFallbackHandler = true;
@@ -221,5 +140,86 @@ export class WebSocketClient implements AsciiPayAuthenticationClient {
     } else {
       this.queue.push(action);
     }
+  }
+
+  private createWebSocket(): WebSocket {
+    let self = this;
+    const socket = new WebSocket(this.url);
+
+    socket.addEventListener("open", function () {
+      self.connected = true;
+
+      let message: WebSocketResponse = {
+        type: "ConnectionStateChange",
+        payload: {
+          connected: true,
+        },
+      };
+      let useFallbackHandler = true;
+      for (const handler of self.handlerList) {
+        if (dispatchClientMessage(message, handler)) {
+          useFallbackHandler = false;
+        }
+      }
+
+      if (useFallbackHandler) {
+        for (const handler of self.fallbackHandlerList) {
+          dispatchClientMessage(message, handler);
+        }
+      }
+
+      for (let q of self.queue) {
+        q();
+      }
+
+      self.queue = [];
+    });
+
+    socket.addEventListener("close", function () {
+      self.queue = [];
+      self.connected = false;
+
+      let message: WebSocketResponse = {
+        type: "ConnectionStateChange",
+        payload: {
+          connected: false,
+        },
+      };
+      let useFallbackHandler = true;
+      for (const handler of self.handlerList) {
+        if (dispatchClientMessage(message, handler)) {
+          useFallbackHandler = false;
+        }
+      }
+
+      if (useFallbackHandler) {
+        for (const handler of self.fallbackHandlerList) {
+          dispatchClientMessage(message, handler);
+        }
+      }
+
+      setTimeout(() => {
+        self.socket = self.createWebSocket();
+      }, 1000);
+    });
+
+    socket.addEventListener("message", function (event) {
+      let message: WebSocketResponse = JSON.parse(event.data);
+
+      let useFallbackHandler = true;
+      for (const handler of self.handlerList) {
+        if (dispatchClientMessage(message, handler)) {
+          useFallbackHandler = false;
+        }
+      }
+
+      if (useFallbackHandler) {
+        for (const handler of self.fallbackHandlerList) {
+          dispatchClientMessage(message, handler);
+        }
+      }
+    });
+
+    return socket;
   }
 }
