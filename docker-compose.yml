@@ -1,0 +1,43 @@
+version: "3"
+services:
+  server:
+    image: asciipay/server:latest
+    restart: always
+    container_name: "ascii-pay-server"
+    environment:
+      - API_HOST=0.0.0.0
+      - API_PORT=3000
+      - DATABASE_URL=postgres://ascii:ascii@postgres:5432/ascii-pay
+      - RUST_LOG=info,sqlx::query=warn
+      - DOMAIN_NAME=http://localhost/
+    depends_on:
+      - postgres
+    ports:
+      - "3000:3000"
+    networks:
+      - default
+  postgres:
+    image: postgres:13-alpine
+    container_name: "ascii-pay-postgres"
+    restart: always
+    environment:
+      - POSTGRES_USER=ascii
+      - POSTGRES_PASSWORD=ascii
+      - POSTGRES_DB=ascii-pay
+    volumes:
+      - ./dist/postgres:/var/lib/postgresql/data
+    networks:
+      - default
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    image: asciipay/frontend:latest
+    restart: always
+    container_name: "ascii-pay-frontend"
+    depends_on:
+      - server
+    ports:
+      - "8080:80"
+    networks:
+      - default
