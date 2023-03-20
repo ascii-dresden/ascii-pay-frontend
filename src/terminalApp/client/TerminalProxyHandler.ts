@@ -1,6 +1,6 @@
 import { TerminalClientMessageHandler } from "./websocket";
 import { AsciiPayAuthenticationClient } from "./AsciiPayAuthenticationClient";
-import { BASE_URL } from "../redux/api/customFetchBase";
+import { BASE_URL } from "../../const";
 import {
   NotificationColor,
   NotificationType,

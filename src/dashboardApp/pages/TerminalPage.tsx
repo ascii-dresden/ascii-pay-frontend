@@ -18,7 +18,6 @@ import { TerminalApp, TerminalAppPage } from "../../terminalApp/TerminalApp";
 import { TerminalSettings } from "../../terminalApp/pages/TerminalSettingsPage";
 import { SelectAccountPopup } from "../components/account/SelectAccountPopup";
 import { AccountDto } from "../../common/contracts";
-import { BASE_URL } from "../redux/api/customFetchBase";
 import { SimulationClient } from "../../terminalApp/client/SimulationClient";
 import {
   AsciiPayAuthenticationClient,
@@ -33,6 +32,7 @@ import {
   Remove,
 } from "@mui/icons-material";
 import { usePageTitle } from "../components/usePageTitle";
+import { BASE_URL } from "../../const";
 
 type ConnectionSimulateState = {
   connected: boolean;

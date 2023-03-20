@@ -32,7 +32,6 @@ import {
   PlaylistAdd,
   SwitchLeft,
 } from "@mui/icons-material";
-import { BASE_URL } from "../../redux/api/customFetchBase";
 import { stringAvatar } from "../../../common/stringAvatar";
 import { CoinAmountView } from "./CoinAmountView";
 import { SelectProductPopup } from "../product/SelectProductPopup";
@@ -45,6 +44,7 @@ import {
 } from "../../../common/transactionUtils";
 import { useDashboardSelector } from "../../redux/dashboardStore";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { BASE_URL } from "../../../const";
 
 export const CreatePaymentDialog = (props: {
   account: AccountDto;

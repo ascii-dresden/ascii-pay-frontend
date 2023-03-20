@@ -19,9 +19,9 @@ import {
 } from "../../redux/api/productApi";
 import { ProductDto } from "../../../common/contracts";
 import { Close } from "@mui/icons-material";
-import { BASE_URL } from "../../redux/api/customFetchBase";
 import styled from "@emotion/styled";
 import clsx from "clsx";
+import { BASE_URL } from "../../../const";
 
 const StyledImageContainer = styled.div`
   height: 8rem;

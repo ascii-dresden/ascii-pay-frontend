@@ -12,7 +12,7 @@ import {
 import { useTerminalDispatch } from "../redux/terminalStore";
 import { addProduct } from "../redux/features/paymentSlice";
 import { Avatar } from "@mui/material";
-import { BASE_URL } from "../redux/api/customFetchBase";
+import { BASE_URL } from "../../const";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { Money } from "../components/Money";
 import styled from "@emotion/styled";

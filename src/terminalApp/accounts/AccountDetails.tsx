@@ -5,7 +5,7 @@ import { useGetAccountQuery } from "../redux/api/accountApi";
 import styled from "@emotion/styled";
 import { TerminalClientMessageHandler } from "../client/websocket";
 import { CardTypeDto } from "../../common/contracts";
-import { BASE_URL } from "../redux/api/customFetchBase";
+import { BASE_URL } from "../../const";
 import {
   NotificationColor,
   NotificationType,

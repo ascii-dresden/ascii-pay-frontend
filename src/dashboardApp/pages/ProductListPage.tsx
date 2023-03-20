@@ -24,7 +24,6 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Add } from "@mui/icons-material";
 import { CreateProductDialog } from "../components/product/CreateProductDialog";
-import { BASE_URL } from "../redux/api/customFetchBase";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { ProductDto } from "../../common/contracts";
@@ -33,6 +32,7 @@ import { TagChip } from "../components/product/TagChip";
 import { ProductListRowActionButton } from "../components/product/ProductListRowActionButton";
 import { Link as RLink } from "react-router-dom";
 import { usePageTitle } from "../components/usePageTitle";
+import { BASE_URL } from "../../const";
 
 export const ProductListPage = () => {
   const [openModal, setOpenModal] = useState(false);

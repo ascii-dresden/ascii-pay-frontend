@@ -13,7 +13,6 @@ import {
   stringAvatar,
   stringWithoutColorAvatar,
 } from "../../../common/stringAvatar";
-import { BASE_URL } from "../../redux/api/customFetchBase";
 import { TagChip } from "../product/TagChip";
 import { CoinAmountView } from "../transaction/CoinAmountView";
 import { RoleChip } from "../account/RoleChip";
@@ -24,6 +23,7 @@ import { CreateAccountDialog } from "../account/CreateAccountDialog";
 import { CreateProductDialog } from "../product/CreateProductDialog";
 import { AccountListRowActionButton } from "../account/AccountListRowActionButton";
 import { ProductListRowActionButton } from "../product/ProductListRowActionButton";
+import { BASE_URL } from "../../../const";
 
 const StyledRow = styled("div")(({ theme }) => ({
   position: "relative",

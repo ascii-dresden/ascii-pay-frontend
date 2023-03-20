@@ -14,10 +14,10 @@ import {
   PseudoProductDto,
   selectNextCoinAmount,
 } from "../../../common/transactionUtils";
-import { BASE_URL } from "../api/customFetchBase";
 import { TerminalDispatch, TerminalState } from "../terminalStore";
 import { ReceiveKeyboardEventKey } from "../../client/websocket";
 import { validateKeypadValue } from "../../payment/Keypad";
+import { BASE_URL } from "../../../const";
 
 const PAYMENT_WAITING_TIMEOUT = 30_000;
 const PAYMENT_INPROGRESS_TIMEOUT = 3_000;

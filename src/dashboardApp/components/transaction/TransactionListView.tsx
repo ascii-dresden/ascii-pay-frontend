@@ -27,7 +27,6 @@ import { toast } from "react-toastify";
 import { useGetAllTransactionsQuery } from "../../redux/api/accountApi";
 import { CoinAmountView } from "./CoinAmountView";
 import { AccountDto, TransactionDto } from "../../../common/contracts";
-import { BASE_URL } from "../../redux/api/customFetchBase";
 import { stringAvatar } from "../../../common/stringAvatar";
 import { TransactionChart } from "./TransactionChart";
 import { getTransactionSum } from "../../../common/transactionUtils";
@@ -37,6 +36,7 @@ import enGB from "date-fns/locale/en-GB";
 import { dateToGrouping } from "./GlobalTransactionChart";
 import { TransactionListRowAuthorization } from "./TransactionListRowAuthorization";
 import { TransactionHeatmap } from "./TransactionHeatmap";
+import { BASE_URL } from "../../../const";
 
 export const TransactionListView = (props: { account: AccountDto }) => {
   const [tabIndex, setTabIndex] = React.useState(
