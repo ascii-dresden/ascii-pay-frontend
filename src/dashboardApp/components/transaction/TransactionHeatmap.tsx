@@ -162,7 +162,7 @@ export const TransactionHeatmap = (props: {
         }
       }
     }
-    let sum = up - down;
+    let sum = up / 10 - down;
 
     if (sum > maxSum) {
       maxSum = sum;
