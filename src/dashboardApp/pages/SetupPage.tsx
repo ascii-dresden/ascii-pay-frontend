@@ -13,6 +13,7 @@ import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
 import { useCreateAdminAccountMutation } from "../redux/api/accountApi";
+import { usePageTitle } from "../components/usePageTitle";
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.8rem 0;
@@ -29,6 +30,8 @@ export const SetupPage = () => {
   const [email, setEmail] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  usePageTitle("Setup");
 
   useEffect(() => {
     if (isSuccess) {

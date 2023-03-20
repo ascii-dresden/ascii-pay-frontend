@@ -32,6 +32,7 @@ import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { TagChip } from "../components/product/TagChip";
 import { ProductListRowActionButton } from "../components/product/ProductListRowActionButton";
 import { Link as RLink } from "react-router-dom";
+import { usePageTitle } from "../components/usePageTitle";
 
 export const ProductListPage = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -46,6 +47,8 @@ export const ProductListPage = () => {
     error,
     data: products,
   } = useGetAllProductsQuery();
+
+  usePageTitle("Products");
 
   useEffect(() => {
     if (isError) {
