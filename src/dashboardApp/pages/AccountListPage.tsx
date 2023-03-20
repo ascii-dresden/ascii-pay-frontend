@@ -17,7 +17,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Link as RLink } from "react-router-dom";
+import { Link as RLink, useNavigate } from "react-router-dom";
 import { useGetAllAccountsQuery } from "../redux/api/accountApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -33,6 +33,7 @@ import { usePageTitle } from "../components/usePageTitle";
 
 export const AccountListPage = () => {
   const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);

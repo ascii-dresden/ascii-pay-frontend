@@ -28,31 +28,6 @@ export class SimulationClient implements AsciiPayAuthenticationClient {
     this.queue = [];
   }
 
-  private dispatch(message: WebSocketResponse, preventQueueDispatch?: boolean) {
-    let useFallbackHandler = true;
-    for (const handler of this.handlerList) {
-      if (dispatchClientMessage(message, handler)) {
-        useFallbackHandler = false;
-      }
-    }
-
-    if (useFallbackHandler) {
-      for (const handler of this.fallbackHandlerList) {
-        dispatchClientMessage(message, handler);
-      }
-    }
-
-    if (preventQueueDispatch) {
-      return;
-    }
-
-    for (let q of this.queue) {
-      q();
-    }
-
-    this.queue = [];
-  }
-
   public isConnected(): boolean {
     return this.state.connected;
   }
@@ -178,5 +153,30 @@ export class SimulationClient implements AsciiPayAuthenticationClient {
         key: key,
       },
     });
+  }
+
+  private dispatch(message: WebSocketResponse, preventQueueDispatch?: boolean) {
+    let useFallbackHandler = true;
+    for (const handler of this.handlerList) {
+      if (dispatchClientMessage(message, handler)) {
+        useFallbackHandler = false;
+      }
+    }
+
+    if (useFallbackHandler) {
+      for (const handler of this.fallbackHandlerList) {
+        dispatchClientMessage(message, handler);
+      }
+    }
+
+    if (preventQueueDispatch) {
+      return;
+    }
+
+    for (let q of this.queue) {
+      q();
+    }
+
+    this.queue = [];
   }
 }

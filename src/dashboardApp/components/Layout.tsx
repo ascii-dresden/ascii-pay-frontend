@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   Container,
-  Divider,
   Drawer,
   IconButton,
   List,
@@ -13,6 +12,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  ListSubheader,
   Toolbar,
   useTheme,
 } from "@mui/material";
@@ -133,6 +133,7 @@ export const Layout = () => {
       <Toolbar></Toolbar>
       <Box sx={{ overflow: "auto" }}>
         <List>
+          <ListSubheader component="div">General</ListSubheader>
           <ListItem disablePadding>
             <NavLink
               to="/"
@@ -152,6 +153,7 @@ export const Layout = () => {
               )}
             </NavLink>
           </ListItem>
+          <ListSubheader component="div">Administration</ListSubheader>
           <ListItem disablePadding>
             <NavLink
               to="/accounts"
@@ -209,7 +211,7 @@ export const Layout = () => {
               )}
             </NavLink>
           </ListItem>
-          <Divider />
+          <ListSubheader component="div">Deployment</ListSubheader>
           <ListItem disablePadding>
             <NavLink
               to="/terminal"
