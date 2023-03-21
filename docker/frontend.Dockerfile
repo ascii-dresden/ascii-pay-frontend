@@ -8,3 +8,4 @@ RUN yarn build
 FROM nginx:1.21-alpine
 COPY --from=build-deps /usr/src/app/dist /usr/share/nginx/html
 COPY ./docker/nginx.conf /etc/nginx/nginx.conf
+

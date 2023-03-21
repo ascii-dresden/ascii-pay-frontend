@@ -20,6 +20,7 @@ export type AuthMethodDtoNfcBased = {
   name: string;
   card_id: string;
   card_type: CardTypeDto;
+  depends_on_session?: string | null;
 };
 
 export type AuthMethodDtoPublicTab = {

@@ -115,8 +115,8 @@ export const TransactionChart = (props: {
       data: seriesData,
       color:
         theme.palette.mode === "light"
-          ? theme.palette.info.light
-          : theme.palette.info.dark,
+          ? theme.palette.primary.light
+          : theme.palette.primary.dark,
     },
   ];
   let options: ApexOptions = {
