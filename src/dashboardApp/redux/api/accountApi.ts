@@ -238,7 +238,12 @@ export const accountApi = createApi({
         };
       },
       invalidatesTags: (result, error, { id }) =>
-        result ? [{ type: "Sessions", id }] : [],
+        result
+          ? [
+              { type: "Sessions", id },
+              { type: "Accounts", id },
+            ]
+          : [],
     }),
   }),
 });
