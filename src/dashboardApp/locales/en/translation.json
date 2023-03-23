@@ -1,0 +1,53 @@
+{
+  "search": {
+    "prompt": "Search…",
+    "noInput": "Type to start searching…",
+    "noMatch": "Nothing found"
+  },
+  "layout": {
+    "general": "General",
+    "profile": "Profile",
+    "administration": "Administration",
+    "accounts": "Accounts",
+    "products": "Products",
+    "transactions": "Transactions",
+    "deployment": "Deployment",
+    "terminal": "Terminal",
+    "logout": "Logout",
+    "rowsPerPage": "Rows per page",
+    "rowsPerPageAll": "All",
+    "loading": "Loading…"
+  },
+  "account": {
+    "balance": "Balance",
+    "email": "Email",
+    "usedCredit": "Used credit",
+    "loadedCredit": "Loaded credit",
+    "balanceTrend": "Balance trend",
+    "heatmap": "Heatmap",
+    "action": {
+      "payment": "Payment",
+      "editAccount": "Edit account details",
+      "authenticationMethods": "Authentication methods",
+      "activeSessions": "Active sessions",
+      "estimatedBalance": "Estimated balance"
+    }
+  },
+  "date": {
+    "start": "Start date",
+    "end": "End date",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "transactions": {
+    "total": "Total",
+    "date": "Date",
+    "product": "Product",
+    "price": "Price"
+  }
+}

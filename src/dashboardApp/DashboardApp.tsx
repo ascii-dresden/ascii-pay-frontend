@@ -14,6 +14,10 @@ import { RequireUserLogin } from "./components/RequireUserLogin";
 import { FullScreenLoader } from "./components/FullScreenLoader";
 import { dashboardStore } from "./redux/dashboardStore";
 import { Provider } from "react-redux";
+import { createInstance } from "i18next";
+import { I18nextProvider, initReactI18next } from "react-i18next";
+import i18n_german from "./locales/de/translation.json";
+import i18n_english from "./locales/en/translation.json";
 
 const ProfilePage = React.lazy(() =>
   import("./pages/ProfilePage").then((module) => ({
@@ -77,43 +81,68 @@ export function DashboardApp() {
     [prefersDarkMode]
   );
 
+  const resources = {
+    de: {
+      translation: i18n_german,
+    },
+    en: {
+      translation: i18n_english,
+    },
+  };
+
+  const i18nConfig = createInstance({
+    resources,
+    lng: "en",
+    fallbackLng: "en",
+    debug: false,
+    interpolation: {
+      escapeValue: false,
+    },
+  });
+
+  i18nConfig.use(initReactI18next).init().catch(console.error);
+
   return (
     <Provider store={dashboardStore}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <ToastContainer />
-        <React.Suspense fallback={<FullScreenLoader />}>
-          <Routes>
-            <Route element={<RequireUserLogin />}>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<ProfilePage />} />
-                <Route
-                  element={<RequireUserUnauthorized allowedRoles={["Admin"]} />}
-                >
-                  <Route path="accounts" element={<AccountListPage />} />
+      <I18nextProvider i18n={i18nConfig}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <ToastContainer />
+          <React.Suspense fallback={<FullScreenLoader />}>
+            <Routes>
+              <Route element={<RequireUserLogin />}>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<ProfilePage />} />
                   <Route
-                    path="accounts/:accountId"
-                    element={<AccountDetailsPage />}
-                  />
-                  <Route path="products" element={<ProductListPage />} />
-                  <Route
-                    path="products/:productId"
-                    element={<ProductDetailsPage />}
-                  />
-                  <Route
-                    path="transactions"
-                    element={<TransactionListPage />}
-                  />
-                  <Route path="terminal/:page" element={<TerminalPage />} />
-                  <Route path="terminal" element={<TerminalPage />} />
+                    element={
+                      <RequireUserUnauthorized allowedRoles={["Admin"]} />
+                    }
+                  >
+                    <Route path="accounts" element={<AccountListPage />} />
+                    <Route
+                      path="accounts/:accountId"
+                      element={<AccountDetailsPage />}
+                    />
+                    <Route path="products" element={<ProductListPage />} />
+                    <Route
+                      path="products/:productId"
+                      element={<ProductDetailsPage />}
+                    />
+                    <Route
+                      path="transactions"
+                      element={<TransactionListPage />}
+                    />
+                    <Route path="terminal/:page" element={<TerminalPage />} />
+                    <Route path="terminal" element={<TerminalPage />} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-            <Route path="setup" element={<SetupPage />} />
-            <Route path="reset-password" element={<ResetPasswordPage />} />
-          </Routes>
-        </React.Suspense>
-      </ThemeProvider>
+              <Route path="setup" element={<SetupPage />} />
+              <Route path="reset-password" element={<ResetPasswordPage />} />
+            </Routes>
+          </React.Suspense>
+        </ThemeProvider>
+      </I18nextProvider>
     </Provider>
   );
 }

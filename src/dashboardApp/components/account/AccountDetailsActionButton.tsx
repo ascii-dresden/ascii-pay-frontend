@@ -23,8 +23,10 @@ import { UpdateAccountDialog } from "./UpdateAccountDialog";
 import { CreatePaymentDialog } from "../transaction/CreatePaymentDialog";
 import { AccountAuthenticationDialog } from "./AccountAuthenticationDialog";
 import { AccountSessionDialog } from "./AccountSessionDialog";
+import { useTranslation } from "react-i18next";
 
 export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -66,7 +68,7 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
           sx={{ whiteSpace: "nowrap", width: "9.52rem" }}
           onClick={() => setOpenPaymentModal(true)}
         >
-          Payment
+          {t("account.action.payment")}
         </Button>
         <Button
           sx={{ whiteSpace: "nowrap", width: "3.5rem" }}
@@ -102,7 +104,9 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
                     <ListItemIcon>
                       <Edit fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Edit account details</ListItemText>
+                    <ListItemText>
+                      {t("account.action.editAccount")}
+                    </ListItemText>
                   </MenuItem>
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenAuthModal)}
@@ -110,7 +114,9 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
                     <ListItemIcon>
                       <LockOutlined fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Authentication methods</ListItemText>
+                    <ListItemText>
+                      {t("account.action.authenticationMethods")}
+                    </ListItemText>
                   </MenuItem>
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenSessionModal)}
@@ -118,7 +124,9 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
                     <ListItemIcon>
                       <Token fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Active sessions</ListItemText>
+                    <ListItemText>
+                      {t("account.action.activeSessions")}
+                    </ListItemText>
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>

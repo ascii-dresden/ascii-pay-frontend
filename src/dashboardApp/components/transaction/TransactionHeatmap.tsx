@@ -7,6 +7,7 @@ import styled from "@emotion/styled";
 import { dateToGrouping } from "./GlobalTransactionChart";
 import { renderToString } from "react-dom/server";
 import { moneyToString } from "../../../terminalApp/components/Money";
+import { useTranslation } from "react-i18next";
 
 const StyledChart = styled.div`
   .coin-amount-view {
@@ -22,15 +23,6 @@ type SeriesData = {
   down: number;
   count: number;
 };
-const dayNames = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
 
 function splitToWeekDay(date: Date): {
   week: string;
@@ -69,6 +61,7 @@ export const TransactionHeatmap = (props: {
   startDate?: Date | null;
   endDate?: Date | null;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   let groupedTransactions = new Map<number, TransactionDto[]>();
 
@@ -113,31 +106,31 @@ export const TransactionHeatmap = (props: {
 
   let series: { name: string; data: SeriesData[] }[] = [
     {
-      name: dayNames[0],
+      name: t("date.monday"),
       data: [],
     },
     {
-      name: dayNames[1],
+      name: t("date.tuesday"),
       data: [],
     },
     {
-      name: dayNames[2],
+      name: t("date.wednesday"),
       data: [],
     },
     {
-      name: dayNames[3],
+      name: t("date.thursday"),
       data: [],
     },
     {
-      name: dayNames[4],
+      name: t("date.friday"),
       data: [],
     },
     {
-      name: dayNames[5],
+      name: t("date.saturday"),
       data: [],
     },
     {
-      name: dayNames[6],
+      name: t("date.sunday"),
       data: [],
     },
   ];
