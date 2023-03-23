@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 import { SearchOutlined } from "@mui/icons-material";
 import { SearchContent } from "./SearchContent";
+import { useTranslation } from "react-i18next";
 
 const StyledSearchDialogWrapper = styled("div")(() => ({
   position: "fixed",
@@ -96,6 +97,7 @@ const StyledSearchContent = styled("div")(() => ({
 }));
 
 export const SearchDialog = (props: { setOpen: (open: boolean) => void }) => {
+  const { t } = useTranslation();
   const [search, setSearch] = React.useState("");
 
   const closeAction = () => props.setOpen(false);
@@ -133,7 +135,7 @@ export const SearchDialog = (props: { setOpen: (open: boolean) => void }) => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={preventUpDown}
-              placeholder="Search…"
+              placeholder={t("search.prompt") ?? undefined}
               autoFocus
             />
             <StyledSearchBarIcon>

@@ -1,0 +1,53 @@
+{
+  "search": {
+    "prompt": "Suche…",
+    "noInput": "Tippen um Suche zu starten…",
+    "noMatch": "Kein Treffer gefunden"
+  },
+  "layout": {
+    "general": "Allgemein",
+    "profile": "Profil",
+    "administration": "Administration",
+    "accounts": "Konten",
+    "products": "Produkte",
+    "transactions": "Transaktionen",
+    "deployment": "Verteilung",
+    "terminal": "Terminal",
+    "logout": "Abmelden",
+    "rowsPerPage": "Zeilen pro Seite",
+    "rowsPerPageAll": "Alle",
+    "loading": "Laden…"
+  },
+  "account": {
+    "balance": "Guthaben",
+    "email": "Email",
+    "usedCredit": "Verbrauchtes Guthaben",
+    "loadedCredit": "Aufgeladenes Guthaben",
+    "balanceTrend": "Guthabentrend",
+    "heatmap": "Wochenübersicht",
+    "action": {
+      "payment": "Bezahlen",
+      "editAccount": "Kontodetails bearbeiten",
+      "authenticationMethods": "Authentifizierungsmethoden",
+      "activeSessions": "Aktive Sitzungen",
+      "estimatedBalance": "Geschätztes Guthaben"
+    }
+  },
+  "date": {
+    "start": "Startdatum",
+    "end": "Enddatum",
+    "monday": "Montag",
+    "tuesday": "Dienstag",
+    "wednesday": "Mittwoch",
+    "thursday": "Donnerstag",
+    "friday": "Freitag",
+    "saturday": "Samstag",
+    "sunday": "Sonntag"
+  },
+  "transactions": {
+    "total": "Summe",
+    "date": "Datum",
+    "product": "Produkt",
+    "price": "Preis"
+  }
+}

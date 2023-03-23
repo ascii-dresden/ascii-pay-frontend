@@ -33,12 +33,14 @@ import {
 } from "../../redux/api/accountApi";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
+import { useTranslation } from "react-i18next";
 
 export const AccountAuthenticationDialog = (props: {
   account: AccountDto;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -110,7 +112,9 @@ export const AccountAuthenticationDialog = (props: {
       fullScreen={fullScreen}
     >
       <DialogTitle component="div">
-        <Typography variant="h5">Authentication methods</Typography>
+        <Typography variant="h5">
+          {t("account.action.authenticationMethods")}
+        </Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}

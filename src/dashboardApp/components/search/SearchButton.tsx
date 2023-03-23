@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import { alpha } from "@mui/material";
 import { SearchOutlined } from "@mui/icons-material";
 import { SearchDialog } from "./SearchDialog";
+import { useTranslation } from "react-i18next";
 
 const SearchContainer = styled("div")(({ theme }) => ({
   position: "relative",
@@ -52,6 +53,7 @@ const SearchKeyWrapper = styled("div")(({ theme }) => ({
 }));
 
 export const SearchButton = () => {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const handleAction = () => {
     setOpen((o) => !o);
@@ -78,7 +80,7 @@ export const SearchButton = () => {
         <SearchIconWrapper>
           <SearchOutlined />
         </SearchIconWrapper>
-        <SearchTextWrapper>Search…</SearchTextWrapper>
+        <SearchTextWrapper>{t("search.prompt")}</SearchTextWrapper>
         <SearchKeyWrapper>⌘K</SearchKeyWrapper>
       </SearchContainer>
       {open ? <SearchDialog setOpen={setOpen} /> : null}

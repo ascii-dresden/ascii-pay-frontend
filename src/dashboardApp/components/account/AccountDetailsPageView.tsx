@@ -18,11 +18,13 @@ import { CoinAmountView } from "../transaction/CoinAmountView";
 import { RoleChip } from "./RoleChip";
 import { AccountDetailsActionButton } from "./AccountDetailsActionButton";
 import { usePageTitle } from "../usePageTitle";
+import { useTranslation } from "react-i18next";
 
 export const AccountDetailsPageView = (props: {
   accountId: number;
   isRoot?: boolean;
 }) => {
+  const { t } = useTranslation();
   const {
     isLoading,
     isError,
@@ -31,7 +33,9 @@ export const AccountDetailsPageView = (props: {
   } = useGetAccountQuery(props.accountId);
 
   usePageTitle(
-    props.isRoot ? [] : ["Accounts", account?.name ?? "Loading ..."]
+    props.isRoot
+      ? []
+      : [t("layout.accounts"), account?.name ?? t("layout.loading")]
   );
 
   useEffect(() => {
@@ -98,7 +102,7 @@ export const AccountDetailsPageView = (props: {
                     component={RLink}
                     to="/accounts"
                   >
-                    Accounts
+                    {t("layout.accounts")}
                   </Link>
                   <Link
                     underline="hover"
@@ -122,7 +126,7 @@ export const AccountDetailsPageView = (props: {
         <Grid item xs={12} md={6}>
           <Paper sx={{ height: "100%", p: 2 }} elevation={4}>
             <Typography gutterBottom variant="h6" component="div">
-              Balance
+              {t("account.balance")}
             </Typography>
             <CoinAmountView coins={account.balance} negativeIsError={true} />
           </Paper>
@@ -130,7 +134,7 @@ export const AccountDetailsPageView = (props: {
         <Grid item xs={12} md={6}>
           <Paper sx={{ height: "100%", p: 2 }} elevation={4}>
             <Typography gutterBottom variant="h6" component="div">
-              Email
+              {t("account.email")}
             </Typography>
             <Typography variant="body1" color="text.secondary">
               {account.email}

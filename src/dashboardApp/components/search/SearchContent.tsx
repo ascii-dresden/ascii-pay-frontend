@@ -24,6 +24,7 @@ import { CreateProductDialog } from "../product/CreateProductDialog";
 import { AccountListRowActionButton } from "../account/AccountListRowActionButton";
 import { ProductListRowActionButton } from "../product/ProductListRowActionButton";
 import { BASE_URL } from "../../../const";
+import { useTranslation } from "react-i18next";
 
 const StyledRow = styled("div")(({ theme }) => ({
   position: "relative",
@@ -79,6 +80,7 @@ export const SearchContent = (props: {
   search: string;
   onClose: () => void;
 }) => {
+  const { t } = useTranslation();
   const { isLoading, results } = useSearchHook(props.search, 6);
   const [selected, setSelected] = React.useState(0);
 
@@ -124,7 +126,7 @@ export const SearchContent = (props: {
   if (props.search === "") {
     return (
       <StyledRowEmpty>
-        <span>Type to start searching…</span>
+        <span>{t("search.noInput")}</span>
       </StyledRowEmpty>
     );
   }
@@ -132,7 +134,7 @@ export const SearchContent = (props: {
   if (resultCount === 0) {
     return (
       <StyledRowEmpty>
-        <span>Nothing found</span>
+        <span>{t("search.noMatch")}</span>
       </StyledRowEmpty>
     );
   }

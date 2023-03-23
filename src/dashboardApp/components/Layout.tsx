@@ -33,6 +33,7 @@ import {
 import logo from "../../assets/ascii-pay-logo-wide.svg";
 import { logout } from "../redux/features/userSlice";
 import { PaperScreenLoader } from "./PaperScreenLoader";
+import { useTranslation } from "react-i18next";
 
 const drawerWidth = 240;
 
@@ -45,6 +46,7 @@ const SearchButton = React.lazy(() =>
 export const Layout = () => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const { t } = useTranslation();
   const user = useDashboardSelector((state) => state.userState.user);
   const dispatch = useDashboardDispatch();
 
@@ -98,14 +100,14 @@ export const Layout = () => {
                     marginTop: "0.5rem",
                   }}
                   src={logo}
-                  alt="ascii pay"
+                  alt="ascii-pay"
                 />
               </Box>
               <Box sx={{ flexGrow: 1 }} />
               <Box display="flex" sx={{ ml: "auto" }}>
                 {user && (
                   <Button onClick={onLogoutHandler} color="inherit">
-                    Logout
+                    {t("layout.logout")}
                   </Button>
                 )}
               </Box>
@@ -133,7 +135,7 @@ export const Layout = () => {
       <Toolbar></Toolbar>
       <Box sx={{ overflow: "auto" }}>
         <List>
-          <ListSubheader component="div">General</ListSubheader>
+          <ListSubheader component="div">{t("layout.general")}</ListSubheader>
           <ListItem disablePadding>
             <NavLink
               to="/"
@@ -148,12 +150,14 @@ export const Layout = () => {
                   <ListItemIcon>
                     <Home />
                   </ListItemIcon>
-                  <ListItemText primary="Profile" />
+                  <ListItemText primary={t("layout.profile")} />
                 </ListItemButton>
               )}
             </NavLink>
           </ListItem>
-          <ListSubheader component="div">Administration</ListSubheader>
+          <ListSubheader component="div">
+            {t("layout.administration")}
+          </ListSubheader>
           <ListItem disablePadding>
             <NavLink
               to="/accounts"
@@ -168,7 +172,7 @@ export const Layout = () => {
                   <ListItemIcon>
                     <AccountCircle />
                   </ListItemIcon>
-                  <ListItemText primary="Accounts" />
+                  <ListItemText primary={t("layout.accounts")} />
                 </ListItemButton>
               )}
             </NavLink>
@@ -187,7 +191,7 @@ export const Layout = () => {
                   <ListItemIcon>
                     <Coffee />
                   </ListItemIcon>
-                  <ListItemText primary="Products" />
+                  <ListItemText primary={t("layout.products")} />
                 </ListItemButton>
               )}
             </NavLink>
@@ -206,12 +210,14 @@ export const Layout = () => {
                   <ListItemIcon>
                     <PublicOutlined />
                   </ListItemIcon>
-                  <ListItemText primary="Transactions" />
+                  <ListItemText primary={t("layout.transactions")} />
                 </ListItemButton>
               )}
             </NavLink>
           </ListItem>
-          <ListSubheader component="div">Deployment</ListSubheader>
+          <ListSubheader component="div">
+            {t("layout.deployment")}
+          </ListSubheader>
           <ListItem disablePadding>
             <NavLink
               to="/terminal"
@@ -226,7 +232,7 @@ export const Layout = () => {
                   <ListItemIcon>
                     <Store />
                   </ListItemIcon>
-                  <ListItemText primary="Terminal" />
+                  <ListItemText primary={t("layout.terminal")} />
                 </ListItemButton>
               )}
             </NavLink>
@@ -260,7 +266,7 @@ export const Layout = () => {
                   marginTop: "0.5rem",
                 }}
                 src={logo}
-                alt="ascii pay"
+                alt="ascii-pay"
               />
             </Box>
           </Link>
@@ -271,7 +277,7 @@ export const Layout = () => {
           <Box display="flex" sx={{ ml: "auto" }}>
             {user && (
               <Button onClick={onLogoutHandler} color="inherit">
-                Logout
+                {t("layout.logout")}
               </Button>
             )}
           </Box>
