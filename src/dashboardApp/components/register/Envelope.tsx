@@ -1,29 +1,13 @@
 import React from "react";
-import { Money } from "../components/Money";
 import { useTranslation } from "react-i18next";
 import styled from "@emotion/styled";
-import { ArrowBack } from "@mui/icons-material";
-import { useTerminalSelector } from "../redux/terminalStore";
-import { getRegisterTotal } from "../../common/registerHistoryUtils";
+import { useDashboardSelector } from "../../redux/dashboardStore";
+import { getRegisterTotal } from "../../../common/registerHistoryUtils";
+import { moneyToString } from "../../../terminalApp/components/Money";
 
 const StyledEnvelope = styled.div`
-  &.empty {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    padding: 1em;
-    display: flex;
-    align-items: center;
-
-    svg {
-      width: 1.6em;
-      height: 1.6em;
-    }
-
-    span {
-      padding-left: 0.4em;
-    }
-  }
+  position: relative;
+  width: 54em;
 
   .cash-book {
     display: block;
@@ -128,22 +112,17 @@ const StyledEnvelope = styled.div`
 export const Envelope = () => {
   const { t } = useTranslation();
 
-  const coinBox = useTerminalSelector((state) => state.registerState.coinBox);
-  const noteBox = useTerminalSelector((state) => state.registerState.noteBox);
-  const previousCoinBox = useTerminalSelector(
+  const coinBox = useDashboardSelector((state) => state.registerState.coinBox);
+  const noteBox = useDashboardSelector((state) => state.registerState.noteBox);
+  const previousCoinBox = useDashboardSelector(
     (state) => state.registerState.previous?.coinBox
   );
-  const previousNoteBox = useTerminalSelector(
+  const previousNoteBox = useDashboardSelector(
     (state) => state.registerState.previous?.noteBox
   );
 
   if (!previousCoinBox || !previousNoteBox) {
-    return (
-      <StyledEnvelope className="empty">
-        <ArrowBack />
-        <span>{t("register.start")}</span>
-      </StyledEnvelope>
-    );
+    return null;
   }
 
   const currentTotal = getRegisterTotal(coinBox, noteBox);
@@ -161,9 +140,9 @@ export const Envelope = () => {
       <div className="cash-book">
         <span>{t("register.cashBook")}</span>
         <div className="cash-book-list">
-          <Money value={previousTotal} />
-          <Money value={previousTotal - currentTotal} />
-          <Money value={currentTotal} />
+          <span>{moneyToString(previousTotal)}</span>
+          <span>{moneyToString(previousTotal - currentTotal)}</span>
+          <span>{moneyToString(currentTotal)}</span>
           <span>-</span>
           <span>{date}</span>
           <span>{previousNoteBox.note100}</span>
@@ -179,7 +158,7 @@ export const Envelope = () => {
           <span>{previousCoinBox.coin5}</span>
           <span>{previousCoinBox.coin2}</span>
           <span>{previousCoinBox.coin1}</span>
-          <Money value={previousTotal} />
+          <span>{moneyToString(previousTotal)}</span>
         </div>
       </div>
 
@@ -197,7 +176,7 @@ export const Envelope = () => {
             </div>
             <div>
               <span>{t("register.total")}</span>
-              <Money value={previousTotal - currentTotal} />
+              <span>{moneyToString(previousTotal - currentTotal)}</span>
             </div>
           </div>
         </div>

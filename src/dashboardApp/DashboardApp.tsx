@@ -62,6 +62,16 @@ const TransactionListPage = React.lazy(() =>
     default: module.TransactionListPage,
   }))
 );
+const RegisterPage = React.lazy(() =>
+  import("./pages/RegisterPage").then((module) => ({
+    default: module.RegisterPage,
+  }))
+);
+const RegisterHistoryListPage = React.lazy(() =>
+  import("./pages/RegisterHistoryListPage").then((module) => ({
+    default: module.RegisterHistoryListPage,
+  }))
+);
 
 export function DashboardApp() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -113,6 +123,7 @@ export function DashboardApp() {
               <Route element={<RequireUserLogin />}>
                 <Route path="/" element={<Layout />}>
                   <Route index element={<ProfilePage />} />
+                  <Route path="register" element={<RegisterPage />} />
                   <Route
                     element={
                       <RequireUserUnauthorized allowedRoles={["Admin"]} />
@@ -134,6 +145,10 @@ export function DashboardApp() {
                     />
                     <Route path="terminal/:page" element={<TerminalPage />} />
                     <Route path="terminal" element={<TerminalPage />} />
+                    <Route
+                      path="registerHistory"
+                      element={<RegisterHistoryListPage />}
+                    />
                   </Route>
                 </Route>
               </Route>

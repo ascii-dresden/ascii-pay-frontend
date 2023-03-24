@@ -49,5 +49,20 @@
     "date": "Datum",
     "product": "Produkt",
     "price": "Preis"
+  },
+  "register": {
+    "cashBook": "Kassenbuch",
+    "envelope": "Briefumschlag",
+    "name": "Name",
+    "yourName": "Dein Name",
+    "date": "Datum",
+    "total": "Summe",
+    "coins": "Münzen",
+    "notes": "Scheine",
+    "start": "Starte Berechnung um Übersicht zu sehen!",
+    "enterCoins": "Münzeingabe",
+    "enterNotes": "Scheineingabe",
+    "overview": "Übersicht",
+    "calculate": "Berechnungsmodus"
   }
 }

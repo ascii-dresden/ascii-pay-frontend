@@ -145,3 +145,33 @@ export type SessionDto = {
   valid_until: string;
   is_single_use: boolean;
 };
+
+export type RegisterHistoryStateDto = {
+  coin200: number;
+  coin100: number;
+  coin50: number;
+  coin20: number;
+  coin10: number;
+  coin5: number;
+  coin2: number;
+  coin1: number;
+  note100: number;
+  note50: number;
+  note20: number;
+  note10: number;
+  note5: number;
+};
+
+export type RegisterHistoryDto = {
+  id: number;
+  timestamp: string;
+  source_register: RegisterHistoryStateDto;
+  target_register: RegisterHistoryStateDto;
+  envelope_register: RegisterHistoryStateDto;
+};
+
+export type SaveRegisterHistoryDto = {
+  source_register: RegisterHistoryStateDto;
+  target_register: RegisterHistoryStateDto;
+  envelope_register: RegisterHistoryStateDto;
+};

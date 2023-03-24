@@ -8,14 +8,7 @@ import {
   targetNoteBox,
 } from "../../../common/registerHistoryUtils";
 
-export enum RegisterMode {
-  COINS,
-  NOTES,
-  RESULT,
-}
-
 interface RegisterState {
-  registerMode: RegisterMode;
   coinBox: CoinBoxState;
   noteBox: NoteBoxState;
   previous: {
@@ -25,7 +18,6 @@ interface RegisterState {
 }
 
 const initialState: RegisterState = {
-  registerMode: RegisterMode.COINS,
   coinBox: { ...targetCoinBox },
   noteBox: { ...targetNoteBox },
   previous: null,
@@ -87,28 +79,6 @@ export const registerSlice = createSlice({
       if (state.previous) return;
       state.coinBox.coin1 = Math.max(0, action.payload);
     },
-    setRegisterMode: (state, action: PayloadAction<RegisterMode>) => {
-      state.registerMode = action.payload;
-
-      if (action.payload === RegisterMode.RESULT && state.previous === null) {
-        let nextBoxes = solveCashProblem(state.coinBox, state.noteBox);
-        state.previous = {
-          coinBox: state.coinBox,
-          noteBox: state.noteBox,
-        };
-        state.coinBox = nextBoxes.coinBox;
-        state.noteBox = nextBoxes.noteBox;
-
-        saveRegisterHistory({
-          coinBox: nextBoxes.coinBox,
-          noteBox: nextBoxes.noteBox,
-          previous: {
-            coinBox: state.previous.coinBox,
-            noteBox: state.previous.noteBox,
-          },
-        });
-      }
-    },
     toggleResultMode: (state) => {
       if (state.previous === null) {
         let nextBoxes = solveCashProblem(state.coinBox, state.noteBox);
@@ -150,7 +120,6 @@ export const {
   setCoin5,
   setCoin2,
   setCoin1,
-  setRegisterMode,
   toggleResultMode,
 } = registerSlice.actions;
 export default registerSlice.reducer;

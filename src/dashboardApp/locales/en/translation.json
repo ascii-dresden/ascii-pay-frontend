@@ -49,5 +49,20 @@
     "date": "Date",
     "product": "Product",
     "price": "Price"
+  },
+  "register": {
+    "cashBook": "Cash book",
+    "envelope": "Envelope",
+    "name": "Name",
+    "yourName": "Your name",
+    "date": "Date",
+    "total": "Total",
+    "coins": "Coins",
+    "notes": "Notes",
+    "start": "Start calculation to view overview!",
+    "enterCoins": "Enter coin count",
+    "enterNotes": "Enter note count",
+    "overview": "Overview",
+    "calculate": "Calculate"
   }
 }
