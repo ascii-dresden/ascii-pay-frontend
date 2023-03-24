@@ -79,9 +79,11 @@ export const RegisterPage = () => {
           fontSize: 18,
         }}
       >
-        <CoinBox />
-        <NoteBox />
-        <Envelope />
+        <Paper elevation={4} sx={{ overflow: "hidden" }}>
+          <CoinBox />
+          <NoteBox />
+          <Envelope />
+        </Paper>
       </Box>
     </Container>
   );

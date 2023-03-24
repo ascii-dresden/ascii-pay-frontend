@@ -201,15 +201,15 @@ export const CoinBox = (props: {
   );
   const dispatch = useTerminalDispatch();
 
-  const [selectedGroup, setSelectedGroup] = useState(
-    null as {
-      cents: number;
-      count: number;
-      top: number;
-      height: number;
-      offset: number;
-    } | null
-  );
+  const [selectedGroup, setSelectedGroup] = useState<{
+    cents: number;
+    count: number;
+    top: number;
+    height: number;
+    offset: number;
+    hasMoved: boolean;
+  } | null>(null);
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     props.setAppClass("coin-box-body");
@@ -273,76 +273,6 @@ export const CoinBox = (props: {
     }
   };
 
-  // const handleTab = (event: HammerInput) => {
-  //   if (previousCoinBox) return;
-  //   let currentElement: HTMLElement | null = event.target;
-  //   let targetCents = 0;
-  //   let targetCentCount = 0;
-  //   let targetTop = 0;
-  //   let targetHeight = 0;
-  //
-  //   while (currentElement != null) {
-  //     if (currentElement.classList.contains("coin-stack-group")) {
-  //       targetTop = currentElement.offsetTop;
-  //       targetHeight = currentElement.clientHeight;
-  //       targetCentCount = currentElement.getElementsByClassName("coin").length;
-  //     }
-  //     if (currentElement.classList.contains("coin-group")) {
-  //       targetCents = parseInt(currentElement.dataset["value"] ?? "0");
-  //       break;
-  //     }
-  //     currentElement = currentElement.parentElement;
-  //   }
-  //
-  //   if (targetCents !== 0 && targetHeight !== 0) {
-  //     let newCount =
-  //       targetCentCount -
-  //       Math.round(
-  //         ((event.center.y - targetTop) / targetHeight) * targetCentCount
-  //       );
-  //     setCoinCount(targetCents, newCount);
-  //   }
-  // };
-  //
-  // const handlePress = (event: HammerInput) => {
-  //   if (previousCoinBox) return;
-  //   let currentElement: HTMLElement | null = event.target;
-  //   let targetCents = 0;
-  //   let targetCentCount = 0;
-  //   let targetTop = 0;
-  //   let targetHeight = 0;
-  //
-  //   while (currentElement != null) {
-  //     if (currentElement.classList.contains("coin-stack-group")) {
-  //       targetTop = currentElement.offsetTop;
-  //       targetHeight = currentElement.clientHeight;
-  //       targetCentCount = currentElement.getElementsByClassName("coin").length;
-  //     }
-  //     if (currentElement.classList.contains("coin-group")) {
-  //       targetCents = parseInt(currentElement.dataset["value"] ?? "0");
-  //       break;
-  //     }
-  //     currentElement = currentElement.parentElement;
-  //   }
-  //
-  //   if (targetCents !== 0 && targetHeight !== 0) {
-  //     let newCount =
-  //       targetCentCount -
-  //       Math.round(
-  //         ((event.center.y - targetTop) / targetHeight) * targetCentCount
-  //       );
-  //     setCoinCount(targetCents, newCount);
-  //
-  //     setSelectedGroup({
-  //       cents: targetCents,
-  //       count: targetCentCount,
-  //       top: targetTop,
-  //       height: targetHeight,
-  //       offset: 0,
-  //     });
-  //   }
-  // };
-
   const handlePointerDown = (event: React.PointerEvent) => {
     const target: HTMLDivElement = event.target as HTMLDivElement;
     target.setPointerCapture(event.pointerId);
@@ -354,10 +284,11 @@ export const CoinBox = (props: {
     let targetTop = 0;
     let targetHeight = 0;
 
-    while (currentElement != null) {
+    while (currentElement !== null) {
       if (currentElement.classList.contains("coin-stack-group")) {
-        targetTop = currentElement.offsetTop;
-        targetHeight = currentElement.clientHeight;
+        let box = currentElement.getBoundingClientRect();
+        targetTop = box.top;
+        targetHeight = box.height;
         targetCentCount = currentElement.getElementsByClassName("coin").length;
       }
       if (currentElement.classList.contains("coin-group")) {
@@ -381,7 +312,23 @@ export const CoinBox = (props: {
         top: targetTop,
         height: targetHeight,
         offset: newCount - currentCount,
+        hasMoved: false,
       });
+
+      setTimer(
+        setTimeout(function () {
+          setSelectedGroup({
+            cents: targetCents,
+            count: targetCentCount,
+            top: targetTop,
+            height: targetHeight,
+            offset: 0,
+            hasMoved: false,
+          });
+          setCoinCount(targetCents, newCount);
+          setTimer(null);
+        }, 500)
+      );
     }
   };
 
@@ -398,13 +345,65 @@ export const CoinBox = (props: {
         selectedGroup.offset;
 
       setCoinCount(selectedGroup.cents, newCount);
+      if (selectedGroup.count != newCount) {
+        if (timer) {
+          clearTimeout(timer);
+          setTimer(null);
+        }
+        setSelectedGroup((g) => {
+          if (!g) {
+            return null;
+          }
+          return {
+            ...g,
+            hasMoved: true,
+          };
+        });
+      }
     }
   };
 
   const handlePointerUp = (event: React.PointerEvent) => {
     if (previousCoinBox) return;
 
+    if (timer) {
+      clearTimeout(timer);
+      setTimer(null);
+    }
+
     if (selectedGroup) {
+      if (!selectedGroup.hasMoved) {
+        let currentElement: HTMLElement | null = event.target as HTMLElement;
+        let targetCents = 0;
+        let targetCentCount = 0;
+        let targetTop = 0;
+        let targetHeight = 0;
+
+        while (currentElement !== null) {
+          if (currentElement.classList.contains("coin-stack-group")) {
+            let box = currentElement.getBoundingClientRect();
+            targetTop = box.top;
+            targetHeight = box.height;
+            targetCentCount =
+              currentElement.getElementsByClassName("coin").length;
+          }
+          if (currentElement.classList.contains("coin-group")) {
+            targetCents = parseInt(currentElement.dataset["value"] ?? "0");
+            break;
+          }
+          currentElement = currentElement.parentElement;
+        }
+
+        if (targetCents !== 0 && targetHeight !== 0) {
+          let newCount =
+            targetCentCount -
+            Math.round(
+              ((event.clientY - targetTop) / targetHeight) * targetCentCount
+            );
+          setCoinCount(targetCents, newCount);
+        }
+      }
+
       setSelectedGroup(null);
     }
   };
