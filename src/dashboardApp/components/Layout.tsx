@@ -171,7 +171,7 @@ export const Layout = () => {
                   <ListItemIcon>
                     <LocalAtm />
                   </ListItemIcon>
-                  <ListItemText primary="Register" />
+                  <ListItemText primary={t("layout.register")} />
                 </ListItemButton>
               )}
             </NavLink>
@@ -250,7 +250,7 @@ export const Layout = () => {
                   <ListItemIcon>
                     <PriceChangeOutlined />
                   </ListItemIcon>
-                  <ListItemText primary="Register history" />
+                  <ListItemText primary={t("layout.registerHistory")} />
                 </ListItemButton>
               )}
             </NavLink>

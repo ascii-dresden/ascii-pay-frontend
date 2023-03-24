@@ -5,6 +5,7 @@ import {
   Button,
   ButtonGroup,
   ClickAwayListener,
+  Divider,
   Grow,
   ListItemIcon,
   ListItemText,
@@ -70,7 +71,7 @@ export const AccountListRowActionButton = (props: {
       >
         {props.hidePrimaryAction ? null : (
           <Button component={Link} to={`/accounts/${props.account.id}`}>
-            Profile
+            Details
           </Button>
         )}
         <Button
@@ -134,6 +135,7 @@ export const AccountListRowActionButton = (props: {
                     </ListItemIcon>
                     <ListItemText>Active sessions</ListItemText>
                   </MenuItem>
+                  <Divider />
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenDeleteModal)}
                   >

@@ -5,6 +5,7 @@ import {
   Button,
   ButtonGroup,
   ClickAwayListener,
+  Divider,
   Grow,
   ListItemIcon,
   ListItemText,
@@ -112,6 +113,7 @@ export const ProductListRowActionButton = (props: {
                     </ListItemIcon>
                     <ListItemText>Edit product details</ListItemText>
                   </MenuItem>
+                  <Divider />
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenDeleteModal)}
                   >

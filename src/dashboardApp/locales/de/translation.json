@@ -13,6 +13,8 @@
     "transactions": "Transaktionen",
     "deployment": "Verteilung",
     "terminal": "Terminal",
+    "register": "Kasse",
+    "registerHistory": "Kassenverlauf",
     "logout": "Abmelden",
     "rowsPerPage": "Zeilen pro Seite",
     "rowsPerPageAll": "Alle",
