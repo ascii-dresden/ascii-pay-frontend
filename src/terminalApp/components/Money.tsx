@@ -11,8 +11,9 @@ function formatFloatString(nStr: string): string {
   return x1 + x2;
 }
 
-export function moneyToString(value: number): string {
-  return formatFloatString((value / 100).toFixed(2)) + " €";
+export function moneyToString(value: number, suffix?: string): string {
+  let s = suffix ?? " €";
+  return formatFloatString((value / 100).toFixed(2)) + s;
 }
 
 export const Money = (props: { value: number; compact?: boolean }) => {

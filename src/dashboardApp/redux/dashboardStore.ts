@@ -5,6 +5,8 @@ import { userApi } from "./api/userApi";
 import { productApi } from "./api/productApi";
 import { accountApi } from "./api/accountApi";
 import userReducer from "./features/userSlice";
+import registerReducer from "./features/registerSlice";
+import { registerHistoryApi } from "./api/registerHistoryApi";
 
 export const dashboardStore = configureStore({
   reducer: {
@@ -12,7 +14,9 @@ export const dashboardStore = configureStore({
     [userApi.reducerPath]: userApi.reducer,
     [accountApi.reducerPath]: accountApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
+    [registerHistoryApi.reducerPath]: registerHistoryApi.reducer,
     userState: userReducer,
+    registerState: registerReducer,
   },
   devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>
@@ -21,6 +25,7 @@ export const dashboardStore = configureStore({
       userApi.middleware,
       accountApi.middleware,
       productApi.middleware,
+      registerHistoryApi.middleware,
     ]),
 });
 

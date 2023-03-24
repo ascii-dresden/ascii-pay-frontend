@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from "react";
-import {
-  useTerminalDispatch,
-  useTerminalSelector,
-} from "../redux/terminalStore";
+import React, { useState } from "react";
 import {
   setNote10,
   setNote100,
   setNote20,
   setNote5,
   setNote50,
-} from "../redux/features/registerSlice";
-import { Money, moneyToString } from "../components/Money";
+} from "../../redux/features/registerSlice";
 import styled from "@emotion/styled";
-import note5 from "../../assets/register/note5.png";
-import note10 from "../../assets/register/note10.png";
-import note20 from "../../assets/register/note20.png";
-import note50 from "../../assets/register/note50.png";
-import note100 from "../../assets/register/note100.png";
+import note5 from "../../../assets/register/note5.png";
+import note10 from "../../../assets/register/note10.png";
+import note20 from "../../../assets/register/note20.png";
+import note50 from "../../../assets/register/note50.png";
+import note100 from "../../../assets/register/note100.png";
+import { moneyToString } from "../../../terminalApp/components/Money";
+import {
+  useDashboardDispatch,
+  useDashboardSelector,
+} from "../../redux/dashboardStore";
 
 const StyledNoteBox = styled.div`
-  position: absolute;
+  position: relative;
   left: 0;
   top: 0;
-  height: 100%;
-  width: 100%;
+  height: 15em;
+  width: 54em;
+  user-select: none;
 
   background-color: #424242;
   color: #fff;
@@ -40,7 +41,7 @@ const StyledNoteBox = styled.div`
   }
 
   .note-stack-group {
-    height: 25.7em;
+    height: 9em;
     position: relative;
     display: flex;
     flex-direction: column-reverse;
@@ -59,7 +60,7 @@ const StyledNoteBox = styled.div`
     }
 
     &:not(:first-of-type) {
-      margin-bottom: -3em;
+      margin-bottom: -3.3em;
     }
 
     &:not(.previous) ~ .previous {
@@ -114,6 +115,19 @@ const StyledNoteBox = styled.div`
   //    margin-bottom: -2.5em !important;
   //  }
   //}
+
+  // Group notes in one stack
+  .note-bundle:not(:last-of-type):not(:nth-last-of-type(1)):not(
+      :nth-last-of-type(2)
+    ):not(:nth-last-of-type(3)):not(:nth-last-of-type(4)) {
+    & + .note,
+    & + .note + .note,
+    & + .note + .note + .note,
+    & + .note + .note + .note + .note,
+    & + .note + .note + .note + .note + .note {
+      margin-bottom: -3.9em !important;
+    }
+  }
 `;
 
 const NoteGroup = (props: {
@@ -162,20 +176,18 @@ const NoteGroup = (props: {
       <div className="note-stack-group">{stacks}</div>
       <div className="note-group-sum">
         <span>{props.count}</span>
-        <Money value={props.count * props.centValue} />
+        <span>{moneyToString(props.count * props.centValue)}</span>
       </div>
     </div>
   );
 };
 
-export const NoteBox = (props: {
-  setAppClass: (appClass: string | null) => void;
-}) => {
-  const noteBox = useTerminalSelector((state) => state.registerState.noteBox);
-  const previousNoteBox = useTerminalSelector(
+export const NoteBox = () => {
+  const noteBox = useDashboardSelector((state) => state.registerState.noteBox);
+  const previousNoteBox = useDashboardSelector(
     (state) => state.registerState.previous?.noteBox
   );
-  const dispatch = useTerminalDispatch();
+  const dispatch = useDashboardDispatch();
 
   const [selectedGroup, setSelectedGroup] = useState(
     null as {
@@ -186,13 +198,6 @@ export const NoteBox = (props: {
       offset: number;
     } | null
   );
-
-  useEffect(() => {
-    props.setAppClass("note-box-body");
-    return () => {
-      props.setAppClass(null);
-    };
-  }, [props.setAppClass]);
 
   const getNoteCount = (cents: number) => {
     switch (cents) {

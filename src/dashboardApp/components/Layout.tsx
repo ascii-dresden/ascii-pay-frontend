@@ -26,7 +26,9 @@ import {
   AccountCircle,
   Coffee,
   Home,
+  LocalAtm,
   Menu,
+  PriceChangeOutlined,
   PublicOutlined,
   Store,
 } from "@mui/icons-material";
@@ -155,6 +157,25 @@ export const Layout = () => {
               )}
             </NavLink>
           </ListItem>
+          <ListItem disablePadding>
+            <NavLink
+              to="/register"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <LocalAtm />
+                  </ListItemIcon>
+                  <ListItemText primary="Register" />
+                </ListItemButton>
+              )}
+            </NavLink>
+          </ListItem>
           <ListSubheader component="div">
             {t("layout.administration")}
           </ListSubheader>
@@ -211,6 +232,25 @@ export const Layout = () => {
                     <PublicOutlined />
                   </ListItemIcon>
                   <ListItemText primary={t("layout.transactions")} />
+                </ListItemButton>
+              )}
+            </NavLink>
+          </ListItem>
+          <ListItem disablePadding>
+            <NavLink
+              to="/registerHistory"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <PriceChangeOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary="Register history" />
                 </ListItemButton>
               )}
             </NavLink>
