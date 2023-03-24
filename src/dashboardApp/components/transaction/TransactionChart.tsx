@@ -50,31 +50,20 @@ export const TransactionChart = (props: {
   let seriesData: SeriesData[] = [];
 
   let latest: SeriesData;
-  if (props.previousTransactions.length > 0) {
-    let balance: CoinAmountDto = {};
-    for (let transaction of props.previousTransactions) {
-      let price = getTransactionSum(transaction);
-      balance = subCoinAmount(balance, price);
-    }
-
-    latest = {
-      x: props.startDate ?? new Date(),
-      y: balance.Cent ?? 0,
-      price: {},
-      beforeBalance: balance,
-      afterBalance: balance,
-      isStatic: true,
-    };
-  } else {
-    latest = {
-      x: props.startDate ?? new Date(),
-      y: props.account.balance.Cent ?? 0,
-      price: {},
-      beforeBalance: {},
-      afterBalance: {},
-      isStatic: true,
-    };
+  let balance: CoinAmountDto = {};
+  for (let transaction of props.previousTransactions) {
+    let price = getTransactionSum(transaction);
+    balance = subCoinAmount(balance, price);
   }
+
+  latest = {
+    x: props.startDate ?? new Date(),
+    y: balance.Cent ?? 0,
+    price: {},
+    beforeBalance: balance,
+    afterBalance: balance,
+    isStatic: true,
+  };
   seriesData.push(latest);
 
   let min = props.account.balance.Cent ?? 0;
