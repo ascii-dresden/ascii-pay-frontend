@@ -21,10 +21,13 @@ const SearchContainer = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   userSelect: "none",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
+  [theme.breakpoints.up("xs")]: {
+    marginLeft: theme.spacing(2),
     width: "auto",
     minWidth: "15rem",
+  },
+  [theme.breakpoints.up("lg")]: {
+    marginLeft: theme.spacing(3),
   },
 }));
 

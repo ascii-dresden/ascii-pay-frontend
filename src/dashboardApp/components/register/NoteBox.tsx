@@ -86,14 +86,30 @@ const StyledNoteBox = styled.div`
     line-height: 1.1em;
     height: 1.1em;
 
-    & > span:first-of-type {
+    & > input {
       position: absolute;
       left: 0;
       width: 5em;
       text-align: center;
+
+      appearance: textfield;
+      color: #fff;
+      background-color: transparent;
+      border: none;
+      outline: none;
+      font-size: 0.9em;
+      margin: 0;
+      padding: 0 0 0.2em;
+
+      transition: border-bottom 0.2s;
+      border-bottom: solid 0.2em rgba(255, 255, 255, 0.2);
+
+      &:focus {
+        border-bottom: solid 0.2rem #ffee58;
+      }
     }
 
-    & > span:last-of-type {
+    & > span {
       position: absolute;
       right: 0;
       font-size: 0.8em;
@@ -136,6 +152,7 @@ const NoteGroup = (props: {
   centValue: number;
   count: number;
   previousCount: number;
+  setCount: (count: number) => void;
 }) => {
   const stacks = Array.from(
     { length: Math.max(1, Math.max(props.count, props.previousCount)) },
@@ -175,7 +192,11 @@ const NoteGroup = (props: {
       <span>{props.name}</span>
       <div className="note-stack-group">{stacks}</div>
       <div className="note-group-sum">
-        <span>{props.count}</span>
+        <input
+          type="number"
+          value={props.count}
+          onChange={(e) => props.setCount(parseInt(e.target.value))}
+        />
         <span>{moneyToString(props.count * props.centValue)}</span>
       </div>
     </div>
@@ -381,6 +402,7 @@ export const NoteBox = () => {
           centValue={10000}
           count={noteBox.note100}
           previousCount={previousNoteBox?.note100 ?? 0}
+          setCount={(c) => setNoteCount(10000, c)}
         />
       </div>
 
@@ -391,6 +413,7 @@ export const NoteBox = () => {
           centValue={5000}
           count={noteBox.note50}
           previousCount={previousNoteBox?.note50 ?? 0}
+          setCount={(c) => setNoteCount(5000, c)}
         />
       </div>
 
@@ -401,6 +424,7 @@ export const NoteBox = () => {
           centValue={2000}
           count={noteBox.note20}
           previousCount={previousNoteBox?.note20 ?? 0}
+          setCount={(c) => setNoteCount(2000, c)}
         />
       </div>
 
@@ -411,6 +435,7 @@ export const NoteBox = () => {
           centValue={1000}
           count={noteBox.note10}
           previousCount={previousNoteBox?.note10 ?? 0}
+          setCount={(c) => setNoteCount(1000, c)}
         />
       </div>
 
@@ -421,6 +446,7 @@ export const NoteBox = () => {
           centValue={500}
           count={noteBox.note5}
           previousCount={previousNoteBox?.note5 ?? 0}
+          setCount={(c) => setNoteCount(500, c)}
         />
       </div>
     </StyledNoteBox>

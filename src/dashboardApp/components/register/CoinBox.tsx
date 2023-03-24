@@ -154,14 +154,30 @@ const StyledCoinBox = styled.div`
     line-height: 1.1em;
     height: 1.1em;
 
-    & > span:first-of-type {
+    & > input {
       position: absolute;
       left: 0;
       width: 3em;
       text-align: center;
+
+      appearance: textfield;
+      color: #fff;
+      background-color: transparent;
+      border: none;
+      outline: none;
+      font-size: 0.9em;
+      margin: 0;
+      padding: 0 0 0.2em;
+
+      transition: border-bottom 0.2s;
+      border-bottom: solid 0.2em rgba(255, 255, 255, 0.2);
+
+      &:focus {
+        border-bottom: solid 0.2rem #ffee58;
+      }
     }
 
-    & > span:last-of-type {
+    & > span {
       position: absolute;
       right: 0;
       font-size: 0.8em;
@@ -413,6 +429,7 @@ export const CoinBox = () => {
           centValue={200}
           count={coinBox.coin200}
           previousCount={previousCoinBox?.coin200 ?? 0}
+          setCount={(c) => setCoinCount(200, c)}
         />
       </div>
 
@@ -423,6 +440,7 @@ export const CoinBox = () => {
           centValue={100}
           count={coinBox.coin100}
           previousCount={previousCoinBox?.coin100 ?? 0}
+          setCount={(c) => setCoinCount(100, c)}
         />
       </div>
 
@@ -433,6 +451,7 @@ export const CoinBox = () => {
           centValue={50}
           count={coinBox.coin50}
           previousCount={previousCoinBox?.coin50 ?? 0}
+          setCount={(c) => setCoinCount(50, c)}
         />
       </div>
 
@@ -443,6 +462,7 @@ export const CoinBox = () => {
           centValue={20}
           count={coinBox.coin20}
           previousCount={previousCoinBox?.coin20 ?? 0}
+          setCount={(c) => setCoinCount(20, c)}
         />
       </div>
 
@@ -453,6 +473,7 @@ export const CoinBox = () => {
           centValue={10}
           count={coinBox.coin10}
           previousCount={previousCoinBox?.coin10 ?? 0}
+          setCount={(c) => setCoinCount(10, c)}
         />
       </div>
 
@@ -463,6 +484,7 @@ export const CoinBox = () => {
           centValue={5}
           count={coinBox.coin5}
           previousCount={previousCoinBox?.coin5 ?? 0}
+          setCount={(c) => setCoinCount(5, c)}
         />
       </div>
 
@@ -473,6 +495,7 @@ export const CoinBox = () => {
           centValue={2}
           count={coinBox.coin2}
           previousCount={previousCoinBox?.coin2 ?? 0}
+          setCount={(c) => setCoinCount(2, c)}
         />
         <CoinGroup
           name="1 CENT"
@@ -480,6 +503,7 @@ export const CoinBox = () => {
           centValue={1}
           count={coinBox.coin1}
           previousCount={previousCoinBox?.coin1 ?? 0}
+          setCount={(c) => setCoinCount(1, c)}
         />
       </div>
     </StyledCoinBox>
@@ -492,6 +516,7 @@ const CoinGroup = (props: {
   centValue: number;
   count: number;
   previousCount: number;
+  setCount: (count: number) => void;
 }) => {
   const maxCoinIndex = props.stackCount * 5;
 
@@ -542,7 +567,11 @@ const CoinGroup = (props: {
       <span>{props.name}</span>
       <div className="coin-stack-group">{stacks}</div>
       <div className="coin-group-sum">
-        <span>{props.count}</span>
+        <input
+          type="number"
+          value={props.count}
+          onChange={(e) => props.setCount(parseInt(e.target.value))}
+        />
         <span>{moneyToString(props.count * props.centValue)}</span>
       </div>
     </div>

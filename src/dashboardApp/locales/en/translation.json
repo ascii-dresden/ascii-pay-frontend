@@ -13,6 +13,8 @@
     "transactions": "Transactions",
     "deployment": "Deployment",
     "terminal": "Terminal",
+    "register": "Register",
+    "registerHistory": "Register history",
     "logout": "Logout",
     "rowsPerPage": "Rows per page",
     "rowsPerPageAll": "All",
