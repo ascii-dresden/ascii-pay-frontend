@@ -145,6 +145,7 @@ const AuthMethodRowPasswordBasedMissing = (props: {
   account: AccountDto;
   setResetToken: (token: string | null) => void;
 }) => {
+  const { t } = useTranslation();
   const [createResetToken, { isLoading, isError, error, isSuccess, data }] =
     useCreateAccountPasswordResetTokenMutation();
 
@@ -174,9 +175,11 @@ const AuthMethodRowPasswordBasedMissing = (props: {
           </Avatar>
         </TableCell>
         <TableCell>
-          <Typography>Password authentication</Typography>
+          <Typography>
+            {t("account.authentication.passwordAuthentication")}
+          </Typography>
           <Typography variant="caption" color="grey">
-            Unset
+            {t("account.authentication.passwordUnset")}
           </Typography>
         </TableCell>
         <TableCell align="right">
@@ -186,7 +189,7 @@ const AuthMethodRowPasswordBasedMissing = (props: {
               loading={isLoading}
               variant="outlined"
             >
-              Setup
+              {t("account.authentication.passwordSetup")}
             </LoadingButton>
           </ButtonGroup>
         </TableCell>
@@ -200,6 +203,7 @@ const AuthMethodRowPasswordBasedResetToken = (props: {
   resetToken: string;
   setResetToken: (token: string | null) => void;
 }) => {
+  const { t } = useTranslation();
   const handleAction = () => {
     props.setResetToken(null);
   };
@@ -215,14 +219,18 @@ const AuthMethodRowPasswordBasedResetToken = (props: {
           </Avatar>
         </TableCell>
         <TableCell>
-          <Typography>Password authentication</Typography>
+          <Typography>
+            {t("account.authentication.passwordAuthentication")}
+          </Typography>
           <Link href={link}>
             <Typography variant="caption">{link}</Typography>
           </Link>
         </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">
-            <Button onClick={handleAction}>Revoke</Button>
+            <Button onClick={handleAction}>
+              {t("account.authentication.passwordRevoke")}
+            </Button>
           </ButtonGroup>
         </TableCell>
       </TableRow>
@@ -234,6 +242,7 @@ const AuthMethodRowPasswordBased = (props: {
   account: AccountDto;
   auth: AuthMethodDtoPasswordBased;
 }) => {
+  const { t } = useTranslation();
   const [deletePassword, { isLoading, isError, error, isSuccess }] =
     useDeleteAccountPasswordAuthenticationMutation();
 
@@ -260,7 +269,9 @@ const AuthMethodRowPasswordBased = (props: {
           </Avatar>
         </TableCell>
         <TableCell>
-          <Typography>Password authentication</Typography>
+          <Typography>
+            {t("account.authentication.passwordAuthentication")}
+          </Typography>
           <Typography variant="caption">{props.auth.username}</Typography>
         </TableCell>
         <TableCell align="right">
@@ -270,7 +281,7 @@ const AuthMethodRowPasswordBased = (props: {
               loading={isLoading}
               variant="outlined"
             >
-              Revoke
+              {t("account.authentication.passwordRevoke")}
             </LoadingButton>
           </ButtonGroup>
         </TableCell>
@@ -283,6 +294,7 @@ const AuthMethodRowNfcBased = (props: {
   account: AccountDto;
   auth: AuthMethodDtoNfcBased;
 }) => {
+  const { t } = useTranslation();
   const [deleteNfc, { isLoading, isError, error, isSuccess }] =
     useDeleteAccountNfcAuthenticationMutation();
 
@@ -314,7 +326,9 @@ const AuthMethodRowNfcBased = (props: {
           </Avatar>
         </TableCell>
         <TableCell>
-          <Typography>Nfc card authentication</Typography>
+          <Typography>
+            {t("account.authentication.nfcAuthentication")}
+          </Typography>
           <Typography variant="caption">{props.auth.name}</Typography>
         </TableCell>
         <TableCell align="right">
@@ -324,7 +338,7 @@ const AuthMethodRowNfcBased = (props: {
               loading={isLoading}
               variant="outlined"
             >
-              Delete
+              {t("account.authentication.nfcDelete")}
             </LoadingButton>
           </ButtonGroup>
         </TableCell>
@@ -334,6 +348,7 @@ const AuthMethodRowNfcBased = (props: {
 };
 
 const AuthMethodPublicTab = (props: { account: AccountDto }) => {
+  const { t } = useTranslation();
   const [deletePublicTab, { isLoading, isError, error, isSuccess }] =
     useDeleteAccountPublicTabAuthenticationMutation();
 
@@ -360,8 +375,12 @@ const AuthMethodPublicTab = (props: { account: AccountDto }) => {
           </Avatar>
         </TableCell>
         <TableCell>
-          <Typography>Public tab</Typography>
-          <Typography variant="caption">enabled</Typography>
+          <Typography>
+            {t("account.authentication.publicTabAuthentication")}
+          </Typography>
+          <Typography variant="caption">
+            {t("account.authentication.publicTabEnabled")}
+          </Typography>
         </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" aria-label="outlined button group">
@@ -370,7 +389,7 @@ const AuthMethodPublicTab = (props: { account: AccountDto }) => {
               loading={isLoading}
               variant="outlined"
             >
-              Disable
+              {t("account.authentication.publicTabDisable")}
             </LoadingButton>
           </ButtonGroup>
         </TableCell>
@@ -380,6 +399,7 @@ const AuthMethodPublicTab = (props: { account: AccountDto }) => {
 };
 
 const AuthMethodPublicTabDisabled = (props: { account: AccountDto }) => {
+  const { t } = useTranslation();
   const [updatePublicTab, { isLoading, isError, error, isSuccess }] =
     useUpdateAccountPublicTabAuthenticationMutation();
 
@@ -406,9 +426,11 @@ const AuthMethodPublicTabDisabled = (props: { account: AccountDto }) => {
           </Avatar>
         </TableCell>
         <TableCell>
-          <Typography>Public tab</Typography>
+          <Typography>
+            {t("account.authentication.publicTabAuthentication")}
+          </Typography>
           <Typography variant="caption" color="grey">
-            disabled
+            {t("account.authentication.publicTabDisabled")}
           </Typography>
         </TableCell>
         <TableCell align="right">
@@ -418,7 +440,7 @@ const AuthMethodPublicTabDisabled = (props: { account: AccountDto }) => {
               loading={isLoading}
               variant="outlined"
             >
-              Enable
+              {t("account.authentication.publicTabEnable")}
             </LoadingButton>
           </ButtonGroup>
         </TableCell>

@@ -21,12 +21,14 @@ import { useUpdateAccountMutation } from "../../redux/api/accountApi";
 import { AccountDto, RoleDto, SaveAccountDto } from "../../../common/contracts";
 import { Close } from "@mui/icons-material";
 import { useDashboardSelector } from "../../redux/dashboardStore";
+import { useTranslation } from "react-i18next";
 
 export const UpdateAccountDialog = (props: {
   account: AccountDto;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -82,7 +84,7 @@ export const UpdateAccountDialog = (props: {
       fullScreen={fullScreen}
     >
       <DialogTitle component="div">
-        <Typography variant="h5">Edit account</Typography>
+        <Typography variant="h5">{t("account.edit.updateTitle")}</Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}
@@ -99,14 +101,14 @@ export const UpdateAccountDialog = (props: {
       <DialogContent dividers={true}>
         <Box pt={1}>
           <TextField
-            label="Name"
+            label={t("account.edit.name")}
             fullWidth
             sx={{ mb: "1rem" }}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <TextField
-            label="Email"
+            label={t("account.edit.email")}
             fullWidth
             sx={{ mb: "1rem" }}
             value={email}
@@ -114,16 +116,16 @@ export const UpdateAccountDialog = (props: {
           />
           {user?.role === "Admin" ? (
             <TextField
-              label="Role"
+              label={t("account.edit.role")}
               fullWidth
               select
               sx={{ mb: "1rem" }}
               value={role}
               onChange={(e) => setRole(e.target.value as RoleDto)}
             >
-              <MenuItem value="Basic">Basic</MenuItem>
-              <MenuItem value="Member">Member</MenuItem>
-              <MenuItem value="Admin">Admin</MenuItem>
+              <MenuItem value="Basic">{t("account.role.basic")}</MenuItem>
+              <MenuItem value="Member">{t("account.role.member")}</MenuItem>
+              <MenuItem value="Admin">{t("account.role.admin")}</MenuItem>
             </TextField>
           ) : null}
 
@@ -135,7 +137,7 @@ export const UpdateAccountDialog = (props: {
                   onChange={(e) => setEnableMonthlyMailReport(e.target.checked)}
                 />
               }
-              label="Receive monthly reports by email"
+              label={t("account.edit.enableMonthlyMailReport")}
             />
             <FormControlLabel
               control={
@@ -146,7 +148,7 @@ export const UpdateAccountDialog = (props: {
                   }
                 />
               }
-              label="Automatically use available stamps during payment"
+              label={t("account.edit.enableAutomaticStampUsage")}
             />
           </FormGroup>
         </Box>
@@ -159,7 +161,7 @@ export const UpdateAccountDialog = (props: {
           onClick={handleSubmit}
           loading={isLoading}
         >
-          Save changes
+          {t("account.edit.updateAction")}
         </LoadingButton>
       </DialogActions>
     </Dialog>
