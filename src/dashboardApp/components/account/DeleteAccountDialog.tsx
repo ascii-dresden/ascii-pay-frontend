@@ -15,12 +15,14 @@ import { toast } from "react-toastify";
 import { useDeleteAccountMutation } from "../../redux/api/accountApi";
 import { AccountDto } from "../../../common/contracts";
 import { Close } from "@mui/icons-material";
+import { Trans, useTranslation } from "react-i18next";
 
 export const DeleteAccountDialog = (props: {
   account: AccountDto;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -49,7 +51,7 @@ export const DeleteAccountDialog = (props: {
       fullScreen={fullScreen}
     >
       <DialogTitle component="div">
-        <Typography variant="h5">Delete account?</Typography>
+        <Typography variant="h5">{t("account.edit.deleteTitle")}</Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}
@@ -65,9 +67,11 @@ export const DeleteAccountDialog = (props: {
       </DialogTitle>
       <DialogContent dividers={true}>
         <Box pt={1}>
-          Do you want to permanently delete the account{" "}
-          <b>{props.account.name}</b>? This will anonymize all transactions of
-          this account. This action cannot be undone!
+          <Trans
+            i18nKey="account.edit.deleteContent"
+            values={{ name: props.account.name }}
+            components={{ bold: <b /> }}
+          />
         </Box>
       </DialogContent>
       <DialogActions>
@@ -79,7 +83,7 @@ export const DeleteAccountDialog = (props: {
           loading={isLoading}
           color="error"
         >
-          Delete Account
+          {t("account.edit.deleteAction")}
         </LoadingButton>
       </DialogActions>
     </Dialog>

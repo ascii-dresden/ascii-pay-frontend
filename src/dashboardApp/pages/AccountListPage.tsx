@@ -17,7 +17,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { Link as RLink, useNavigate } from "react-router-dom";
+import { Link as RLink } from "react-router-dom";
 import { useGetAllAccountsQuery } from "../redux/api/accountApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -30,10 +30,11 @@ import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { RoleChip } from "../components/account/RoleChip";
 import { AccountListRowActionButton } from "../components/account/AccountListRowActionButton";
 import { usePageTitle } from "../components/usePageTitle";
+import { useTranslation } from "react-i18next";
 
 export const AccountListPage = () => {
+  const { t } = useTranslation();
   const [openModal, setOpenModal] = useState(false);
-  const navigate = useNavigate();
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -45,7 +46,7 @@ export const AccountListPage = () => {
     data: accounts,
   } = useGetAllAccountsQuery();
 
-  usePageTitle("Accounts");
+  usePageTitle(t("layout.accounts"));
 
   useEffect(() => {
     if (isError) {
@@ -61,7 +62,7 @@ export const AccountListPage = () => {
         <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              Accounts
+              {t("layout.accounts")}
             </Typography>
             <Breadcrumbs aria-label="breadcrumb">
               <Link underline="hover" color="inherit" component={RLink} to="/">
@@ -74,7 +75,7 @@ export const AccountListPage = () => {
                 component={RLink}
                 to="/accounts"
               >
-                Accounts
+                {t("layout.accounts")}
               </Link>
             </Breadcrumbs>
           </div>
@@ -86,7 +87,7 @@ export const AccountListPage = () => {
             sx={{ whiteSpace: "nowrap", width: "13rem" }}
             onClick={() => setOpenModal(true)}
           >
-            New account
+            {t("account.action.createAccount")}
           </Button>
         </Toolbar>
       </Box>
@@ -135,9 +136,9 @@ export const AccountListPage = () => {
           <TableHead>
             <TableRow>
               <TableCell width={72}></TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell width={250}>Balance</TableCell>
+              <TableCell>{t("account.name")}</TableCell>
+              <TableCell>{t("account.email")}</TableCell>
+              <TableCell width={250}>{t("account.balance")}</TableCell>
               <TableCell width={150}></TableCell>
             </TableRow>
           </TableHead>
@@ -154,7 +155,13 @@ export const AccountListPage = () => {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[
+                  5,
+                  10,
+                  25,
+                  { label: t("layout.rowsPerPageAll"), value: -1 },
+                ]}
+                labelRowsPerPage={t("layout.rowsPerPage")}
                 colSpan={5}
                 count={accounts.length}
                 rowsPerPage={rowsPerPage}

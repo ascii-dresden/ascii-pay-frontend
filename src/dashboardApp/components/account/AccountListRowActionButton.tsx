@@ -27,11 +27,13 @@ import { CreatePaymentDialog } from "../transaction/CreatePaymentDialog";
 import { AccountAuthenticationDialog } from "./AccountAuthenticationDialog";
 import { AccountSessionDialog } from "./AccountSessionDialog";
 import { DeleteAccountDialog } from "./DeleteAccountDialog";
+import { useTranslation } from "react-i18next";
 
 export const AccountListRowActionButton = (props: {
   account: AccountDto;
   hidePrimaryAction?: boolean;
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -71,7 +73,7 @@ export const AccountListRowActionButton = (props: {
       >
         {props.hidePrimaryAction ? null : (
           <Button component={Link} to={`/accounts/${props.account.id}`}>
-            Details
+            {t("account.action.details")}
           </Button>
         )}
         <Button
@@ -109,7 +111,7 @@ export const AccountListRowActionButton = (props: {
                     <ListItemIcon>
                       <ShoppingCartOutlined fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Payment</ListItemText>
+                    <ListItemText>{t("account.action.payment")}</ListItemText>
                   </MenuItem>
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenEditModal)}
@@ -117,7 +119,9 @@ export const AccountListRowActionButton = (props: {
                     <ListItemIcon>
                       <Edit fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Edit account details</ListItemText>
+                    <ListItemText>
+                      {t("account.action.editAccount")}
+                    </ListItemText>
                   </MenuItem>
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenAuthModal)}
@@ -125,7 +129,9 @@ export const AccountListRowActionButton = (props: {
                     <ListItemIcon>
                       <LockOutlined fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Authentication methods</ListItemText>
+                    <ListItemText>
+                      {t("account.action.authenticationMethods")}
+                    </ListItemText>
                   </MenuItem>
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenSessionModal)}
@@ -133,7 +139,9 @@ export const AccountListRowActionButton = (props: {
                     <ListItemIcon>
                       <Token fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Active sessions</ListItemText>
+                    <ListItemText>
+                      {t("account.action.activeSessions")}
+                    </ListItemText>
                   </MenuItem>
                   <Divider />
                   <MenuItem
@@ -142,7 +150,9 @@ export const AccountListRowActionButton = (props: {
                     <ListItemIcon>
                       <DeleteOutline fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Delete account</ListItemText>
+                    <ListItemText>
+                      {t("account.action.deleteAccount")}
+                    </ListItemText>
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>

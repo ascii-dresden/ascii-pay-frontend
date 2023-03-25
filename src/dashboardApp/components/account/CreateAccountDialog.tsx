@@ -20,11 +20,13 @@ import { toast } from "react-toastify";
 import { useCreateAccountMutation } from "../../redux/api/accountApi";
 import { RoleDto, SaveAccountDto } from "../../../common/contracts";
 import { Close } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 export const CreateAccountDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -74,7 +76,7 @@ export const CreateAccountDialog = (props: {
       fullScreen={fullScreen}
     >
       <DialogTitle component="div">
-        <Typography variant="h5">Create a new account</Typography>
+        <Typography variant="h5">{t("account.edit.createTitle")}</Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}
@@ -91,30 +93,30 @@ export const CreateAccountDialog = (props: {
       <DialogContent dividers={true}>
         <Box pt={1}>
           <TextField
-            label="Name"
+            label={t("account.edit.name")}
             fullWidth
             sx={{ mb: "1rem" }}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <TextField
-            label="Email"
+            label={t("account.edit.email")}
             fullWidth
             sx={{ mb: "1rem" }}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
-            label="Role"
+            label={t("account.edit.role")}
             fullWidth
             select
             sx={{ mb: "1rem" }}
             value={role}
             onChange={(e) => setRole(e.target.value as RoleDto)}
           >
-            <MenuItem value="Basic">Basic</MenuItem>
-            <MenuItem value="Member">Member</MenuItem>
-            <MenuItem value="Admin">Admin</MenuItem>
+            <MenuItem value="Basic">{t("account.role.basic")}</MenuItem>
+            <MenuItem value="Member">{t("account.role.member")}</MenuItem>
+            <MenuItem value="Admin">{t("account.role.admin")}</MenuItem>
           </TextField>
 
           <FormGroup>
@@ -125,7 +127,7 @@ export const CreateAccountDialog = (props: {
                   onChange={(e) => setEnableMonthlyMailReport(e.target.checked)}
                 />
               }
-              label="Receive monthly reports by email"
+              label={t("account.edit.enableMonthlyMailReport")}
             />
             <FormControlLabel
               control={
@@ -136,7 +138,7 @@ export const CreateAccountDialog = (props: {
                   }
                 />
               }
-              label="Automatically use available stamps during payment"
+              label={t("account.edit.enableAutomaticStampUsage")}
             />
           </FormGroup>
         </Box>
@@ -149,7 +151,7 @@ export const CreateAccountDialog = (props: {
           onClick={handleSubmit}
           loading={isLoading}
         >
-          Create Account
+          {t("account.edit.createAction")}
         </LoadingButton>
       </DialogActions>
     </Dialog>

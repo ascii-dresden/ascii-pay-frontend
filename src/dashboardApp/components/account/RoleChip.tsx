@@ -1,28 +1,41 @@
 import { RoleDto } from "../../../common/contracts";
 import { Chip } from "@mui/material";
+import { useTranslation } from "react-i18next";
+
+type Colors =
+  | "default"
+  | "primary"
+  | "secondary"
+  | "error"
+  | "info"
+  | "success"
+  | "warning";
 
 export const RoleChip = (props: { role: RoleDto }) => {
-  let color:
-    | "default"
-    | "primary"
-    | "secondary"
-    | "error"
-    | "info"
-    | "success"
-    | "warning" = "default";
+  const { t } = useTranslation();
 
-  if (props.role === "Member") {
-    color = "primary";
-  }
-  if (props.role === "Admin") {
-    color = "error";
+  let label: string;
+  let color: Colors;
+  switch (props.role) {
+    case "Basic":
+      label = t("account.role.basic");
+      color = "default";
+      break;
+    case "Member":
+      label = t("account.role.member");
+      color = "primary";
+      break;
+    case "Admin":
+      label = t("account.role.admin");
+      color = "error";
+      break;
   }
 
   return (
     <Chip
       sx={{ mr: 2 }}
       size="small"
-      label={props.role}
+      label={label}
       variant="outlined"
       color={color}
     />

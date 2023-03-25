@@ -21,18 +21,61 @@
     "loading": "Laden…"
   },
   "account": {
+    "name": "Name",
     "balance": "Guthaben",
-    "email": "Email",
+    "email": "E-Mail",
     "usedCredit": "Verbrauchtes Guthaben",
     "loadedCredit": "Aufgeladenes Guthaben",
     "balanceTrend": "Guthabentrend",
     "heatmap": "Wochenübersicht",
     "action": {
+      "details": "Details",
       "payment": "Bezahlen",
+      "createAccount": "Konto erstellen",
       "editAccount": "Kontodetails bearbeiten",
+      "deleteAccount": "Konto löschen",
       "authenticationMethods": "Authentifizierungsmethoden",
       "activeSessions": "Aktive Sitzungen",
       "estimatedBalance": "Geschätztes Guthaben"
+    },
+    "role": {
+      "basic": "Standard",
+      "member": "Mitglied",
+      "admin": "Admin"
+    },
+    "edit": {
+      "createTitle": "Konto erstellen",
+      "createAction": "Konto erstellen",
+      "updateTitle": "Konto bearbeiten",
+      "updateAction": "Änderungen speichern",
+      "deleteTitle": "Konto löschen?",
+      "deleteAction": "Konto löschen",
+      "deleteContent": "Möchten Sie das Konto <bold>{{name}}</bold> dauerhaft löschen? Dies wird alle Transaktionen des Kontos anonymisieren. Diese Aktion kann nicht wiederrufen werden!",
+      "name": "Name",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "enableMonthlyMailReport": "Monatliche Zusammenfassung per E-Mail empfangen",
+      "enableAutomaticStampUsage": "Verfügbare Stempel automatisch benutzen"
+    },
+    "authentication": {
+      "passwordAuthentication": "Benutzername/Passwort",
+      "passwordUnset": "Entfernen",
+      "passwordSetup": "Einrichten",
+      "passwordRevoke": "Entfernen",
+      "nfcAuthentication": "NFC-Karte",
+      "nfcDelete": "Entfernen",
+      "publicTabAuthentication": "Anschreibeliste",
+      "publicTabEnable": "Aktivieren",
+      "publicTabEnabled": "aktiviert",
+      "publicTabDisable": "Deaktivieren",
+      "publicTabDisabled": "deaktiviert"
+    },
+    "session": {
+      "methodPasswordBased": "Benutzername/Passwort",
+      "methodNfcBased": "NFC-Karte",
+      "methodPublicTab": "Anschreibeliste",
+      "methodPasswordResetToken": "Passwort zurücksetzen",
+      "revoke": "Entfernen"
     }
   },
   "date": {

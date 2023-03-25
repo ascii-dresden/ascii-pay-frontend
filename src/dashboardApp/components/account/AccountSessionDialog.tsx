@@ -25,12 +25,14 @@ import {
 } from "../../redux/api/accountApi";
 import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
+import { useTranslation } from "react-i18next";
 
 export const AccountSessionDialog = (props: {
   account: AccountDto;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -55,7 +57,9 @@ export const AccountSessionDialog = (props: {
     return (
       <Dialog open={props.open} onClose={() => props.setOpen(false)}>
         <DialogTitle component="div">
-          <Typography variant="h5">Active sessions</Typography>
+          <Typography variant="h5">
+            {t("account.action.activeSessions")}
+          </Typography>
           <IconButton
             aria-label="close"
             onClick={() => props.setOpen(false)}
@@ -98,7 +102,7 @@ export const AccountSessionDialog = (props: {
     >
       <DialogTitle component="div">
         <Typography variant="h5" onClick={() => trigger(props.account.id)}>
-          Active sessions
+          {t("account.action.activeSessions")}
         </Typography>
         <IconButton
           aria-label="close"
@@ -127,10 +131,11 @@ export const AccountSessionDialog = (props: {
 };
 
 const SessionRow = (props: { account: AccountDto; session: SessionDto }) => {
+  const { t, i18n } = useTranslation();
   const [deleteSession, { isLoading, isError, error, isSuccess }] =
     useDeleteAccountSessionMutation();
 
-  const format = new Intl.DateTimeFormat("de-DE", {
+  const format = new Intl.DateTimeFormat(i18n.resolvedLanguage, {
     dateStyle: "full",
     timeStyle: "medium",
   });
@@ -152,6 +157,22 @@ const SessionRow = (props: { account: AccountDto; session: SessionDto }) => {
     });
   };
 
+  let label: string;
+  switch (props.session.auth_method) {
+    case "PasswordBased":
+      label = t("account.session.methodPasswordBased");
+      break;
+    case "NfcBased":
+      label = t("account.session.methodNfcBased");
+      break;
+    case "PublicTab":
+      label = t("account.session.methodPublicTab");
+      break;
+    case "PasswordResetToken":
+      label = t("account.session.methodPasswordResetToken");
+      break;
+  }
+
   return (
     <TableRow>
       <TableCell width={72}>
@@ -160,7 +181,7 @@ const SessionRow = (props: { account: AccountDto; session: SessionDto }) => {
         </Avatar>
       </TableCell>
       <TableCell>
-        <Typography>{props.session.auth_method}</Typography>
+        <Typography>{label}</Typography>
         <Typography variant="caption">
           {format.format(new Date(props.session.valid_until))}
         </Typography>
@@ -172,7 +193,7 @@ const SessionRow = (props: { account: AccountDto; session: SessionDto }) => {
             loading={isLoading}
             variant="outlined"
           >
-            Revoke
+            {t("account.session.revoke")}
           </LoadingButton>
         </ButtonGroup>
       </TableCell>

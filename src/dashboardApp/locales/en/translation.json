@@ -21,6 +21,7 @@
     "loading": "Loading…"
   },
   "account": {
+    "name": "Name",
     "balance": "Balance",
     "email": "Email",
     "usedCredit": "Used credit",
@@ -28,11 +29,53 @@
     "balanceTrend": "Balance trend",
     "heatmap": "Heatmap",
     "action": {
+      "details": "Details",
       "payment": "Payment",
+      "createAccount": "Create account",
       "editAccount": "Edit account details",
+      "deleteAccount": "Delete account",
       "authenticationMethods": "Authentication methods",
       "activeSessions": "Active sessions",
       "estimatedBalance": "Estimated balance"
+    },
+    "role": {
+      "basic": "Basic",
+      "member": "Member",
+      "admin": "Admin"
+    },
+    "edit": {
+      "createTitle": "Create a new account",
+      "createAction": "Create account",
+      "updateTitle": "Edit account",
+      "updateAction": "Save changes",
+      "deleteTitle": "Delete account?",
+      "deleteAction": "Delete account",
+      "deleteContent": "Do you want to permanently delete the account <bold>{{name}}</bold>? This will anonymize all transactions of this account. This action cannot be undone!",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "enableMonthlyMailReport": "Receive monthly reports by email",
+      "enableAutomaticStampUsage": "Automatically use available stamps during payment"
+    },
+    "authentication": {
+      "passwordAuthentication": "Password authentication",
+      "passwordUnset": "Unset",
+      "passwordSetup": "Setup",
+      "passwordRevoke": "Revoke",
+      "nfcAuthentication": "Nfc card authentication",
+      "nfcDelete": "Delete",
+      "publicTabAuthentication": "Public tab authentication",
+      "publicTabEnable": "Enable",
+      "publicTabEnabled": "enabled",
+      "publicTabDisable": "Disable",
+      "publicTabDisabled": "disabled"
+    },
+    "session": {
+      "methodPasswordBased": "Username/Password",
+      "methodNfcBased": "Nfc card",
+      "methodPublicTab": "Public tab",
+      "methodPasswordResetToken": "Password reset token",
+      "revoke": "Revoke"
     }
   },
   "date": {

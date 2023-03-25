@@ -102,9 +102,9 @@ export function DashboardApp() {
 
   const i18nConfig = createInstance({
     resources,
-    lng: "en",
+    lng: "de",
     fallbackLng: "en",
-    debug: false,
+    debug: true,
     interpolation: {
       escapeValue: false,
     },

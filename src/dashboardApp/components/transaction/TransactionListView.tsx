@@ -330,10 +330,10 @@ export const TransactionListView = (props: { account: AccountDto }) => {
 };
 
 const TransactionListRow = (props: { transaction: TransactionDto }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [open, setOpen] = React.useState(false);
 
-  const format = new Intl.DateTimeFormat("de-DE", {
+  const format = new Intl.DateTimeFormat(i18n.resolvedLanguage, {
     dateStyle: "full",
     timeStyle: "medium",
   });
