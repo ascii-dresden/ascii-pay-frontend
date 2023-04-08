@@ -20,6 +20,26 @@
     "rowsPerPageAll": "Alle",
     "loading": "Laden…"
   },
+  "setup": {
+    "message": "ascii-pay einrichten",
+    "name": "Name",
+    "email": "E-Mail",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "action": "Admin-Konto erstellen"
+  },
+  "login": {
+    "message": "Willkommen zurück!",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "action": "Anmelden"
+  },
+  "resetPassword": {
+    "message": "Passwort zurücksetzen",
+    "username": "Benutzername",
+    "password": "Password",
+    "action": "Passwort zurücksetzen"
+  },
   "account": {
     "name": "Name",
     "balance": "Guthaben",
@@ -93,7 +113,13 @@
     "total": "Summe",
     "date": "Datum",
     "product": "Produkt",
-    "price": "Preis"
+    "price": "Preis",
+    "totalDeposit": "Einzahlungen",
+    "totalPayout": "Auszahlungen",
+    "systemBalance": "Systemguthaben",
+    "beforeBalance": "Guthaben zuvor",
+    "afterBalance": "Guthaben danach",
+    "balance": "Guthaben"
   },
   "register": {
     "cashBook": "Kassenbuch",
@@ -108,6 +134,57 @@
     "enterCoins": "Münzeingabe",
     "enterNotes": "Scheineingabe",
     "overview": "Übersicht",
-    "calculate": "Berechnungsmodus"
+    "calculate": "Berechnungsmodus",
+    "toggle": "Berechnungsmodus"
+  },
+  "registerHistory": {
+    "date": "Datum",
+    "total": "Summe",
+    "envelope": "Briefumschlag",
+    "remaining": "Kasse",
+    "delete": "Löschen",
+    "deleteTitle": "Kasseneintrag löschen?",
+    "deleteAction": "Kasseneintrag löschen",
+    "deleteContent": "Möchten Sie den Kasseneintrag <bold>{{date}}</bold> ({{money}}) dauerhaft löschen? Diese Aktion kann nicht wiederrufen werden!"
+  },
+  "product": {
+    "name": "Name",
+    "nickname": "Nickname",
+    "price": "Preis",
+    "bonus": "Bonus",
+    "category": "Kategorie",
+    "tags": "Tags",
+    "barcode": "Barcode",
+    "addToTransaction": "Produkt zu Transaktion hinzufgen",
+    "noProducts": "Keine Produkte",
+    "selectPaymentProduct": "Produkt auswählen",
+    "action": {
+      "details": "Details",
+      "edit": "Bearbeiten",
+      "editImage": "Produktbild setzen",
+      "createProduct": "Produkt erstellen",
+      "editProduct": "Produktdetails bearbeiten",
+      "deleteProduct": "Produkt löschen"
+    },
+    "edit": {
+      "createTitle": "Produkt erstellen",
+      "createAction": "Produkt erstellen",
+      "updateTitle": "Produkt bearbeiten",
+      "updateAction": "Änderungen speichern",
+      "deleteTitle": "Produkt löschen?",
+      "deleteAction": "Produkt löschen",
+      "deleteContent": "Möchten Sie das Produkt <bold>{{name}}</bold> dauerhaft löschen? Dies wird alle Transaktionseinträge dieses Produkts anonymisieren. Diese Aktion kann nicht wiederrufen werden!",
+      "updateImageTitle": "Produktbild bearbeiten",
+      "updateImageRemove": "Produktbild entfernen",
+      "updateImageDragHint": "Produktbild hier einfügen",
+      "updateImageClickHint": "oder klicken um Datei auszuwählen"
+    }
+  },
+  "payment": {
+    "title": "Transaktion erstellen",
+    "addItem": "Zu Transaktion hinzufügen",
+    "total": "Summe",
+    "balance": "Neues Guthaben",
+    "action": "Bezahlen"
   }
 }

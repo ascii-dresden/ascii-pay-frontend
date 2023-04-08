@@ -4,6 +4,7 @@ import { ApexOptions } from "apexcharts";
 import { TransactionDto } from "../../../common/contracts";
 import { useTheme } from "@mui/material";
 import styled from "@emotion/styled";
+import { useTranslation } from "react-i18next";
 
 const StyledChart = styled.div`
   .coin-amount-view {
@@ -32,6 +33,7 @@ export const GlobalTransactionChart = (props: {
   endDate?: Date | null;
   onRequestZoom: (startDate: Date, endDate: Date) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   let groupedTransactions = new Map<number, TransactionDto[]>();
 
@@ -126,7 +128,7 @@ export const GlobalTransactionChart = (props: {
 
   let series = [
     {
-      name: "Total deposit",
+      name: t("transactions.totalDeposit"),
       type: "column",
       data: upSeries,
       color:
@@ -135,7 +137,7 @@ export const GlobalTransactionChart = (props: {
           : theme.palette.success.dark,
     },
     {
-      name: "Total payout",
+      name: t("transactions.totalPayout"),
       type: "column",
       data: downSeries,
       color:
@@ -144,7 +146,7 @@ export const GlobalTransactionChart = (props: {
           : theme.palette.error.dark,
     },
     {
-      name: "System balance",
+      name: t("transactions.systemBalance"),
       type: "line",
       data: sumSeries,
       color:

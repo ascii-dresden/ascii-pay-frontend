@@ -107,7 +107,7 @@ function cloneCoins(coins: CoinAmountDto): CoinAmountDto {
 }
 
 export const CoinAmountEdit = (props: {
-  label?: string;
+  label?: string | undefined | null;
   coins: CoinAmountDto;
   onChange: (coins: CoinAmountDto) => void;
   children?: React.ReactNode | React.ReactNode[];

@@ -51,8 +51,10 @@ import { usePageTitle } from "../components/usePageTitle";
 import { moneyToString } from "../../terminalApp/components/Money";
 import { getRegisterHistorySum } from "../../common/registerHistoryUtils";
 import { LoadingButton } from "@mui/lab";
+import { Trans, useTranslation } from "react-i18next";
 
 export const RegisterHistoryListPage = () => {
+  const { t } = useTranslation();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -68,7 +70,7 @@ export const RegisterHistoryListPage = () => {
     data: registerHistories,
   } = useGetAllRegisterHistoriesQuery();
 
-  usePageTitle("Register history");
+  usePageTitle(t("layout.registerHistory"));
 
   useEffect(() => {
     if (isError) {
@@ -89,7 +91,7 @@ export const RegisterHistoryListPage = () => {
     >
       <DatePicker
         views={["year", "month", "day"]}
-        label="Start date"
+        label={t("date.start")}
         value={startDate}
         onChange={(v) => setStartDate(v)}
         disabled={rangePickerDisabled}
@@ -97,7 +99,7 @@ export const RegisterHistoryListPage = () => {
       <Remove sx={{ mx: 1, opacity: rangePickerDisabled ? 0.4 : 1 }} />
       <DatePicker
         views={["year", "month", "day"]}
-        label="End date"
+        label={t("date.end")}
         value={endDate}
         onChange={(v) => setEndDate(v)}
         disabled={rangePickerDisabled}
@@ -111,7 +113,7 @@ export const RegisterHistoryListPage = () => {
         <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              Register history
+              {t("layout.registerHistory")}
             </Typography>
             <Breadcrumbs aria-label="breadcrumb">
               <Link underline="hover" color="inherit" component={RLink} to="/">
@@ -124,7 +126,7 @@ export const RegisterHistoryListPage = () => {
                 component={RLink}
                 to="/registerHistory"
               >
-                Register history
+                {t("layout.registerHistory")}
               </Link>
             </Breadcrumbs>
           </div>
@@ -201,10 +203,10 @@ export const RegisterHistoryListPage = () => {
             <TableHead>
               <TableRow>
                 <TableCell width={72}></TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Total</TableCell>
-                <TableCell>Envelope</TableCell>
-                <TableCell>Remaining</TableCell>
+                <TableCell>{t("registerHistory.date")}</TableCell>
+                <TableCell>{t("registerHistory.total")}</TableCell>
+                <TableCell>{t("registerHistory.envelope")}</TableCell>
+                <TableCell>{t("registerHistory.remaining")}</TableCell>
                 <TableCell width={128}></TableCell>
               </TableRow>
             </TableHead>
@@ -224,8 +226,14 @@ export const RegisterHistoryListPage = () => {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                  colSpan={3}
+                  rowsPerPageOptions={[
+                    5,
+                    10,
+                    25,
+                    { label: t("layout.rowsPerPageAll"), value: -1 },
+                  ]}
+                  labelRowsPerPage={t("layout.rowsPerPage")}
+                  colSpan={6}
                   count={sortedRegisterHistories.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
@@ -255,6 +263,7 @@ const format = new Intl.DateTimeFormat("de-DE", {
 const RegisterHistoryListRow = (props: {
   registerHistory: RegisterHistoryDto;
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
@@ -293,7 +302,9 @@ const RegisterHistoryListRow = (props: {
         </TableCell>
         <TableCell align="right">
           <ButtonGroup variant="outlined" size="large">
-            <Button onClick={() => setOpenDeleteModal(true)}>Delete</Button>
+            <Button onClick={() => setOpenDeleteModal(true)}>
+              {t("registerHistory.delete")}
+            </Button>
           </ButtonGroup>
         </TableCell>
       </TableRow>
@@ -308,7 +319,7 @@ const RegisterHistoryListRow = (props: {
               >
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
+                    <TableCell></TableCell>
                     <TableCell align="right">
                       {moneyToString(10000, "")}
                     </TableCell>
@@ -343,7 +354,7 @@ const RegisterHistoryListRow = (props: {
                     key="source"
                     sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    <TableCell>Total</TableCell>
+                    <TableCell>{t("registerHistory.total")}</TableCell>
                     <RegisterStateRow
                       row={props.registerHistory.source_register}
                     />
@@ -352,7 +363,7 @@ const RegisterHistoryListRow = (props: {
                     key="envelope"
                     sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    <TableCell>Envelope</TableCell>
+                    <TableCell>{t("registerHistory.envelope")}</TableCell>
                     <RegisterStateRow
                       row={props.registerHistory.envelope_register}
                     />
@@ -361,7 +372,7 @@ const RegisterHistoryListRow = (props: {
                     key="target"
                     sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    <TableCell>Remaining</TableCell>
+                    <TableCell>{t("registerHistory.remaining")}</TableCell>
                     <RegisterStateRow
                       row={props.registerHistory.target_register}
                     />
@@ -407,6 +418,7 @@ const DeleteRegisterHistoryDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -435,7 +447,7 @@ const DeleteRegisterHistoryDialog = (props: {
       fullScreen={fullScreen}
     >
       <DialogTitle component="div">
-        <Typography variant="h5">Delete register history?</Typography>
+        <Typography variant="h5">{t("registerHistory.deleteTitle")}</Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}
@@ -451,12 +463,16 @@ const DeleteRegisterHistoryDialog = (props: {
       </DialogTitle>
       <DialogContent dividers={true}>
         <Box pt={1}>
-          Do you want to permanently delete the register history{" "}
-          <b>{format.format(new Date(props.registerHistory.timestamp))}</b> (
-          {moneyToString(
-            getRegisterHistorySum(props.registerHistory.source_register)
-          )}
-          )? This action cannot be undone!
+          <Trans
+            i18nKey="registerHistory.deleteContent"
+            values={{
+              date: format.format(new Date(props.registerHistory.timestamp)),
+              money: moneyToString(
+                getRegisterHistorySum(props.registerHistory.source_register)
+              ),
+            }}
+            components={{ bold: <b /> }}
+          />
         </Box>
       </DialogContent>
       <DialogActions>
@@ -468,7 +484,7 @@ const DeleteRegisterHistoryDialog = (props: {
           loading={isLoading}
           color="error"
         >
-          Delete Register History
+          {t("registerHistory.deleteAction")}
         </LoadingButton>
       </DialogActions>
     </Dialog>

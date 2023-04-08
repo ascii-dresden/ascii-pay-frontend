@@ -100,11 +100,12 @@ export function DashboardApp() {
     },
   };
 
+  const initLanguage = window.navigator.language;
   const i18nConfig = createInstance({
     resources,
-    lng: "de",
+    lng: initLanguage,
     fallbackLng: "en",
-    debug: true,
+    debug: false,
     interpolation: {
       escapeValue: false,
     },

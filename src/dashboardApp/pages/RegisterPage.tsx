@@ -20,14 +20,17 @@ import {
   useDashboardSelector,
 } from "../redux/dashboardStore";
 import { toggleResultMode } from "../redux/features/registerSlice";
+import { useTranslation } from "react-i18next";
 
 export const RegisterPage = () => {
+  const { t } = useTranslation();
+
   const isResultModel = useDashboardSelector(
     (state) => state.registerState.previous !== null
   );
   const dispatch = useDashboardDispatch();
 
-  usePageTitle("Register");
+  usePageTitle(t("layout.register"));
 
   const header = (
     <Paper elevation={0}>
@@ -35,7 +38,7 @@ export const RegisterPage = () => {
         <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              Register
+              {t("layout.register")}
             </Typography>
             <Breadcrumbs aria-label="breadcrumb">
               <Link underline="hover" color="inherit" component={RLink} to="/">
@@ -48,7 +51,7 @@ export const RegisterPage = () => {
                 component={RLink}
                 to="/register"
               >
-                Register
+                {t("layout.register")}
               </Link>
             </Breadcrumbs>
           </div>
@@ -60,7 +63,7 @@ export const RegisterPage = () => {
             sx={{ whiteSpace: "nowrap", width: "13rem" }}
             onClick={() => dispatch(toggleResultMode())}
           >
-            Toggle result mode
+            {t("register.toggle")}
           </Button>
         </Toolbar>
       </Box>

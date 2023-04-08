@@ -13,6 +13,7 @@ import { LoadingButton as _LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 import { useLoginUserMutation } from "../redux/api/authApi";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
+import { useTranslation } from "react-i18next";
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.8rem 0;
@@ -20,6 +21,8 @@ const LoadingButton = styled(_LoadingButton)`
 `;
 
 export const LoginPage = () => {
+  const { t } = useTranslation();
+
   const [loginUser, { isLoading, isError, error, isSuccess }] =
     useLoginUserMutation();
 
@@ -96,13 +99,13 @@ export const LoginPage = () => {
               letterSpacing: 1,
             }}
           >
-            Welcome Back!
+            {t("login.message")}
           </Typography>
 
           <Box maxWidth="27rem" width="100%">
             <TextField
               error={hasErrors}
-              label="Username"
+              label={t("login.username")}
               fullWidth
               sx={{ mb: "1rem" }}
               value={username}
@@ -110,7 +113,7 @@ export const LoginPage = () => {
             />
             <TextField
               error={hasErrors}
-              label="Password"
+              label={t("login.password")}
               fullWidth
               sx={{ mb: "1rem" }}
               value={password}
@@ -126,7 +129,7 @@ export const LoginPage = () => {
               type="submit"
               loading={isLoading}
             >
-              Login
+              {t("login.action")}
             </LoadingButton>
           </Box>
         </Box>

@@ -45,12 +45,14 @@ import {
 import { useDashboardSelector } from "../../redux/dashboardStore";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { BASE_URL } from "../../../const";
+import { useTranslation } from "react-i18next";
 
 export const CreatePaymentDialog = (props: {
   account: AccountDto;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const user = useDashboardSelector((state) => state.userState.user);
@@ -205,7 +207,7 @@ export const CreatePaymentDialog = (props: {
       fullScreen={fullScreen}
     >
       <DialogTitle component="div">
-        <Typography variant="h5">Payment</Typography>
+        <Typography variant="h5">{t("payment.title")}</Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}
@@ -227,7 +229,7 @@ export const CreatePaymentDialog = (props: {
             isTransaction={true}
             preventNegate={user?.role !== "Admin"}
           >
-            <Tooltip title="Add additional transaction item">
+            <Tooltip title={t("payment.addItem")}>
               <IconButton sx={{ height: "40px" }} onClick={handleAddCoins}>
                 <PlaylistAdd />
               </IconButton>
@@ -289,7 +291,7 @@ export const CreatePaymentDialog = (props: {
               <TableRow>
                 <TableCell height={52.9} width={72}></TableCell>
                 <TableCell>
-                  <b>Total</b>
+                  <b>{t("payment.total")}</b>
                 </TableCell>
                 <TableCell width={200}>
                   <Box
@@ -308,7 +310,7 @@ export const CreatePaymentDialog = (props: {
               </TableRow>
               <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
                 <TableCell height={52.9} width={72}></TableCell>
-                <TableCell>Estimated balance</TableCell>
+                <TableCell>{t("payment.balance")}</TableCell>
                 <TableCell width={200}>
                   <Box
                     sx={{
@@ -335,7 +337,7 @@ export const CreatePaymentDialog = (props: {
           loading={isLoading}
           color={cannotPay ? "error" : undefined}
         >
-          Pay
+          {t("payment.action")}
         </LoadingButton>
       </DialogActions>
     </Dialog>

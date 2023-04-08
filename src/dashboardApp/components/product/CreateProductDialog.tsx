@@ -20,11 +20,13 @@ import { Close } from "@mui/icons-material";
 import { CategoryInput } from "./CategoryInput";
 import { TagsInput } from "./TagsInput";
 import { useProductMetadataHook } from "./useProductMetadataHook";
+import { useTranslation } from "react-i18next";
 
 export const CreateProductDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -84,7 +86,7 @@ export const CreateProductDialog = (props: {
       fullScreen={fullScreen}
     >
       <DialogTitle component="div">
-        <Typography variant="h5">Create a new product</Typography>
+        <Typography variant="h5">{t("product.edit.createTitle")}</Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}
@@ -101,14 +103,14 @@ export const CreateProductDialog = (props: {
       <DialogContent dividers={true}>
         <Box pt={1}>
           <TextField
-            label="Product name"
+            label={t("product.name")}
             fullWidth
             sx={{ mb: "1rem" }}
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <TextField
-            label="Nickname"
+            label={t("product.nickname")}
             fullWidth
             sx={{ mb: "1rem" }}
             value={nickname}
@@ -120,7 +122,7 @@ export const CreateProductDialog = (props: {
             possibleValues={categories}
           />
           <TextField
-            label="Barcode"
+            label={t("product.barcode")}
             fullWidth
             sx={{ mb: "1rem" }}
             value={barcode}
@@ -131,8 +133,16 @@ export const CreateProductDialog = (props: {
             setValues={setPTags}
             possibleValues={tags}
           />
-          <CoinAmountEdit label="Price" coins={price} onChange={setPrice} />
-          <CoinAmountEdit label="Bonus" coins={bonus} onChange={setBonus} />
+          <CoinAmountEdit
+            label={t("product.price")}
+            coins={price}
+            onChange={setPrice}
+          />
+          <CoinAmountEdit
+            label={t("product.bonus")}
+            coins={bonus}
+            onChange={setBonus}
+          />
         </Box>
       </DialogContent>
       <DialogActions>
@@ -143,7 +153,7 @@ export const CreateProductDialog = (props: {
           onClick={handleSubmit}
           loading={isLoading}
         >
-          Create Product
+          {t("product.edit.createAction")}
         </LoadingButton>
       </DialogActions>
     </Dialog>

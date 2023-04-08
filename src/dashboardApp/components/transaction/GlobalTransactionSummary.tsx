@@ -2,11 +2,14 @@ import { Box, Paper, Typography } from "@mui/material";
 import { CoinAmountView } from "./CoinAmountView";
 import React from "react";
 import { TransactionDto } from "../../../common/contracts";
+import { useTranslation } from "react-i18next";
 
 export const GlobalTransactionSummary = (props: {
   transactions: TransactionDto[];
   previousTransactions: TransactionDto[];
 }) => {
+  const { t } = useTranslation();
+
   let totalUpCent = 0;
   let totalUpBottleStamp = 0;
   let totalUpCoffeeStamp = 0;
@@ -69,7 +72,7 @@ export const GlobalTransactionSummary = (props: {
       <Paper sx={{ mr: 4, flex: "1 1 100%" }} elevation={4}>
         <Box sx={{ p: 2 }}>
           <Typography gutterBottom variant="h6" component="div">
-            Total deposit
+            {t("transactions.totalDeposit")}
           </Typography>
           <CoinAmountView
             large
@@ -84,7 +87,7 @@ export const GlobalTransactionSummary = (props: {
       <Paper sx={{ mr: 4, flex: "1 1 100%" }} elevation={4}>
         <Box sx={{ p: 2 }}>
           <Typography gutterBottom variant="h6" component="div">
-            Total payout
+            {t("transactions.totalPayout")}
           </Typography>
           <CoinAmountView
             large
@@ -99,7 +102,7 @@ export const GlobalTransactionSummary = (props: {
       <Paper sx={{ flex: "1 1 100%" }} elevation={4}>
         <Box sx={{ p: 2 }}>
           <Typography gutterBottom variant="h6" component="div">
-            System balance
+            {t("transactions.systemBalance")}
           </Typography>
           <CoinAmountView
             large

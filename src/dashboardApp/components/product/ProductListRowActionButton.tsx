@@ -23,11 +23,14 @@ import {
 import { UpdateProductImageDialog } from "./UpdateProductImageDialog";
 import { UpdateProductDialog } from "./UpdateProductDialog";
 import { DeleteProductDialog } from "./DeleteProductDialog";
+import { useTranslation } from "react-i18next";
 
 export const ProductListRowActionButton = (props: {
   product: ProductDto;
   hidePrimaryAction?: boolean;
 }) => {
+  const { t } = useTranslation();
+
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -65,7 +68,7 @@ export const ProductListRowActionButton = (props: {
       >
         {props.hidePrimaryAction ? null : (
           <Button component={Link} to={`/products/${props.product.id}`}>
-            Details
+            {t("product.action.details")}
           </Button>
         )}
         <Button
@@ -103,7 +106,7 @@ export const ProductListRowActionButton = (props: {
                     <ListItemIcon>
                       <ImageOutlined fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Set product image</ListItemText>
+                    <ListItemText>{t("product.action.editImage")}</ListItemText>
                   </MenuItem>
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenEditModal)}
@@ -111,7 +114,9 @@ export const ProductListRowActionButton = (props: {
                     <ListItemIcon>
                       <Edit fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Edit product details</ListItemText>
+                    <ListItemText>
+                      {t("product.action.editProduct")}
+                    </ListItemText>
                   </MenuItem>
                   <Divider />
                   <MenuItem
@@ -120,7 +125,9 @@ export const ProductListRowActionButton = (props: {
                     <ListItemIcon>
                       <DeleteOutline fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Delete product</ListItemText>
+                    <ListItemText>
+                      {t("product.action.deleteProduct")}
+                    </ListItemText>
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>

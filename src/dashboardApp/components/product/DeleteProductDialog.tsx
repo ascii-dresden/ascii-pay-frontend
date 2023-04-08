@@ -15,12 +15,14 @@ import { toast } from "react-toastify";
 import { useDeleteProductMutation } from "../../redux/api/productApi";
 import { ProductDto } from "../../../common/contracts";
 import { Close } from "@mui/icons-material";
+import { Trans, useTranslation } from "react-i18next";
 
 export const DeleteProductDialog = (props: {
   product: ProductDto;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -49,7 +51,7 @@ export const DeleteProductDialog = (props: {
       fullScreen={fullScreen}
     >
       <DialogTitle component="div">
-        <Typography variant="h5">Delete product?</Typography>
+        <Typography variant="h5">{t("product.edit.deleteTitle")}</Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}
@@ -65,9 +67,11 @@ export const DeleteProductDialog = (props: {
       </DialogTitle>
       <DialogContent dividers={true}>
         <Box pt={1}>
-          Do you want to permanently delete the product{" "}
-          <b>{props.product.name}</b>? This will anonymize transaction items
-          that use this product. This action cannot be undone!
+          <Trans
+            i18nKey="product.edit.deleteContent"
+            values={{ name: props.product.name }}
+            components={{ bold: <b /> }}
+          />
         </Box>
       </DialogContent>
       <DialogActions>
@@ -79,7 +83,7 @@ export const DeleteProductDialog = (props: {
           loading={isLoading}
           color="error"
         >
-          Delete Product
+          {t("product.edit.deleteAction")}
         </LoadingButton>
       </DialogActions>
     </Dialog>

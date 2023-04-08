@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
 import { useAccountPasswordResetMutation } from "../redux/api/accountApi";
 import { usePageTitle } from "../components/usePageTitle";
+import { useTranslation } from "react-i18next";
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.8rem 0;
@@ -21,6 +22,8 @@ const LoadingButton = styled(_LoadingButton)`
 `;
 
 export const ResetPasswordPage = () => {
+  const { t } = useTranslation();
+
   const [resetPassword, { isLoading, isError, error, isSuccess }] =
     useAccountPasswordResetMutation();
 
@@ -105,19 +108,19 @@ export const ResetPasswordPage = () => {
               letterSpacing: 1,
             }}
           >
-            Reset password
+            {t("resetPassword.message")}
           </Typography>
 
           <Box maxWidth="27rem" width="100%">
             <TextField
-              label="Username"
+              label={t("resetPassword.username")}
               fullWidth
               sx={{ mb: "1rem" }}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
-              label="Password"
+              label={t("resetPassword.password")}
               fullWidth
               sx={{ mb: "1rem" }}
               value={password}
@@ -133,7 +136,7 @@ export const ResetPasswordPage = () => {
               type="submit"
               loading={isLoading}
             >
-              Reset password
+              {t("resetPassword.action")}
             </LoadingButton>
           </Box>
         </Box>

@@ -30,7 +30,7 @@ const StyledSearchDialogWindow = styled("div")(({ theme }) => ({
   borderRadius: "1rem",
   border: `solid 1px ${theme.palette.divider}`,
   boxShadow: theme.shadows[8],
-  left: "22rem",
+  left: "22%",
   width: "56%",
   top: "15%",
   overflow: "hidden",

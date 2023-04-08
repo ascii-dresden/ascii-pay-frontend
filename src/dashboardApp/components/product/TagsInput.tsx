@@ -1,10 +1,13 @@
 import { Autocomplete, TextField } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export const TagsInput = (props: {
   values: string[];
   setValues: (value: string[]) => void;
   possibleValues: string[];
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Autocomplete
       multiple={true}
@@ -21,7 +24,7 @@ export const TagsInput = (props: {
       fullWidth={true}
       options={props.possibleValues}
       renderInput={(params) => (
-        <TextField {...params} label="Tags" sx={{ mb: "1rem" }} />
+        <TextField {...params} label={t("product.tags")} sx={{ mb: "1rem" }} />
       )}
     />
   );
