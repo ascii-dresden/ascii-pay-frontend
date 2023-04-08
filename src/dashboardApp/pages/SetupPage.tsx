@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
 import { useCreateAdminAccountMutation } from "../redux/api/accountApi";
 import { usePageTitle } from "../components/usePageTitle";
+import { useTranslation } from "react-i18next";
 
 const LoadingButton = styled(_LoadingButton)`
   padding: 0.8rem 0;
@@ -21,6 +22,8 @@ const LoadingButton = styled(_LoadingButton)`
 `;
 
 export const SetupPage = () => {
+  const { t } = useTranslation();
+
   const [createAdminAccount, { isLoading, isError, error, isSuccess }] =
     useCreateAdminAccountMutation();
 
@@ -102,33 +105,33 @@ export const SetupPage = () => {
               letterSpacing: 1,
             }}
           >
-            Setup ascii-pay
+            {t("setup.message")}
           </Typography>
 
           <Box maxWidth="27rem" width="100%">
             <TextField
-              label="Name"
+              label={t("setup.name")}
               fullWidth
               sx={{ mb: "1rem" }}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <TextField
-              label="Email"
+              label={t("setup.email")}
               fullWidth
               sx={{ mb: "1rem" }}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
-              label="Username"
+              label={t("setup.username")}
               fullWidth
               sx={{ mb: "1rem" }}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
-              label="Password"
+              label={t("setup.password")}
               fullWidth
               sx={{ mb: "1rem" }}
               value={password}
@@ -144,7 +147,7 @@ export const SetupPage = () => {
               type="submit"
               loading={isLoading}
             >
-              Create admin account
+              {t("setup.action")}
             </LoadingButton>
           </Box>
         </Box>

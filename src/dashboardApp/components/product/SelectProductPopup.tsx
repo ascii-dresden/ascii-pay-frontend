@@ -9,6 +9,7 @@ import { Coffee } from "@mui/icons-material";
 import { useGetAllProductsQuery } from "../../redux/api/productApi";
 import { toast } from "react-toastify";
 import { CoinAmountView } from "../transaction/CoinAmountView";
+import { useTranslation } from "react-i18next";
 
 const PopperComponent = (props: {
   anchorEl?: any;
@@ -26,6 +27,7 @@ const PaperComponent = (props: any) => {
 export const SelectProductPopup = (props: {
   selectProduct: (product: ProductDto) => void;
 }) => {
+  const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const {
@@ -77,7 +79,7 @@ export const SelectProductPopup = (props: {
 
   return (
     <>
-      <Tooltip title="Add product to transaction">
+      <Tooltip title={t("product.addToTransaction")}>
         <IconButton sx={{ height: "40px" }} onClick={handleClick}>
           <Coffee />
         </IconButton>
@@ -115,7 +117,7 @@ export const SelectProductPopup = (props: {
             }}
             PaperComponent={PaperComponent}
             PopperComponent={PopperComponent}
-            noOptionsText="No products"
+            noOptionsText={t("product.noProducts")}
             options={sortedProducts}
             getOptionLabel={(option) => option?.name ?? "---"}
             groupBy={(option) => option.category}
@@ -131,7 +133,7 @@ export const SelectProductPopup = (props: {
               <TextField
                 ref={params.InputProps.ref}
                 inputProps={params.inputProps}
-                label="Select payment product"
+                label={t("product.selectPaymentProduct")}
                 autoFocus={true}
                 sx={{
                   width: "24rem",

@@ -47,8 +47,11 @@ import { TransactionListRowAuthorization } from "../components/transaction/Trans
 import { TransactionHeatmap } from "../components/transaction/TransactionHeatmap";
 import { usePageTitle } from "../components/usePageTitle";
 import { BASE_URL } from "../../const";
+import { useTranslation } from "react-i18next";
 
 export const TransactionListPage = () => {
+  const { t } = useTranslation();
+
   const [tabIndex, setTabIndex] = React.useState(
     isNaN(parseInt(localStorage["ascii-pay-transactions-tab-index"]))
       ? 0
@@ -77,7 +80,7 @@ export const TransactionListPage = () => {
     data: transactions,
   } = useGetGlobalTransactionsQuery();
 
-  usePageTitle("Transactions");
+  usePageTitle(t("layout.transactions"));
 
   useEffect(() => {
     if (isError) {
@@ -98,7 +101,7 @@ export const TransactionListPage = () => {
     >
       <DatePicker
         views={["year", "month", "day"]}
-        label="Start date"
+        label={t("date.start")}
         value={startDate}
         onChange={(v) => setStartDate(v)}
         disabled={rangePickerDisabled}
@@ -106,7 +109,7 @@ export const TransactionListPage = () => {
       <Remove sx={{ mx: 1, opacity: rangePickerDisabled ? 0.4 : 1 }} />
       <DatePicker
         views={["year", "month", "day"]}
-        label="End date"
+        label={t("date.end")}
         value={endDate}
         onChange={(v) => setEndDate(v)}
         disabled={rangePickerDisabled}
@@ -120,7 +123,7 @@ export const TransactionListPage = () => {
         <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              Transactions
+              {t("layout.transactions")}
             </Typography>
             <Breadcrumbs aria-label="breadcrumb">
               <Link underline="hover" color="inherit" component={RLink} to="/">
@@ -133,7 +136,7 @@ export const TransactionListPage = () => {
                 component={RLink}
                 to="/transactions"
               >
-                Transactions
+                {t("layout.transactions")}
               </Link>
             </Breadcrumbs>
           </div>
@@ -231,8 +234,8 @@ export const TransactionListPage = () => {
               localStorage["ascii-pay-transactions-tab-index"] = newValue;
             }}
           >
-            <Tab label="Balance trend" />
-            <Tab label="Heatmap" />
+            <Tab label={t("account.balanceTrend")} />
+            <Tab label={t("account.heatmap")} />
           </Tabs>
           <Box sx={{ px: 2, pb: 1 }}>
             {tabIndex === 0 ? (
@@ -259,8 +262,8 @@ export const TransactionListPage = () => {
             <TableHead>
               <TableRow>
                 <TableCell width={72}></TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Total</TableCell>
+                <TableCell>{t("transactions.date")}</TableCell>
+                <TableCell>{t("transactions.total")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -279,7 +282,13 @@ export const TransactionListPage = () => {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  rowsPerPageOptions={[
+                    5,
+                    10,
+                    25,
+                    { label: t("layout.rowsPerPageAll"), value: -1 },
+                  ]}
+                  labelRowsPerPage={t("layout.rowsPerPage")}
                   colSpan={3}
                   count={sortedTransactions.length}
                   rowsPerPage={rowsPerPage}
@@ -308,6 +317,8 @@ const format = new Intl.DateTimeFormat("de-DE", {
 });
 
 const TransactionListRow = (props: { transaction: TransactionDto }) => {
+  const { t } = useTranslation();
+
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -358,8 +369,8 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
                 <TableHead>
                   <TableRow>
                     <TableCell width={72}></TableCell>
-                    <TableCell>Product</TableCell>
-                    <TableCell>Price</TableCell>
+                    <TableCell>{t("transactions.product")}</TableCell>
+                    <TableCell>{t("transactions.price")}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

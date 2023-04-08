@@ -22,6 +22,7 @@ import { Close } from "@mui/icons-material";
 import styled from "@emotion/styled";
 import clsx from "clsx";
 import { BASE_URL } from "../../../const";
+import { useTranslation } from "react-i18next";
 
 const StyledImageContainer = styled.div`
   height: 8rem;
@@ -69,6 +70,7 @@ export const UpdateProductImageDialog = (props: {
   open: boolean;
   setOpen: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -194,7 +196,9 @@ export const UpdateProductImageDialog = (props: {
       fullScreen={fullScreen}
     >
       <DialogTitle component="div">
-        <Typography variant="h5">Edit product image</Typography>
+        <Typography variant="h5">
+          {t("product.edit.updateImageTitle")}
+        </Typography>
         <IconButton
           aria-label="close"
           onClick={() => props.setOpen(false)}
@@ -216,7 +220,7 @@ export const UpdateProductImageDialog = (props: {
                 <StyledImage alt="" src={image?.image} />
               </StyledImageContainer>
               <Button onClick={handleRemoveImage} color="error" fullWidth>
-                Remove image
+                {t("product.edit.updateImageRemove")}
               </Button>
             </Box>
             <Box sx={{ ml: 2 }}>
@@ -237,8 +241,12 @@ export const UpdateProductImageDialog = (props: {
                 onDrop={handleDrop}
               >
                 <div>
-                  <Typography>Drag and drop your file here</Typography>
-                  <Typography>or click to select file</Typography>
+                  <Typography>
+                    {t("product.edit.updateImageDragHint")}
+                  </Typography>
+                  <Typography>
+                    {t("product.edit.updateImageClickHint")}
+                  </Typography>
                 </div>
               </StyledLabel>
             </Box>
@@ -254,7 +262,7 @@ export const UpdateProductImageDialog = (props: {
           loading={updateIsLoading || deleteIsLoading}
           disabled={!image.delete && image.file === null}
         >
-          Save changes
+          {t("product.edit.updateAction")}
         </LoadingButton>
       </DialogActions>
     </Dialog>

@@ -14,6 +14,7 @@ import {
 import { Theme, useTheme } from "@mui/material";
 import { CoinAmountView } from "./CoinAmountView";
 import styled from "@emotion/styled";
+import { useTranslation } from "react-i18next";
 
 const StyledChart = styled.div`
   .coin-amount-view {
@@ -38,6 +39,7 @@ export const TransactionChart = (props: {
   endDate?: Date | null;
   onRequestZoom: (startDate: Date, endDate: Date) => void;
 }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const format = new Intl.DateTimeFormat("de-DE", {
     dateStyle: "full",
@@ -166,7 +168,7 @@ export const TransactionChart = (props: {
                 theme={theme}
                 items={[
                   {
-                    name: "Balance",
+                    name: t("transactions.balance"),
                     coins: entry.afterBalance,
                     negativeIsError: true,
                   },
@@ -184,13 +186,17 @@ export const TransactionChart = (props: {
               title={date}
               items={[
                 {
-                  name: "Before balance",
+                  name: t("transactions.beforeBalance"),
                   coins: entry.beforeBalance,
                   negativeIsError: true,
                 },
-                { name: "Price", coins: entry.price, isTransaction: true },
                 {
-                  name: "After balance",
+                  name: t("transactions.price"),
+                  coins: entry.price,
+                  isTransaction: true,
+                },
+                {
+                  name: t("transactions.afterBalance"),
                   coins: entry.afterBalance,
                   negativeIsError: true,
                 },

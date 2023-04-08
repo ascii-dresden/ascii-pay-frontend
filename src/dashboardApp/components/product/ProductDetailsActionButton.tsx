@@ -21,11 +21,14 @@ import {
 import { UpdateProductImageDialog } from "./UpdateProductImageDialog";
 import { UpdateProductDialog } from "./UpdateProductDialog";
 import { DeleteProductDialog } from "./DeleteProductDialog";
+import { useTranslation } from "react-i18next";
 
 export const ProductDetailsActionButton = (props: {
   product: ProductDto;
   hidePrimaryAction?: boolean;
 }) => {
+  const { t } = useTranslation();
+
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -63,7 +66,7 @@ export const ProductDetailsActionButton = (props: {
       >
         {props.hidePrimaryAction ? null : (
           <Button startIcon={<Edit />} onClick={() => setOpenEditModal(true)}>
-            Edit
+            {t("product.action.edit")}
           </Button>
         )}
         <Button
@@ -100,7 +103,7 @@ export const ProductDetailsActionButton = (props: {
                     <ListItemIcon>
                       <ImageOutlined fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Set product image</ListItemText>
+                    <ListItemText>{t("product.action.editImage")}</ListItemText>
                   </MenuItem>
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenDeleteModal)}
@@ -108,7 +111,9 @@ export const ProductDetailsActionButton = (props: {
                     <ListItemIcon>
                       <DeleteOutline fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Delete product</ListItemText>
+                    <ListItemText>
+                      {t("product.action.deleteProduct")}
+                    </ListItemText>
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>

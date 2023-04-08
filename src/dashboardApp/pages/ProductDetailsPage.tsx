@@ -25,8 +25,10 @@ import { BarcodeView } from "../components/product/Barcode";
 import { ProductDetailsActionButton } from "../components/product/ProductDetailsActionButton";
 import { usePageTitle } from "../components/usePageTitle";
 import { BASE_URL } from "../../const";
+import { useTranslation } from "react-i18next";
 
 export const ProductDetailsPage = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
 
   let params = useParams();
@@ -39,7 +41,7 @@ export const ProductDetailsPage = () => {
     data: product,
   } = useGetProductQuery(productId);
 
-  usePageTitle(["Products", product?.name ?? "Loading ..."]);
+  usePageTitle([t("layout.products"), product?.name ?? t("layout.loading")]);
 
   useEffect(() => {
     if (isError) {
@@ -88,7 +90,7 @@ export const ProductDetailsPage = () => {
                   component={RLink}
                   to="/products"
                 >
-                  Products
+                  {t("layout.products")}
                 </Link>
                 <Link
                   underline="hover"
@@ -133,7 +135,7 @@ export const ProductDetailsPage = () => {
                     align="right"
                     sx={{ fontWeight: "bold" }}
                   >
-                    Name
+                    {t("product.name")}
                   </TableCell>
                   <TableCell>{product.name}</TableCell>
                 </TableRow>
@@ -145,7 +147,7 @@ export const ProductDetailsPage = () => {
                     align="right"
                     sx={{ fontWeight: "bold" }}
                   >
-                    Nickname
+                    {t("product.nickname")}
                   </TableCell>
                   <TableCell>{product.nickname}</TableCell>
                 </TableRow>
@@ -157,7 +159,7 @@ export const ProductDetailsPage = () => {
                     align="right"
                     sx={{ fontWeight: "bold" }}
                   >
-                    Category
+                    {t("product.category")}
                   </TableCell>
                   <TableCell>{product.category}</TableCell>
                 </TableRow>
@@ -169,7 +171,7 @@ export const ProductDetailsPage = () => {
                     align="right"
                     sx={{ fontWeight: "bold" }}
                   >
-                    Tags
+                    {t("product.tags")}
                   </TableCell>
                   <TableCell>
                     {product.tags.map((t) => (
@@ -185,7 +187,7 @@ export const ProductDetailsPage = () => {
                     align="right"
                     sx={{ fontWeight: "bold" }}
                   >
-                    Price
+                    {t("product.price")}
                   </TableCell>
                   <TableCell>
                     <CoinAmountView coins={product.price} />
@@ -199,7 +201,7 @@ export const ProductDetailsPage = () => {
                     align="right"
                     sx={{ fontWeight: "bold" }}
                   >
-                    Bonus
+                    {t("product.bonus")}
                   </TableCell>
                   <TableCell>
                     <CoinAmountView coins={product.bonus} />
@@ -213,7 +215,7 @@ export const ProductDetailsPage = () => {
                     align="right"
                     sx={{ fontWeight: "bold" }}
                   >
-                    Barcode
+                    {t("product.barcode")}
                   </TableCell>
                   <TableCell>
                     {product.barcode ? (

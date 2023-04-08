@@ -20,6 +20,26 @@
     "rowsPerPageAll": "All",
     "loading": "Loading…"
   },
+  "setup": {
+    "message": "Setup ascii-pay",
+    "name": "Name",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "action": "Create admin account"
+  },
+  "login": {
+    "message": "Welcome Back!",
+    "username": "Username",
+    "password": "Password",
+    "action": "Login"
+  },
+  "resetPassword": {
+    "message": "Reset password",
+    "username": "Username",
+    "password": "Password",
+    "action": "Reset password"
+  },
   "account": {
     "name": "Name",
     "balance": "Balance",
@@ -93,7 +113,13 @@
     "total": "Total",
     "date": "Date",
     "product": "Product",
-    "price": "Price"
+    "price": "Price",
+    "totalDeposit": "Total deposit",
+    "totalPayout": "Total payout",
+    "systemBalance": "System balance",
+    "beforeBalance": "Before balance",
+    "afterBalance": "After balance",
+    "balance": "Balance"
   },
   "register": {
     "cashBook": "Cash book",
@@ -108,6 +134,57 @@
     "enterCoins": "Enter coin count",
     "enterNotes": "Enter note count",
     "overview": "Overview",
-    "calculate": "Calculate"
+    "calculate": "Calculate",
+    "toggle": "Toggle result mode"
+  },
+  "registerHistory": {
+    "date": "Date",
+    "total": "Total",
+    "envelope": "Envelope",
+    "remaining": "Remaining",
+    "delete": "Delete",
+    "deleteTitle": "Delete register history?",
+    "deleteAction": "Delete Register History",
+    "deleteContent": "Do you want to permanently delete the register history <bold>{{date}}</bold> ({{money}})? This action cannot be undone!"
+  },
+  "product": {
+    "name": "Name",
+    "nickname": "Nickname",
+    "price": "Price",
+    "bonus": "Bonus",
+    "category": "Category",
+    "tags": "Tags",
+    "barcode": "Barcode",
+    "addToTransaction": "Add product to transaction",
+    "noProducts": "No products",
+    "selectPaymentProduct": "Select payment product",
+    "action": {
+      "details": "Details",
+      "edit": "Edit",
+      "editImage": "Set product image",
+      "createProduct": "Create product",
+      "editProduct": "Edit product details",
+      "deleteProduct": "Delete product"
+    },
+    "edit": {
+      "createTitle": "Create a new product",
+      "createAction": "Create product",
+      "updateTitle": "Edit product",
+      "updateAction": "Save changes",
+      "deleteTitle": "Delete product?",
+      "deleteAction": "Delete product",
+      "deleteContent": "Do you want to permanently delete the product <bold>{{name}}</bold>? This will anonymize transaction items that use this product. This action cannot be undone!",
+      "updateImageTitle": "Edit product image",
+      "updateImageRemove": "Remove image",
+      "updateImageDragHint": "Drag and drop your file here",
+      "updateImageClickHint": "or click to select file"
+    }
+  },
+  "payment": {
+    "title": "Payment",
+    "addItem": "Add additional transaction item",
+    "total": "Total",
+    "balance": "Estimated balance",
+    "action": "Pay"
   }
 }

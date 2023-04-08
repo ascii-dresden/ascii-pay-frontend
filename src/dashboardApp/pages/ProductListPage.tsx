@@ -33,8 +33,11 @@ import { ProductListRowActionButton } from "../components/product/ProductListRow
 import { Link as RLink } from "react-router-dom";
 import { usePageTitle } from "../components/usePageTitle";
 import { BASE_URL } from "../../const";
+import { useTranslation } from "react-i18next";
 
 export const ProductListPage = () => {
+  const { t } = useTranslation();
+
   const [openModal, setOpenModal] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -48,7 +51,7 @@ export const ProductListPage = () => {
     data: products,
   } = useGetAllProductsQuery();
 
-  usePageTitle("Products");
+  usePageTitle(t("layout.products"));
 
   useEffect(() => {
     if (isError) {
@@ -64,7 +67,7 @@ export const ProductListPage = () => {
         <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
           <div>
             <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              Products
+              {t("layout.products")}
             </Typography>
             <Breadcrumbs aria-label="breadcrumb">
               <Link underline="hover" color="inherit" component={RLink} to="/">
@@ -77,7 +80,7 @@ export const ProductListPage = () => {
                 component={RLink}
                 to="/products"
               >
-                Products
+                {t("layout.products")}
               </Link>
             </Breadcrumbs>
           </div>
@@ -89,7 +92,7 @@ export const ProductListPage = () => {
             sx={{ whiteSpace: "nowrap", width: "13rem" }}
             onClick={() => setOpenModal(true)}
           >
-            New product
+            {t("product.action.createProduct")}
           </Button>
         </Toolbar>
       </Box>
@@ -170,9 +173,9 @@ export const ProductListPage = () => {
           <TableHead>
             <TableRow>
               <TableCell width={72}></TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell width={250}>Price</TableCell>
-              <TableCell width={250}>Bonus</TableCell>
+              <TableCell>{t("product.name")}</TableCell>
+              <TableCell width={250}>{t("product.price")}</TableCell>
+              <TableCell width={250}>{t("product.bonus")}</TableCell>
               <TableCell width={128}></TableCell>
             </TableRow>
           </TableHead>
@@ -189,7 +192,13 @@ export const ProductListPage = () => {
           <TableFooter>
             <TableRow>
               <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[
+                  5,
+                  10,
+                  25,
+                  { label: t("layout.rowsPerPageAll"), value: -1 },
+                ]}
+                labelRowsPerPage={t("layout.rowsPerPage")}
                 colSpan={5}
                 count={filteredProducts.length}
                 rowsPerPage={rowsPerPage}

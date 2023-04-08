@@ -1,10 +1,13 @@
 import { Autocomplete, TextField } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export const CategoryInput = (props: {
   value: string;
   setValue: (value: string) => void;
   possibleValues: string[];
 }) => {
+  const { t } = useTranslation();
+
   return (
     <Autocomplete
       value={props.value}
@@ -20,7 +23,11 @@ export const CategoryInput = (props: {
       fullWidth={true}
       options={props.possibleValues}
       renderInput={(params) => (
-        <TextField {...params} label="Category" sx={{ mb: "1rem" }} />
+        <TextField
+          {...params}
+          label={t("product.category")}
+          sx={{ mb: "1rem" }}
+        />
       )}
     />
   );
