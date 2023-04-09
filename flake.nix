@@ -7,7 +7,7 @@
     pkgs = import nixpkgs { 
       system = "x86_64-linux"; 
       overlays = [
-        ascii-pay-server.overlay
+        ascii-pay-server.overlays.default
       ];
     };
   in {
