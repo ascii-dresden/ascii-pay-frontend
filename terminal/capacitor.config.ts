@@ -1,8 +1,8 @@
 import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "io.ionic.ascii.pay.terminal",
-  appName: "ascii-pay-terminal",
+  appId: "coffee.ascii.pay.terminal.2",
+  appName: "ascii-pay-terminal v2",
   webDir: "dist",
   bundledWebRuntime: false,
 };
