@@ -80,7 +80,7 @@ export function getPossiblePrices(product: PseudoProductDto): CoinAmountDto[] {
 
   if (product.price.Cent && product.price.Cent !== 0) {
     prices.push({
-      Cent: product.price.Cent,
+      Cent: product.price.Cent - (product.bonus.Cent ?? 0),
       BottleStamp: product.bonus.BottleStamp
         ? -product.bonus.BottleStamp
         : undefined,
@@ -91,7 +91,6 @@ export function getPossiblePrices(product: PseudoProductDto): CoinAmountDto[] {
   }
   if (product.price.BottleStamp && product.price.BottleStamp !== 0) {
     prices.push({
-      Cent: product.bonus.Cent ? -product.bonus.Cent : undefined,
       BottleStamp: product.price.BottleStamp,
       CoffeeStamp: product.bonus.CoffeeStamp
         ? -product.bonus.CoffeeStamp
@@ -100,7 +99,6 @@ export function getPossiblePrices(product: PseudoProductDto): CoinAmountDto[] {
   }
   if (product.price.CoffeeStamp && product.price.CoffeeStamp !== 0) {
     prices.push({
-      Cent: product.bonus.Cent ? -product.bonus.Cent : undefined,
       BottleStamp: product.bonus.BottleStamp
         ? -product.bonus.BottleStamp
         : undefined,
