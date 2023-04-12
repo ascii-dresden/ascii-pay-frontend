@@ -217,8 +217,8 @@ export const TerminalPaymentPage = (props: {
         <Basket />
         <StyledPaymentPageSummary>
           <Money value={paymentTotal.Cent ?? 0} />
-          <Stamp value={paymentTotal.CoffeeStamp ?? 0} type="CoffeeStamp" />
-          <Stamp value={paymentTotal.BottleStamp ?? 0} type="BottleStamp" />
+          <Stamp value={-(paymentTotal.CoffeeStamp ?? 0)} type="CoffeeStamp" />
+          <Stamp value={-(paymentTotal.BottleStamp ?? 0)} type="BottleStamp" />
           <span
             onClick={payAction}
             className={

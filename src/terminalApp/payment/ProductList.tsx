@@ -627,7 +627,7 @@ function ProductItem(props: { product: ProductDto }) {
         <div className="product-entry-price">
           <Money
             value={
-              (props.product.price.Cent ?? 0) + (props.product.bonus.Cent ?? 0)
+              (props.product.price.Cent ?? 0) - (props.product.bonus.Cent ?? 0)
             }
           />
         </div>

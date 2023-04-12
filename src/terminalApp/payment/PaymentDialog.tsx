@@ -215,11 +215,11 @@ export const PaymentDialog = (props: {
       </div>
       <div>
         <Stamp
-          value={props.payment.total.CoffeeStamp ?? 0}
+          value={-(props.payment.total.CoffeeStamp ?? 0)}
           type="CoffeeStamp"
         />
         <Stamp
-          value={props.payment.total.BottleStamp ?? 0}
+          value={-(props.payment.total.BottleStamp ?? 0)}
           type="BottleStamp"
         />
       </div>
@@ -240,11 +240,11 @@ export const PaymentDialog = (props: {
         </div>
         <div>
           <Stamp
-            value={props.payment.withStamps.total.CoffeeStamp ?? 0}
+            value={-(props.payment.withStamps.total.CoffeeStamp ?? 0)}
             type="CoffeeStamp"
           />
           <Stamp
-            value={props.payment.withStamps.total.BottleStamp ?? 0}
+            value={-(props.payment.withStamps.total.BottleStamp ?? 0)}
             type="BottleStamp"
           />
         </div>
