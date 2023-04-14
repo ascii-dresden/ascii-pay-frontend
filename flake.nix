@@ -20,5 +20,8 @@
         src = ./.;
       };
     });
+    hydraJobs = {
+      ascii-pay-frontend-dashboard."x86_64-linux" = self.packages."x86_64-linux".ascii-pay-frontend-dashboard;
+    };
   };
 }
