@@ -25,6 +25,7 @@ import { AccountListRowActionButton } from "../account/AccountListRowActionButto
 import { ProductListRowActionButton } from "../product/ProductListRowActionButton";
 import { BASE_URL } from "../../../const";
 import { useTranslation } from "react-i18next";
+import { HiddenField } from "../HiddenField";
 
 const StyledRow = styled("div")(({ theme }) => ({
   position: "relative",
@@ -248,10 +249,12 @@ const SearchAccountRow = (props: {
           <RoleChip role={props.account.role} />
         </StyledRowContent>
         <StyledRowCoins>
-          <CoinAmountView
-            coins={props.account.balance}
-            negativeIsError={true}
-          />
+          <HiddenField>
+            <CoinAmountView
+              coins={props.account.balance}
+              negativeIsError={true}
+            />
+          </HiddenField>
         </StyledRowCoins>
         <StyledRowActions onClick={(e) => e.stopPropagation()}>
           <AccountListRowActionButton

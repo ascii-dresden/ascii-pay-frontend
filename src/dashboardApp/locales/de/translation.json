@@ -18,7 +18,9 @@
     "logout": "Abmelden",
     "rowsPerPage": "Zeilen pro Seite",
     "rowsPerPageAll": "Alle",
-    "loading": "Laden…"
+    "loading": "Laden…",
+    "hiddenFieldText": "Versteckte Daten anzeigen",
+    "hiddenFieldToggle": "Sichtbarkeit von versteckten Daten wechseln"
   },
   "setup": {
     "message": "ascii-pay einrichten",

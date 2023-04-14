@@ -4,6 +4,7 @@ import { authApi } from "./api/authApi";
 import { userApi } from "./api/userApi";
 import { productApi } from "./api/productApi";
 import { accountApi } from "./api/accountApi";
+import adminReducer from "./features/adminSlice";
 import userReducer from "./features/userSlice";
 import registerReducer from "./features/registerSlice";
 import { registerHistoryApi } from "./api/registerHistoryApi";
@@ -16,6 +17,7 @@ export const dashboardStore = configureStore({
     [productApi.reducerPath]: productApi.reducer,
     [registerHistoryApi.reducerPath]: registerHistoryApi.reducer,
     userState: userReducer,
+    adminState: adminReducer,
     registerState: registerReducer,
   },
   devTools: process.env.NODE_ENV === "development",

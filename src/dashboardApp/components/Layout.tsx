@@ -31,11 +31,14 @@ import {
   PriceChangeOutlined,
   PublicOutlined,
   Store,
+  VisibilityOffOutlined,
+  VisibilityOutlined,
 } from "@mui/icons-material";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
 import { logout } from "../redux/features/userSlice";
 import { PaperScreenLoader } from "./PaperScreenLoader";
 import { useTranslation } from "react-i18next";
+import { toggleRevealAllHiddenFields } from "../redux/features/adminSlice";
 
 const drawerWidth = 240;
 
@@ -50,6 +53,9 @@ export const Layout = () => {
   const theme = useTheme();
   const { t } = useTranslation();
   const user = useDashboardSelector((state) => state.userState.user);
+  const revealAllHiddenFields = useDashboardSelector(
+    (state) => state.adminState.revealAllHiddenFields
+  );
   const dispatch = useDashboardDispatch();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -84,6 +90,10 @@ export const Layout = () => {
 
   const onLogoutHandler = async () => {
     logoutUser();
+  };
+
+  const toggleRevealAllHiddenFieldsHandler = () => {
+    dispatch(toggleRevealAllHiddenFields());
   };
 
   if (user?.role !== "Admin") {
@@ -313,6 +323,19 @@ export const Layout = () => {
           <React.Suspense>
             <SearchButton />
           </React.Suspense>
+          <Box display="flex" sx={{ ml: "auto" }}>
+            <IconButton
+              onClick={toggleRevealAllHiddenFieldsHandler}
+              title={t("layout.hiddenFieldToggle") ?? undefined}
+              color="inherit"
+            >
+              {revealAllHiddenFields ? (
+                <VisibilityOffOutlined />
+              ) : (
+                <VisibilityOutlined />
+              )}
+            </IconButton>
+          </Box>
           <Box sx={{ flexGrow: 1 }} />
           <Box display="flex" sx={{ ml: "auto" }}>
             {user && (

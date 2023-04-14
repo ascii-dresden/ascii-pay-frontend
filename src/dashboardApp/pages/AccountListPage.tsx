@@ -31,6 +31,7 @@ import { RoleChip } from "../components/account/RoleChip";
 import { AccountListRowActionButton } from "../components/account/AccountListRowActionButton";
 import { usePageTitle } from "../components/usePageTitle";
 import { useTranslation } from "react-i18next";
+import { HiddenField } from "../components/HiddenField";
 
 export const AccountListPage = () => {
   const { t } = useTranslation();
@@ -198,12 +199,16 @@ const AccountListRow = (props: { account: AccountDto }) => {
           <Typography>{props.account.name}</Typography>
           <RoleChip role={props.account.role} />
         </TableCell>
-        <TableCell>{props.account.email}</TableCell>
         <TableCell>
-          <CoinAmountView
-            coins={props.account.balance}
-            negativeIsError={true}
-          />
+          <HiddenField>{props.account.email}</HiddenField>
+        </TableCell>
+        <TableCell>
+          <HiddenField>
+            <CoinAmountView
+              coins={props.account.balance}
+              negativeIsError={true}
+            />
+          </HiddenField>
         </TableCell>
         <TableCell>
           <AccountListRowActionButton account={props.account} />

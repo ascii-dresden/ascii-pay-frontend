@@ -18,7 +18,9 @@
     "logout": "Logout",
     "rowsPerPage": "Rows per page",
     "rowsPerPageAll": "All",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "hiddenFieldText": "Reveal hidden data",
+    "hiddenFieldToggle": "Toggle hidden data visibility"
   },
   "setup": {
     "message": "Setup ascii-pay",
