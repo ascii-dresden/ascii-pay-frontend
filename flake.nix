@@ -16,12 +16,12 @@
     };
 
     overlay = (final: prev: {
-      ascii-pay-frontend-dashboard = pkgs.callPackage ./derivation.nix {
+      ascii-pay-frontend = pkgs.callPackage ./derivation.nix {
         src = ./.;
       };
     });
     hydraJobs = {
-      ascii-pay-frontend-dashboard."x86_64-linux" = self.packages."x86_64-linux".ascii-pay-frontend-dashboard;
+      ascii-pay-frontend."x86_64-linux" = self.packages."x86_64-linux".ascii-pay-frontend;
     };
   };
 }
