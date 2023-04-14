@@ -10,7 +10,7 @@
         ascii-pay-server.overlays.default
       ];
     };
-  in {
+  in rec {
     defaultPackage."x86_64-linux" = pkgs.callPackage ./derivation.nix {
       src = ./.;
     };
@@ -21,7 +21,7 @@
       };
     });
     hydraJobs = {
-      ascii-pay-frontend."x86_64-linux" = self.packages."x86_64-linux".ascii-pay-frontend;
+      ascii-pay-frontend."x86_64-linux" = self.defaultPackage."x86_64-linux";
     };
   };
 }
