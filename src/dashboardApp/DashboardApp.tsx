@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import {
   createTheme,
@@ -75,6 +75,9 @@ const RegisterHistoryListPage = React.lazy(() =>
 
 export function DashboardApp() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const [language, setLanguage] = useState(
+    dashboardStore.getState().adminState.language
+  );
 
   const theme = React.useMemo(
     () =>
@@ -100,10 +103,12 @@ export function DashboardApp() {
     },
   };
 
-  const initLanguage = window.navigator.language;
+  dashboardStore.subscribe(() => {
+    setLanguage(dashboardStore.getState().adminState.language);
+  });
   const i18nConfig = createInstance({
     resources,
-    lng: initLanguage,
+    lng: language,
     fallbackLng: "en",
     debug: false,
     interpolation: {

@@ -13,7 +13,10 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
+  Menu,
+  MenuItem,
   Toolbar,
+  Typography,
   useTheme,
 } from "@mui/material";
 import {
@@ -26,11 +29,13 @@ import {
   AccountCircle,
   Coffee,
   Home,
+  LanguageOutlined,
   LocalAtm,
-  Menu,
+  MenuOutlined,
   PriceChangeOutlined,
   PublicOutlined,
   Store,
+  TranslateOutlined,
   VisibilityOffOutlined,
   VisibilityOutlined,
 } from "@mui/icons-material";
@@ -38,7 +43,10 @@ import logo from "../../assets/ascii-pay-logo-wide.svg";
 import { logout } from "../redux/features/userSlice";
 import { PaperScreenLoader } from "./PaperScreenLoader";
 import { useTranslation } from "react-i18next";
-import { toggleRevealAllHiddenFields } from "../redux/features/adminSlice";
+import {
+  setLanguage,
+  toggleRevealAllHiddenFields,
+} from "../redux/features/adminSlice";
 
 const drawerWidth = 240;
 
@@ -56,6 +64,7 @@ export const Layout = () => {
   const revealAllHiddenFields = useDashboardSelector(
     (state) => state.adminState.revealAllHiddenFields
   );
+  const language = useDashboardSelector((state) => state.adminState.language);
   const dispatch = useDashboardDispatch();
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -65,6 +74,20 @@ export const Layout = () => {
 
   const [logoutUser, { isLoading, isSuccess, error, isError }] =
     useLogoutUserMutation();
+
+  const [anchorTranslateEl, setAnchorTranslateEl] =
+    React.useState<null | HTMLElement>(null);
+
+  const handleTranslateClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorTranslateEl(event.currentTarget);
+  };
+  const handleTranslateClose = (language?: string) => {
+    if (language) {
+      dispatch(setLanguage(language));
+    }
+
+    setAnchorTranslateEl(null);
+  };
 
   useEffect(() => {
     if (isSuccess) {
@@ -306,7 +329,7 @@ export const Layout = () => {
             onClick={handleDrawerToggle}
             sx={{ mr: 2, display: { md: "none" } }}
           >
-            <Menu />
+            <MenuOutlined />
           </IconButton>
           <Link to="/">
             <Box sx={{ cursor: "pointer" }}>
@@ -324,6 +347,45 @@ export const Layout = () => {
             <SearchButton />
           </React.Suspense>
           <Box display="flex" sx={{ ml: "auto" }}>
+            <IconButton
+              onClick={handleTranslateClick}
+              title={t("layout.toggleLanguage") ?? undefined}
+              color="inherit"
+            >
+              <TranslateOutlined />
+            </IconButton>
+            <Menu
+              anchorEl={anchorTranslateEl}
+              open={anchorTranslateEl !== null}
+              onClose={() => handleTranslateClose()}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+            >
+              <MenuItem
+                onClick={() => handleTranslateClose("de")}
+                selected={language.includes("de")}
+              >
+                <ListItemIcon>
+                  <LanguageOutlined />
+                </ListItemIcon>
+                <Typography variant="inherit">Deutsch</Typography>
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleTranslateClose("en")}
+                selected={language.includes("en")}
+              >
+                <ListItemIcon>
+                  <LanguageOutlined />
+                </ListItemIcon>
+                <Typography variant="inherit">English</Typography>
+              </MenuItem>
+            </Menu>
             <IconButton
               onClick={toggleRevealAllHiddenFieldsHandler}
               title={t("layout.hiddenFieldToggle") ?? undefined}

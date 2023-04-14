@@ -20,7 +20,8 @@
     "rowsPerPageAll": "All",
     "loading": "Loading…",
     "hiddenFieldText": "Reveal hidden data",
-    "hiddenFieldToggle": "Toggle hidden data visibility"
+    "hiddenFieldToggle": "Toggle hidden data visibility",
+    "toggleLanguage": "Toggle language"
   },
   "setup": {
     "message": "Setup ascii-pay",

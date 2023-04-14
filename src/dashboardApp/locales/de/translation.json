@@ -20,7 +20,8 @@
     "rowsPerPageAll": "Alle",
     "loading": "Laden…",
     "hiddenFieldText": "Versteckte Daten anzeigen",
-    "hiddenFieldToggle": "Sichtbarkeit von versteckten Daten wechseln"
+    "hiddenFieldToggle": "Sichtbarkeit von versteckten Daten wechseln",
+    "toggleLanguage": "Sprache wechseln"
   },
   "setup": {
     "message": "ascii-pay einrichten",
