@@ -260,71 +260,6 @@ export const NoteBox = () => {
     }
   };
 
-  // const handleTab = (event: HammerInput) => {
-  //   if (previousNoteBox) return;
-  //   let currentElement: HTMLElement | null = event.target;
-  //   let targetCents = 0;
-  //   let targetTop = 0;
-  //   let targetHeight = 0;
-  //
-  //   while (currentElement != null) {
-  //     if (currentElement.classList.contains("note-stack-group")) {
-  //       targetTop = currentElement.offsetTop;
-  //       targetHeight = currentElement.clientHeight;
-  //     }
-  //     if (currentElement.classList.contains("note-group")) {
-  //       targetCents = parseInt(currentElement.dataset["value"] ?? "0");
-  //       break;
-  //     }
-  //     currentElement = currentElement.parentElement;
-  //   }
-  //
-  //   if (targetCents !== 0 && targetHeight !== 0) {
-  //     let noteHeight = document.getElementsByClassName("note")[0].clientHeight;
-  //     let newCount = Math.round(
-  //       (targetHeight - (event.center.y - targetTop) - noteHeight * 0.5) /
-  //         (noteHeight * 0.25)
-  //     );
-  //     setNoteCount(targetCents, newCount);
-  //   }
-  // };
-  // const handlePress = (event: HammerInput) => {
-  //   if (previousNoteBox) return;
-  //   let currentElement: HTMLElement | null = event.target;
-  //   let targetCents = 0;
-  //   let targetTop = 0;
-  //   let targetHeight = 0;
-  //
-  //   while (currentElement != null) {
-  //     if (currentElement.classList.contains("note-stack-group")) {
-  //       targetTop = currentElement.offsetTop;
-  //       targetHeight = currentElement.clientHeight;
-  //     }
-  //     if (currentElement.classList.contains("note-group")) {
-  //       targetCents = parseInt(currentElement.dataset["value"] ?? "0");
-  //       break;
-  //     }
-  //     currentElement = currentElement.parentElement;
-  //   }
-  //
-  //   if (targetCents !== 0 && targetHeight !== 0) {
-  //     let noteHeight = document.getElementsByClassName("note")[0].clientHeight;
-  //     let newCount = Math.round(
-  //       (targetHeight - (event.center.y - targetTop) - noteHeight * 0.5) /
-  //         (noteHeight * 0.25)
-  //     );
-  //     setNoteCount(targetCents, newCount);
-  //
-  //     setSelectedGroup({
-  //       cents: targetCents,
-  //       noteHeight: noteHeight,
-  //       top: targetTop,
-  //       height: targetHeight,
-  //       offset: 0,
-  //     });
-  //   }
-  // };
-
   const handlePointerDown = (event: React.PointerEvent) => {
     const target: HTMLDivElement = event.target as HTMLDivElement;
     target.setPointerCapture(event.pointerId);
@@ -394,6 +329,8 @@ export const NoteBox = () => {
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
+      onPointerCancel={handlePointerUp}
     >
       <div>
         <NoteGroup
