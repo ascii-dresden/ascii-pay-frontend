@@ -224,6 +224,106 @@ class TransactionHelper {
   }
 }
 
+// Rekursive Hilfsfunktion, um das Kreuzprodukt zu berechnen
+function cartesianProductHelper(
+  possiblePrices: PaymentTransactionItem[][],
+  index: number,
+  currentProduct: PaymentTransactionItem[],
+  allProducts: PaymentTransactionItem[][]
+): void {
+  if (index === possiblePrices.length) {
+    allProducts.push([...currentProduct]);
+    return;
+  }
+
+  for (const price of possiblePrices[index]) {
+    currentProduct[index] = price;
+    cartesianProductHelper(
+      possiblePrices,
+      index + 1,
+      currentProduct,
+      allProducts
+    );
+  }
+}
+
+// Funktion, um das Kreuzprodukt aller möglichen Preise für die Elemente in 'items' zu erhalten
+function getCrossProduct(
+  items: PaymentTransactionItem[]
+): PaymentTransactionItem[][] {
+  const possiblePriceList: PaymentTransactionItem[][] = items.map((item) =>
+    getPossiblePrices(item.product).map((coinamount) => {
+      item.effective_price = coinamount;
+      return item;
+    })
+  );
+
+  const allProducts: PaymentTransactionItem[][] = [];
+
+  cartesianProductHelper(possiblePriceList, 0, [], allProducts);
+
+  return allProducts;
+}
+
+export function findOptimalSolutionForTokenUsage(
+  account: AccountDto,
+  items: PaymentTransactionItem[]
+): PaymentTransactionItem[][] {
+  // let rounded = Math.floor(bottleStamps * 0.1)
+  let bottleStamps = account.balance.BottleStamp ?? 0;
+  let coffeeStamps = account.balance.CoffeeStamp ?? 0;
+  let centAmount = account.balance.Cent ?? 0;
+
+  // Liste aller möglichen Preis/Token-Kombinationen.
+  const crossProduct = getCrossProduct(items);
+
+  // Listen zusammenfassen zu Gesamtpunkten, Gesamtpreis
+  const paymentItemSums = crossProduct.map(getPaymentItemSum);
+
+  // Elemente aus Liste löschen, die den verfügbaren Punktestand/Geld überschreiten
+  paymentItemSums.filter(
+    (coinAmount) =>
+      !(
+        (coinAmount.BottleStamp ?? 0) > bottleStamps ||
+        (coinAmount.CoffeeStamp ?? 0) > coffeeStamps ||
+        (coinAmount.Cent ?? 0) > centAmount
+      )
+  );
+
+  // geringsten Preis finden
+  let smallestPrice: number = paymentItemSums[0].Cent ?? 0; // TODO: Wenn liste leer, kann eig auch abgebrochen werden.
+  for (let coinAmount of paymentItemSums) {
+    let sum = coinAmount.Cent ?? 0; // TODO: Was, wenn coinAmount nicht existert? erstmal auf null gesetzt.
+    if (sum < smallestPrice) smallestPrice = sum;
+  }
+
+  // Elemente für den geringsten Preis finden
+  crossProduct.filter(
+    (productList) => getPaymentItemSum(productList).Cent == smallestPrice
+  );
+
+  // geringsten Tokenverbrauch ermitteln
+  const paymentItemSums_short = crossProduct.map(getPaymentItemSum);
+
+  let smallestTokenAmount: number =
+    (paymentItemSums_short[0].BottleStamp ?? 0) +
+    (paymentItemSums_short[0].CoffeeStamp ?? 0);
+  for (let tokenAmount of paymentItemSums_short) {
+    let sum = (tokenAmount.BottleStamp ?? 0) + (tokenAmount.CoffeeStamp ?? 0);
+    if (sum < smallestTokenAmount) smallestTokenAmount = sum;
+  }
+
+  // erstbesten Eintrag mit dieser Tokenanzahl finden
+  crossProduct.filter(
+    (productList) =>
+      (getPaymentItemSum(productList).BottleStamp ?? 0) +
+        (getPaymentItemSum(productList).CoffeeStamp ?? 0) ==
+      smallestTokenAmount
+  );
+
+  return crossProduct;
+}
+
 export function calculateStampPaymentTransactionItems(
   account: AccountDto,
   items: PaymentTransactionItem[]
@@ -234,6 +334,11 @@ export function calculateStampPaymentTransactionItems(
     account,
     items
   );
+
+  // TODO: Optimale Lösung ist:
+  // crossProduct[0]
+  const optimalSolution: PaymentTransactionItem[] =
+    findOptimalSolutionForTokenUsage(account, items)[0];
 
   let maxPrice: number = 0;
   let maxIndex: number = -1;
