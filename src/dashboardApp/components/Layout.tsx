@@ -27,6 +27,8 @@ import { useLogoutUserMutation } from "../redux/api/authApi";
 import { toast } from "react-toastify";
 import {
   AccountCircle,
+  AdminPanelSettings,
+  AdminPanelSettingsOutlined,
   Coffee,
   Home,
   LanguageOutlined,
@@ -36,8 +38,6 @@ import {
   PublicOutlined,
   Store,
   TranslateOutlined,
-  VisibilityOffOutlined,
-  VisibilityOutlined,
 } from "@mui/icons-material";
 import logo from "../../assets/ascii-pay-logo-wide.svg";
 import { logout } from "../redux/features/userSlice";
@@ -320,7 +320,7 @@ export const Layout = () => {
   if (import.meta.env.DEV) {
     devMode = (
       <Box display="flex" sx={{ ml: "auto", pr: 2 }}>
-        <Box component="code" sx={{ fontSize: 9 }}>
+        <Box component="code" sx={{ fontSize: 10, lineHeight: 1.1 }}>
           development mode
           <br />
           {BASE_URL}
@@ -417,9 +417,9 @@ export const Layout = () => {
               color="inherit"
             >
               {revealAllHiddenFields ? (
-                <VisibilityOffOutlined />
+                <AdminPanelSettings />
               ) : (
-                <VisibilityOutlined />
+                <AdminPanelSettingsOutlined />
               )}
             </IconButton>
           </Box>
