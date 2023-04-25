@@ -201,7 +201,12 @@ export const receiveAccountSessionToken = createAsyncThunk<
       }
 
       let data = await accountPayment(account.id, query, {
-        items: payment.items,
+        items: payment.items.map((item) => {
+          return {
+            effective_price: item.effective_price,
+            product_id: item.product?.id,
+          };
+        }),
       });
 
       if (data) {
