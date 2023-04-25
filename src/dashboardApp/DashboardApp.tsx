@@ -18,6 +18,7 @@ import { createInstance } from "i18next";
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n_german from "./locales/de/translation.json";
 import i18n_english from "./locales/en/translation.json";
+import { blue, red } from "@mui/material/colors";
 
 const ProfilePage = React.lazy(() =>
   import("./pages/ProfilePage").then((module) => ({
@@ -84,6 +85,9 @@ export function DashboardApp() {
       createTheme({
         palette: {
           mode: prefersDarkMode ? "dark" : "light",
+          primary: {
+            main: import.meta.env.PROD ? blue[700] : red[600],
+          },
         },
         typography: {
           button: {

@@ -47,6 +47,7 @@ import {
   setLanguage,
   toggleRevealAllHiddenFields,
 } from "../redux/features/adminSlice";
+import { BASE_URL } from "../../const";
 
 const drawerWidth = 240;
 
@@ -315,6 +316,19 @@ export const Layout = () => {
     </>
   );
 
+  let devMode;
+  if (import.meta.env.DEV) {
+    devMode = (
+      <Box display="flex" sx={{ ml: "auto", pr: 2 }}>
+        <Box component="code" sx={{ fontSize: 9 }}>
+          development mode
+          <br />
+          {BASE_URL}
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
@@ -399,6 +413,7 @@ export const Layout = () => {
             </IconButton>
           </Box>
           <Box sx={{ flexGrow: 1 }} />
+          {devMode}
           <Box display="flex" sx={{ ml: "auto" }}>
             {user && (
               <Button onClick={onLogoutHandler} color="inherit">
