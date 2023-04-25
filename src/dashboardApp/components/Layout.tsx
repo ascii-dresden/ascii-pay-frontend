@@ -399,6 +399,17 @@ export const Layout = () => {
                 </ListItemIcon>
                 <Typography variant="inherit">English</Typography>
               </MenuItem>
+              {import.meta.env.PROD ? undefined : (
+                <MenuItem
+                  onClick={() => handleTranslateClose("dev")}
+                  selected={language.includes("dev")}
+                >
+                  <ListItemIcon>
+                    <LanguageOutlined />
+                  </ListItemIcon>
+                  <Typography variant="inherit">Development</Typography>
+                </MenuItem>
+              )}
             </Menu>
             <IconButton
               onClick={toggleRevealAllHiddenFieldsHandler}

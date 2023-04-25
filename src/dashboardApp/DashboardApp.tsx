@@ -113,7 +113,7 @@ export function DashboardApp() {
   const i18nConfig = createInstance({
     resources,
     lng: language,
-    fallbackLng: "en",
+    fallbackLng: language === "dev" ? undefined : "en",
     debug: false,
     interpolation: {
       escapeValue: false,
