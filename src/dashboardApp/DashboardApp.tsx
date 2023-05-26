@@ -87,6 +87,8 @@ export function DashboardApp() {
           mode: prefersDarkMode ? "dark" : "light",
           primary: {
             main: import.meta.env.PROD ? blue[700] : red[600],
+            light: import.meta.env.PROD ? blue[700] : red[600],
+            dark: import.meta.env.PROD ? blue[700] : red[600],
           },
         },
         typography: {
