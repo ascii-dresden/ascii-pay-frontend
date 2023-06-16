@@ -162,7 +162,7 @@ export const receiveAccountSessionToken = createAsyncThunk<
 
     if (payment && payment.type === "InProgress") {
       let stampPaymentItems = calculateStampPaymentTransactionItems(
-        account,
+        account.balance,
         payment.items
       );
       if (

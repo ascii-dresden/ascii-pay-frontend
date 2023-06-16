@@ -175,7 +175,7 @@ class TransactionHelper {
   }
 
   checkIfItemCouldBePaidWithStamps(
-    account: AccountDto,
+    balance: CoinAmountDto,
     item: PaymentTransactionItem
   ): boolean {
     if (
@@ -184,9 +184,8 @@ class TransactionHelper {
       item.product.price.CoffeeStamp !== item.effective_price.CoffeeStamp
     ) {
       return (
-        (account.balance.CoffeeStamp &&
-          account.balance.CoffeeStamp >= item.product.price.CoffeeStamp) ===
-        true
+        (balance.CoffeeStamp &&
+          balance.CoffeeStamp >= item.product.price.CoffeeStamp) === true
       );
     }
 
@@ -196,9 +195,8 @@ class TransactionHelper {
       item.product.price.BottleStamp !== item.effective_price.BottleStamp
     ) {
       return (
-        (account.balance.BottleStamp &&
-          account.balance.BottleStamp >= item.product.price.BottleStamp) ===
-        true
+        (balance.BottleStamp &&
+          balance.BottleStamp >= item.product.price.BottleStamp) === true
       );
     }
 
@@ -206,7 +204,7 @@ class TransactionHelper {
   }
 
   findItemsThatCouldBePaidWithStamps(
-    account: AccountDto,
+    balance: CoinAmountDto,
     items: PaymentTransactionItem[]
   ): PaymentTransactionItem[] {
     let result: PaymentTransactionItem[] = [];
@@ -215,7 +213,7 @@ class TransactionHelper {
       let helper = this.clone();
       helper.removeItem(item);
 
-      if (helper.checkIfItemCouldBePaidWithStamps(account, item)) {
+      if (helper.checkIfItemCouldBePaidWithStamps(balance, item)) {
         result.push(item);
       }
     }
@@ -225,13 +223,13 @@ class TransactionHelper {
 }
 
 export function calculateStampPaymentTransactionItems(
-  account: AccountDto,
+  balance: CoinAmountDto,
   items: PaymentTransactionItem[]
 ): PaymentTransactionItem[] | null {
   let helper = TransactionHelper.fromItems(items);
 
   let removableItems = helper.findItemsThatCouldBePaidWithStamps(
-    account,
+    balance,
     items
   );
 
@@ -268,7 +266,8 @@ export function calculateStampPaymentTransactionItems(
     effective_price: newPrice,
   });
 
-  let recursive = calculateStampPaymentTransactionItems(account, newItems);
+  let newBalance = subCoinAmount(balance, newPrice);
+  let recursive = calculateStampPaymentTransactionItems(newBalance, newItems);
   return recursive ?? newItems;
 }
 
