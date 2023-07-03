@@ -9,6 +9,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableRow,
   Tooltip,
   Typography,
@@ -54,7 +55,7 @@ export const CreatePaymentDialog = (props: {
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const user = useDashboardSelector((state) => state.userState.user);
 
   const [payment, { isLoading, isError, error, isSuccess }] =
@@ -204,7 +205,7 @@ export const CreatePaymentDialog = (props: {
     <Dialog
       open={props.open}
       onClose={() => props.setOpen(false)}
-      fullScreen={fullScreen}
+      fullScreen={isMobile}
     >
       <DialogTitle component="div">
         <Typography variant="h5">{t("payment.title")}</Typography>
@@ -237,95 +238,23 @@ export const CreatePaymentDialog = (props: {
             <SelectProductPopup selectProduct={handleSelectProduct} />
           </CoinAmountEdit>
 
-          <Table size="small">
-            <TableBody>
-              {paymentItems.map((item, index) => {
-                const isClickable =
-                  item.product !== undefined &&
-                  item.product !== null &&
-                  getPossiblePrices(item.product).length > 1;
-                return (
-                  <TableRow key={index}>
-                    <TableCell width={72}>
-                      {item.product ? (
-                        <Avatar
-                          alt={item.product.name}
-                          src={`${BASE_URL}/product/${item.product.id}/image`}
-                          {...stringAvatar(item.product.name)}
-                        />
-                      ) : null}
-                    </TableCell>
-                    <TableCell>{item.product?.name ?? "-"}</TableCell>
-                    <TableCell
-                      width={200}
-                      onClick={() => handleNextPrice(index)}
-                    >
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "right",
-                          alignItems: "center",
-                        }}
-                      >
-                        {isClickable ? (
-                          <SwitchLeft sx={{ opacity: 0.5 }} />
-                        ) : null}
-                        <CoinAmountView
-                          coins={item.effective_price}
-                          isTransaction={true}
-                          isClickable={isClickable}
-                        />
-                      </Box>
-                    </TableCell>
-                    <TableCell width={72}>
-                      <IconButton onClick={() => handleRemoveItem(index)}>
-                        <DeleteOutline />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              <TableRow>
-                <TableCell colSpan={4} sx={{ p: 0, pt: 0.2 }}></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell height={52.9} width={72}></TableCell>
-                <TableCell>
-                  <b>{t("payment.total")}</b>
-                </TableCell>
-                <TableCell width={200}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "right",
-                      alignItems: "center",
-                    }}
-                  >
-                    <b>
-                      <CoinAmountView coins={total} isTransaction={true} />
-                    </b>
-                  </Box>
-                </TableCell>
-                <TableCell width={72}></TableCell>
-              </TableRow>
-              <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
-                <TableCell height={52.9} width={72}></TableCell>
-                <TableCell>{t("payment.balance")}</TableCell>
-                <TableCell width={200}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "right",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CoinAmountView coins={balance} negativeIsError={true} />
-                  </Box>
-                </TableCell>
-                <TableCell width={72}></TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          {isMobile ? (
+            <MobileTable
+              paymentItems={paymentItems}
+              handleNextPrice={handleNextPrice}
+              handleRemoveItem={handleRemoveItem}
+              total={total}
+              balance={balance}
+            />
+          ) : (
+            <DefaultTable
+              paymentItems={paymentItems}
+              handleNextPrice={handleNextPrice}
+              handleRemoveItem={handleRemoveItem}
+              total={total}
+              balance={balance}
+            />
+          )}
         </Box>
       </DialogContent>
       <DialogActions>
@@ -341,5 +270,209 @@ export const CreatePaymentDialog = (props: {
         </LoadingButton>
       </DialogActions>
     </Dialog>
+  );
+};
+
+const DefaultTable = (props: {
+  paymentItems: TransactionItemDto[];
+  handleNextPrice: (index: number) => void;
+  handleRemoveItem: (index: number) => void;
+  total: CoinAmountDto;
+  balance: CoinAmountDto;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <TableContainer>
+      <Table size="small">
+        <TableBody>
+          {props.paymentItems.map((item, index) => {
+            const isClickable =
+              item.product !== undefined &&
+              item.product !== null &&
+              getPossiblePrices(item.product).length > 1;
+            return (
+              <TableRow key={index}>
+                <TableCell width={72}>
+                  {item.product ? (
+                    <Avatar
+                      alt={item.product.name}
+                      src={`${BASE_URL}/product/${item.product.id}/image`}
+                      {...stringAvatar(item.product.name)}
+                    />
+                  ) : null}
+                </TableCell>
+                <TableCell>{item.product?.name ?? "-"}</TableCell>
+                <TableCell
+                  width={200}
+                  onClick={() => props.handleNextPrice(index)}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "right",
+                      alignItems: "center",
+                    }}
+                  >
+                    {isClickable ? <SwitchLeft sx={{ opacity: 0.5 }} /> : null}
+                    <CoinAmountView
+                      coins={item.effective_price}
+                      isTransaction={true}
+                      isClickable={isClickable}
+                    />
+                  </Box>
+                </TableCell>
+                <TableCell width={72}>
+                  <IconButton onClick={() => props.handleRemoveItem(index)}>
+                    <DeleteOutline />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+          <TableRow>
+            <TableCell colSpan={4} sx={{ p: 0, pt: 0.2 }}></TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell width={72} rowSpan={3}></TableCell>
+            <TableCell height={52.9}>
+              <b>{t("payment.total")}</b>
+            </TableCell>
+            <TableCell width={200}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "right",
+                  alignItems: "center",
+                }}
+              >
+                <b>
+                  <CoinAmountView coins={props.total} isTransaction={true} />
+                </b>
+              </Box>
+            </TableCell>
+            <TableCell width={72} rowSpan={2}></TableCell>
+          </TableRow>
+          <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
+            <TableCell>{t("payment.balance")}</TableCell>
+            <TableCell width={200}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "right",
+                  alignItems: "center",
+                }}
+              >
+                <CoinAmountView coins={props.balance} negativeIsError={true} />
+              </Box>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
+
+const MobileTable = (props: {
+  paymentItems: TransactionItemDto[];
+  handleNextPrice: (index: number) => void;
+  handleRemoveItem: (index: number) => void;
+  total: CoinAmountDto;
+  balance: CoinAmountDto;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <TableContainer>
+      <Table size="small">
+        <TableBody>
+          {props.paymentItems.map((item, index) => {
+            const isClickable =
+              item.product !== undefined &&
+              item.product !== null &&
+              getPossiblePrices(item.product).length > 1;
+            return (
+              <>
+                <TableRow key={index + "-a"}>
+                  <TableCell width={72} rowSpan={2}>
+                    {item.product ? (
+                      <Avatar
+                        alt={item.product.name}
+                        src={`${BASE_URL}/product/${item.product.id}/image`}
+                        {...stringAvatar(item.product.name)}
+                      />
+                    ) : null}
+                  </TableCell>
+                  <TableCell colSpan={2}>{item.product?.name ?? "-"}</TableCell>
+                  <TableCell width={72}>
+                    <IconButton onClick={() => props.handleRemoveItem(index)}>
+                      <DeleteOutline fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+                <TableRow key={index + "-b"}>
+                  <TableCell
+                    onClick={() => props.handleNextPrice(index)}
+                    colSpan={3}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "right",
+                        alignItems: "center",
+                      }}
+                    >
+                      {isClickable ? (
+                        <SwitchLeft sx={{ opacity: 0.5 }} />
+                      ) : null}
+                      <CoinAmountView
+                        coins={item.effective_price}
+                        isTransaction={true}
+                        isClickable={isClickable}
+                      />
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              </>
+            );
+          })}
+          <TableRow>
+            <TableCell colSpan={4} sx={{ p: 0, pt: 0.2 }}></TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={2} height={52.9}>
+              <b>{t("payment.total")}</b>
+            </TableCell>
+            <TableCell width={200} colSpan={2}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "right",
+                  alignItems: "center",
+                }}
+              >
+                <b>
+                  <CoinAmountView coins={props.total} isTransaction={true} />
+                </b>
+              </Box>
+            </TableCell>
+          </TableRow>
+          <TableRow sx={{ "& > *": { borderBottom: "unset !important" } }}>
+            <TableCell colSpan={2}>{t("payment.balance")}</TableCell>
+            <TableCell width={200} colSpan={2}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "right",
+                  alignItems: "center",
+                }}
+              >
+                <CoinAmountView coins={props.balance} negativeIsError={true} />
+              </Box>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };

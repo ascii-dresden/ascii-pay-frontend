@@ -17,6 +17,7 @@ import {
   MenuItem,
   Toolbar,
   Typography,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import {
@@ -60,6 +61,7 @@ const SearchButton = React.lazy(() =>
 export const Layout = () => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { t } = useTranslation();
   const user = useDashboardSelector((state) => state.userState.user);
   const revealAllHiddenFields = useDashboardSelector(
@@ -317,7 +319,7 @@ export const Layout = () => {
   );
 
   let devMode;
-  if (import.meta.env.DEV) {
+  if (import.meta.env.DEV && !isMobile) {
     devMode = (
       <Box display="flex" sx={{ ml: "auto", pr: 2 }}>
         <Box component="code" sx={{ fontSize: 10, lineHeight: 1.1 }}>

@@ -1,33 +1,61 @@
 import { CoinAmountDto } from "../../../common/contracts";
 import React from "react";
-import { InputAdornment, TextField } from "@mui/material";
+import {
+  InputAdornment,
+  TextField,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 
 import { Euro } from "@mui/icons-material";
 import { BottleStamp } from "../../../assets/BottleStamp";
 import { CoffeeStamp } from "../../../assets/CoffeeStamp";
 import { CoinInput } from "./CoinInput";
-import styled from "@emotion/styled";
+import { styled } from "@mui/material/styles";
 
-const StyledDiv = styled.div`
-  display: flex;
-  margin-bottom: 1rem;
+const StyledDiv = styled("div")(({ theme }) => ({
+  display: "flex",
+  marginBottom: "1rem",
+  gap: "0.5rem",
 
-  & > div:first-of-type {
-    flex-grow: 4;
-    flex-shrink: 1;
-  }
+  ["& > div"]: {
+    display: "flex",
+    columnGap: "0.5rem",
+  },
 
-  & > div:not(:first-of-type) {
-    flex-grow: 1;
-    flex-shrink: 4;
-    margin-left: 0.5rem;
-  }
-`;
+  ["& > div:first-of-type"]: {
+    flexGrow: 4,
+    flexShrink: 1,
+  },
 
-const StyledActionDiv = styled.div`
-  display: flex;
-  align-items: center;
-`;
+  ["& > div:first-of-type > div"]: {
+    flexGrow: 1,
+  },
+
+  ["& > div:not(:first-of-type)"]: {
+    flexGrow: 1,
+    flexShrink: 4,
+  },
+
+  [theme.breakpoints.down("sm")]: {
+    flexDirection: "column",
+
+    ["& > div:first-of-type"]: {
+      flexGrow: 1,
+      flexShrink: 1,
+    },
+
+    ["& > div:not(:first-of-type)"]: {
+      flexGrow: 1,
+      flexShrink: 4,
+    },
+  },
+}));
+
+const StyledActionDiv = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+}));
 
 interface CustomProps {
   value: number;
@@ -114,6 +142,9 @@ export const CoinAmountEdit = (props: {
   isTransaction?: boolean;
   preventNegate?: boolean;
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   function setCents(value: number) {
     let newCoins = cloneCoins(props.coins);
     if (props.preventNegate && value < 0 && (newCoins.Cent ?? 0) == 0) {
@@ -164,52 +195,56 @@ export const CoinAmountEdit = (props: {
 
   return (
     <StyledDiv>
-      <TextField
-        label={props.label}
-        value={props.coins.Cent ?? 0}
-        onChange={setCents as any}
-        InputProps={{
-          inputComponent: props.isTransaction
-            ? (TransactionCentInputRef as any)
-            : (CentInputRef as any),
-          endAdornment: (
-            <InputAdornment position="end">
-              <Euro />
-            </InputAdornment>
-          ),
-        }}
-      />
-      <TextField
-        value={props.coins.CoffeeStamp ?? 0}
-        onChange={setCoffeeStamps as any}
-        InputProps={{
-          inputComponent: props.isTransaction
-            ? (TransactionStampInputRef as any)
-            : (StampInputRef as any),
-          endAdornment: (
-            <InputAdornment position="end">
-              <CoffeeStamp />
-            </InputAdornment>
-          ),
-        }}
-      />
-      <TextField
-        value={props.coins.BottleStamp ?? 0}
-        onChange={setBottleStamps as any}
-        InputProps={{
-          inputComponent: props.isTransaction
-            ? (TransactionStampInputRef as any)
-            : (StampInputRef as any),
-          endAdornment: (
-            <InputAdornment position="end">
-              <BottleStamp />
-            </InputAdornment>
-          ),
-        }}
-      />
-      {props.children ? (
-        <StyledActionDiv>{props.children}</StyledActionDiv>
-      ) : null}
+      <div>
+        <TextField
+          label={props.label}
+          value={props.coins.Cent ?? 0}
+          onChange={setCents as any}
+          InputProps={{
+            inputComponent: props.isTransaction
+              ? (TransactionCentInputRef as any)
+              : (CentInputRef as any),
+            endAdornment: (
+              <InputAdornment position="end">
+                <Euro />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </div>
+      <div>
+        <TextField
+          value={props.coins.CoffeeStamp ?? 0}
+          onChange={setCoffeeStamps as any}
+          InputProps={{
+            inputComponent: props.isTransaction
+              ? (TransactionStampInputRef as any)
+              : (StampInputRef as any),
+            endAdornment: (
+              <InputAdornment position="end">
+                <CoffeeStamp />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          value={props.coins.BottleStamp ?? 0}
+          onChange={setBottleStamps as any}
+          InputProps={{
+            inputComponent: props.isTransaction
+              ? (TransactionStampInputRef as any)
+              : (StampInputRef as any),
+            endAdornment: (
+              <InputAdornment position="end">
+                <BottleStamp />
+              </InputAdornment>
+            ),
+          }}
+        />
+        {props.children ? (
+          <StyledActionDiv>{props.children}</StyledActionDiv>
+        ) : null}
+      </div>
     </StyledDiv>
   );
 };

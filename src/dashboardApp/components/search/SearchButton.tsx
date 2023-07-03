@@ -21,7 +21,12 @@ const SearchContainer = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "center",
   userSelect: "none",
-  [theme.breakpoints.up("xs")]: {
+  [theme.breakpoints.down("sm")]: {
+    marginLeft: theme.spacing(2),
+    width: "auto",
+    minWidth: "3rem",
+  },
+  [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(2),
     width: "auto",
     minWidth: "15rem",
@@ -39,11 +44,14 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
-const SearchTextWrapper = styled("div")(() => ({
+const SearchTextWrapper = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "left",
   flexGrow: 1,
+  [theme.breakpoints.down("sm")]: {
+    display: "none",
+  },
 }));
 
 const SearchKeyWrapper = styled("div")(({ theme }) => ({
@@ -53,6 +61,9 @@ const SearchKeyWrapper = styled("div")(({ theme }) => ({
   justifyContent: "center",
   borderRadius: theme.shape.borderRadius,
   fontSize: "0.9rem",
+  [theme.breakpoints.down("sm")]: {
+    display: "none",
+  },
 }));
 
 export const SearchButton = () => {

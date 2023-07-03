@@ -3,6 +3,7 @@ import {
   Box,
   CircularProgress,
   Collapse,
+  Grid,
   IconButton,
   Paper,
   Tab,
@@ -199,49 +200,54 @@ export const TransactionListView = (props: { account: AccountDto }) => {
       <Paper sx={{ mb: 4, width: "100%" }} elevation={4}>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
             px: 2,
             pb: 1,
             pt: 2,
           }}
         >
-          <Box sx={{ p: 1 }}>
-            <Typography gutterBottom variant="h6" component="div">
-              {t("account.usedCredit")}
-            </Typography>
-            <CoinAmountView coins={totalDown} isTransaction={true} />
-          </Box>
-          <Box sx={{ p: 1 }}>
-            <Typography gutterBottom variant="h6" component="div">
-              {t("account.loadedCredit")}
-            </Typography>
-            <CoinAmountView coins={totalUp} />
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "right",
-              mt: 1,
-              mr: 1,
-            }}
-          >
-            <DatePicker
-              views={["year", "month", "day"]}
-              label={t("date.start")}
-              value={startDate}
-              onChange={(v) => setStartDate(v)}
-            />
-            <Remove sx={{ mx: 1 }} />
-            <DatePicker
-              views={["year", "month", "day"]}
-              label={t("date.end")}
-              value={endDate}
-              onChange={(v) => setEndDate(v)}
-            />
-          </Box>
+          <Grid container spacing={4} sx={{ mb: 4 }}>
+            <Grid item xs={12} md={3}>
+              <Box sx={{ p: 1 }}>
+                <Typography gutterBottom variant="h6" component="div">
+                  {t("account.usedCredit")}
+                </Typography>
+                <CoinAmountView coins={totalDown} isTransaction={true} />
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={3}>
+              <Box sx={{ p: 1 }}>
+                <Typography gutterBottom variant="h6" component="div">
+                  {t("account.loadedCredit")}
+                </Typography>
+                <CoinAmountView coins={totalUp} />
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "right",
+                  mt: 1,
+                  mr: 1,
+                }}
+              >
+                <DatePicker
+                  views={["year", "month", "day"]}
+                  label={t("date.start")}
+                  value={startDate}
+                  onChange={(v) => setStartDate(v)}
+                />
+                <Remove sx={{ mx: 1 }} />
+                <DatePicker
+                  views={["year", "month", "day"]}
+                  label={t("date.end")}
+                  value={endDate}
+                  onChange={(v) => setEndDate(v)}
+                />
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
         <Tabs
           sx={{ px: 2 }}
@@ -379,41 +385,43 @@ const TransactionListRow = (props: { transaction: TransactionDto }) => {
                   />
                 ) : null}
               </Box>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell width={72}></TableCell>
-                    <TableCell>{t("transactions.product")}</TableCell>
-                    <TableCell>{t("transactions.price")}</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {props.transaction.items.map((item, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{ "& > *": { borderBottom: "unset !important" } }}
-                    >
-                      <TableCell>
-                        {item.product ? (
-                          <Avatar
-                            alt={item.product.name}
-                            src={`${BASE_URL}/product/${item.product.id}/image`}
-                            variant="rounded"
-                            {...stringAvatar(item.product.name)}
-                          />
-                        ) : null}
-                      </TableCell>
-                      <TableCell>{item.product?.name ?? "-"}</TableCell>
-                      <TableCell>
-                        <CoinAmountView
-                          coins={item.effective_price}
-                          isTransaction={true}
-                        />
-                      </TableCell>
+              <TableContainer>
+                <Table size="small" aria-label="purchases">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell width={72}></TableCell>
+                      <TableCell>{t("transactions.product")}</TableCell>
+                      <TableCell>{t("transactions.price")}</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {props.transaction.items.map((item, index) => (
+                      <TableRow
+                        key={index}
+                        sx={{ "& > *": { borderBottom: "unset !important" } }}
+                      >
+                        <TableCell>
+                          {item.product ? (
+                            <Avatar
+                              alt={item.product.name}
+                              src={`${BASE_URL}/product/${item.product.id}/image`}
+                              variant="rounded"
+                              {...stringAvatar(item.product.name)}
+                            />
+                          ) : null}
+                        </TableCell>
+                        <TableCell>{item.product?.name ?? "-"}</TableCell>
+                        <TableCell>
+                          <CoinAmountView
+                            coins={item.effective_price}
+                            isTransaction={true}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Box>
           </Collapse>
         </TableCell>

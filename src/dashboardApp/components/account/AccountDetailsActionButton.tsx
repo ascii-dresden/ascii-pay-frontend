@@ -25,7 +25,10 @@ import { AccountAuthenticationDialog } from "./AccountAuthenticationDialog";
 import { AccountSessionDialog } from "./AccountSessionDialog";
 import { useTranslation } from "react-i18next";
 
-export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
+export const AccountDetailsActionButton = (props: {
+  account: AccountDto;
+  minimize?: boolean;
+}) => {
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
@@ -63,13 +66,15 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
         ref={anchorRef}
         aria-label="split button"
       >
-        <Button
-          startIcon={<ShoppingCartOutlined />}
-          sx={{ whiteSpace: "nowrap", width: "9.52rem" }}
-          onClick={() => setOpenPaymentModal(true)}
-        >
-          {t("account.action.payment")}
-        </Button>
+        {props.minimize ? null : (
+          <Button
+            startIcon={<ShoppingCartOutlined />}
+            sx={{ whiteSpace: "nowrap", width: "9.52rem" }}
+            onClick={() => setOpenPaymentModal(true)}
+          >
+            {t("account.action.payment")}
+          </Button>
+        )}
         <Button
           sx={{ whiteSpace: "nowrap", width: "3.5rem" }}
           onClick={handleToggle}
@@ -98,6 +103,16 @@ export const AccountDetailsActionButton = (props: { account: AccountDto }) => {
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" autoFocusItem>
+                  {props.minimize ? (
+                    <MenuItem
+                      onClick={() => handleMenuItemClick(setOpenPaymentModal)}
+                    >
+                      <ListItemIcon>
+                        <ShoppingCartOutlined fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText>{t("account.action.payment")}</ListItemText>
+                    </MenuItem>
+                  ) : null}
                   <MenuItem
                     onClick={() => handleMenuItemClick(setOpenEditModal)}
                   >
