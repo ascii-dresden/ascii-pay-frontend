@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { SidebarLayout } from "../components/SidebarLayout";
 import logo from "../../assets/ascii-circle-icon.svg";
 import { TerminalNavigateHandler } from "../TerminalApp";
+import { AsciiPayAuthenticationClient } from "../client/AsciiPayAuthenticationClient";
 
 const StyledSettings = styled.div`
   & > span {
@@ -191,6 +192,7 @@ export const TerminalSettingsPage = (props: {
   settings: TerminalSettings;
   setSettings: (settings: TerminalSettings) => void;
   navigate: TerminalNavigateHandler;
+  authClient: AsciiPayAuthenticationClient;
 }) => {
   const { t } = useTranslation();
   const handleGoBack = () => props.navigate("start");
@@ -298,7 +300,7 @@ export const TerminalSettingsPage = (props: {
               </div>
               <span>{t("settingsPage.terminal")}</span>
               <StyledSettingsProxyStatus className="settings-item">
-                <code>-</code>
+                <code>{props.authClient.toString()}</code>
               </StyledSettingsProxyStatus>
             </div>
           </div>

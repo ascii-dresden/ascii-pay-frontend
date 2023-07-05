@@ -18,20 +18,25 @@ import {
   MoreVert,
   ShoppingCartOutlined,
   Token,
+  Wallet,
 } from "@mui/icons-material";
 import { UpdateAccountDialog } from "./UpdateAccountDialog";
 import { CreatePaymentDialog } from "../transaction/CreatePaymentDialog";
 import { AccountAuthenticationDialog } from "./AccountAuthenticationDialog";
 import { AccountSessionDialog } from "./AccountSessionDialog";
 import { useTranslation } from "react-i18next";
+import { useDashboardSelector } from "../../redux/dashboardStore";
 
 export const AccountDetailsActionButton = (props: {
   account: AccountDto;
+  isOwn?: boolean;
   minimize?: boolean;
 }) => {
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLDivElement>(null);
+
+  const token = useDashboardSelector((state) => state.userState.token);
 
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -57,6 +62,9 @@ export const AccountDetailsActionButton = (props: {
 
     setOpen(false);
   };
+
+  const appleWalletTarget =
+    token && props.isOwn ? `/v1/asciipay.pkpass?session_token=${token}` : null;
 
   return (
     <>
@@ -143,6 +151,16 @@ export const AccountDetailsActionButton = (props: {
                       {t("account.action.activeSessions")}
                     </ListItemText>
                   </MenuItem>
+                  {appleWalletTarget ? (
+                    <MenuItem component="a" href={appleWalletTarget}>
+                      <ListItemIcon>
+                        <Wallet fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText>
+                        {t("account.action.appleWallet")}
+                      </ListItemText>
+                    </MenuItem>
+                  ) : null}
                 </MenuList>
               </ClickAwayListener>
             </Paper>

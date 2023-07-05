@@ -3,6 +3,7 @@ import { CardTypeDto } from "../../common/contracts";
 
 export interface AsciiPayAuthenticationClient {
   isConnected: () => boolean;
+  toString: () => string;
 
   addEventHandler: (handler: TerminalClientMessageHandler) => void;
   removeEventHandler: (handler: TerminalClientMessageHandler) => void;

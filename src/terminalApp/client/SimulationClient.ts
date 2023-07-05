@@ -32,6 +32,10 @@ export class SimulationClient implements AsciiPayAuthenticationClient {
     return this.state.connected;
   }
 
+  public toString(): string {
+    return `Simulation()`;
+  }
+
   public updateState(state: SimulationClientState) {
     if (this.state.connected !== state.connected) {
       this.state.connected = state.connected;

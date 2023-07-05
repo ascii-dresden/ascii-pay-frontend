@@ -59,7 +59,8 @@
       "deleteAccount": "Konto löschen",
       "authenticationMethods": "Authentifizierungsmethoden",
       "activeSessions": "Aktive Sitzungen",
-      "estimatedBalance": "Geschätztes Guthaben"
+      "estimatedBalance": "Geschätztes Guthaben",
+      "appleWallet": "Hinzufügen zu Apple Wallet"
     },
     "role": {
       "basic": "Standard",

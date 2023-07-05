@@ -375,6 +375,7 @@ export const TerminalApp = React.memo(
             settings={props.settings}
             setSettings={props.setSettings}
             navigate={props.navigate}
+            authClient={props.authClient}
           />
         );
         break;

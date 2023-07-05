@@ -59,7 +59,8 @@
       "deleteAccount": "Delete account",
       "authenticationMethods": "Authentication methods",
       "activeSessions": "Active sessions",
-      "estimatedBalance": "Estimated balance"
+      "estimatedBalance": "Estimated balance",
+      "appleWallet": "Add to Apple Wallet"
     },
     "role": {
       "basic": "Basic",

@@ -117,7 +117,10 @@ export const AccountDetailsPageView = (props: {
               )}
             </div>
 
-            <AccountDetailsActionButton account={account} />
+            <AccountDetailsActionButton
+              account={account}
+              isOwn={props.isRoot}
+            />
           </Toolbar>
         </Box>
       </Paper>

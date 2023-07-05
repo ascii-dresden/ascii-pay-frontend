@@ -10,6 +10,10 @@ export default defineConfig({
         target: "http://127.0.0.1:3000",
         changeOrigin: true,
       },
+      "/v1": {
+        target: "http://127.0.0.1:3000",
+        changeOrigin: true,
+      },
     },
   },
   build: {

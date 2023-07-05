@@ -59,7 +59,11 @@ export const MobileAccountPageView = (props: { accountId: number }) => {
               </Typography>
               <Typography component="div">{account.email}</Typography>
             </div>
-            <AccountDetailsActionButton account={account} minimize={true} />
+            <AccountDetailsActionButton
+              account={account}
+              isOwn={true}
+              minimize={true}
+            />
           </Toolbar>
         </Box>
       </Paper>

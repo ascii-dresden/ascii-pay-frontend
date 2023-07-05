@@ -44,6 +44,10 @@ export class WebSocketClient implements AsciiPayAuthenticationClient {
     return this.connected;
   }
 
+  public toString(): string {
+    return `Websocket(${this.url})`;
+  }
+
   addEventHandler(handler: TerminalClientMessageHandler) {
     this.handlerList.push(handler);
   }
