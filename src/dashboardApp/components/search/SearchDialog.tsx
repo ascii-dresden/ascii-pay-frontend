@@ -34,6 +34,10 @@ const StyledSearchDialogWindow = styled("div")(({ theme }) => ({
   width: "56%",
   top: "15%",
   overflow: "hidden",
+  [theme.breakpoints.down("sm")]: {
+    left: "0.5rem",
+    width: "calc(100% - 1rem)",
+  },
 }));
 
 const StyledSearchBar = styled("div")(({ theme }) => ({

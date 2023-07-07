@@ -313,6 +313,72 @@ export const Layout = () => {
               )}
             </NavLink>
           </ListItem>
+          <ListSubheader component="div">
+            {t("layout.preferences")}
+          </ListSubheader>
+          <ListItem disablePadding>
+            <ListItemButton onClick={handleTranslateClick}>
+              <ListItemIcon>
+                <TranslateOutlined />
+              </ListItemIcon>
+              <ListItemText primary={t("layout.toggleLanguage")} />
+            </ListItemButton>
+            <Menu
+              anchorEl={anchorTranslateEl}
+              open={anchorTranslateEl !== null}
+              onClose={() => handleTranslateClose()}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+            >
+              <MenuItem
+                onClick={() => handleTranslateClose("de")}
+                selected={language.includes("de")}
+              >
+                <ListItemIcon>
+                  <LanguageOutlined />
+                </ListItemIcon>
+                <Typography variant="inherit">Deutsch</Typography>
+              </MenuItem>
+              <MenuItem
+                onClick={() => handleTranslateClose("en")}
+                selected={language.includes("en")}
+              >
+                <ListItemIcon>
+                  <LanguageOutlined />
+                </ListItemIcon>
+                <Typography variant="inherit">English</Typography>
+              </MenuItem>
+              {import.meta.env.PROD ? undefined : (
+                <MenuItem
+                  onClick={() => handleTranslateClose("dev")}
+                  selected={language.includes("dev")}
+                >
+                  <ListItemIcon>
+                    <LanguageOutlined />
+                  </ListItemIcon>
+                  <Typography variant="inherit">Development</Typography>
+                </MenuItem>
+              )}
+            </Menu>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={toggleRevealAllHiddenFieldsHandler}>
+              <ListItemIcon>
+                {revealAllHiddenFields ? (
+                  <AdminPanelSettings />
+                ) : (
+                  <AdminPanelSettingsOutlined />
+                )}
+              </ListItemIcon>
+              <ListItemText primary={t("layout.hiddenFieldToggle")} />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Box>
     </>
@@ -362,69 +428,6 @@ export const Layout = () => {
           <React.Suspense>
             <SearchButton />
           </React.Suspense>
-          <Box display="flex" sx={{ ml: "auto" }}>
-            <IconButton
-              onClick={handleTranslateClick}
-              title={t("layout.toggleLanguage") ?? undefined}
-              color="inherit"
-            >
-              <TranslateOutlined />
-            </IconButton>
-            <Menu
-              anchorEl={anchorTranslateEl}
-              open={anchorTranslateEl !== null}
-              onClose={() => handleTranslateClose()}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              <MenuItem
-                onClick={() => handleTranslateClose("de")}
-                selected={language.includes("de")}
-              >
-                <ListItemIcon>
-                  <LanguageOutlined />
-                </ListItemIcon>
-                <Typography variant="inherit">Deutsch</Typography>
-              </MenuItem>
-              <MenuItem
-                onClick={() => handleTranslateClose("en")}
-                selected={language.includes("en")}
-              >
-                <ListItemIcon>
-                  <LanguageOutlined />
-                </ListItemIcon>
-                <Typography variant="inherit">English</Typography>
-              </MenuItem>
-              {import.meta.env.PROD ? undefined : (
-                <MenuItem
-                  onClick={() => handleTranslateClose("dev")}
-                  selected={language.includes("dev")}
-                >
-                  <ListItemIcon>
-                    <LanguageOutlined />
-                  </ListItemIcon>
-                  <Typography variant="inherit">Development</Typography>
-                </MenuItem>
-              )}
-            </Menu>
-            <IconButton
-              onClick={toggleRevealAllHiddenFieldsHandler}
-              title={t("layout.hiddenFieldToggle") ?? undefined}
-              color="inherit"
-            >
-              {revealAllHiddenFields ? (
-                <AdminPanelSettings />
-              ) : (
-                <AdminPanelSettingsOutlined />
-              )}
-            </IconButton>
-          </Box>
           <Box sx={{ flexGrow: 1 }} />
           {devMode}
           <Box display="flex" sx={{ ml: "auto" }}>
