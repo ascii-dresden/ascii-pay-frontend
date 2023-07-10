@@ -4,6 +4,7 @@ import { useGetAllProductsQuery } from "../redux/api/productApi";
 import assetLogo from "../../assets/ascii-logo-text.svg";
 
 import "../../assets/fonts/jetbrains-mono.css";
+import { CircularProgress } from "@mui/material";
 
 const Logo = styled.img`
   height: 4rem;
@@ -68,6 +69,21 @@ export const PrintSnacksPage = () => {
     data: products,
   } = useGetAllProductsQuery();
 
+  if (isLoading)
+    return (
+      <Page>
+        <CircularProgress sx={{ justifySelf: "center" }} />
+      </Page>
+    );
+
+  if (isError)
+    return (
+      <Page>
+        <Text>Failed to load Snacks.</Text>
+        {error && <Text>Error: {error.toString()}</Text>}
+      </Page>
+    );
+
   if (!products) return <></>;
 
   const snacks = products
@@ -87,8 +103,8 @@ export const PrintSnacksPage = () => {
               )
               .map((snack) => (
                 <>
-                  <Text key={`${snack.id}-name`}>{snack.name}</Text>
-                  <Text key={`${snack.id}-price`}>
+                  <Text key={`${snack.id} -name`}>{snack.name}</Text>
+                  <Text key={`${snack.id} -price`}>
                     {snack.price.Cent !== undefined
                       ? new Intl.NumberFormat("de-DE", {
                           style: "currency",
