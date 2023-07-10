@@ -169,7 +169,8 @@
       "editImage": "Set product image",
       "createProduct": "Create product",
       "editProduct": "Edit product details",
-      "deleteProduct": "Delete product"
+      "deleteProduct": "Delete product",
+      "printSnacks": "Print snacks"
     },
     "edit": {
       "createTitle": "Create a new product",
