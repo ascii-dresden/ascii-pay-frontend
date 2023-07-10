@@ -18,6 +18,7 @@ const Page = styled.div`
   background-color: white;
   color: black;
   padding-inline: 4rem;
+  grid-template-columns: max-content 1fr;
   grid-template-rows: 0 max-content;
   align-content: center;
   row-gap: 4rem;
@@ -27,6 +28,7 @@ const List = styled.div`
   display: grid;
   grid-auto-columns: 1fr;
   grid-auto-flow: column;
+  grid-column: 1 / 3;
   column-gap: 4rem;
   aligncontent: center;
 `;
@@ -93,6 +95,9 @@ export const PrintSnacksPage = () => {
   return (
     <Page>
       <Logo src={assetLogo} alt="Logo" />
+      <Text style={{ justifySelf: "end", alignSelf: "end" }}>
+        {new Intl.DateTimeFormat("de-DE").format(new Date())}
+      </Text>
       <List>
         {Array.from({ length: COLUMN_COUNT }).map((_, column) => (
           <Grid key={column}>
