@@ -41,7 +41,8 @@ const List = styled.div`
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr max-content;
-  grid-auto-rows: 2rem;
+  grid-auto-rows: max-content;
+  row-gap: 1rem;
   align-items: start;
 `;
 
