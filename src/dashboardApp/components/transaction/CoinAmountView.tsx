@@ -14,7 +14,7 @@ type StyledCoinAmountViewProps = {
 };
 const StyledCoinAmountView = styled.div`
   display: flex;
-  width: 11.5rem;
+  width: 11.5em;
   cursor: default;
   user-select: none;
   position: relative;
@@ -24,13 +24,13 @@ const StyledCoinAmountView = styled.div`
     content: "";
     display: block;
     position: absolute;
-    top: -0.6rem;
-    left: -1.8rem;
-    right: -0.6rem;
-    bottom: -0.6rem;
+    top: -0.6em;
+    left: -1.8em;
+    right: -0.6em;
+    bottom: -0.6em;
     background-color: transparent;
     z-index: -1;
-    border-radius: 0.2rem;
+    border-radius: 0.2em;
     transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   }
 
@@ -49,7 +49,7 @@ const StyledCoinAmountView = styled.div`
   }
 
   svg {
-    font-size: 1.1rem !important;
+    font-size: 1.1em !important;
   }
 
   &.large {
@@ -66,21 +66,21 @@ const StyledCoinAmountEntry = styled.div`
   display: flex;
   align-items: center;
   justify-content: right;
-  width: 3.5rem;
+  width: 3.5em;
 
   & > span {
-    line-height: 1rem;
-    padding-right: 0.2rem;
-    min-width: 1rem;
-    padding-top: 0.1rem;
+    line-height: 1em;
+    padding-right: 0.2em;
+    min-width: 1em;
+    padding-top: 0.1em;
   }
 
   &:first-of-type {
-    width: 4.5rem;
+    width: 4.5em;
   }
 
   &:not(:first-of-type) {
-    margin-left: 0.5rem;
+    margin-left: 0.5em;
   }
 `;
 
