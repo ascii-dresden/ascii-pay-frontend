@@ -27,11 +27,6 @@ const Page = styled.div`
   grid-template-rows: 0 max-content;
   align-content: center;
   row-gap: 4rem;
-
-  @media print {
-    width: 100vw;
-    height: 100vh;
-  }
 `;
 
 const List = styled.div`

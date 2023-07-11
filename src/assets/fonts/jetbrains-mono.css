@@ -1,1 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap");
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+}
