@@ -149,7 +149,7 @@ export const PrintSnacksPage = () => {
         <PrintButton>
           <Button
             variant="outlined"
-            endIcon={<PrintOutlined />}
+            startIcon={<PrintOutlined />}
             onClick={onPrintDocument}
           >
             {t("layout.print")}
