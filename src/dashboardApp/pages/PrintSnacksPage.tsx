@@ -86,6 +86,11 @@ const PageWrapper = styled.div`
     & > div {
       box-shadow: none;
     }
+
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
   }
 `;
 
