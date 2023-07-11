@@ -22,7 +22,7 @@ import {
 import { useGetAllProductsQuery } from "../redux/api/productApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Add } from "@mui/icons-material";
+import { Add, Print } from "@mui/icons-material";
 import { CreateProductDialog } from "../components/product/CreateProductDialog";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
@@ -85,15 +85,33 @@ export const ProductListPage = () => {
             </Breadcrumbs>
           </div>
 
-          <Button
-            variant="outlined"
-            size="large"
-            startIcon={<Add />}
-            sx={{ whiteSpace: "nowrap", width: "13rem" }}
-            onClick={() => setOpenModal(true)}
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              alignItems: "flex-end",
+              justifyContent: "flex-end",
+              flexDirection: { xs: "column", sm: "row" },
+            }}
           >
-            {t("product.action.createProduct")}
-          </Button>
+            <Button
+              variant="text"
+              size="large"
+              startIcon={<Print />}
+              href="/printSnacks"
+            >
+              {t("product.action.printSnacks")}
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              startIcon={<Add />}
+              sx={{ whiteSpace: "nowrap" }}
+              onClick={() => setOpenModal(true)}
+            >
+              {t("product.action.createProduct")}
+            </Button>
+          </Box>
         </Toolbar>
       </Box>
     </Paper>

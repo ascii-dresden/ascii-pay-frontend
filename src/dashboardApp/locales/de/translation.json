@@ -169,7 +169,8 @@
       "editImage": "Produktbild setzen",
       "createProduct": "Produkt erstellen",
       "editProduct": "Produktdetails bearbeiten",
-      "deleteProduct": "Produkt löschen"
+      "deleteProduct": "Produkt löschen",
+      "printSnacks": "Snacks drucken"
     },
     "edit": {
       "createTitle": "Produkt erstellen",
