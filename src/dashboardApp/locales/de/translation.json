@@ -22,7 +22,8 @@
     "hiddenFieldText": "Versteckte Daten anzeigen",
     "hiddenFieldToggle": "Privatsphäre",
     "toggleLanguage": "Sprache wechseln",
-    "preferences": "Einstellungen"
+    "preferences": "Einstellungen",
+    "print": "Drucken"
   },
   "setup": {
     "message": "ascii-pay einrichten",

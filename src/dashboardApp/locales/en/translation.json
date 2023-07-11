@@ -22,7 +22,8 @@
     "hiddenFieldText": "Reveal hidden data",
     "hiddenFieldToggle": "Toggle privacy",
     "toggleLanguage": "Toggle language",
-    "preferences": "Preferences"
+    "preferences": "Preferences",
+    "print": "Print"
   },
   "setup": {
     "message": "Setup ascii-pay",

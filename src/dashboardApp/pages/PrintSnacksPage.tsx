@@ -4,7 +4,11 @@ import { useGetAllProductsQuery } from "../redux/api/productApi";
 import assetLogo from "../../assets/ascii-logo-text.svg";
 
 import "../../assets/fonts/jetbrains-mono.css";
-import { CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
+import { moneyToString } from "../../terminalApp/components/Money";
+import { PrintOutlined } from "@mui/icons-material";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 const Logo = styled.img`
   height: 4rem;
@@ -12,6 +16,7 @@ const Logo = styled.img`
 `;
 
 const Page = styled.div`
+  position: relative;
   display: grid;
   width: 296.5mm;
   height: 209.5mm;
@@ -22,6 +27,11 @@ const Page = styled.div`
   grid-template-rows: 0 max-content;
   align-content: center;
   row-gap: 4rem;
+
+  @media print {
+    width: 100vw;
+    height: 100vh;
+  }
 `;
 
 const List = styled.div`
@@ -30,7 +40,7 @@ const List = styled.div`
   grid-auto-flow: column;
   grid-column: 1 / 3;
   column-gap: 4rem;
-  aligncontent: center;
+  align-content: center;
 `;
 
 const Grid = styled.div`
@@ -60,10 +70,48 @@ const Text = styled.div`
   }
 `;
 
+const PageWrapper = styled.div`
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+
+  & > div {
+    box-shadow: rgba(0, 0, 0, 0.6) 0.1em 0.2em 1em -0.2em;
+  }
+
+  @media print {
+    background-color: transparent;
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    & > div {
+      box-shadow: none;
+    }
+  }
+`;
+
+const PrintButton = styled.div`
+  position: absolute;
+  top: 1em;
+  right: 1em;
+
+  @media print {
+    display: none;
+  }
+`;
+
 const COLUMN_COUNT = 2;
 const TEA_ID = 77;
+const dateFormat = new Intl.DateTimeFormat("de-DE", {
+  dateStyle: "long",
+});
 
 export const PrintSnacksPage = () => {
+  const { t } = useTranslation();
   const {
     isLoading,
     isError,
@@ -71,57 +119,71 @@ export const PrintSnacksPage = () => {
     data: products,
   } = useGetAllProductsQuery();
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <Page>
         <CircularProgress sx={{ justifySelf: "center" }} />
       </Page>
     );
+  }
 
-  if (isError)
+  if (isError) {
     return (
       <Page>
         <Text>Failed to load Snacks.</Text>
         {error && <Text>Error: {error.toString()}</Text>}
       </Page>
     );
+  }
 
-  if (!products) return <></>;
+  if (!products) {
+    return <></>;
+  }
 
   const snacks = products
     .filter((product) => product.category === "Snacks" && product.id !== TEA_ID)
     .sort((a, b) => a.name.localeCompare(b.name));
 
+  const onPrintDocument = () => {
+    window.print();
+  };
+
   return (
-    <Page>
-      <Logo src={assetLogo} alt="Logo" />
-      <Text style={{ justifySelf: "end", alignSelf: "end" }}>
-        {new Intl.DateTimeFormat("de-DE").format(new Date())}
-      </Text>
-      <List>
-        {Array.from({ length: COLUMN_COUNT }).map((_, column) => (
-          <Grid key={column}>
-            {snacks
-              .slice(
-                column * Math.ceil(snacks.length / COLUMN_COUNT),
-                (column + 1) * Math.ceil(snacks.length / COLUMN_COUNT)
-              )
-              .map((snack) => (
-                <>
-                  <Text key={`${snack.id} -name`}>{snack.name}</Text>
-                  <Text key={`${snack.id} -price`}>
-                    {snack.price.Cent !== undefined
-                      ? new Intl.NumberFormat("de-DE", {
-                          style: "currency",
-                          currency: "EUR",
-                        }).format(snack.price.Cent / 100)
-                      : "N/A"}
-                  </Text>
-                </>
-              ))}
-          </Grid>
-        ))}
-      </List>
-    </Page>
+    <PageWrapper>
+      <Page>
+        <PrintButton>
+          <Button
+            variant="outlined"
+            endIcon={<PrintOutlined />}
+            onClick={onPrintDocument}
+          >
+            {t("layout.print")}
+          </Button>
+        </PrintButton>
+        <Logo src={assetLogo} alt="Logo" />
+        <Text style={{ justifySelf: "end", alignSelf: "end" }}>
+          {dateFormat.format(new Date())}
+        </Text>
+        <List>
+          {Array.from({ length: COLUMN_COUNT }).map((_, column) => (
+            <Grid key={column}>
+              {snacks
+                .slice(
+                  column * Math.ceil(snacks.length / COLUMN_COUNT),
+                  (column + 1) * Math.ceil(snacks.length / COLUMN_COUNT)
+                )
+                .map((snack) => (
+                  <>
+                    <Text key={`${snack.id} -name`}>{snack.name}</Text>
+                    <Text key={`${snack.id} -price`}>
+                      {moneyToString(snack.price.Cent ?? 0)}
+                    </Text>
+                  </>
+                ))}
+            </Grid>
+          ))}
+        </List>
+      </Page>
+    </PageWrapper>
   );
 };
