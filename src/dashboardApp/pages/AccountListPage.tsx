@@ -1,10 +1,6 @@
 import {
   Avatar,
-  Box,
-  Breadcrumbs,
-  Button,
   Container,
-  Link,
   Paper,
   Table,
   TableBody,
@@ -14,10 +10,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Toolbar,
   Typography,
 } from "@mui/material";
-import { Link as RLink } from "react-router-dom";
 import { useGetAllAccountsQuery } from "../redux/api/accountApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -28,10 +22,12 @@ import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { AccountDto } from "../../common/contracts";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { RoleChip } from "../components/account/RoleChip";
-import { AccountListRowActionButton } from "../components/account/AccountListRowActionButton";
 import { usePageTitle } from "../components/usePageTitle";
 import { useTranslation } from "react-i18next";
 import { HiddenField } from "../components/HiddenField";
+import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
+import { ActionButtonAction } from "../components/ActionButton";
+import { AccountActionButton } from "../components/account/AccountActionButton";
 
 export const AccountListPage = () => {
   const { t } = useTranslation();
@@ -57,46 +53,31 @@ export const AccountListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  const header = (
-    <Paper elevation={0}>
-      <Box sx={{ px: 1, py: 2, mb: 2 }}>
-        <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
-          <div>
-            <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              {t("layout.accounts")}
-            </Typography>
-            <Breadcrumbs aria-label="breadcrumb">
-              <Link underline="hover" color="inherit" component={RLink} to="/">
-                ascii-pay
-              </Link>
-              <Link
-                underline="hover"
-                color="text.primary"
-                aria-current="page"
-                component={RLink}
-                to="/accounts"
-              >
-                {t("layout.accounts")}
-              </Link>
-            </Breadcrumbs>
-          </div>
+  const navigation: PageHeaderNavigation[] = [
+    {
+      label: t("layout.accounts"),
+      target: "/accounts",
+    },
+  ];
 
-          <Button
-            variant="outlined"
-            size="large"
-            startIcon={<Add />}
-            sx={{ whiteSpace: "nowrap", width: "13rem" }}
-            onClick={() => setOpenModal(true)}
-          >
-            {t("account.action.createAccount")}
-          </Button>
-        </Toolbar>
-      </Box>
-    </Paper>
-  );
+  const actions: ActionButtonAction[] = [
+    {
+      label: t("account.action.createAccount"),
+      icon: <Add />,
+      action: () => setOpenModal(true),
+    },
+  ];
 
   if (isLoading || accounts === undefined) {
-    return <PaperScreenLoader>{header}</PaperScreenLoader>;
+    return (
+      <PaperScreenLoader>
+        <PageHeader navigation={navigation} actions={actions}>
+          <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+            {t("layout.accounts")}
+          </Typography>
+        </PageHeader>
+      </PaperScreenLoader>
+    );
   }
 
   const sortedAccounts = [...accounts];
@@ -131,7 +112,12 @@ export const AccountListPage = () => {
       : sortedAccounts;
   return (
     <Container maxWidth="lg">
-      {header}
+      <PageHeader navigation={navigation} actions={actions}>
+        <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+          {t("layout.accounts")}
+        </Typography>
+      </PageHeader>
+
       <TableContainer component={Paper} elevation={4}>
         <Table aria-label="Account table">
           <TableHead>
@@ -211,7 +197,7 @@ const AccountListRow = (props: { account: AccountDto }) => {
           </HiddenField>
         </TableCell>
         <TableCell>
-          <AccountListRowActionButton account={props.account} />
+          <AccountActionButton account={props.account} showNavigationOption />
         </TableCell>
       </TableRow>
     </>

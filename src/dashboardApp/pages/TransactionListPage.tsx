@@ -1,11 +1,9 @@
 import {
   Avatar,
   Box,
-  Breadcrumbs,
   Collapse,
   Container,
   IconButton,
-  Link,
   Paper,
   Tab,
   Table,
@@ -17,8 +15,9 @@ import {
   TablePagination,
   TableRow,
   Tabs,
-  Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useGetGlobalTransactionsQuery } from "../redux/api/accountApi";
 import React, { useEffect } from "react";
@@ -28,7 +27,6 @@ import {
   KeyboardArrowUp,
   Remove,
 } from "@mui/icons-material";
-import { Link as RLink } from "react-router-dom";
 import { stringAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { TransactionDto } from "../../common/contracts";
@@ -48,8 +46,11 @@ import { TransactionHeatmap } from "../components/transaction/TransactionHeatmap
 import { usePageTitle } from "../components/usePageTitle";
 import { BASE_URL } from "../../const";
 import { useTranslation } from "react-i18next";
+import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 
 export const TransactionListPage = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { t } = useTranslation();
 
   const [tabIndex, setTabIndex] = React.useState(
@@ -117,34 +118,22 @@ export const TransactionListPage = () => {
     </Box>
   );
 
-  const header = (
-    <Paper elevation={0}>
-      <Box sx={{ px: 1, py: 2, mb: 2 }}>
-        <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
-          <div>
-            <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              {t("layout.transactions")}
-            </Typography>
-            <Breadcrumbs aria-label="breadcrumb">
-              <Link underline="hover" color="inherit" component={RLink} to="/">
-                ascii-pay
-              </Link>
-              <Link
-                underline="hover"
-                color="text.primary"
-                aria-current="page"
-                component={RLink}
-                to="/transactions"
-              >
-                {t("layout.transactions")}
-              </Link>
-            </Breadcrumbs>
-          </div>
+  const navigation: PageHeaderNavigation[] = [
+    {
+      label: t("layout.transactions"),
+      target: "/transactions",
+    },
+  ];
 
-          {rangePicker}
-        </Toolbar>
-      </Box>
-    </Paper>
+  const header = (
+    <PageHeader
+      navigation={navigation}
+      actionButtonView={isMobile ? undefined : rangePicker}
+    >
+      <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+        {t("layout.transactions")}
+      </Typography>
+    </PageHeader>
   );
 
   if (isLoading || transactions === undefined) {
@@ -218,12 +207,12 @@ export const TransactionListPage = () => {
       <Container maxWidth="lg">
         {header}
 
-        <Box sx={{ display: "flex", mb: 4 }}>
-          <GlobalTransactionSummary
-            transactions={filteredTransactions}
-            previousTransactions={previousTransactions}
-          />
-        </Box>
+        {isMobile ? <Box sx={{ mb: 2 }}>{rangePicker}</Box> : null}
+
+        <GlobalTransactionSummary
+          transactions={filteredTransactions}
+          previousTransactions={previousTransactions}
+        />
 
         <Paper sx={{ mb: 4 }} elevation={4}>
           <Tabs

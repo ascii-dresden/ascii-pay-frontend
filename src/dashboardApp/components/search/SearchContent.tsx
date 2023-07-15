@@ -21,11 +21,11 @@ import clsx from "clsx";
 import { Terminal } from "@mui/icons-material";
 import { CreateAccountDialog } from "../account/CreateAccountDialog";
 import { CreateProductDialog } from "../product/CreateProductDialog";
-import { AccountListRowActionButton } from "../account/AccountListRowActionButton";
-import { ProductListRowActionButton } from "../product/ProductListRowActionButton";
 import { BASE_URL } from "../../../const";
 import { useTranslation } from "react-i18next";
 import { HiddenField } from "../HiddenField";
+import { AccountActionButton } from "../account/AccountActionButton";
+import { ProductActionButton } from "../product/ProductActionButton";
 
 const StyledRow = styled("div")(({ theme }) => ({
   position: "relative",
@@ -257,10 +257,7 @@ const SearchAccountRow = (props: {
           </HiddenField>
         </StyledRowCoins>
         <StyledRowActions onClick={(e) => e.stopPropagation()}>
-          <AccountListRowActionButton
-            account={props.account}
-            hidePrimaryAction
-          />
+          <AccountActionButton account={props.account} minimize />
         </StyledRowActions>
       </StyledRow>
     </Link>
@@ -340,10 +337,7 @@ const SearchProductRow = (props: {
           <CoinAmountView coins={props.product.price} />
         </StyledRowCoins>
         <StyledRowActions onClick={(e) => e.stopPropagation()}>
-          <ProductListRowActionButton
-            product={props.product}
-            hidePrimaryAction
-          />
+          <ProductActionButton product={props.product} minimize />
         </StyledRowActions>
       </StyledRow>
     </Link>

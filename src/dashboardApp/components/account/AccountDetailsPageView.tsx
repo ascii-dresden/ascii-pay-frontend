@@ -1,14 +1,11 @@
 import {
-  Box,
-  Breadcrumbs,
   Container,
   Grid,
-  Link,
   Paper,
-  Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import { Link as RLink } from "react-router-dom";
 import { FullScreenLoader } from "../FullScreenLoader";
 import { TransactionListView } from "../transaction/TransactionListView";
 import React, { useEffect } from "react";
@@ -16,14 +13,17 @@ import { useGetAccountQuery } from "../../redux/api/accountApi";
 import { toast } from "react-toastify";
 import { CoinAmountView } from "../transaction/CoinAmountView";
 import { RoleChip } from "./RoleChip";
-import { AccountDetailsActionButton } from "./AccountDetailsActionButton";
+import { AccountActionButton } from "./AccountActionButton";
 import { usePageTitle } from "../usePageTitle";
 import { useTranslation } from "react-i18next";
+import { PageHeader, PageHeaderNavigation } from "../PageHeader";
 
 export const AccountDetailsPageView = (props: {
   accountId: number;
   isRoot?: boolean;
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { t } = useTranslation();
   const {
     isLoading,
@@ -50,80 +50,65 @@ export const AccountDetailsPageView = (props: {
     return <FullScreenLoader />;
   }
 
+  let headerNavigation: PageHeaderNavigation[] | undefined;
+  if (props.isRoot && !isMobile) {
+    headerNavigation = [];
+  } else if (!props.isRoot) {
+    headerNavigation = [
+      {
+        label: t("layout.accounts"),
+        target: "/accounts",
+      },
+      {
+        label: account.name,
+        target: `/accounts/${props.accountId}`,
+      },
+    ];
+  }
+
+  let headerTitle;
+  if (isMobile) {
+    headerTitle = (
+      <>
+        <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+          <span style={{ marginRight: "0.6rem" }}>{account.name}</span>
+          <RoleChip role={account.role} />
+        </Typography>
+        <Typography component="div">{account.email}</Typography>
+      </>
+    );
+  } else {
+    headerTitle = (
+      <>
+        <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+          <span style={{ marginRight: "0.6rem" }}>{account.name}</span>
+          {props.isRoot && account.role !== "Admin" ? null : (
+            <RoleChip role={account.role} />
+          )}
+        </Typography>
+
+        {props.isRoot ? (
+          account.role !== "Admin" ? (
+            <RoleChip role={account.role} />
+          ) : null
+        ) : null}
+      </>
+    );
+  }
+
   return (
     <Container maxWidth="lg">
-      <Paper elevation={0}>
-        <Box sx={{ px: 1, py: 2, mb: 2 }}>
-          <Toolbar
-            disableGutters={true}
-            sx={{ justifyContent: "space-between" }}
-          >
-            <div>
-              <Typography
-                sx={{ flex: "1 1 100%" }}
-                variant="h5"
-                component="div"
-              >
-                <span style={{ marginRight: "0.6rem" }}>{account.name}</span>
-                {props.isRoot && account.role !== "Admin" ? null : (
-                  <RoleChip role={account.role} />
-                )}
-              </Typography>
-
-              {props.isRoot ? (
-                account.role !== "Admin" ? (
-                  <RoleChip role={account.role} />
-                ) : (
-                  <Breadcrumbs aria-label="breadcrumb">
-                    <Link
-                      underline="hover"
-                      color="text.primary"
-                      aria-current="page"
-                      component={RLink}
-                      to="/"
-                    >
-                      ascii-pay
-                    </Link>
-                  </Breadcrumbs>
-                )
-              ) : (
-                <Breadcrumbs aria-label="breadcrumb">
-                  <Link
-                    underline="hover"
-                    color="inherit"
-                    component={RLink}
-                    to="/"
-                  >
-                    ascii-pay
-                  </Link>
-                  <Link
-                    underline="hover"
-                    color="inherit"
-                    component={RLink}
-                    to="/accounts"
-                  >
-                    {t("layout.accounts")}
-                  </Link>
-                  <Link
-                    underline="hover"
-                    color="text.primary"
-                    aria-current="page"
-                    component={RLink}
-                    to={`/accounts/${props.accountId}/`}
-                  >
-                    {account.name}
-                  </Link>
-                </Breadcrumbs>
-              )}
-            </div>
-
-            <AccountDetailsActionButton
-              account={account}
-              isOwn={props.isRoot}
-            />
-          </Toolbar>
-        </Box>
-      </Paper>
+      <PageHeader
+        navigation={headerNavigation}
+        actionButtonView={
+          <AccountActionButton
+            account={account}
+            showOptionsForOwnAccount={true}
+          />
+        }
+      >
+        {headerTitle}
+      </PageHeader>
 
       <Grid container spacing={4} sx={{ mb: 4 }}>
         <Grid item xs={12} md={6}>
@@ -134,7 +119,7 @@ export const AccountDetailsPageView = (props: {
             <CoinAmountView coins={account.balance} negativeIsError={true} />
           </Paper>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={6} sx={{ display: { xs: "none", md: "block" } }}>
           <Paper sx={{ height: "100%", p: 2 }} elevation={4}>
             <Typography gutterBottom variant="h6" component="div">
               {t("account.email")}

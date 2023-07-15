@@ -1,19 +1,16 @@
 import {
   Box,
-  Breadcrumbs,
   Button,
   ButtonGroup,
   Container,
-  Link,
   MenuItem,
   Paper,
   TextField,
-  Toolbar,
   Typography,
   useTheme,
 } from "@mui/material";
 import React from "react";
-import { Link as RLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TerminalApp, TerminalAppPage } from "../../terminalApp/TerminalApp";
 import { TerminalSettings } from "../../terminalApp/pages/TerminalSettingsPage";
 import { SelectAccountPopup } from "../components/account/SelectAccountPopup";
@@ -33,6 +30,7 @@ import {
 } from "@mui/icons-material";
 import { usePageTitle } from "../components/usePageTitle";
 import { BASE_URL } from "../../const";
+import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 
 type ConnectionSimulateState = {
   connected: boolean;
@@ -159,44 +157,28 @@ export const TerminalPage = () => {
     }
   };
 
+  let navigation: PageHeaderNavigation[] = [
+    {
+      label: "Terminal",
+      target: "/terminal",
+    },
+  ];
+
+  if (terminalPage !== "start") {
+    navigation.push({
+      label:
+        terminalPage.charAt(0).toUpperCase() +
+        terminalPage.substr(1).toLowerCase(),
+      target: `/terminal/${terminalPage}`,
+    });
+  }
+
   const header = (
-    <Paper elevation={0}>
-      <Box sx={{ px: 1, py: 2, mb: 2 }}>
-        <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
-          <div>
-            <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              Terminal emulator
-            </Typography>
-            <Breadcrumbs aria-label="breadcrumb">
-              <Link underline="hover" color="inherit" component={RLink} to="/">
-                ascii-pay
-              </Link>
-              <Link
-                underline="hover"
-                color={terminalPage === "start" ? "text.primary" : "inherit"}
-                aria-current={terminalPage === "start" ? "page" : undefined}
-                component={RLink}
-                to="/terminal"
-              >
-                Terminal
-              </Link>
-              {terminalPage !== "start" ? (
-                <Link
-                  underline="hover"
-                  color="text.primary"
-                  aria-current="page"
-                  component={RLink}
-                  to={`/terminal/${terminalPage}`}
-                >
-                  {terminalPage.charAt(0).toUpperCase() +
-                    terminalPage.substr(1).toLowerCase()}
-                </Link>
-              ) : null}
-            </Breadcrumbs>
-          </div>
-        </Toolbar>
-      </Box>
-    </Paper>
+    <PageHeader navigation={navigation}>
+      <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+        Terminal emulator
+      </Typography>
+    </PageHeader>
   );
 
   let connectionBox;

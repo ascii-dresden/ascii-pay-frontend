@@ -1,4 +1,4 @@
-import { Box, Paper, Typography } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import { CoinAmountView } from "./CoinAmountView";
 import React from "react";
 import { TransactionDto } from "../../../common/contracts";
@@ -68,9 +68,9 @@ export const GlobalTransactionSummary = (props: {
   }
 
   return (
-    <>
-      <Paper sx={{ mr: 4, flex: "1 1 100%" }} elevation={4}>
-        <Box sx={{ p: 2 }}>
+    <Grid container spacing={{ xs: 2, md: 4 }} sx={{ mb: 4 }}>
+      <Grid item xs={12} md={4}>
+        <Paper sx={{ height: "100%", p: 2 }} elevation={4}>
           <Typography gutterBottom variant="h6" component="div">
             {t("transactions.totalDeposit")}
           </Typography>
@@ -82,10 +82,10 @@ export const GlobalTransactionSummary = (props: {
               CoffeeStamp: totalUpCoffeeStamp,
             }}
           />
-        </Box>
-      </Paper>
-      <Paper sx={{ mr: 4, flex: "1 1 100%" }} elevation={4}>
-        <Box sx={{ p: 2 }}>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={4}>
+        <Paper sx={{ height: "100%", p: 2 }} elevation={4}>
           <Typography gutterBottom variant="h6" component="div">
             {t("transactions.totalPayout")}
           </Typography>
@@ -97,10 +97,10 @@ export const GlobalTransactionSummary = (props: {
               CoffeeStamp: totalDownCoffeeStamp,
             }}
           />
-        </Box>
-      </Paper>
-      <Paper sx={{ flex: "1 1 100%" }} elevation={4}>
-        <Box sx={{ p: 2 }}>
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={4}>
+        <Paper sx={{ height: "100%", p: 2 }} elevation={4}>
           <Typography gutterBottom variant="h6" component="div">
             {t("transactions.systemBalance")}
           </Typography>
@@ -113,8 +113,8 @@ export const GlobalTransactionSummary = (props: {
               CoffeeStamp: totalUpCoffeeStamp + totalDownCoffeeStamp,
             }}
           />
-        </Box>
-      </Paper>
-    </>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };

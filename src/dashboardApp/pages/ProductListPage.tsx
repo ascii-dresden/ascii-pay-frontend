@@ -1,10 +1,7 @@
 import {
   Avatar,
   Box,
-  Breadcrumbs,
-  Button,
   Container,
-  Link,
   Paper,
   Tab,
   Table,
@@ -16,24 +13,24 @@ import {
   TablePagination,
   TableRow,
   Tabs,
-  Toolbar,
   Typography,
 } from "@mui/material";
 import { useGetAllProductsQuery } from "../redux/api/productApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Add, Print } from "@mui/icons-material";
+import { Add, PrintOutlined } from "@mui/icons-material";
 import { CreateProductDialog } from "../components/product/CreateProductDialog";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { ProductDto } from "../../common/contracts";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { TagChip } from "../components/product/TagChip";
-import { ProductListRowActionButton } from "../components/product/ProductListRowActionButton";
-import { Link as RLink } from "react-router-dom";
 import { usePageTitle } from "../components/usePageTitle";
 import { BASE_URL } from "../../const";
 import { useTranslation } from "react-i18next";
+import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
+import { ActionButtonAction } from "../components/ActionButton";
+import { ProductActionButton } from "../components/product/ProductActionButton";
 
 export const ProductListPage = () => {
   const { t } = useTranslation();
@@ -61,64 +58,36 @@ export const ProductListPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
 
-  const header = (
-    <Paper elevation={0}>
-      <Box sx={{ px: 1, py: 2, mb: 2 }}>
-        <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
-          <div>
-            <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              {t("layout.products")}
-            </Typography>
-            <Breadcrumbs aria-label="breadcrumb">
-              <Link underline="hover" color="inherit" component={RLink} to="/">
-                ascii-pay
-              </Link>
-              <Link
-                underline="hover"
-                color="text.primary"
-                aria-current="page"
-                component={RLink}
-                to="/products"
-              >
-                {t("layout.products")}
-              </Link>
-            </Breadcrumbs>
-          </div>
+  const navigation: PageHeaderNavigation[] = [
+    {
+      label: t("layout.products"),
+      target: "/products",
+    },
+  ];
 
-          <Box
-            sx={{
-              display: "flex",
-              gap: 1,
-              alignItems: "flex-end",
-              justifyContent: "flex-end",
-              flexDirection: { xs: "column", sm: "row" },
-            }}
-          >
-            <Button
-              variant="text"
-              size="large"
-              startIcon={<Print />}
-              href="/printSnacks"
-            >
-              {t("product.action.printSnacks")}
-            </Button>
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<Add />}
-              sx={{ whiteSpace: "nowrap" }}
-              onClick={() => setOpenModal(true)}
-            >
-              {t("product.action.createProduct")}
-            </Button>
-          </Box>
-        </Toolbar>
-      </Box>
-    </Paper>
-  );
+  const actions: ActionButtonAction[] = [
+    {
+      label: t("product.action.createProduct"),
+      icon: <Add />,
+      action: () => setOpenModal(true),
+    },
+    {
+      label: t("product.action.printSnacks"),
+      icon: <PrintOutlined />,
+      href: "/printSnacks",
+    },
+  ];
 
   if (isLoading || products === undefined) {
-    return <PaperScreenLoader>{header}</PaperScreenLoader>;
+    return (
+      <PaperScreenLoader>
+        <PageHeader navigation={navigation} actions={actions}>
+          <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+            {t("layout.products")}
+          </Typography>
+        </PageHeader>
+      </PaperScreenLoader>
+    );
   }
 
   let categories =
@@ -167,7 +136,12 @@ export const ProductListPage = () => {
 
   return (
     <Container maxWidth="lg">
-      {header}
+      <PageHeader navigation={navigation} actions={actions}>
+        <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+          {t("layout.products")}
+        </Typography>
+      </PageHeader>
+
       <TableContainer component={Paper} elevation={4}>
         <Box
           sx={{
@@ -268,7 +242,7 @@ const ProductListRow = (props: { product: ProductDto }) => {
           <CoinAmountView coins={props.product.bonus} />
         </TableCell>
         <TableCell>
-          <ProductListRowActionButton product={props.product} />
+          <ProductActionButton product={props.product} showNavigationOption />
         </TableCell>
       </TableRow>
     </>

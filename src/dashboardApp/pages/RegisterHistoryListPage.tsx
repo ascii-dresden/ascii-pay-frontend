@@ -1,6 +1,5 @@
 import {
   Box,
-  Breadcrumbs,
   Button,
   ButtonGroup,
   Collapse,
@@ -10,7 +9,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Link,
   Paper,
   Table,
   TableBody,
@@ -20,7 +18,6 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Toolbar,
   Typography,
   useMediaQuery,
   useTheme,
@@ -37,7 +34,6 @@ import {
   KeyboardArrowUp,
   Remove,
 } from "@mui/icons-material";
-import { Link as RLink } from "react-router-dom";
 import {
   RegisterHistoryDto,
   RegisterHistoryStateDto,
@@ -52,8 +48,11 @@ import { moneyToString } from "../../terminalApp/components/Money";
 import { getRegisterHistorySum } from "../../common/registerHistoryUtils";
 import { LoadingButton } from "@mui/lab";
 import { Trans, useTranslation } from "react-i18next";
+import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 
 export const RegisterHistoryListPage = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { t } = useTranslation();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -107,34 +106,22 @@ export const RegisterHistoryListPage = () => {
     </Box>
   );
 
-  const header = (
-    <Paper elevation={0}>
-      <Box sx={{ px: 1, py: 2, mb: 2 }}>
-        <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
-          <div>
-            <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-              {t("layout.registerHistory")}
-            </Typography>
-            <Breadcrumbs aria-label="breadcrumb">
-              <Link underline="hover" color="inherit" component={RLink} to="/">
-                ascii-pay
-              </Link>
-              <Link
-                underline="hover"
-                color="text.primary"
-                aria-current="page"
-                component={RLink}
-                to="/registerHistory"
-              >
-                {t("layout.registerHistory")}
-              </Link>
-            </Breadcrumbs>
-          </div>
+  const navigation: PageHeaderNavigation[] = [
+    {
+      label: t("layout.registerHistory"),
+      target: "/registerHistory",
+    },
+  ];
 
-          {rangePicker}
-        </Toolbar>
-      </Box>
-    </Paper>
+  const header = (
+    <PageHeader
+      navigation={navigation}
+      actionButtonView={isMobile ? undefined : rangePicker}
+    >
+      <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+        {t("layout.registerHistory")}
+      </Typography>
+    </PageHeader>
   );
 
   if (isLoading || registerHistories === undefined) {
@@ -197,6 +184,8 @@ export const RegisterHistoryListPage = () => {
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
       <Container maxWidth="lg">
         {header}
+
+        {isMobile ? <Box sx={{ mb: 2 }}>{rangePicker}</Box> : null}
 
         <TableContainer component={Paper} elevation={4}>
           <Table aria-label="RegisterHistories table">
