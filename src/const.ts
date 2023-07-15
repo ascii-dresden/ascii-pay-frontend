@@ -1,4 +1,7 @@
-// export const BASE_URL = `${window.origin}/api/v1`;
-export const BASE_URL = import.meta.env.PROD
-  ? `https://pay.ascii.coffee/api/v1`
-  : `http://localhost:3000/api/v1`;
+export const USE_DEV_MODE = !import.meta.env.PROD;
+
+export const USE_DEV_COLOR_SCHEMA = true;
+
+export const BASE_URL = USE_DEV_MODE
+  ? `${location.origin}/api/v1`
+  : `https://pay.ascii.coffee/api/v1`;

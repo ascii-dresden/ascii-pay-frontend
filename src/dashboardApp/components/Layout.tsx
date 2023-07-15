@@ -48,7 +48,7 @@ import {
   setLanguage,
   toggleRevealAllHiddenFields,
 } from "../redux/features/adminSlice";
-import { BASE_URL } from "../../const";
+import { BASE_URL, USE_DEV_MODE } from "../../const";
 
 const drawerWidth = 240;
 
@@ -154,7 +154,12 @@ export const Layout = () => {
         </AppBar>
         <Box
           component="main"
-          sx={{ flexGrow: 1, p: { xs: 0, md: 3 }, position: "relative" }}
+          sx={{
+            flexGrow: 1,
+            p: { xs: 0, md: 3 },
+            pb: { xs: 2, md: 3 },
+            position: "relative",
+          }}
         >
           <Toolbar />
 
@@ -354,7 +359,7 @@ export const Layout = () => {
                 </ListItemIcon>
                 <Typography variant="inherit">English</Typography>
               </MenuItem>
-              {import.meta.env.PROD ? undefined : (
+              {!USE_DEV_MODE ? undefined : (
                 <MenuItem
                   onClick={() => handleTranslateClose("dev")}
                   selected={language.includes("dev")}
@@ -385,7 +390,7 @@ export const Layout = () => {
   );
 
   let devMode;
-  if (import.meta.env.DEV && !isMobile) {
+  if (USE_DEV_MODE && !isMobile) {
     devMode = (
       <Box display="flex" sx={{ ml: "auto", pr: 2 }}>
         <Box component="code" sx={{ fontSize: 10, lineHeight: 1.1 }}>
@@ -471,7 +476,12 @@ export const Layout = () => {
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, p: { xs: 0, md: 3 }, position: "relative" }}
+        sx={{
+          flexGrow: 1,
+          p: { xs: 0, md: 3 },
+          pb: { xs: 2, md: 3 },
+          position: "relative",
+        }}
       >
         <Toolbar />
 

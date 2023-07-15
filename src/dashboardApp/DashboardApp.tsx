@@ -19,6 +19,7 @@ import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n_german from "./locales/de/translation.json";
 import i18n_english from "./locales/en/translation.json";
 import { blue, red } from "@mui/material/colors";
+import { USE_DEV_COLOR_SCHEMA, USE_DEV_MODE } from "../const";
 
 const ProfilePage = React.lazy(() =>
   import("./pages/ProfilePage").then((module) => ({
@@ -91,9 +92,9 @@ export function DashboardApp() {
         palette: {
           mode: prefersDarkMode ? "dark" : "light",
           primary: {
-            main: import.meta.env.PROD ? blue[700] : red[600],
-            light: import.meta.env.PROD ? blue[700] : red[600],
-            dark: import.meta.env.PROD ? blue[700] : red[600],
+            main: USE_DEV_MODE && USE_DEV_COLOR_SCHEMA ? red[600] : blue[700],
+            light: USE_DEV_MODE && USE_DEV_COLOR_SCHEMA ? red[600] : blue[700],
+            dark: USE_DEV_MODE && USE_DEV_COLOR_SCHEMA ? red[600] : blue[700],
           },
         },
         typography: {
