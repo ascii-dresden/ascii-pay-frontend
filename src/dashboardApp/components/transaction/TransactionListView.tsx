@@ -206,7 +206,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
           }}
         >
           <Grid container spacing={4} sx={{ mb: 4 }}>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={6} lg={3}>
               <Box sx={{ p: 1 }}>
                 <Typography gutterBottom variant="h6" component="div">
                   {t("account.usedCredit")}
@@ -214,7 +214,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
                 <CoinAmountView coins={totalDown} isTransaction={true} />
               </Box>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={6} lg={3}>
               <Box sx={{ p: 1 }}>
                 <Typography gutterBottom variant="h6" component="div">
                   {t("account.loadedCredit")}
@@ -222,7 +222,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
                 <CoinAmountView coins={totalUp} />
               </Box>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} lg={6}>
               <Box
                 sx={{
                   display: "flex",
