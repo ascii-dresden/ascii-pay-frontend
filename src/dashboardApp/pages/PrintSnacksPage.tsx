@@ -174,12 +174,12 @@ export const PrintSnacksPage = () => {
                   (column + 1) * Math.ceil(snacks.length / COLUMN_COUNT)
                 )
                 .map((snack) => (
-                  <>
-                    <Text key={`${snack.id} -name`}>{snack.name}</Text>
-                    <Text key={`${snack.id} -price`}>
+                  <React.Fragment key={snack.id}>
+                    <Text key={`${snack.id}-name`}>{snack.name}</Text>
+                    <Text key={`${snack.id}-price`}>
                       {moneyToString(snack.price.Cent ?? 0)}
                     </Text>
-                  </>
+                  </React.Fragment>
                 ))}
             </Grid>
           ))}
