@@ -113,7 +113,16 @@
     "thursday": "Donnerstag",
     "friday": "Freitag",
     "saturday": "Samstag",
-    "sunday": "Sonntag"
+    "sunday": "Sonntag",
+    "compact": {
+      "monday": "Mo",
+      "tuesday": "Di",
+      "wednesday": "Mi",
+      "thursday": "Do",
+      "friday": "Fr",
+      "saturday": "Sa",
+      "sunday": "So"
+    }
   },
   "transactions": {
     "total": "Summe",

@@ -68,7 +68,7 @@ export const GlobalTransactionSummary = (props: {
   }
 
   return (
-    <Grid container spacing={{ xs: 2, md: 4 }} sx={{ mb: 4 }}>
+    <Grid container spacing={{ xs: 2, md: 4 }} sx={{ mb: { xs: 2, sm: 4 } }}>
       <Grid item xs={12} md={4}>
         <Paper sx={{ height: "100%", p: 2 }} elevation={4}>
           <Typography gutterBottom variant="h6" component="div">

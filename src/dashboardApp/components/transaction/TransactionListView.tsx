@@ -197,7 +197,7 @@ export const TransactionListView = (props: { account: AccountDto }) => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
-      <Paper sx={{ mb: 4, width: "100%" }} elevation={4}>
+      <Paper sx={{ mb: { xs: 2, sm: 4 }, width: "100%" }} elevation={4}>
         <Box
           sx={{
             px: 2,

@@ -64,7 +64,7 @@ export const PageHeader = (props: {
   if (isMobile) {
     header = (
       <Box sx={{ px: 1, py: 2, mb: 2 }}>
-        {navigation ? <Box sx={{ my: 1 }}>{navigation}</Box> : null}
+        <Box sx={{ my: 1 }}>{navigation}</Box>
         <Toolbar disableGutters={true} sx={{ justifyContent: "space-between" }}>
           <div>{props.children}</div>
           {actionButton}

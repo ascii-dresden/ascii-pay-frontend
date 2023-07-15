@@ -2,7 +2,7 @@ import React from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { TransactionDto } from "../../../common/contracts";
-import { Theme, useTheme } from "@mui/material";
+import { Theme, useMediaQuery, useTheme } from "@mui/material";
 import styled from "@emotion/styled";
 import { dateToGrouping } from "./GlobalTransactionChart";
 import { renderToString } from "react-dom/server";
@@ -61,8 +61,9 @@ export const TransactionHeatmap = (props: {
   startDate?: Date | null;
   endDate?: Date | null;
 }) => {
-  const { t } = useTranslation();
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { t } = useTranslation();
   let groupedTransactions = new Map<number, TransactionDto[]>();
 
   const timeDiff = 24 * 60 * 60 * 1000;
@@ -106,31 +107,31 @@ export const TransactionHeatmap = (props: {
 
   let series: { name: string; data: SeriesData[] }[] = [
     {
-      name: t("date.monday"),
+      name: isMobile ? t("date.compact.monday") : t("date.monday"),
       data: [],
     },
     {
-      name: t("date.tuesday"),
+      name: isMobile ? t("date.compact.tuesday") : t("date.tuesday"),
       data: [],
     },
     {
-      name: t("date.wednesday"),
+      name: isMobile ? t("date.compact.wednesday") : t("date.wednesday"),
       data: [],
     },
     {
-      name: t("date.thursday"),
+      name: isMobile ? t("date.compact.thursday") : t("date.thursday"),
       data: [],
     },
     {
-      name: t("date.friday"),
+      name: isMobile ? t("date.compact.friday") : t("date.friday"),
       data: [],
     },
     {
-      name: t("date.saturday"),
+      name: isMobile ? t("date.compact.saturday") : t("date.saturday"),
       data: [],
     },
     {
-      name: t("date.sunday"),
+      name: isMobile ? t("date.compact.sunday") : t("date.sunday"),
       data: [],
     },
   ];

@@ -214,7 +214,7 @@ export const TransactionListPage = () => {
           previousTransactions={previousTransactions}
         />
 
-        <Paper sx={{ mb: 4 }} elevation={4}>
+        <Paper sx={{ mb: { xs: 2, sm: 4 } }} elevation={4}>
           <Tabs
             sx={{ px: 2, pt: 1 }}
             value={tabIndex}
