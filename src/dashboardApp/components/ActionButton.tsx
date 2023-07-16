@@ -153,7 +153,13 @@ export const ActionButton = (props: {
                     if (item.href) {
                       return (
                         <MenuItem component="a" href={item.href} key={index}>
-                          <ListItemIcon>{item.icon}</ListItemIcon>
+                          <ListItemIcon
+                            sx={{
+                              "& > svg": { fontSize: "1.25rem !important" },
+                            }}
+                          >
+                            {item.icon}
+                          </ListItemIcon>
                           <ListItemText>{item.label}</ListItemText>
                         </MenuItem>
                       );
@@ -163,7 +169,11 @@ export const ActionButton = (props: {
                         onClick={() => handleMenuItemClick(item.action!)}
                         key={index}
                       >
-                        <ListItemIcon>{item.icon}</ListItemIcon>
+                        <ListItemIcon
+                          sx={{ "& > svg": { fontSize: "1.25rem !important" } }}
+                        >
+                          {item.icon}
+                        </ListItemIcon>
                         <ListItemText>{item.label}</ListItemText>
                       </MenuItem>
                     );

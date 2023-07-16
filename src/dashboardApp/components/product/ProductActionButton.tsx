@@ -26,12 +26,12 @@ export const ProductActionButton = (props: {
     },
     {
       label: t("product.action.editImage"),
-      icon: <ImageOutlined fontSize="small" />,
+      icon: <ImageOutlined />,
       action: () => setOpenImageModal(true),
     },
     {
       label: t("product.action.deleteProduct"),
-      icon: <DeleteOutline fontSize="small" />,
+      icon: <DeleteOutline />,
       action: () => setOpenDeleteModal(true),
     },
   ];

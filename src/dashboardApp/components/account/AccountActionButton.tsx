@@ -38,17 +38,17 @@ export const AccountActionButton = (props: {
     },
     {
       label: t("account.action.editAccount"),
-      icon: <Edit fontSize="small" />,
+      icon: <Edit />,
       action: () => setOpenEditModal(true),
     },
     {
       label: t("account.action.authenticationMethods"),
-      icon: <LockOutlined fontSize="small" />,
+      icon: <LockOutlined />,
       action: () => setOpenAuthModal(true),
     },
     {
       label: t("account.action.activeSessions"),
-      icon: <Token fontSize="small" />,
+      icon: <Token />,
       action: () => setOpenSessionModal(true),
     },
   ];
@@ -63,7 +63,7 @@ export const AccountActionButton = (props: {
   if (token && props.showOptionsForOwnAccount) {
     actions.push({
       label: t("account.action.appleWallet"),
-      icon: <Wallet fontSize="small" />,
+      icon: <Wallet />,
       href: `/v1/asciipay.pkpass?session_token=${token}`,
     });
   }

@@ -30,6 +30,7 @@ import { CoinAmountEdit } from "./CoinAmountEdit";
 import {
   Close,
   DeleteOutline,
+  DeleteOutlined,
   PlaylistAdd,
   SwitchLeft,
 } from "@mui/icons-material";
@@ -406,7 +407,7 @@ const MobileTable = (props: {
                   <TableCell colSpan={2}>{item.product?.name ?? "-"}</TableCell>
                   <TableCell width={72}>
                     <IconButton onClick={() => props.handleRemoveItem(index)}>
-                      <DeleteOutline fontSize="small" />
+                      <DeleteOutlined />
                     </IconButton>
                   </TableCell>
                 </TableRow>
