@@ -6,9 +6,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
-  TablePagination,
   TableRow,
   Typography,
 } from "@mui/material";
@@ -28,6 +26,7 @@ import { HiddenField } from "../components/HiddenField";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { ActionButtonAction } from "../components/ActionButton";
 import { AccountActionButton } from "../components/account/AccountActionButton";
+import { DefaultTablePagination } from "../components/DefaultTablePagination";
 
 export const AccountListPage = () => {
   const { t } = useTranslation();
@@ -118,54 +117,38 @@ export const AccountListPage = () => {
         </Typography>
       </PageHeader>
 
-      <TableContainer component={Paper} elevation={4}>
-        <Table aria-label="Account table">
-          <TableHead>
-            <TableRow>
-              <TableCell width={72}></TableCell>
-              <TableCell>{t("account.name")}</TableCell>
-              <TableCell>{t("account.email")}</TableCell>
-              <TableCell width={250}>{t("account.balance")}</TableCell>
-              <TableCell width={150}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {slicedAccounts.map((account) => (
-              <AccountListRow key={account.id} account={account} />
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 78 * emptyRows }}>
-                <TableCell colSpan={5} />
+      <Paper sx={{ overflow: "hidden" }} elevation={4}>
+        <TableContainer>
+          <Table aria-label="Account table">
+            <TableHead>
+              <TableRow>
+                <TableCell width={72}></TableCell>
+                <TableCell>{t("account.name")}</TableCell>
+                <TableCell>{t("account.email")}</TableCell>
+                <TableCell width={250}>{t("account.balance")}</TableCell>
+                <TableCell width={150}></TableCell>
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[
-                  5,
-                  10,
-                  25,
-                  { label: t("layout.rowsPerPageAll"), value: -1 },
-                ]}
-                labelRowsPerPage={t("layout.rowsPerPage")}
-                colSpan={5}
-                count={accounts.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {slicedAccounts.map((account) => (
+                <AccountListRow key={account.id} account={account} />
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 78 * emptyRows }}>
+                  <TableCell colSpan={5} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <DefaultTablePagination
+          count={accounts.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
       <CreateAccountDialog open={openModal} setOpen={setOpenModal} />
     </Container>
   );

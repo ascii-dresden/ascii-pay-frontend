@@ -11,9 +11,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
-  TablePagination,
   TableRow,
   Tabs,
   Typography,
@@ -39,6 +37,7 @@ import { TransactionListRowAuthorization } from "./TransactionListRowAuthorizati
 import { TransactionHeatmap } from "./TransactionHeatmap";
 import { BASE_URL } from "../../../const";
 import { useTranslation } from "react-i18next";
+import { DefaultTablePagination } from "../DefaultTablePagination";
 
 export const TransactionListView = (props: { account: AccountDto }) => {
   const { t } = useTranslation();
@@ -280,57 +279,42 @@ export const TransactionListView = (props: { account: AccountDto }) => {
           ) : null}
         </Box>
       </Paper>
-      <TableContainer component={Paper} elevation={4} sx={{ width: "100%" }}>
-        <Table aria-label="Transactions table">
-          <TableHead>
-            <TableRow>
-              <TableCell width={72}></TableCell>
-              <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
-                {t("transactions.date")}
-              </TableCell>
-              <TableCell>{t("transactions.total")}</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {slicedTransactions?.map((transaction) => (
-              <TransactionListRow
-                key={transaction.id}
-                transaction={transaction}
-              />
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 67 * emptyRows }}>
-                <TableCell colSpan={3} />
+      <Paper elevation={4}>
+        <TableContainer>
+          <Table aria-label="Transactions table">
+            <TableHead>
+              <TableRow>
+                <TableCell width={72}></TableCell>
+                <TableCell sx={{ display: { xs: "none", sm: "table-cell" } }}>
+                  {t("transactions.date")}
+                </TableCell>
+                <TableCell>{t("transactions.total")}</TableCell>
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[
-                  5,
-                  10,
-                  25,
-                  { label: t("layout.rowsPerPageAll"), value: -1 },
-                ]}
-                labelRowsPerPage={t("layout.rowsPerPage")}
-                colSpan={3}
-                count={sortedTransactions.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {slicedTransactions?.map((transaction) => (
+                <TransactionListRow
+                  key={transaction.id}
+                  transaction={transaction}
+                />
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 67 * emptyRows }}>
+                  <TableCell colSpan={3} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <DefaultTablePagination
+          count={sortedTransactions.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </LocalizationProvider>
   );
 };

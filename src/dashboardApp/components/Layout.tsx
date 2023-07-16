@@ -159,6 +159,7 @@ export const Layout = () => {
             p: { xs: 0, md: 3 },
             pb: { xs: 2, md: 3 },
             position: "relative",
+            width: "100%",
           }}
         >
           <Toolbar />
@@ -481,6 +482,7 @@ export const Layout = () => {
           p: { xs: 0, md: 3 },
           pb: { xs: 2, md: 3 },
           position: "relative",
+          width: "100%",
         }}
       >
         <Toolbar />

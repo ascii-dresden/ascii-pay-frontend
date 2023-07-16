@@ -14,9 +14,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
-  TablePagination,
   TableRow,
   Typography,
   useMediaQuery,
@@ -49,6 +47,7 @@ import { getRegisterHistorySum } from "../../common/registerHistoryUtils";
 import { LoadingButton } from "@mui/lab";
 import { Trans, useTranslation } from "react-i18next";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
+import { DefaultTablePagination } from "../components/DefaultTablePagination";
 
 export const RegisterHistoryListPage = () => {
   const theme = useTheme();
@@ -187,58 +186,42 @@ export const RegisterHistoryListPage = () => {
 
         {isMobile ? <Box sx={{ mb: 2 }}>{rangePicker}</Box> : null}
 
-        <TableContainer component={Paper} elevation={4}>
-          <Table aria-label="RegisterHistories table">
-            <TableHead>
-              <TableRow>
-                <TableCell width={72}></TableCell>
-                <TableCell>{t("registerHistory.date")}</TableCell>
-                <TableCell>{t("registerHistory.total")}</TableCell>
-                <TableCell>{t("registerHistory.envelope")}</TableCell>
-                <TableCell>{t("registerHistory.remaining")}</TableCell>
-                <TableCell width={128}></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {slicedRegisterHistories?.map((registerHistory) => (
-                <RegisterHistoryListRow
-                  key={registerHistory.id}
-                  registerHistory={registerHistory}
-                />
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 67 * emptyRows }}>
-                  <TableCell colSpan={6} />
+        <Paper elevation={4}>
+          <TableContainer>
+            <Table aria-label="RegisterHistories table">
+              <TableHead>
+                <TableRow>
+                  <TableCell width={72}></TableCell>
+                  <TableCell>{t("registerHistory.date")}</TableCell>
+                  <TableCell>{t("registerHistory.total")}</TableCell>
+                  <TableCell>{t("registerHistory.envelope")}</TableCell>
+                  <TableCell>{t("registerHistory.remaining")}</TableCell>
+                  <TableCell width={128}></TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  rowsPerPageOptions={[
-                    5,
-                    10,
-                    25,
-                    { label: t("layout.rowsPerPageAll"), value: -1 },
-                  ]}
-                  labelRowsPerPage={t("layout.rowsPerPage")}
-                  colSpan={6}
-                  count={sortedRegisterHistories.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  SelectProps={{
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
-                  }}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {slicedRegisterHistories?.map((registerHistory) => (
+                  <RegisterHistoryListRow
+                    key={registerHistory.id}
+                    registerHistory={registerHistory}
+                  />
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 67 * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <DefaultTablePagination
+            count={sortedRegisterHistories.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
       </Container>
     </LocalizationProvider>
   );

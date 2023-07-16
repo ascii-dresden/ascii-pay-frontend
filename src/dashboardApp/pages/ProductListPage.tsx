@@ -8,9 +8,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
-  TablePagination,
   TableRow,
   Tabs,
   Typography,
@@ -31,6 +29,7 @@ import { useTranslation } from "react-i18next";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { ActionButtonAction } from "../components/ActionButton";
 import { ProductActionButton } from "../components/product/ProductActionButton";
+import { DefaultTablePagination } from "../components/DefaultTablePagination";
 
 export const ProductListPage = () => {
   const { t } = useTranslation();
@@ -142,7 +141,7 @@ export const ProductListPage = () => {
         </Typography>
       </PageHeader>
 
-      <TableContainer component={Paper} elevation={4}>
+      <Paper elevation={4}>
         <Box
           sx={{
             borderBottom: 1,
@@ -150,6 +149,8 @@ export const ProductListPage = () => {
           }}
         >
           <Tabs
+            variant="scrollable"
+            scrollButtons="auto"
             value={tabIndex}
             onChange={(_, i) => {
               setTabIndex(i);
@@ -161,53 +162,37 @@ export const ProductListPage = () => {
             ))}
           </Tabs>
         </Box>
-        <Table aria-label="Products table">
-          <TableHead>
-            <TableRow>
-              <TableCell width={72}></TableCell>
-              <TableCell>{t("product.name")}</TableCell>
-              <TableCell width={250}>{t("product.price")}</TableCell>
-              <TableCell width={250}>{t("product.bonus")}</TableCell>
-              <TableCell width={128}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {slicedProducts.map((product) => (
-              <ProductListRow key={product.id} product={product} />
-            ))}
-            {emptyRows > 0 && (
-              <TableRow style={{ height: 78 * emptyRows }}>
-                <TableCell colSpan={5} />
+        <TableContainer>
+          <Table aria-label="Products table">
+            <TableHead>
+              <TableRow>
+                <TableCell width={72}></TableCell>
+                <TableCell>{t("product.name")}</TableCell>
+                <TableCell width={250}>{t("product.price")}</TableCell>
+                <TableCell width={250}>{t("product.bonus")}</TableCell>
+                <TableCell width={128}></TableCell>
               </TableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[
-                  5,
-                  10,
-                  25,
-                  { label: t("layout.rowsPerPageAll"), value: -1 },
-                ]}
-                labelRowsPerPage={t("layout.rowsPerPage")}
-                colSpan={5}
-                count={filteredProducts.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {slicedProducts.map((product) => (
+                <ProductListRow key={product.id} product={product} />
+              ))}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 78 * emptyRows }}>
+                  <TableCell colSpan={5} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <DefaultTablePagination
+          count={filteredProducts.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
       <CreateProductDialog open={openModal} setOpen={setOpenModal} />
     </Container>
   );
