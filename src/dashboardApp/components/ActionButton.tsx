@@ -26,6 +26,7 @@ export type ActionButtonAction = {
 export const ActionButton = (props: {
   actions?: ActionButtonAction[];
   minimize?: boolean;
+  zIndex?: number;
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -130,13 +131,13 @@ export const ActionButton = (props: {
       </ButtonGroup>
       <Popper
         sx={{
-          zIndex: 1,
+          zIndex: props.zIndex ?? 1,
         }}
         open={open}
         anchorEl={anchorRef.current}
         role={undefined}
         transition
-        disablePortal
+        disablePortal={!props.zIndex}
       >
         {({ TransitionProps, placement }) => (
           <Grow

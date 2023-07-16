@@ -11,6 +11,7 @@ export const ProductActionButton = (props: {
   product: ProductDto;
   showNavigationOption?: boolean;
   minimize?: boolean;
+  zIndex?: number;
 }) => {
   const { t } = useTranslation();
 
@@ -45,7 +46,11 @@ export const ProductActionButton = (props: {
 
   return (
     <>
-      <ActionButton actions={actions} minimize={props.minimize} />
+      <ActionButton
+        actions={actions}
+        minimize={props.minimize}
+        zIndex={props.zIndex}
+      />
 
       <UpdateProductImageDialog
         product={props.product}

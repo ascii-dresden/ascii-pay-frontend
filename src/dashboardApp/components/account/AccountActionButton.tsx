@@ -20,6 +20,7 @@ export const AccountActionButton = (props: {
   showNavigationOption?: boolean;
   showOptionsForOwnAccount?: boolean;
   minimize?: boolean;
+  zIndex?: number;
 }) => {
   const { t } = useTranslation();
 
@@ -70,7 +71,11 @@ export const AccountActionButton = (props: {
 
   return (
     <>
-      <ActionButton actions={actions} minimize={props.minimize} />
+      <ActionButton
+        actions={actions}
+        minimize={props.minimize}
+        zIndex={props.zIndex}
+      />
 
       <UpdateAccountDialog
         account={props.account}

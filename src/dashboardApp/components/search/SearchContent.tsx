@@ -77,6 +77,11 @@ const StyledRowEmpty = styled("div")(() => ({
   alignItems: "center",
 }));
 
+const rowActionHandler = (e: React.MouseEvent) => {
+  e.stopPropagation();
+  e.preventDefault();
+};
+
 export const SearchContent = (props: {
   search: string;
   onClose: () => void;
@@ -256,8 +261,8 @@ const SearchAccountRow = (props: {
             />
           </HiddenField>
         </StyledRowCoins>
-        <StyledRowActions onClick={(e) => e.stopPropagation()}>
-          <AccountActionButton account={props.account} minimize />
+        <StyledRowActions onClick={rowActionHandler}>
+          <AccountActionButton account={props.account} zIndex={1300} minimize />
         </StyledRowActions>
       </StyledRow>
     </Link>
@@ -336,8 +341,8 @@ const SearchProductRow = (props: {
         <StyledRowCoins>
           <CoinAmountView coins={props.product.price} />
         </StyledRowCoins>
-        <StyledRowActions onClick={(e) => e.stopPropagation()}>
-          <ProductActionButton product={props.product} minimize />
+        <StyledRowActions onClick={rowActionHandler}>
+          <ProductActionButton product={props.product} zIndex={1300} minimize />
         </StyledRowActions>
       </StyledRow>
     </Link>
