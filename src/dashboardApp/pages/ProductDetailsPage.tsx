@@ -13,7 +13,7 @@ import {
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
-import { useGetProductQuery } from "../redux/api/productApi";
+import { productApi, useGetProductQuery } from "../redux/api/productApi";
 import { FullScreenLoader } from "../components/FullScreenLoader";
 import { TagChip } from "../components/product/TagChip";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
@@ -24,6 +24,8 @@ import { usePageTitle } from "../components/usePageTitle";
 import { BASE_URL } from "../../const";
 import { useTranslation } from "react-i18next";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
+import { useDashboardDispatch } from "../redux/dashboardStore";
+import { PullToRefreshWrapper } from "../components/PullToRefresh";
 
 export const ProductDetailsPage = () => {
   const { t } = useTranslation();
@@ -38,6 +40,13 @@ export const ProductDetailsPage = () => {
     error,
     data: product,
   } = useGetProductQuery(productId);
+  const dispatch = useDashboardDispatch();
+
+  const handleRefresh = () => {
+    dispatch(
+      productApi.util?.invalidateTags([{ type: "Products", id: productId }])
+    );
+  };
 
   usePageTitle([t("layout.products"), product?.name ?? t("layout.loading")]);
 
@@ -65,138 +74,140 @@ export const ProductDetailsPage = () => {
   ];
 
   return (
-    <Container maxWidth="lg">
-      <PageHeader
-        navigation={navigation}
-        actionButtonView={<ProductActionButton product={product} />}
-      >
-        <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-          <span style={{ marginRight: "0.6rem" }}>{product.name}</span>
-          {product.tags.map((t) => (
-            <TagChip key={t} tag={t} />
-          ))}
-        </Typography>
-      </PageHeader>
+    <PullToRefreshWrapper onRefresh={handleRefresh}>
+      <Container maxWidth="lg">
+        <PageHeader
+          navigation={navigation}
+          actionButtonView={<ProductActionButton product={product} />}
+        >
+          <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+            <span style={{ marginRight: "0.6rem" }}>{product.name}</span>
+            {product.tags.map((t) => (
+              <TagChip key={t} tag={t} />
+            ))}
+          </Typography>
+        </PageHeader>
 
-      <Box sx={{ mb: 4 }}>
-        <Paper sx={{ display: { xs: "block", md: "flex" } }} elevation={4}>
-          <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
-            <Avatar
-              alt={product.name}
-              src={`${BASE_URL}/product/${product.id}/image`}
-              variant="rounded"
-              sx={{
-                width: 128,
-                height: 128,
-                border: `solid 1px ${theme.palette.divider}`,
-              }}
-              {...stringWithoutColorAvatar(product.name)}
-            />
-          </Box>
-          <Box sx={{ p: 2, flexGrow: 1 }}>
-            <Table size="small">
-              <TableBody>
-                <TableRow
-                  sx={{ "& > *": { borderBottom: "unset !important" } }}
-                >
-                  <TableCell
-                    width={100}
-                    align="right"
-                    sx={{ fontWeight: "bold" }}
+        <Box sx={{ mb: 4 }}>
+          <Paper sx={{ display: { xs: "block", md: "flex" } }} elevation={4}>
+            <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
+              <Avatar
+                alt={product.name}
+                src={`${BASE_URL}/product/${product.id}/image`}
+                variant="rounded"
+                sx={{
+                  width: 128,
+                  height: 128,
+                  border: `solid 1px ${theme.palette.divider}`,
+                }}
+                {...stringWithoutColorAvatar(product.name)}
+              />
+            </Box>
+            <Box sx={{ p: 2, flexGrow: 1 }}>
+              <Table size="small">
+                <TableBody>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    {t("product.name")}
-                  </TableCell>
-                  <TableCell>{product.name}</TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "& > *": { borderBottom: "unset !important" } }}
-                >
-                  <TableCell
-                    width={100}
-                    align="right"
-                    sx={{ fontWeight: "bold" }}
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.name")}
+                    </TableCell>
+                    <TableCell>{product.name}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    {t("product.nickname")}
-                  </TableCell>
-                  <TableCell>{product.nickname}</TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "& > *": { borderBottom: "unset !important" } }}
-                >
-                  <TableCell
-                    width={100}
-                    align="right"
-                    sx={{ fontWeight: "bold" }}
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.nickname")}
+                    </TableCell>
+                    <TableCell>{product.nickname}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    {t("product.category")}
-                  </TableCell>
-                  <TableCell>{product.category}</TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "& > *": { borderBottom: "unset !important" } }}
-                >
-                  <TableCell
-                    width={100}
-                    align="right"
-                    sx={{ fontWeight: "bold" }}
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.category")}
+                    </TableCell>
+                    <TableCell>{product.category}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    {t("product.tags")}
-                  </TableCell>
-                  <TableCell>
-                    {product.tags.map((t) => (
-                      <TagChip key={t} tag={t} />
-                    ))}
-                  </TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "& > *": { borderBottom: "unset !important" } }}
-                >
-                  <TableCell
-                    width={100}
-                    align="right"
-                    sx={{ fontWeight: "bold" }}
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.tags")}
+                    </TableCell>
+                    <TableCell>
+                      {product.tags.map((t) => (
+                        <TagChip key={t} tag={t} />
+                      ))}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    {t("product.price")}
-                  </TableCell>
-                  <TableCell>
-                    <CoinAmountView coins={product.price} />
-                  </TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "& > *": { borderBottom: "unset !important" } }}
-                >
-                  <TableCell
-                    width={100}
-                    align="right"
-                    sx={{ fontWeight: "bold" }}
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.price")}
+                    </TableCell>
+                    <TableCell>
+                      <CoinAmountView coins={product.price} />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    {t("product.bonus")}
-                  </TableCell>
-                  <TableCell>
-                    <CoinAmountView coins={product.bonus} />
-                  </TableCell>
-                </TableRow>
-                <TableRow
-                  sx={{ "& > *": { borderBottom: "unset !important" } }}
-                >
-                  <TableCell
-                    width={100}
-                    align="right"
-                    sx={{ fontWeight: "bold" }}
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.bonus")}
+                    </TableCell>
+                    <TableCell>
+                      <CoinAmountView coins={product.bonus} />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
                   >
-                    {t("product.barcode")}
-                  </TableCell>
-                  <TableCell>
-                    {product.barcode ? (
-                      <BarcodeView value={product.barcode} />
-                    ) : null}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Box>
-        </Paper>
-      </Box>
-    </Container>
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.barcode")}
+                    </TableCell>
+                    <TableCell>
+                      {product.barcode ? (
+                        <BarcodeView value={product.barcode} />
+                      ) : null}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Box>
+          </Paper>
+        </Box>
+      </Container>
+    </PullToRefreshWrapper>
   );
 };

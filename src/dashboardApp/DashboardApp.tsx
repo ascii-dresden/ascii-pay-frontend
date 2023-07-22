@@ -20,6 +20,7 @@ import i18n_german from "./locales/de/translation.json";
 import i18n_english from "./locales/en/translation.json";
 import { blue, red } from "@mui/material/colors";
 import { USE_DEV_COLOR_SCHEMA, USE_DEV_MODE } from "../const";
+import styled from "@emotion/styled";
 
 const ProfilePage = React.lazy(() =>
   import("./pages/ProfilePage").then((module) => ({
@@ -80,6 +81,10 @@ const RegisterHistoryListPage = React.lazy(() =>
   }))
 );
 
+const StyledDashboardApp = styled.div`
+  min-height: 100vh;
+`;
+
 export function DashboardApp() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const [language, setLanguage] = useState(
@@ -134,50 +139,52 @@ export function DashboardApp() {
     <Provider store={dashboardStore}>
       <I18nextProvider i18n={i18nConfig}>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <ToastContainer />
-          <React.Suspense fallback={<FullScreenLoader />}>
-            <Routes>
-              <Route element={<RequireUserLogin />}>
-                <Route
-                  path="/printSnacks"
-                  element={<PrintSnacksPage />}
-                ></Route>
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<ProfilePage />} />
-                  <Route path="register" element={<RegisterPage />} />
+          <StyledDashboardApp>
+            <CssBaseline />
+            <ToastContainer />
+            <React.Suspense fallback={<FullScreenLoader />}>
+              <Routes>
+                <Route element={<RequireUserLogin />}>
                   <Route
-                    element={
-                      <RequireUserUnauthorized allowedRoles={["Admin"]} />
-                    }
-                  >
-                    <Route path="accounts" element={<AccountListPage />} />
+                    path="/printSnacks"
+                    element={<PrintSnacksPage />}
+                  ></Route>
+                  <Route path="/" element={<Layout />}>
+                    <Route index element={<ProfilePage />} />
+                    <Route path="register" element={<RegisterPage />} />
                     <Route
-                      path="accounts/:accountId"
-                      element={<AccountDetailsPage />}
-                    />
-                    <Route path="products" element={<ProductListPage />} />
-                    <Route
-                      path="products/:productId"
-                      element={<ProductDetailsPage />}
-                    />
-                    <Route
-                      path="transactions"
-                      element={<TransactionListPage />}
-                    />
-                    <Route path="terminal/:page" element={<TerminalPage />} />
-                    <Route path="terminal" element={<TerminalPage />} />
-                    <Route
-                      path="registerHistory"
-                      element={<RegisterHistoryListPage />}
-                    />
+                      element={
+                        <RequireUserUnauthorized allowedRoles={["Admin"]} />
+                      }
+                    >
+                      <Route path="accounts" element={<AccountListPage />} />
+                      <Route
+                        path="accounts/:accountId"
+                        element={<AccountDetailsPage />}
+                      />
+                      <Route path="products" element={<ProductListPage />} />
+                      <Route
+                        path="products/:productId"
+                        element={<ProductDetailsPage />}
+                      />
+                      <Route
+                        path="transactions"
+                        element={<TransactionListPage />}
+                      />
+                      <Route path="terminal/:page" element={<TerminalPage />} />
+                      <Route path="terminal" element={<TerminalPage />} />
+                      <Route
+                        path="registerHistory"
+                        element={<RegisterHistoryListPage />}
+                      />
+                    </Route>
                   </Route>
                 </Route>
-              </Route>
-              <Route path="setup" element={<SetupPage />} />
-              <Route path="reset-password" element={<ResetPasswordPage />} />
-            </Routes>
-          </React.Suspense>
+                <Route path="setup" element={<SetupPage />} />
+                <Route path="reset-password" element={<ResetPasswordPage />} />
+              </Routes>
+            </React.Suspense>
+          </StyledDashboardApp>
         </ThemeProvider>
       </I18nextProvider>
     </Provider>

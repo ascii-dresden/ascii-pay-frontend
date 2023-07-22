@@ -13,7 +13,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { useGetAllProductsQuery } from "../redux/api/productApi";
+import { productApi, useGetAllProductsQuery } from "../redux/api/productApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Add, PrintOutlined } from "@mui/icons-material";
@@ -30,6 +30,8 @@ import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { ActionButtonAction } from "../components/ActionButton";
 import { ProductActionButton } from "../components/product/ProductActionButton";
 import { DefaultTablePagination } from "../components/DefaultTablePagination";
+import { useDashboardDispatch } from "../redux/dashboardStore";
+import { PullToRefreshWrapper } from "../components/PullToRefresh";
 
 export const ProductListPage = () => {
   const { t } = useTranslation();
@@ -46,6 +48,11 @@ export const ProductListPage = () => {
     error,
     data: products,
   } = useGetAllProductsQuery();
+  const dispatch = useDashboardDispatch();
+
+  const handleRefresh = () => {
+    dispatch(productApi.util?.invalidateTags(["Products"]));
+  };
 
   usePageTitle(t("layout.products"));
 
@@ -134,67 +141,69 @@ export const ProductListPage = () => {
       : filteredProducts;
 
   return (
-    <Container maxWidth="lg">
-      <PageHeader navigation={navigation} actions={actions}>
-        <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-          {t("layout.products")}
-        </Typography>
-      </PageHeader>
+    <PullToRefreshWrapper onRefresh={handleRefresh}>
+      <Container maxWidth="lg">
+        <PageHeader navigation={navigation} actions={actions}>
+          <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+            {t("layout.products")}
+          </Typography>
+        </PageHeader>
 
-      <Paper elevation={4}>
-        <Box
-          sx={{
-            borderBottom: 1,
-            borderColor: "divider",
-          }}
-        >
-          <Tabs
-            variant="scrollable"
-            scrollButtons="auto"
-            value={tabIndex}
-            onChange={(_, i) => {
-              setTabIndex(i);
-              setPage(0);
+        <Paper elevation={4}>
+          <Box
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
             }}
           >
-            {categories.map((c) => (
-              <Tab key={c} label={c.length > 0 ? c : "Uncategorized"} />
-            ))}
-          </Tabs>
-        </Box>
-        <TableContainer>
-          <Table aria-label="Products table">
-            <TableHead>
-              <TableRow>
-                <TableCell width={72}></TableCell>
-                <TableCell>{t("product.name")}</TableCell>
-                <TableCell width={250}>{t("product.price")}</TableCell>
-                <TableCell width={250}>{t("product.bonus")}</TableCell>
-                <TableCell width={128}></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {slicedProducts.map((product) => (
-                <ProductListRow key={product.id} product={product} />
+            <Tabs
+              variant="scrollable"
+              scrollButtons="auto"
+              value={tabIndex}
+              onChange={(_, i) => {
+                setTabIndex(i);
+                setPage(0);
+              }}
+            >
+              {categories.map((c) => (
+                <Tab key={c} label={c.length > 0 ? c : "Uncategorized"} />
               ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 78 * emptyRows }}>
-                  <TableCell colSpan={5} />
+            </Tabs>
+          </Box>
+          <TableContainer>
+            <Table aria-label="Products table">
+              <TableHead>
+                <TableRow>
+                  <TableCell width={72}></TableCell>
+                  <TableCell>{t("product.name")}</TableCell>
+                  <TableCell width={250}>{t("product.price")}</TableCell>
+                  <TableCell width={250}>{t("product.bonus")}</TableCell>
+                  <TableCell width={128}></TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <DefaultTablePagination
-          count={filteredProducts.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <CreateProductDialog open={openModal} setOpen={setOpenModal} />
-    </Container>
+              </TableHead>
+              <TableBody>
+                {slicedProducts.map((product) => (
+                  <ProductListRow key={product.id} product={product} />
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 78 * emptyRows }}>
+                    <TableCell colSpan={5} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <DefaultTablePagination
+            count={filteredProducts.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <CreateProductDialog open={openModal} setOpen={setOpenModal} />
+      </Container>
+    </PullToRefreshWrapper>
   );
 };
 

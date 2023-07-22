@@ -17,7 +17,10 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useGetGlobalTransactionsQuery } from "../redux/api/accountApi";
+import {
+  accountApi,
+  useGetGlobalTransactionsQuery,
+} from "../redux/api/accountApi";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import {
@@ -46,6 +49,8 @@ import { BASE_URL } from "../../const";
 import { useTranslation } from "react-i18next";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { DefaultTablePagination } from "../components/DefaultTablePagination";
+import { useDashboardDispatch } from "../redux/dashboardStore";
+import { PullToRefreshWrapper } from "../components/PullToRefresh";
 
 export const TransactionListPage = () => {
   const theme = useTheme();
@@ -79,6 +84,11 @@ export const TransactionListPage = () => {
     error,
     data: transactions,
   } = useGetGlobalTransactionsQuery();
+  const dispatch = useDashboardDispatch();
+
+  const handleRefresh = () => {
+    dispatch(accountApi.util?.invalidateTags(["Transactions"]));
+  };
 
   usePageTitle(t("layout.transactions"));
 
@@ -203,82 +213,84 @@ export const TransactionListPage = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
-      <Container maxWidth="lg">
-        {header}
+      <PullToRefreshWrapper onRefresh={handleRefresh}>
+        <Container maxWidth="lg">
+          {header}
 
-        {isMobile ? <Box sx={{ mb: 2 }}>{rangePicker}</Box> : null}
+          {isMobile ? <Box sx={{ mb: 2 }}>{rangePicker}</Box> : null}
 
-        <GlobalTransactionSummary
-          transactions={filteredTransactions}
-          previousTransactions={previousTransactions}
-        />
-
-        <Paper sx={{ mb: { xs: 2, sm: 4 } }} elevation={4}>
-          <Tabs
-            sx={{ px: 2, pt: 1 }}
-            value={tabIndex}
-            onChange={(event, newValue) => {
-              setTabIndex(newValue);
-              localStorage["ascii-pay-transactions-tab-index"] = newValue;
-            }}
-          >
-            <Tab label={t("account.balanceTrend")} />
-            <Tab label={t("account.heatmap")} />
-          </Tabs>
-          <Box sx={{ px: 2, pb: 1 }}>
-            {tabIndex === 0 ? (
-              <GlobalTransactionChart
-                transactions={filteredTransactions}
-                previousTransactions={previousTransactions}
-                startDate={startDate}
-                endDate={endDate}
-                onRequestZoom={onRequestZoomHandler}
-              />
-            ) : null}
-            {tabIndex === 1 ? (
-              <TransactionHeatmap
-                transactions={filteredTransactions}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            ) : null}
-          </Box>
-        </Paper>
-
-        <Paper elevation={4}>
-          <TableContainer>
-            <Table aria-label="Transactions table">
-              <TableHead>
-                <TableRow>
-                  <TableCell width={72}></TableCell>
-                  <TableCell>{t("transactions.date")}</TableCell>
-                  <TableCell>{t("transactions.total")}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {slicedTransactions?.map((transaction) => (
-                  <TransactionListRow
-                    key={transaction.id}
-                    transaction={transaction}
-                  />
-                ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 67 * emptyRows }}>
-                    <TableCell colSpan={3} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <DefaultTablePagination
-            count={sortedTransactions.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+          <GlobalTransactionSummary
+            transactions={filteredTransactions}
+            previousTransactions={previousTransactions}
           />
-        </Paper>
-      </Container>
+
+          <Paper sx={{ mb: { xs: 2, sm: 4 } }} elevation={4}>
+            <Tabs
+              sx={{ px: 2, pt: 1 }}
+              value={tabIndex}
+              onChange={(event, newValue) => {
+                setTabIndex(newValue);
+                localStorage["ascii-pay-transactions-tab-index"] = newValue;
+              }}
+            >
+              <Tab label={t("account.balanceTrend")} />
+              <Tab label={t("account.heatmap")} />
+            </Tabs>
+            <Box sx={{ px: 2, pb: 1 }}>
+              {tabIndex === 0 ? (
+                <GlobalTransactionChart
+                  transactions={filteredTransactions}
+                  previousTransactions={previousTransactions}
+                  startDate={startDate}
+                  endDate={endDate}
+                  onRequestZoom={onRequestZoomHandler}
+                />
+              ) : null}
+              {tabIndex === 1 ? (
+                <TransactionHeatmap
+                  transactions={filteredTransactions}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              ) : null}
+            </Box>
+          </Paper>
+
+          <Paper elevation={4}>
+            <TableContainer>
+              <Table aria-label="Transactions table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell width={72}></TableCell>
+                    <TableCell>{t("transactions.date")}</TableCell>
+                    <TableCell>{t("transactions.total")}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {slicedTransactions?.map((transaction) => (
+                    <TransactionListRow
+                      key={transaction.id}
+                      transaction={transaction}
+                    />
+                  ))}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 67 * emptyRows }}>
+                      <TableCell colSpan={3} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <DefaultTablePagination
+              count={sortedTransactions.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </Container>
+      </PullToRefreshWrapper>
     </LocalizationProvider>
   );
 };

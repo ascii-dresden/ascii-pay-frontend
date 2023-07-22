@@ -21,6 +21,7 @@ import {
   useTheme,
 } from "@mui/material";
 import {
+  registerHistoryApi,
   useDeleteRegisterHistoryMutation,
   useGetAllRegisterHistoriesQuery,
 } from "../redux/api/registerHistoryApi";
@@ -48,6 +49,8 @@ import { LoadingButton } from "@mui/lab";
 import { Trans, useTranslation } from "react-i18next";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { DefaultTablePagination } from "../components/DefaultTablePagination";
+import { useDashboardDispatch } from "../redux/dashboardStore";
+import { PullToRefreshWrapper } from "../components/PullToRefresh";
 
 export const RegisterHistoryListPage = () => {
   const theme = useTheme();
@@ -67,6 +70,11 @@ export const RegisterHistoryListPage = () => {
     error,
     data: registerHistories,
   } = useGetAllRegisterHistoriesQuery();
+  const dispatch = useDashboardDispatch();
+
+  const handleRefresh = () => {
+    dispatch(registerHistoryApi.util?.invalidateTags(["RegisterHistories"]));
+  };
 
   usePageTitle(t("layout.registerHistory"));
 
@@ -181,48 +189,50 @@ export const RegisterHistoryListPage = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
-      <Container maxWidth="lg">
-        {header}
+      <PullToRefreshWrapper onRefresh={handleRefresh}>
+        <Container maxWidth="lg">
+          {header}
 
-        {isMobile ? <Box sx={{ mb: 2 }}>{rangePicker}</Box> : null}
+          {isMobile ? <Box sx={{ mb: 2 }}>{rangePicker}</Box> : null}
 
-        <Paper elevation={4}>
-          <TableContainer>
-            <Table aria-label="RegisterHistories table">
-              <TableHead>
-                <TableRow>
-                  <TableCell width={72}></TableCell>
-                  <TableCell>{t("registerHistory.date")}</TableCell>
-                  <TableCell>{t("registerHistory.total")}</TableCell>
-                  <TableCell>{t("registerHistory.envelope")}</TableCell>
-                  <TableCell>{t("registerHistory.remaining")}</TableCell>
-                  <TableCell width={128}></TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {slicedRegisterHistories?.map((registerHistory) => (
-                  <RegisterHistoryListRow
-                    key={registerHistory.id}
-                    registerHistory={registerHistory}
-                  />
-                ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 67 * emptyRows }}>
-                    <TableCell colSpan={6} />
+          <Paper elevation={4}>
+            <TableContainer>
+              <Table aria-label="RegisterHistories table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell width={72}></TableCell>
+                    <TableCell>{t("registerHistory.date")}</TableCell>
+                    <TableCell>{t("registerHistory.total")}</TableCell>
+                    <TableCell>{t("registerHistory.envelope")}</TableCell>
+                    <TableCell>{t("registerHistory.remaining")}</TableCell>
+                    <TableCell width={128}></TableCell>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <DefaultTablePagination
-            count={sortedRegisterHistories.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
-      </Container>
+                </TableHead>
+                <TableBody>
+                  {slicedRegisterHistories?.map((registerHistory) => (
+                    <RegisterHistoryListRow
+                      key={registerHistory.id}
+                      registerHistory={registerHistory}
+                    />
+                  ))}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 67 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <DefaultTablePagination
+              count={sortedRegisterHistories.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </Container>
+      </PullToRefreshWrapper>
     </LocalizationProvider>
   );
 };

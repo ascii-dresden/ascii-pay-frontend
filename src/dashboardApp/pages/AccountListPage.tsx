@@ -10,7 +10,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useGetAllAccountsQuery } from "../redux/api/accountApi";
+import { accountApi, useGetAllAccountsQuery } from "../redux/api/accountApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Add } from "@mui/icons-material";
@@ -27,6 +27,8 @@ import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { ActionButtonAction } from "../components/ActionButton";
 import { AccountActionButton } from "../components/account/AccountActionButton";
 import { DefaultTablePagination } from "../components/DefaultTablePagination";
+import { useDashboardDispatch } from "../redux/dashboardStore";
+import { PullToRefreshWrapper } from "../components/PullToRefresh";
 
 export const AccountListPage = () => {
   const { t } = useTranslation();
@@ -41,6 +43,11 @@ export const AccountListPage = () => {
     error,
     data: accounts,
   } = useGetAllAccountsQuery();
+  const dispatch = useDashboardDispatch();
+
+  const handleRefresh = () => {
+    dispatch(accountApi.util?.invalidateTags(["Accounts"]));
+  };
 
   usePageTitle(t("layout.accounts"));
 
@@ -110,47 +117,49 @@ export const AccountListPage = () => {
         )
       : sortedAccounts;
   return (
-    <Container maxWidth="lg">
-      <PageHeader navigation={navigation} actions={actions}>
-        <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
-          {t("layout.accounts")}
-        </Typography>
-      </PageHeader>
+    <PullToRefreshWrapper onRefresh={handleRefresh}>
+      <Container maxWidth="lg">
+        <PageHeader navigation={navigation} actions={actions}>
+          <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
+            {t("layout.accounts")}
+          </Typography>
+        </PageHeader>
 
-      <Paper sx={{ overflow: "hidden" }} elevation={4}>
-        <TableContainer>
-          <Table aria-label="Account table">
-            <TableHead>
-              <TableRow>
-                <TableCell width={72}></TableCell>
-                <TableCell>{t("account.name")}</TableCell>
-                <TableCell>{t("account.email")}</TableCell>
-                <TableCell width={250}>{t("account.balance")}</TableCell>
-                <TableCell width={150}></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {slicedAccounts.map((account) => (
-                <AccountListRow key={account.id} account={account} />
-              ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 78 * emptyRows }}>
-                  <TableCell colSpan={5} />
+        <Paper sx={{ overflow: "hidden" }} elevation={4}>
+          <TableContainer>
+            <Table aria-label="Account table">
+              <TableHead>
+                <TableRow>
+                  <TableCell width={72}></TableCell>
+                  <TableCell>{t("account.name")}</TableCell>
+                  <TableCell>{t("account.email")}</TableCell>
+                  <TableCell width={250}>{t("account.balance")}</TableCell>
+                  <TableCell width={150}></TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <DefaultTablePagination
-          count={accounts.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <CreateAccountDialog open={openModal} setOpen={setOpenModal} />
-    </Container>
+              </TableHead>
+              <TableBody>
+                {slicedAccounts.map((account) => (
+                  <AccountListRow key={account.id} account={account} />
+                ))}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 78 * emptyRows }}>
+                    <TableCell colSpan={5} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <DefaultTablePagination
+            count={accounts.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <CreateAccountDialog open={openModal} setOpen={setOpenModal} />
+      </Container>
+    </PullToRefreshWrapper>
   );
 };
 
