@@ -144,11 +144,11 @@ export function DashboardApp() {
             <ToastContainer />
             <React.Suspense fallback={<FullScreenLoader />}>
               <Routes>
+                <Route
+                  path="/printSnacks"
+                  element={<PrintSnacksPage />}
+                ></Route>
                 <Route element={<RequireUserLogin />}>
-                  <Route
-                    path="/printSnacks"
-                    element={<PrintSnacksPage />}
-                  ></Route>
                   <Route path="/" element={<Layout />}>
                     <Route index element={<ProfilePage />} />
                     <Route path="register" element={<RegisterPage />} />
