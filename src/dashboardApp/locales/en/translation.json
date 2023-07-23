@@ -37,7 +37,8 @@
     "message": "Welcome Back!",
     "username": "Username",
     "password": "Password",
-    "action": "Login"
+    "action": "Login",
+    "rememberMe": "Remember me"
   },
   "resetPassword": {
     "message": "Reset password",

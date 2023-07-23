@@ -37,7 +37,8 @@
     "message": "Willkommen zurück!",
     "username": "Benutzername",
     "password": "Passwort",
-    "action": "Anmelden"
+    "action": "Anmelden",
+    "rememberMe": "Anmeldung länger speichern"
   },
   "resetPassword": {
     "message": "Passwort zurücksetzen",

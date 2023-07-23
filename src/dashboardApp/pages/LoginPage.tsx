@@ -1,7 +1,9 @@
 import {
   AppBar,
   Box,
+  Checkbox,
   Container,
+  FormControlLabel,
   TextField,
   Toolbar,
   Typography,
@@ -28,6 +30,7 @@ export const LoginPage = () => {
 
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [longLived, setLongLived] = React.useState(false);
   const [hasErrors, setHasErrors] = React.useState(false);
 
   useEffect(() => {
@@ -46,6 +49,7 @@ export const LoginPage = () => {
     loginUser({
       username: username,
       password: password,
+      longLived: longLived,
     });
     return true;
   };
@@ -107,7 +111,7 @@ export const LoginPage = () => {
               error={hasErrors}
               label={t("login.username")}
               fullWidth
-              sx={{ mb: "1rem" }}
+              sx={{ mb: "1em" }}
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -115,10 +119,21 @@ export const LoginPage = () => {
               error={hasErrors}
               label={t("login.password")}
               fullWidth
-              sx={{ mb: "1rem" }}
+              sx={{ mb: "0.4em" }}
               value={password}
               type="password"
               onChange={(e) => setPassword(e.target.value)}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={longLived}
+                  onChange={(e) => setLongLived(e.target.checked)}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              }
+              label={t("login.rememberMe")}
+              sx={{ mb: "0.4rem" }}
             />
 
             <LoadingButton

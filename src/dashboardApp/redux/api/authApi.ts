@@ -9,10 +9,16 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     loginUser: builder.mutation<AuthTokenDto, AuthPasswordBasedDto>({
       query(data) {
+        const url = data.longLived
+          ? "auth/password?long_lived=true"
+          : "auth/password";
         return {
-          url: "auth/password",
+          url,
           method: "POST",
-          body: data,
+          body: {
+            username: data.username,
+            password: data.password,
+          },
         };
       },
       async onQueryStarted(args, { dispatch, queryFulfilled }) {

@@ -65,6 +65,7 @@ export type AuthTokenDto = {
 export type AuthPasswordBasedDto = {
   username: string;
   password: string;
+  longLived?: boolean;
 };
 
 export type ProductDto = {
