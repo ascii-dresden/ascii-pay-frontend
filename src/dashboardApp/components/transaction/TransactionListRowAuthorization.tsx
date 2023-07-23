@@ -5,6 +5,11 @@ import { RoleChip } from "../account/RoleChip";
 import React from "react";
 import { AuthMethodTypeDto } from "../../../common/contracts";
 import { CreditCardOutlined, List, VpnKey } from "@mui/icons-material";
+import styled from "@emotion/styled";
+
+const StyledEmptyAccount = styled.span`
+  padding-right: 0.6em;
+`;
 
 export const TransactionListRowAuthorization = (props: {
   accountId: number;
@@ -12,11 +17,21 @@ export const TransactionListRowAuthorization = (props: {
 }) => {
   const { isLoading, data: account } = useGetAccountQuery(props.accountId);
 
-  if (isLoading) {
-    return <span>Loading...</span>;
-  }
-  if (!account) {
-    return <span>Error...</span>;
+  let accountUi;
+  if (isLoading || !account) {
+    accountUi = <StyledEmptyAccount />;
+  } else {
+    accountUi = (
+      <>
+        <Avatar
+          alt={account.name}
+          {...stringAvatar(account.name)}
+          sx={{ mx: 2 }}
+        />
+        <Typography sx={{ mr: 2 }}>{account.name}</Typography>
+        <RoleChip role={account.role} />
+      </>
+    );
   }
 
   let method = null;
@@ -50,13 +65,7 @@ export const TransactionListRowAuthorization = (props: {
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Typography>Authorization:</Typography>
-      <Avatar
-        alt={account.name}
-        {...stringAvatar(account.name)}
-        sx={{ mx: 2 }}
-      />
-      <Typography sx={{ mr: 2 }}>{account.name}</Typography>
-      <RoleChip role={account.role} />
+      {accountUi}
       {method}
     </Box>
   );
