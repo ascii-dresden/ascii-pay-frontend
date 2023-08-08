@@ -367,7 +367,7 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
         className="quick-access-entry-stamp"
       >
         <span>-{props.entry.price.BottleStamp}</span>
-        <CoffeeStamp />
+        <BottleStamp />
       </StyledQuickAccessEntryStamp>
     );
   }
@@ -402,7 +402,7 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
   if (props.entry.price.Cent || props.entry.bonus.Cent) {
     center = (
       <Money
-        value={(props.entry.price.Cent ?? 0) + (props.entry.bonus.Cent ?? 0)}
+        value={(props.entry.price.Cent ?? 0) - (props.entry.bonus.Cent ?? 0)}
       />
     );
     extra = stamp;
