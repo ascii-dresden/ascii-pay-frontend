@@ -283,6 +283,7 @@ export const TerminalPage = () => {
             width: `${width}px`,
             height: `${height}px`,
             position: "relative",
+            overflow: "hidden",
           }}
         >
           <TerminalApp

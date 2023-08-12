@@ -10,18 +10,19 @@ const StyledEnvelope = styled.div`
   &.empty {
     position: absolute;
     left: 0;
-    bottom: 0;
+    top: 14.4em;
     padding: 1em;
     display: flex;
     align-items: center;
 
     svg {
-      width: 1.6em;
-      height: 1.6em;
+      width: 1.5em;
+      height: 1.5em;
     }
 
     span {
       padding-left: 0.4em;
+      padding-top: 0.2em;
     }
   }
 

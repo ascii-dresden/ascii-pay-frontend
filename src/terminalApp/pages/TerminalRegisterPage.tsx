@@ -4,8 +4,8 @@ import { Envelope } from "../register/Envelope";
 import { NoteBox } from "../register/NoteBox";
 import {
   RegisterMode,
+  resetRegisterState,
   setRegisterMode,
-  toggleResultMode,
 } from "../redux/features/registerSlice";
 import { useTranslation } from "react-i18next";
 import {
@@ -13,8 +13,16 @@ import {
   useTerminalSelector,
 } from "../redux/terminalStore";
 import { SidebarAction, SidebarLayout } from "../components/SidebarLayout";
-import { Done, EuroSymbol, LocalAtm, MailOutline } from "@mui/icons-material";
+import {
+  DeleteForeverOutlined,
+  EuroSymbol,
+  LocalAtm,
+  MailOutline,
+  MarkEmailReadOutlined,
+  Rule,
+} from "@mui/icons-material";
 import { TerminalNavigateHandler } from "../TerminalApp";
+import { Checklist, ChecklistProgress } from "../register/Checklist";
 
 export const TerminalRegisterPage = (props: {
   setAppClass: (appClass: string | null) => void;
@@ -31,6 +39,9 @@ export const TerminalRegisterPage = (props: {
 
   let content: any | null = null;
   switch (registerMode) {
+    case RegisterMode.CHECKLIST:
+      content = <Checklist />;
+      break;
     case RegisterMode.COINS:
       content = <CoinBox setAppClass={props.setAppClass} />;
       break;
@@ -43,6 +54,12 @@ export const TerminalRegisterPage = (props: {
   }
 
   const sidebarContent: SidebarAction[] = [
+    {
+      title: t("register.checklist"),
+      element: <Rule />,
+      action: () => dispatch(setRegisterMode(RegisterMode.CHECKLIST)),
+      active: registerMode === RegisterMode.CHECKLIST,
+    },
     {
       title: t("register.enterCoins"),
       element: <EuroSymbol />,
@@ -57,21 +74,21 @@ export const TerminalRegisterPage = (props: {
     },
     {
       title: t("register.overview"),
-      element: <MailOutline />,
+      element: previous ? <MarkEmailReadOutlined /> : <MailOutline />,
       action: () => dispatch(setRegisterMode(RegisterMode.RESULT)),
       active: registerMode === RegisterMode.RESULT,
     },
     {
-      title: t("register.calculate"),
-      element: <Done />,
-      action: () => dispatch(toggleResultMode()),
-      active: !!previous,
+      title: t("register.reset"),
+      element: <DeleteForeverOutlined />,
+      action: () => dispatch(resetRegisterState()),
       bottom: true,
     },
   ];
 
   return (
     <SidebarLayout defaultAction={handleGoBack} content={sidebarContent}>
+      <ChecklistProgress />
       {content}
     </SidebarLayout>
   );

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   CoinBoxState,
+  getRegisterTotal,
   NoteBoxState,
   saveRegisterHistory,
   solveCashProblem,
@@ -9,13 +10,19 @@ import {
 } from "../../../common/registerHistoryUtils";
 
 export enum RegisterMode {
+  CHECKLIST,
   COINS,
   NOTES,
   RESULT,
 }
 
+export interface ChecklistState {
+  [key: string]: boolean;
+}
+
 interface RegisterState {
   registerMode: RegisterMode;
+  checklist: ChecklistState;
   coinBox: CoinBoxState;
   noteBox: NoteBoxState;
   previous: {
@@ -25,7 +32,8 @@ interface RegisterState {
 }
 
 const initialState: RegisterState = {
-  registerMode: RegisterMode.COINS,
+  registerMode: RegisterMode.CHECKLIST,
+  checklist: {},
   coinBox: { ...targetCoinBox },
   noteBox: { ...targetNoteBox },
   previous: null,
@@ -87,6 +95,9 @@ export const registerSlice = createSlice({
       if (state.previous) return;
       state.coinBox.coin1 = Math.max(0, action.payload);
     },
+    setChecklistState: (state, action: PayloadAction<ChecklistState>) => {
+      state.checklist = action.payload;
+    },
     setRegisterMode: (state, action: PayloadAction<RegisterMode>) => {
       state.registerMode = action.payload;
 
@@ -133,6 +144,12 @@ export const registerSlice = createSlice({
         state.previous = null;
       }
     },
+    resetRegisterState: (state, action: PayloadAction) => {
+      state.checklist = {};
+      state.previous = null;
+      state.coinBox = { ...targetCoinBox };
+      state.noteBox = { ...targetNoteBox };
+    },
   },
 });
 
@@ -152,5 +169,7 @@ export const {
   setCoin1,
   setRegisterMode,
   toggleResultMode,
+  setChecklistState,
+  resetRegisterState,
 } = registerSlice.actions;
 export default registerSlice.reducer;

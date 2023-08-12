@@ -43,6 +43,7 @@
     "nfcResponse": "Response"
   },
   "register": {
+    "checklist": "Checklist",
     "cashBook": "Cash book",
     "envelope": "Envelope",
     "name": "Name",
@@ -55,7 +56,8 @@
     "enterCoins": "Enter coin count",
     "enterNotes": "Enter note count",
     "overview": "Overview",
-    "calculate": "Calculate"
+    "calculate": "Calculate",
+    "reset": "Reset"
   },
   "payment": {
     "basket": {

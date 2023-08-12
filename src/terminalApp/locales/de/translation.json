@@ -43,6 +43,7 @@
     "nfcResponse": "Response"
   },
   "register": {
+    "checklist": "Checklist",
     "cashBook": "Kassenbuch",
     "envelope": "Briefumschlag",
     "name": "Name",
@@ -55,7 +56,8 @@
     "enterCoins": "Münzeingabe",
     "enterNotes": "Scheineingabe",
     "overview": "Übersicht",
-    "calculate": "Berechnungsmodus"
+    "calculate": "Berechnungsmodus",
+    "reset": "Zurücksetzen"
   },
   "payment": {
     "basket": {

@@ -238,6 +238,14 @@ export function saveRegisterHistory(state: {
     noteBox: NoteBoxState;
   };
 }) {
+  const currentTotal = getRegisterTotal(
+    state.previous.coinBox,
+    state.previous.noteBox
+  );
+  if (currentTotal === 10000) {
+    return;
+  }
+
   let body: SaveRegisterHistoryDto = {
     source_register: {
       ...state.previous.noteBox,
