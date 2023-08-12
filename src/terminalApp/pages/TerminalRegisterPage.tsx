@@ -16,6 +16,7 @@ import { SidebarAction, SidebarLayout } from "../components/SidebarLayout";
 import {
   DeleteForeverOutlined,
   EuroSymbol,
+  InfoOutlined,
   LocalAtm,
   MailOutline,
   MarkEmailReadOutlined,
@@ -23,6 +24,7 @@ import {
 } from "@mui/icons-material";
 import { TerminalNavigateHandler } from "../TerminalApp";
 import { Checklist, ChecklistProgress } from "../register/Checklist";
+import { AdditionalInformation } from "../register/AdditonalInformation";
 
 export const TerminalRegisterPage = (props: {
   setAppClass: (appClass: string | null) => void;
@@ -51,6 +53,9 @@ export const TerminalRegisterPage = (props: {
     case RegisterMode.RESULT:
       content = <Envelope />;
       break;
+    case RegisterMode.INFO:
+      content = <AdditionalInformation />;
+      break;
   }
 
   const sidebarContent: SidebarAction[] = [
@@ -77,6 +82,12 @@ export const TerminalRegisterPage = (props: {
       element: previous ? <MarkEmailReadOutlined /> : <MailOutline />,
       action: () => dispatch(setRegisterMode(RegisterMode.RESULT)),
       active: registerMode === RegisterMode.RESULT,
+    },
+    {
+      title: t("register.info"),
+      element: <InfoOutlined />,
+      action: () => dispatch(setRegisterMode(RegisterMode.INFO)),
+      active: registerMode === RegisterMode.INFO,
     },
     {
       title: t("register.reset"),

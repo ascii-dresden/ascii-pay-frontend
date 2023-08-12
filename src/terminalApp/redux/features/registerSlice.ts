@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   CoinBoxState,
-  getRegisterTotal,
   NoteBoxState,
   saveRegisterHistory,
   solveCashProblem,
@@ -14,6 +13,7 @@ export enum RegisterMode {
   COINS,
   NOTES,
   RESULT,
+  INFO,
 }
 
 export interface ChecklistState {
