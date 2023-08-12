@@ -54,6 +54,7 @@ const StyledChecklistItemCheckbox = styled.div`
   height: 1.8em;
   border: solid 2px var(--secondary-text-color);
   border-radius: 0.2em;
+  background-color: var(--secondary-hover-background);
   flex-shrink: 0;
 
   &.isChecked span {
@@ -163,7 +164,7 @@ const rules: Item[][] = [
         },
         {
           key: "coffee_machine_nozzle",
-          name: "Kaffee & Milchdüsen reinigen",
+          name: "Kaffee- & Milchdüsen reinigen",
           hint: "Bitte Zahnbürste benutzen",
         },
         {

@@ -36,7 +36,7 @@ export const AdditionalInformation = () => {
   return (
     <StyledAdditionalInformation>
       <StyledAdditionalInformationText>
-        Mehr Informationen zur letzte Schicht des Tages sind im Wiki zu finden:
+        Mehr Informationen zur letzten Schicht des Tages sind im Wiki zu finden:
       </StyledAdditionalInformationText>
       <StyledAdditionalInformationQR>
         <QRCode
