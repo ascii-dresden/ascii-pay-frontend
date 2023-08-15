@@ -57,7 +57,7 @@ const StyledChecklistItemCheckbox = styled.div`
   background-color: var(--secondary-hover-background);
   flex-shrink: 0;
 
-  &.isChecked span {
+  span {
     position: absolute;
     display: block;
     width: 1.8em;
@@ -65,7 +65,17 @@ const StyledChecklistItemCheckbox = styled.div`
     border-left: solid 0.25em var(--theme-color);
     border-bottom: solid 0.25em var(--theme-color);
     rotate: -50deg;
-    translate: 0.1em -0.1em;
+    margin-left: 0.7em;
+    margin-top: 0.2em;
+    transform-origin: 20% 80%;
+    opacity: 0;
+    scale: 0.2;
+    transition: opacity 80ms linear, scale 80ms ease;
+  }
+
+  &.isChecked span {
+    opacity: 1;
+    scale: 1;
   }
 
   &.isSmall {
@@ -88,6 +98,8 @@ const StyledChecklistItemCheckbox = styled.div`
       width: 1.2em;
       height: 0.6em;
       border-width: 0.2em;
+      margin-left: 0.4em;
+      margin-top: 0.1em;
     }
   }
 
