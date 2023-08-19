@@ -224,7 +224,7 @@ const rules: Item[][] = [
       steps: [
         {
           key: "main_tabletop",
-          name: "Tische & Tresen reinigen",
+          name: "(Steh-)Tische & Tresen reinigen",
           hint: "Besonders auf Sirupspender achten",
         },
         {

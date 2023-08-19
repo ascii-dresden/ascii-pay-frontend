@@ -2,8 +2,8 @@ import { SidebarAction, SidebarLayout } from "../components/SidebarLayout";
 import { useTerminalDispatch } from "../redux/terminalStore";
 import React from "react";
 import {
-  LocalAtm,
   People,
+  Rule,
   Settings,
   ShoppingCartOutlined,
 } from "@mui/icons-material";
@@ -193,7 +193,7 @@ export const TerminalStartPage = (props: {
             <span>{t("startPage.openPayment")}</span>
           </StyledStartPageEntry>
           <StyledStartPageEntry onClick={() => props.navigate("register")}>
-            <LocalAtm />
+            <Rule />
             <span>{t("startPage.openRegister")}</span>
           </StyledStartPageEntry>
           <StyledStartPageEntry onClick={() => props.navigate("accounts")}>

@@ -276,7 +276,7 @@ export const TerminalPage = () => {
   return (
     <>
       <Container maxWidth="lg">{header}</Container>
-      <Box sx={{ display: "flex", justifyContent: "center" }}>
+      <Box sx={{ display: "flex", justifyContent: "center" }} p={2} m={-2}>
         <Paper
           elevation={4}
           sx={{
