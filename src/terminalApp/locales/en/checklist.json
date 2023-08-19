@@ -1,0 +1,98 @@
+{
+  "columns": [
+    [
+      {
+        "name": "Clean coffee machine",
+        "steps": [
+          {
+            "key": "coffee_machine_milk_carton",
+            "name": "Store milk in the refrigerator",
+            "hint": "Close the lid and add the current date"
+          },
+          {
+            "key": "coffee_machine_milk_hose",
+            "name": "Clean the milk hose",
+            "hint": "Remove milk sticking with a cloth"
+          },
+          {
+            "key": "coffee_machine_milk_fridge",
+            "name": "Clean the milk fridge",
+            "hint": "Switch off and leave the door open"
+          },
+          {
+            "key": "coffee_machine_choco",
+            "name": "Clean the chocolate system",
+            "hint": "Then ensure locking"
+          },
+          {
+            "key": "coffee_machine_nozzle",
+            "name": "Clean coffee & milk nozzles",
+            "hint": "Please use a toothbrush"
+          },
+          {
+            "key": "coffee_machine_drain",
+            "name": "Clean drain grid",
+            "hint": "Wipe out drain after cleaning"
+          }
+        ]
+      },
+      {
+        "key": "trash_can",
+        "name": "Dispose of garbage",
+        "hint": "Place new garbage bags in garbage cans"
+      },
+      {
+        "key": "register",
+        "name": "Count register",
+        "hint": "Open count register tool"
+      }
+    ],
+    [
+      {
+        "name": "Clean kitchen",
+        "steps": [
+          {
+            "key": "kitchen_countertop",
+            "name": "Tidy up and clean the worktop",
+            "hint": "Clear away dishes and laundry"
+          },
+          {
+            "key": "kitchen_sink",
+            "name": "Clean both sinks",
+            "hint": "There must be no water under the metal shelf"
+          },
+          {
+            "key": "kitchen_dishwasher",
+            "name": "Switch on the dishwasher",
+            "hint": "Even if only a little full"
+          },
+          {
+            "key": "kitchen_fridge",
+            "name": "Stock up the fridge",
+            "hint": "Check the date of open milk"
+          }
+        ]
+      },
+      {
+        "name": "Clean coffee shop",
+        "steps": [
+          {
+            "key": "main_tabletop",
+            "name": "Clean (standing) tables & counters",
+            "hint": "Pay particular attention to syrup dispensers"
+          },
+          {
+            "key": "main_cereals",
+            "name": "Clean cereal place",
+            "hint": "f necessary, fill up on muesli and snacks"
+          },
+          {
+            "key": "main_floor",
+            "name": "Vacuum & wipe floors",
+            "hint": "Even in corners and behind doors"
+          }
+        ]
+      }
+    ]
+  ]
+}

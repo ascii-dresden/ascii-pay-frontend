@@ -11,6 +11,7 @@ import {
   setRegisterMode,
   toggleResultMode,
 } from "../redux/features/registerSlice";
+import { useTranslation } from "react-i18next";
 
 const StyledChecklist = styled.div`
   position: absolute;
@@ -149,100 +150,8 @@ type ItemStep = {
   hint?: string;
 };
 
-const rules: Item[][] = [
-  [
-    {
-      name: "Kaffeemaschine reinigen",
-      steps: [
-        {
-          key: "coffee_machine_milk_carton",
-          name: "Milch in Kühlschrank lagern",
-          hint: "Deckel schließen und mit Datum beschriften",
-        },
-        {
-          key: "coffee_machine_milk_hose",
-          name: "Milchschlauch reinigen",
-          hint: "Milchverklebungen mit Lappen entfernen",
-        },
-        {
-          key: "coffee_machine_milk_fridge",
-          name: "Milchkühlschrank reinigen",
-          hint: "Ausschalten und Tür offen lassen",
-        },
-        {
-          key: "coffee_machine_choco",
-          name: "Schoko-System reinigen",
-          hint: "Anschließend Veriegelung sicherstellen",
-        },
-        {
-          key: "coffee_machine_nozzle",
-          name: "Kaffee- & Milchdüsen reinigen",
-          hint: "Bitte Zahnbürste benutzen",
-        },
-        {
-          key: "coffee_machine_drain",
-          name: "Ablaufgitter reinigen",
-          hint: "Ablauf nach Reinigung auswischen",
-        },
-      ],
-    },
-    {
-      key: "trash_can",
-      name: "Müll entsorgen",
-      hint: "Neue Müllbeutel in Mülleimer einlegen",
-    },
-    { key: "register", name: "Kasse zählen", hint: "Kassenzähltool öffnen" },
-  ],
-  [
-    {
-      name: "Küche reinigen",
-      steps: [
-        {
-          key: "kitchen_countertop",
-          name: "Arbeitsplatte aufräumen und reinigen",
-          hint: "Geschirr und Wäsche wegräumen",
-        },
-        {
-          key: "kitchen_sink",
-          name: "Beide Spülbecken reinigen",
-          hint: "Unter Metallablage darf kein Wasser stehen",
-        },
-        {
-          key: "kitchen_dishwasher",
-          name: "Geschirrspüler anschalten",
-          hint: "Auch wenn nur wenig gefüllt",
-        },
-        {
-          key: "kitchen_fridge",
-          name: "Kühlschrank auffüllen",
-          hint: "Datum der offenen Milch kontrollieren",
-        },
-      ],
-    },
-    {
-      name: "Café reinigen",
-      steps: [
-        {
-          key: "main_tabletop",
-          name: "(Steh-)Tische & Tresen reinigen",
-          hint: "Besonders auf Sirupspender achten",
-        },
-        {
-          key: "main_cereals",
-          name: "Müsliplatz reinigen",
-          hint: "Ggf. Müsli und Snacks auffüllen",
-        },
-        {
-          key: "main_floor",
-          name: "Fussboden saugen & wischen",
-          hint: "Auch in Ecken & hinter Türen",
-        },
-      ],
-    },
-  ],
-];
-
 export const ChecklistProgress = () => {
+  const { t } = useTranslation();
   const isRegisterFinished = useTerminalSelector(
     (state) => state.registerState.previous !== null
   );
@@ -253,6 +162,7 @@ export const ChecklistProgress = () => {
   let itemCount = 0;
   let checkedCount = 0;
 
+  const rules = t("checklist:columns", { returnObjects: true }) as Item[][];
   for (let column of rules) {
     for (let item of column) {
       if (item.key) {
@@ -285,6 +195,8 @@ export const ChecklistProgress = () => {
 };
 
 export const Checklist = () => {
+  const { t } = useTranslation();
+  const rules = t("checklist:columns", { returnObjects: true }) as Item[][];
   const views = rules.map((items, col) => (
     <div key={col}>
       {items.map((item, i) => (

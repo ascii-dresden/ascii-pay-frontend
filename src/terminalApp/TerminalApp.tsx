@@ -10,6 +10,8 @@ import {
 import { I18nextProvider, initReactI18next } from "react-i18next";
 import i18n_german from "./locales/de/translation.json";
 import i18n_english from "./locales/en/translation.json";
+import checklist_german from "./locales/de/checklist.json";
+import checklist_english from "./locales/en/checklist.json";
 import { createInstance } from "i18next";
 import { ScreensaverClock } from "./components/ScreensaverClock";
 import { TerminalRegisterPage } from "./pages/TerminalRegisterPage";
@@ -393,9 +395,11 @@ export const TerminalApp = React.memo(
     const resources = {
       de: {
         translation: i18n_german,
+        checklist: checklist_german,
       },
       en: {
         translation: i18n_english,
+        checklist: checklist_english,
       },
     };
 
