@@ -1,11 +1,6 @@
 import { CoinAmountDto } from "../../../common/contracts";
 import React from "react";
-import {
-  InputAdornment,
-  TextField,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 
 import { Euro } from "@mui/icons-material";
 import { BottleStamp } from "../../../assets/BottleStamp";
@@ -52,7 +47,7 @@ const StyledDiv = styled("div")(({ theme }) => ({
   },
 }));
 
-const StyledActionDiv = styled("div")(({ theme }) => ({
+const StyledActionDiv = styled("div")(() => ({
   display: "flex",
   alignItems: "center",
 }));
@@ -142,11 +137,14 @@ export const CoinAmountEdit = (props: {
   isTransaction?: boolean;
   preventNegate?: boolean;
 }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const maxSelfGivenStamps = 9;
 
-  function setCents(value: number) {
+  function setCents(value?: number) {
     let newCoins = cloneCoins(props.coins);
+    if (value === undefined) {
+      value = -(newCoins.Cent ?? 0);
+    }
+
     if (props.preventNegate && value < 0 && (newCoins.Cent ?? 0) == 0) {
       value = 0;
     }
@@ -161,13 +159,14 @@ export const CoinAmountEdit = (props: {
     props.onChange(newCoins);
   }
 
-  function setCoffeeStamps(value: number) {
+  function setCoffeeStamps(value?: number) {
     let newCoins = cloneCoins(props.coins);
-    if (props.preventNegate && value < 0 && (newCoins.CoffeeStamp ?? 0) == 0) {
-      value = 0;
+    if (value === undefined) {
+      value = -(newCoins.CoffeeStamp ?? 0);
     }
-    if (props.preventNegate && value < 0) {
-      value *= -1;
+
+    if (props.preventNegate && value < -maxSelfGivenStamps) {
+      value = -maxSelfGivenStamps;
     }
     if (value == 0) {
       delete newCoins.CoffeeStamp;
@@ -177,13 +176,14 @@ export const CoinAmountEdit = (props: {
     props.onChange(newCoins);
   }
 
-  function setBottleStamps(value: number) {
+  function setBottleStamps(value?: number) {
     let newCoins = cloneCoins(props.coins);
-    if (props.preventNegate && value < 0 && (newCoins.BottleStamp ?? 0) == 0) {
-      value = 0;
+    if (value === undefined) {
+      value = -(newCoins.BottleStamp ?? 0);
     }
-    if (props.preventNegate && value < 0) {
-      value *= -1;
+
+    if (props.preventNegate && value < -maxSelfGivenStamps) {
+      value = -maxSelfGivenStamps;
     }
     if (value == 0) {
       delete newCoins.BottleStamp;
@@ -205,7 +205,7 @@ export const CoinAmountEdit = (props: {
               ? (TransactionCentInputRef as any)
               : (CentInputRef as any),
             endAdornment: (
-              <InputAdornment position="end">
+              <InputAdornment position="end" onDoubleClick={() => setCents()}>
                 <Euro />
               </InputAdornment>
             ),
@@ -221,7 +221,10 @@ export const CoinAmountEdit = (props: {
               ? (TransactionStampInputRef as any)
               : (StampInputRef as any),
             endAdornment: (
-              <InputAdornment position="end">
+              <InputAdornment
+                position="end"
+                onDoubleClick={() => setCoffeeStamps()}
+              >
                 <CoffeeStamp />
               </InputAdornment>
             ),
@@ -235,7 +238,10 @@ export const CoinAmountEdit = (props: {
               ? (TransactionStampInputRef as any)
               : (StampInputRef as any),
             endAdornment: (
-              <InputAdornment position="end">
+              <InputAdornment
+                position="end"
+                onDoubleClick={() => setBottleStamps()}
+              >
                 <BottleStamp />
               </InputAdornment>
             ),
