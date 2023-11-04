@@ -63,7 +63,12 @@
       "authenticationMethods": "Authentifizierungsmethoden",
       "activeSessions": "Aktive Sitzungen",
       "estimatedBalance": "Geschätztes Guthaben",
-      "appleWallet": "Hinzufügen zu Apple Wallet"
+      "appleWallet": "Hinzufügen zu Apple Wallet",
+      "multiSelectMessage_one": "{{count}} Konto ausgewählt",
+      "multiSelectMessage_other": "{{count}} Konten ausgewählt",
+      "multiSelectPayment": "Bazahlen",
+      "multiSelectSetRole": "Berechtigung setzen",
+      "multiSelectSetStatus": "Status setzen"
     },
     "role": {
       "basic": "Standard",
@@ -80,7 +85,7 @@
       "deleteContent": "Möchten Sie das Konto <bold>{{name}}</bold> dauerhaft löschen? Dies wird alle Transaktionen des Kontos anonymisieren. Diese Aktion kann nicht wiederrufen werden!",
       "name": "Name",
       "email": "E-Mail",
-      "role": "Rolle",
+      "role": "Berechtigung",
       "enableMonthlyMailReport": "Monatliche Zusammenfassung per E-Mail empfangen",
       "enableAutomaticStampUsage": "Verfügbare Stempel automatisch benutzen"
     },
@@ -181,7 +186,10 @@
       "createProduct": "Produkt erstellen",
       "editProduct": "Produktdetails bearbeiten",
       "deleteProduct": "Produkt löschen",
-      "printSnacks": "Snacks drucken"
+      "printSnacks": "Snacks drucken",
+      "multiSelectMessage_one": "{{count}} Produkt ausgewählt",
+      "multiSelectMessage_other": "{{count}} Produkte ausgewählt",
+      "multiSelectSetPrice": "Preis setzen"
     },
     "edit": {
       "createTitle": "Produkt erstellen",

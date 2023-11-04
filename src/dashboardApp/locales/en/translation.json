@@ -63,7 +63,12 @@
       "authenticationMethods": "Authentication methods",
       "activeSessions": "Active sessions",
       "estimatedBalance": "Estimated balance",
-      "appleWallet": "Add to Apple Wallet"
+      "appleWallet": "Add to Apple Wallet",
+      "multiSelectMessage_one": "{{count}} account selected",
+      "multiSelectMessage_other": "{{count}} accounts selected",
+      "multiSelectPayment": "Payment",
+      "multiSelectSetRole": "Set permission",
+      "multiSelectSetStatus": "Set status"
     },
     "role": {
       "basic": "Basic",
@@ -80,7 +85,7 @@
       "deleteContent": "Do you want to permanently delete the account <bold>{{name}}</bold>? This will anonymize all transactions of this account. This action cannot be undone!",
       "name": "Name",
       "email": "Email",
-      "role": "Role",
+      "role": "Permission",
       "enableMonthlyMailReport": "Receive monthly reports by email",
       "enableAutomaticStampUsage": "Automatically use available stamps during payment"
     },
@@ -181,7 +186,10 @@
       "createProduct": "Create product",
       "editProduct": "Edit product details",
       "deleteProduct": "Delete product",
-      "printSnacks": "Print snacks"
+      "printSnacks": "Print snacks",
+      "multiSelectMessage_one": "{{count}} product selected",
+      "multiSelectMessage_other": "{{count}} products selected",
+      "multiSelectSetPrice": "Set price"
     },
     "edit": {
       "createTitle": "Create a new product",
