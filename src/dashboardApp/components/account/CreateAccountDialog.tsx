@@ -65,6 +65,7 @@ export const CreateAccountDialog = (props: {
       role,
       enable_monthly_mail_report: enableMonthlyMailReport,
       enable_automatic_stamp_usage: enableAutomaticStampUsage,
+      status_id: null,
     };
     createAccount(saveAccount);
   };

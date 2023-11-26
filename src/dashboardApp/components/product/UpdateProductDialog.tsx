@@ -76,6 +76,7 @@ export const UpdateProductDialog = (props: {
       bonus,
       category,
       tags: pTags,
+      status_prices: [],
     };
     if (nickname.length > 0) {
       saveProduct.nickname = nickname;

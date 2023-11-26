@@ -61,6 +61,7 @@ export const UpdateMultiAccountRoleDialog = (props: {
         role,
         enable_monthly_mail_report: account.enable_monthly_mail_report,
         enable_automatic_stamp_usage: account.enable_automatic_stamp_usage,
+        status_id: null,
       };
       await updateAccount({
         id: account.id,

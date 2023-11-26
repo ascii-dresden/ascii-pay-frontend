@@ -32,6 +32,17 @@ export type AuthMethodDto =
   | AuthMethodDtoNfcBased
   | AuthMethodDtoPublicTab;
 
+export type AccountStatusDto = {
+  id: number;
+  name: string;
+  priority: number;
+};
+
+export type SaveAccountStatusDto = {
+  name: string;
+  priority: number;
+};
+
 export type AccountDto = {
   id: number;
   balance: CoinAmountDto;
@@ -41,6 +52,7 @@ export type AccountDto = {
   auth_methods: AuthMethodDto[];
   enable_monthly_mail_report: boolean;
   enable_automatic_stamp_usage: boolean;
+  status: AccountStatusDto | null;
 };
 
 export type SaveAccountDto = {
@@ -49,6 +61,7 @@ export type SaveAccountDto = {
   role: RoleDto;
   enable_monthly_mail_report: boolean;
   enable_automatic_stamp_usage: boolean;
+  status_id: number | null;
 };
 
 export type CreateAdminAccountDto = {
@@ -68,6 +81,12 @@ export type AuthPasswordBasedDto = {
   longLived?: boolean;
 };
 
+export type ProductStatusPriceDto = {
+  status: AccountStatusDto;
+  price: CoinAmountDto;
+  bonus: CoinAmountDto;
+};
+
 export type ProductDto = {
   id: number;
   name: string;
@@ -77,6 +96,13 @@ export type ProductDto = {
   barcode?: string | null;
   category: string;
   tags: string[];
+  status_prices: ProductStatusPriceDto[];
+};
+
+export type SaveProductStatusPriceDto = {
+  status_id: number;
+  price: CoinAmountDto;
+  bonus: CoinAmountDto;
 };
 
 export type SaveProductDto = {
@@ -87,6 +113,7 @@ export type SaveProductDto = {
   barcode?: string | null;
   category: string;
   tags: string[];
+  status_prices: SaveProductStatusPriceDto[];
 };
 
 export type TransactionItemDto = {

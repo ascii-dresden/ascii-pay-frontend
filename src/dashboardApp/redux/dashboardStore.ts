@@ -8,11 +8,13 @@ import adminReducer from "./features/adminSlice";
 import userReducer from "./features/userSlice";
 import registerReducer from "./features/registerSlice";
 import { registerHistoryApi } from "./api/registerHistoryApi";
+import { accountStatusApi } from "./api/accountStatusApi";
 
 export const dashboardStore = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
+    [accountStatusApi.reducerPath]: accountStatusApi.reducer,
     [accountApi.reducerPath]: accountApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
     [registerHistoryApi.reducerPath]: registerHistoryApi.reducer,
@@ -25,6 +27,7 @@ export const dashboardStore = configureStore({
     getDefaultMiddleware({}).concat([
       authApi.middleware,
       userApi.middleware,
+      accountStatusApi.middleware,
       accountApi.middleware,
       productApi.middleware,
       registerHistoryApi.middleware,

@@ -63,6 +63,7 @@ export const UpdateMultiProductPriceDialog = (props: {
         bonus: bonus,
         category: product.category,
         tags: product.tags,
+        status_prices: [],
       };
       await updateProduct({
         id: product.id,
