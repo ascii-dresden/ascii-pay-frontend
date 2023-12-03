@@ -23,7 +23,8 @@
     "hiddenFieldToggle": "Privatsphäre",
     "toggleLanguage": "Sprache wechseln",
     "preferences": "Einstellungen",
-    "print": "Drucken"
+    "print": "Drucken",
+    "accountStatus": "ascii Status"
   },
   "setup": {
     "message": "ascii-pay einrichten",
@@ -108,6 +109,28 @@
       "methodPublicTab": "Anschreibeliste",
       "methodPasswordResetToken": "Passwort zurücksetzen",
       "revoke": "Entfernen"
+    }
+  },
+  "accountStatus": {
+    "name": "Name",
+    "priority": "Priorität",
+    "action": {
+      "details": "Details",
+      "edit": "Bearbeiten",
+      "createAccountStatus": "Status erstellen",
+      "updateAccountStatus": "Status bearbeiten",
+      "deleteAccountStatus": "Status löschen"
+    },
+    "edit": {
+      "createTitle": "Status erstellen",
+      "createAction": "Status erstellen",
+      "updateTitle": "Status bearbeiten",
+      "updateAction": "Änderungen speichern",
+      "deleteTitle": "Status löschen?",
+      "deleteAction": "Status löschen",
+      "deleteContent": "Möchten Sie den ascii Status <bold>{{name}}</bold> dauerhaft löschen? Dabei werden alle Verknüpfungen und Rabatte für diesen Status entfernt. Diese Aktion kann nicht wiederrufen werden!",
+      "name": "Name",
+      "priority": "Priorität"
     }
   },
   "date": {

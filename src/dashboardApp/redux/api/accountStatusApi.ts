@@ -16,7 +16,7 @@ export const accountStatusApi = createApi({
     >({
       query(accountStatus) {
         return {
-          url: "/accountStatus",
+          url: "/account-status",
           method: "POST",
           body: accountStatus,
         };
@@ -29,7 +29,7 @@ export const accountStatusApi = createApi({
     >({
       query({ id, accountStatus }) {
         return {
-          url: `/accountStatus/${id}`,
+          url: `/account-status/${id}`,
           method: "PUT",
           body: accountStatus,
         };
@@ -45,7 +45,7 @@ export const accountStatusApi = createApi({
     getAccountStatus: builder.query<AccountStatusDto, number>({
       query(id) {
         return {
-          url: `/accountStatus/${id}`,
+          url: `/account-status/${id}`,
         };
       },
       providesTags: (result, error, id) => [{ type: "AccountStatus", id }],
@@ -53,7 +53,7 @@ export const accountStatusApi = createApi({
     getAllAccountStatus: builder.query<AccountStatusDto[], void>({
       query() {
         return {
-          url: `/accountStatus`,
+          url: `/account-status`,
         };
       },
       providesTags: (result) =>
@@ -70,7 +70,7 @@ export const accountStatusApi = createApi({
     deleteAccountStatus: builder.mutation<void, number>({
       query(id) {
         return {
-          url: `/accountStatus/${id}`,
+          url: `/account-status/${id}`,
           method: "DELETE",
         };
       },

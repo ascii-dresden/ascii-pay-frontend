@@ -23,7 +23,8 @@
     "hiddenFieldToggle": "Toggle privacy",
     "toggleLanguage": "Toggle language",
     "preferences": "Preferences",
-    "print": "Print"
+    "print": "Print",
+    "accountStatus": "ascii Status"
   },
   "setup": {
     "message": "Setup ascii-pay",
@@ -108,6 +109,28 @@
       "methodPublicTab": "Public tab",
       "methodPasswordResetToken": "Password reset token",
       "revoke": "Revoke"
+    }
+  },
+  "accountStatus": {
+    "name": "Name",
+    "priority": "Priority",
+    "action": {
+      "details": "Details",
+      "edit": "Edit",
+      "createAccountStatus": "Create status",
+      "updateAccountStatus": "Update status",
+      "deleteAccountStatus": "Delete status"
+    },
+    "edit": {
+      "createTitle": "Create a new status",
+      "createAction": "Create status",
+      "updateTitle": "Edit status",
+      "updateAction": "Save changes",
+      "deleteTitle": "Delete status?",
+      "deleteAction": "Delete status",
+      "deleteContent": "Do you want to permanently delete the ascii status <bold>{{name}}</bold>? This will delete all associations and bonuses for this status. This action cannot be undone!",
+      "name": "Name",
+      "priority": "Priority"
     }
   },
   "date": {

@@ -80,6 +80,16 @@ const RegisterHistoryListPage = React.lazy(() =>
     default: module.RegisterHistoryListPage,
   }))
 );
+const AccountStatusListPage = React.lazy(() =>
+  import("./pages/AccountStatusListPage").then((module) => ({
+    default: module.AccountStatusListPage,
+  }))
+);
+const AccountStatusDetailsPage = React.lazy(() =>
+  import("./pages/AccountStatusDetailsPage").then((module) => ({
+    default: module.AccountStatusDetailsPage,
+  }))
+);
 
 const StyledDashboardApp = styled.div`
   min-height: 100vh;
@@ -166,6 +176,14 @@ export function DashboardApp() {
                       <Route
                         path="products/:productId"
                         element={<ProductDetailsPage />}
+                      />
+                      <Route
+                        path="accountStatus"
+                        element={<AccountStatusListPage />}
+                      />
+                      <Route
+                        path="accountStatus/:accountStatusId"
+                        element={<AccountStatusDetailsPage />}
                       />
                       <Route
                         path="transactions"

@@ -37,6 +37,7 @@ import {
   MenuOutlined,
   PriceChangeOutlined,
   PublicOutlined,
+  StarsOutlined,
   Store,
   TranslateOutlined,
 } from "@mui/icons-material";
@@ -255,6 +256,25 @@ export const Layout = () => {
                     <Coffee />
                   </ListItemIcon>
                   <ListItemText primary={t("layout.products")} />
+                </ListItemButton>
+              )}
+            </NavLink>
+          </ListItem>
+          <ListItem disablePadding>
+            <NavLink
+              to="/accountStatus"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <StarsOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={t("layout.accountStatus")} />
                 </ListItemButton>
               )}
             </NavLink>
