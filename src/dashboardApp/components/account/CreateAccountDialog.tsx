@@ -21,6 +21,7 @@ import { useCreateAccountMutation } from "../../redux/api/accountApi";
 import { RoleDto, SaveAccountDto } from "../../../common/contracts";
 import { Close } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { useGetAllAccountStatusQuery } from "../../redux/api/accountStatusApi";
 
 export const CreateAccountDialog = (props: {
   open: boolean;
@@ -33,9 +34,12 @@ export const CreateAccountDialog = (props: {
   const [createAccount, { isLoading, isError, error, isSuccess }] =
     useCreateAccountMutation();
 
+  const { data: accountStatus } = useGetAllAccountStatusQuery();
+
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [role, setRole] = React.useState<RoleDto>("Basic");
+  const [statusId, setStatusId] = React.useState<number | null>(null);
   const [enableMonthlyMailReport, setEnableMonthlyMailReport] =
     React.useState(false);
   const [enableAutomaticStampUsage, setEnableAutomaticStampUsage] =
@@ -49,6 +53,7 @@ export const CreateAccountDialog = (props: {
       setName("");
       setEmail("");
       setRole("Basic");
+      setStatusId(null);
       setEnableMonthlyMailReport(false);
       setEnableAutomaticStampUsage(true);
     } else if (isError) {
@@ -65,7 +70,7 @@ export const CreateAccountDialog = (props: {
       role,
       enable_monthly_mail_report: enableMonthlyMailReport,
       enable_automatic_stamp_usage: enableAutomaticStampUsage,
-      status_id: null,
+      status_id: statusId,
     };
     createAccount(saveAccount);
   };
@@ -118,6 +123,27 @@ export const CreateAccountDialog = (props: {
             <MenuItem value="Basic">{t("account.role.basic")}</MenuItem>
             <MenuItem value="Member">{t("account.role.member")}</MenuItem>
             <MenuItem value="Admin">{t("account.role.admin")}</MenuItem>
+          </TextField>
+          <TextField
+            label={t("account.edit.status")}
+            fullWidth
+            select
+            sx={{ mb: "1rem" }}
+            value={statusId?.toString() ?? "---"}
+            onChange={(e) =>
+              setStatusId(
+                isNaN(parseInt(e.target.value))
+                  ? null
+                  : parseInt(e.target.value)
+              )
+            }
+          >
+            {accountStatus?.map((s) => (
+              <MenuItem key={s.id.toString()} value={s.id.toString()}>
+                {s.name}
+              </MenuItem>
+            ))}
+            <MenuItem value="---">---</MenuItem>
           </TextField>
 
           <FormGroup>

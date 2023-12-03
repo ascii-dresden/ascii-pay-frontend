@@ -42,6 +42,8 @@ import styled from "@emotion/styled";
 import clsx from "clsx";
 import { CreateMultiPaymentDialog } from "../components/transaction/CreateMultiPaymentDialog";
 import { UpdateMultiAccountRoleDialog } from "../components/account/UpdateMultiAccountRoleDialog";
+import { AccountStatusChip } from "../components/accountStatus/AccountStatusChip";
+import { UpdateMultiAccountStatusDialog } from "../components/account/UpdateMultiAccountStatusDialog";
 
 export const AccountListPage = () => {
   const theme = useTheme();
@@ -55,6 +57,7 @@ export const AccountListPage = () => {
 
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [openAccountRoleModal, setOpenAccountRoleModal] = useState(false);
+  const [openAccountStatusModal, setOpenAccountStatusModal] = useState(false);
 
   const {
     isLoading,
@@ -251,7 +254,7 @@ export const AccountListPage = () => {
                               startIcon={<ManageAccountsOutlined />}
                               variant="outlined"
                               size="small"
-                              disabled={true}
+                              onClick={() => setOpenAccountStatusModal(true)}
                             >
                               {t("account.action.multiSelectSetStatus")}
                             </Button>
@@ -306,6 +309,11 @@ export const AccountListPage = () => {
           accounts={selectedAccounts}
           open={openAccountRoleModal}
           setOpen={setOpenAccountRoleModal}
+        />
+        <UpdateMultiAccountStatusDialog
+          accounts={selectedAccounts}
+          open={openAccountStatusModal}
+          setOpen={setOpenAccountStatusModal}
         />
       </Container>
     </PullToRefreshWrapper>
@@ -367,6 +375,7 @@ const AccountListRow = (props: {
         <TableCell>
           <Typography>{props.account.name}</Typography>
           <RoleChip role={props.account.role} />
+          <AccountStatusChip status={props.account.status} />
         </TableCell>
         <TableCell>
           <HiddenField>{props.account.email}</HiddenField>

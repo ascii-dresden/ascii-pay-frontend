@@ -1,0 +1,133 @@
+import {
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  MenuItem,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import React, { useEffect } from "react";
+import { toast } from "react-toastify";
+import { useUpdateAccountMutation } from "../../redux/api/accountApi";
+import { AccountDto, SaveAccountDto } from "../../../common/contracts";
+import { Close } from "@mui/icons-material";
+import { useDashboardSelector } from "../../redux/dashboardStore";
+import { useTranslation } from "react-i18next";
+import { useGetAllAccountStatusQuery } from "../../redux/api/accountStatusApi";
+
+export const UpdateMultiAccountStatusDialog = (props: {
+  accounts: AccountDto[];
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) => {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const user = useDashboardSelector((state) => state.userState.user);
+  const [updateAccount, { isLoading, isError, error, isSuccess }] =
+    useUpdateAccountMutation();
+
+  const { data: accountStatus } = useGetAllAccountStatusQuery();
+  const [statusId, setStatusId] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    setStatusId(null);
+  }, [props.accounts]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Account updated successfully!");
+      props.setOpen(false);
+    } else if (isError) {
+      toast.error("Account could not be updated!");
+      console.error(error);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading]);
+
+  const handleSubmit = async () => {
+    for (const account of props.accounts) {
+      let saveAccount: SaveAccountDto = {
+        name: account.name,
+        email: account.email,
+        role: account.role,
+        enable_monthly_mail_report: account.enable_monthly_mail_report,
+        enable_automatic_stamp_usage: account.enable_automatic_stamp_usage,
+        status_id: statusId,
+      };
+      await updateAccount({
+        id: account.id,
+        account: saveAccount,
+      });
+    }
+  };
+
+  return (
+    <Dialog
+      open={props.open}
+      onClose={() => props.setOpen(false)}
+      fullScreen={fullScreen}
+    >
+      <DialogTitle component="div">
+        <Typography variant="h5">{t("account.edit.updateTitle")}</Typography>
+        <IconButton
+          aria-label="close"
+          onClick={() => props.setOpen(false)}
+          sx={{
+            position: "absolute",
+            right: 16,
+            top: 10,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <Close />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers={true}>
+        <Box pt={1}>
+          {user?.role === "Admin" ? (
+            <TextField
+              label={t("account.edit.status")}
+              fullWidth
+              select
+              sx={{ mb: "1rem" }}
+              value={statusId?.toString() ?? "---"}
+              onChange={(e) =>
+                setStatusId(
+                  isNaN(parseInt(e.target.value))
+                    ? null
+                    : parseInt(e.target.value)
+                )
+              }
+            >
+              {accountStatus?.map((s) => (
+                <MenuItem key={s.id.toString()} value={s.id.toString()}>
+                  {s.name}
+                </MenuItem>
+              ))}
+              <MenuItem value="---">---</MenuItem>
+            </TextField>
+          ) : null}
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <LoadingButton
+          variant="contained"
+          fullWidth
+          sx={{ mx: 2, py: 1.5 }}
+          onClick={handleSubmit}
+          loading={isLoading}
+        >
+          {t("account.edit.updateAction")}
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
+  );
+};

@@ -87,6 +87,7 @@
       "name": "Name",
       "email": "Email",
       "role": "Permission",
+      "status": "ascii Status",
       "enableMonthlyMailReport": "Receive monthly reports by email",
       "enableAutomaticStampUsage": "Automatically use available stamps during payment"
     },

@@ -33,7 +33,7 @@ export const RoleChip = (props: { role: RoleDto }) => {
 
   return (
     <Chip
-      sx={{ mr: 2 }}
+      sx={{ mr: 1 }}
       size="small"
       label={label}
       variant="outlined"

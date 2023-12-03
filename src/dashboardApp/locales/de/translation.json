@@ -87,6 +87,7 @@
       "name": "Name",
       "email": "E-Mail",
       "role": "Berechtigung",
+      "status": "ascii Status",
       "enableMonthlyMailReport": "Monatliche Zusammenfassung per E-Mail empfangen",
       "enableAutomaticStampUsage": "Verfügbare Stempel automatisch benutzen"
     },

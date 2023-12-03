@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import { PageHeader, PageHeaderNavigation } from "../PageHeader";
 import { useDashboardDispatch } from "../../redux/dashboardStore";
 import { PullToRefreshWrapper } from "../PullToRefresh";
+import { AccountStatusChip } from "../accountStatus/AccountStatusChip";
 
 export const AccountDetailsPageView = (props: {
   accountId: number;
@@ -84,6 +85,7 @@ export const AccountDetailsPageView = (props: {
         <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
           <span style={{ marginRight: "0.6rem" }}>{account.name}</span>
           <RoleChip role={account.role} />
+          <AccountStatusChip status={account.status} />
         </Typography>
         <Typography component="div">{account.email}</Typography>
       </>
@@ -96,6 +98,7 @@ export const AccountDetailsPageView = (props: {
           {props.isRoot && account.role !== "Admin" ? null : (
             <RoleChip role={account.role} />
           )}
+          <AccountStatusChip status={account.status} />
         </Typography>
 
         {props.isRoot ? (
