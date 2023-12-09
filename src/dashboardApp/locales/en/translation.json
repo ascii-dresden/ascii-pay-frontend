@@ -88,8 +88,8 @@
       "email": "Email",
       "role": "Permission",
       "status": "ascii Status",
-      "enableMonthlyMailReport": "Receive monthly reports by email",
-      "enableAutomaticStampUsage": "Automatically use available stamps during payment"
+      "enableMonthlyMailReport": "Receive monthly reports by email?",
+      "enableAutomaticStampUsage": "Automatically ask whether stamps should be redeemed?"
     },
     "authentication": {
       "passwordAuthentication": "Password authentication",

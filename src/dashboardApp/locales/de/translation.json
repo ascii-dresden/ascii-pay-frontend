@@ -88,8 +88,9 @@
       "email": "E-Mail",
       "role": "Berechtigung",
       "status": "ascii Status",
-      "enableMonthlyMailReport": "Monatliche Zusammenfassung per E-Mail empfangen",
-      "enableAutomaticStampUsage": "Verfügbare Stempel automatisch benutzen"
+      "enableMonthlyMailReport": "Monatliche Zusammenfassung per E-Mail empfangen?",
+      "enableAutomaticStampUsage": "Automatisch nachfragen, ob Stempel eingelöst werden sollen?",
+      "enableAutomaticStampUsageHint": "Automatisch nachfragen, ob Stempel eingelöst werden sollen?"
     },
     "authentication": {
       "passwordAuthentication": "Benutzername/Passwort",
