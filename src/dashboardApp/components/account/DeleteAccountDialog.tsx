@@ -34,7 +34,12 @@ export const DeleteAccountDialog = (props: {
       toast.success("Account deleted successfully!");
       props.setOpen(false);
     } else if (isError) {
-      toast.error("Account could not be deleted!");
+      const cause = (error as any)?.data?.error;
+      if (cause) {
+        toast.error(`Account could not be deleted: [${cause}]!`);
+      } else {
+        toast.error("Account could not be deleted!");
+      }
       console.error(error);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

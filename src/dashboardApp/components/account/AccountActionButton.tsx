@@ -1,6 +1,7 @@
 import { AccountDto } from "../../../common/contracts";
 import React, { useState } from "react";
 import {
+  DeleteOutline,
   Edit,
   LockOutlined,
   ShoppingCartOutlined,
@@ -14,6 +15,7 @@ import { AccountSessionDialog } from "./AccountSessionDialog";
 import { useTranslation } from "react-i18next";
 import { useDashboardSelector } from "../../redux/dashboardStore";
 import { ActionButton, ActionButtonAction } from "../ActionButton";
+import { DeleteAccountDialog } from "./DeleteAccountDialog";
 
 export const AccountActionButton = (props: {
   account: AccountDto;
@@ -28,6 +30,7 @@ export const AccountActionButton = (props: {
 
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openAuthModal, setOpenAuthModal] = useState(false);
   const [openSessionModal, setOpenSessionModal] = useState(false);
 
@@ -51,6 +54,11 @@ export const AccountActionButton = (props: {
       label: t("account.action.activeSessions"),
       icon: <Token />,
       action: () => setOpenSessionModal(true),
+    },
+    {
+      label: t("account.action.deleteAccount"),
+      icon: <DeleteOutline />,
+      action: () => setOpenDeleteModal(true),
     },
   ];
 
@@ -81,6 +89,12 @@ export const AccountActionButton = (props: {
         account={props.account}
         open={openEditModal}
         setOpen={setOpenEditModal}
+      />
+
+      <DeleteAccountDialog
+        account={props.account}
+        open={openDeleteModal}
+        setOpen={setOpenDeleteModal}
       />
 
       <CreatePaymentDialog
