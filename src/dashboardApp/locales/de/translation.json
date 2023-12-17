@@ -212,6 +212,7 @@
       "editProduct": "Produktdetails bearbeiten",
       "deleteProduct": "Produkt löschen",
       "printSnacks": "Snacks drucken",
+      "addStatusPrice": "Sonderpreis hinzufügen",
       "multiSelectMessage_one": "{{count}} Produkt ausgewählt",
       "multiSelectMessage_other": "{{count}} Produkte ausgewählt",
       "multiSelectSetPrice": "Preis setzen"

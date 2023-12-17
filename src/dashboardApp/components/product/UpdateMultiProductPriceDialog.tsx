@@ -17,10 +17,12 @@ import {
   CoinAmountDto,
   ProductDto,
   SaveProductDto,
+  SaveProductStatusPriceDto,
 } from "../../../common/contracts";
 import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
 import { Close } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { ProductStatusPricesEdit } from "./ProductStatusPricesEdit";
 
 export const UpdateMultiProductPriceDialog = (props: {
   products: ProductDto[];
@@ -36,10 +38,14 @@ export const UpdateMultiProductPriceDialog = (props: {
 
   const [price, setPrice] = React.useState<CoinAmountDto>({});
   const [bonus, setBonus] = React.useState<CoinAmountDto>({});
+  const [statusPrices, setStatusPrices] = React.useState<
+    SaveProductStatusPriceDto[]
+  >([]);
 
   React.useEffect(() => {
     setPrice({});
     setBonus({});
+    setStatusPrices([]);
   }, [props.products]);
 
   useEffect(() => {
@@ -63,7 +69,7 @@ export const UpdateMultiProductPriceDialog = (props: {
         bonus: bonus,
         category: product.category,
         tags: product.tags,
-        status_prices: [],
+        status_prices: statusPrices,
       };
       await updateProduct({
         id: product.id,
@@ -104,6 +110,10 @@ export const UpdateMultiProductPriceDialog = (props: {
             label={t("product.bonus")}
             coins={bonus}
             onChange={setBonus}
+          />
+          <ProductStatusPricesEdit
+            statusPrices={statusPrices}
+            setStatusPrices={setStatusPrices}
           />
         </Box>
       </DialogContent>

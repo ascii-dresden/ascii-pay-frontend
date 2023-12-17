@@ -18,6 +18,7 @@ import {
   CoinAmountDto,
   ProductDto,
   SaveProductDto,
+  SaveProductStatusPriceDto,
 } from "../../../common/contracts";
 import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
 import { Close } from "@mui/icons-material";
@@ -25,6 +26,7 @@ import { CategoryInput } from "./CategoryInput";
 import { TagsInput } from "./TagsInput";
 import { useProductMetadataHook } from "./useProductMetadataHook";
 import { useTranslation } from "react-i18next";
+import { ProductStatusPricesEdit } from "./ProductStatusPricesEdit";
 
 export const UpdateProductDialog = (props: {
   product: ProductDto;
@@ -47,6 +49,9 @@ export const UpdateProductDialog = (props: {
   const [pTags, setPTags] = React.useState<string[]>([]);
   const [price, setPrice] = React.useState<CoinAmountDto>({});
   const [bonus, setBonus] = React.useState<CoinAmountDto>({});
+  const [statusPrices, setStatusPrices] = React.useState<
+    SaveProductStatusPriceDto[]
+  >([]);
 
   React.useEffect(() => {
     setName(props.product.name);
@@ -56,6 +61,13 @@ export const UpdateProductDialog = (props: {
     setPTags(props.product.tags);
     setPrice(props.product.price);
     setBonus(props.product.bonus);
+    setStatusPrices(
+      props.product.status_prices.map((p) => ({
+        status_id: p.status.id,
+        price: p.price,
+        bonus: p.bonus,
+      }))
+    );
   }, [props.product]);
 
   useEffect(() => {
@@ -76,7 +88,7 @@ export const UpdateProductDialog = (props: {
       bonus,
       category,
       tags: pTags,
-      status_prices: [],
+      status_prices: statusPrices,
     };
     if (nickname.length > 0) {
       saveProduct.nickname = nickname;
@@ -153,6 +165,10 @@ export const UpdateProductDialog = (props: {
             label={t("product.bonus")}
             coins={bonus}
             onChange={setBonus}
+          />
+          <ProductStatusPricesEdit
+            statusPrices={statusPrices}
+            setStatusPrices={setStatusPrices}
           />
         </Box>
       </DialogContent>

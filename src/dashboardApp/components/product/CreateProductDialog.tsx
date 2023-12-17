@@ -14,13 +14,18 @@ import { LoadingButton } from "@mui/lab";
 import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useCreateProductMutation } from "../../redux/api/productApi";
-import { CoinAmountDto, SaveProductDto } from "../../../common/contracts";
+import {
+  CoinAmountDto,
+  SaveProductDto,
+  SaveProductStatusPriceDto,
+} from "../../../common/contracts";
 import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
 import { Close } from "@mui/icons-material";
 import { CategoryInput } from "./CategoryInput";
 import { TagsInput } from "./TagsInput";
 import { useProductMetadataHook } from "./useProductMetadataHook";
 import { useTranslation } from "react-i18next";
+import { ProductStatusPricesEdit } from "./ProductStatusPricesEdit";
 
 export const CreateProductDialog = (props: {
   open: boolean;
@@ -42,6 +47,9 @@ export const CreateProductDialog = (props: {
   const [pTags, setPTags] = React.useState<string[]>([]);
   const [price, setPrice] = React.useState<CoinAmountDto>({});
   const [bonus, setBonus] = React.useState<CoinAmountDto>({});
+  const [statusPrices, setStatusPrices] = React.useState<
+    SaveProductStatusPriceDto[]
+  >([]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -55,6 +63,7 @@ export const CreateProductDialog = (props: {
       setPTags([]);
       setPrice({});
       setBonus({});
+      setStatusPrices([]);
     } else if (isError) {
       toast.error("Product could not be created!");
       console.error(error);
@@ -69,7 +78,7 @@ export const CreateProductDialog = (props: {
       bonus,
       category,
       tags: pTags,
-      status_prices: [],
+      status_prices: statusPrices,
     };
     if (nickname.length > 0) {
       saveProduct.nickname = nickname;
@@ -143,6 +152,10 @@ export const CreateProductDialog = (props: {
             label={t("product.bonus")}
             coins={bonus}
             onChange={setBonus}
+          />
+          <ProductStatusPricesEdit
+            statusPrices={statusPrices}
+            setStatusPrices={setStatusPrices}
           />
         </Box>
       </DialogContent>

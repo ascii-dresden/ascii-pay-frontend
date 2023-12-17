@@ -211,6 +211,7 @@
       "editProduct": "Edit product details",
       "deleteProduct": "Delete product",
       "printSnacks": "Print snacks",
+      "addStatusPrice": "Add special price",
       "multiSelectMessage_one": "{{count}} product selected",
       "multiSelectMessage_other": "{{count}} products selected",
       "multiSelectSetPrice": "Set price"

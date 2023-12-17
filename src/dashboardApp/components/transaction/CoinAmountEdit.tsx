@@ -136,6 +136,7 @@ export const CoinAmountEdit = (props: {
   children?: React.ReactNode | React.ReactNode[];
   isTransaction?: boolean;
   preventNegate?: boolean;
+  size?: "small" | "medium" | undefined;
 }) => {
   const maxSelfGivenStamps = 9;
 
@@ -200,6 +201,7 @@ export const CoinAmountEdit = (props: {
           label={props.label}
           value={props.coins.Cent ?? 0}
           onChange={setCents as any}
+          size={props.size}
           InputProps={{
             inputComponent: props.isTransaction
               ? (TransactionCentInputRef as any)
@@ -216,6 +218,7 @@ export const CoinAmountEdit = (props: {
         <TextField
           value={props.coins.CoffeeStamp ?? 0}
           onChange={setCoffeeStamps as any}
+          size={props.size}
           InputProps={{
             inputComponent: props.isTransaction
               ? (TransactionStampInputRef as any)
@@ -233,6 +236,7 @@ export const CoinAmountEdit = (props: {
         <TextField
           value={props.coins.BottleStamp ?? 0}
           onChange={setBottleStamps as any}
+          size={props.size}
           InputProps={{
             inputComponent: props.isTransaction
               ? (TransactionStampInputRef as any)
