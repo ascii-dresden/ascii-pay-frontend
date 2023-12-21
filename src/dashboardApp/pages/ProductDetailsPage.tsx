@@ -6,6 +6,8 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
+  TableHead,
   TableRow,
   Typography,
   useTheme,
@@ -166,34 +168,6 @@ export const ProductDetailsPage = () => {
                       align="right"
                       sx={{ fontWeight: "bold" }}
                     >
-                      {t("product.price")}
-                    </TableCell>
-                    <TableCell>
-                      <CoinAmountView coins={product.price} />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{ "& > *": { borderBottom: "unset !important" } }}
-                  >
-                    <TableCell
-                      width={100}
-                      align="right"
-                      sx={{ fontWeight: "bold" }}
-                    >
-                      {t("product.bonus")}
-                    </TableCell>
-                    <TableCell>
-                      <CoinAmountView coins={product.bonus} />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow
-                    sx={{ "& > *": { borderBottom: "unset !important" } }}
-                  >
-                    <TableCell
-                      width={100}
-                      align="right"
-                      sx={{ fontWeight: "bold" }}
-                    >
                       {t("product.barcode")}
                     </TableCell>
                     <TableCell>
@@ -205,6 +179,46 @@ export const ProductDetailsPage = () => {
                 </TableBody>
               </Table>
             </Box>
+          </Paper>
+
+          <Paper
+            sx={{ display: { xs: "block", md: "flex" }, mt: { xs: 2, sm: 4 } }}
+            elevation={4}
+          >
+            <TableContainer>
+              <Table aria-label="Price table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>{t("layout.accountStatus")}</TableCell>
+                    <TableCell>{t("product.price")}</TableCell>
+                    <TableCell>{t("product.bonus")}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>-</TableCell>
+                    <TableCell>
+                      <CoinAmountView coins={product.price} />
+                    </TableCell>
+                    <TableCell>
+                      <CoinAmountView coins={product.bonus} />
+                    </TableCell>
+                  </TableRow>
+
+                  {product.status_prices.map((p) => (
+                    <TableRow key={p.status.id}>
+                      <TableCell>{p.status.name}</TableCell>
+                      <TableCell>
+                        <CoinAmountView coins={p.price} />
+                      </TableCell>
+                      <TableCell>
+                        <CoinAmountView coins={p.bonus} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Paper>
         </Box>
       </Container>

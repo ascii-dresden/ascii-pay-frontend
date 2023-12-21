@@ -20,7 +20,12 @@ import {
 import { productApi, useGetAllProductsQuery } from "../redux/api/productApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Add, EuroSymbolOutlined, PrintOutlined } from "@mui/icons-material";
+import {
+  Add,
+  EuroSymbolOutlined,
+  PrintOutlined,
+  StarsOutlined,
+} from "@mui/icons-material";
 import { CreateProductDialog } from "../components/product/CreateProductDialog";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
@@ -39,6 +44,59 @@ import { PullToRefreshWrapper } from "../components/PullToRefresh";
 import styled from "@emotion/styled";
 import clsx from "clsx";
 import { UpdateMultiProductPriceDialog } from "../components/product/UpdateMultiProductPriceDialog";
+
+const ProductStatusPricesPopoverStyled = styled.div`
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 1;
+  top: calc(100% + 0.4em);
+  right: -2em;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+`;
+
+const ProductStatusPricesIndicatorStyled = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4em;
+  cursor: default;
+
+  & > span {
+    padding-top: 0.1em;
+  }
+
+  &:hover > div {
+    visibility: visible;
+    opacity: 1;
+  }
+`;
+
+const StyledCheckableAvatar = styled.div`
+  width: 40px;
+  height: 40px;
+
+  & > div:first-child {
+    display: block;
+  }
+
+  & > div:last-child {
+    display: none;
+  }
+
+  &:hover,
+  &.active {
+    & > div:first-child {
+      display: none;
+    }
+
+    & > div:last-child {
+      display: block;
+    }
+  }
+`;
 
 export const ProductListPage = () => {
   const theme = useTheme();
@@ -247,7 +305,7 @@ export const ProductListPage = () => {
                   </TableCell>
                   {selected.length > 0 ? (
                     <TableCell
-                      colSpan={4}
+                      colSpan={5}
                       padding="none"
                       height={56.5}
                       style={{
@@ -286,6 +344,7 @@ export const ProductListPage = () => {
                       <TableCell>{t("product.name")}</TableCell>
                       <TableCell width={250}>{t("product.price")}</TableCell>
                       <TableCell width={250}>{t("product.bonus")}</TableCell>
+                      <TableCell width={80}></TableCell>
                       <TableCell width={128}></TableCell>
                     </>
                   )}
@@ -303,7 +362,7 @@ export const ProductListPage = () => {
                 ))}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 78 * emptyRows }}>
-                    <TableCell colSpan={5} />
+                    <TableCell colSpan={6} />
                   </TableRow>
                 )}
               </TableBody>
@@ -329,36 +388,13 @@ export const ProductListPage = () => {
   );
 };
 
-const StyledCheckableAvatar = styled.div`
-  width: 40px;
-  height: 40px;
-
-  & > div:first-child {
-    display: block;
-  }
-
-  & > div:last-child {
-    display: none;
-  }
-
-  &:hover,
-  &.active {
-    & > div:first-child {
-      display: none;
-    }
-
-    & > div:last-child {
-      display: block;
-    }
-  }
-`;
-
 const ProductListRow = (props: {
   product: ProductDto;
   selected: boolean;
   toggleSelected: (product: ProductDto) => void;
   selectionMode: boolean;
 }) => {
+  const { t } = useTranslation();
   return (
     <>
       <TableRow style={{ height: 78 }}>
@@ -398,6 +434,45 @@ const ProductListRow = (props: {
         </TableCell>
         <TableCell width={250} align="right">
           <CoinAmountView coins={props.product.bonus} />
+        </TableCell>
+        <TableCell width={80}>
+          {props.product.status_prices.length <= 0 ? (
+            <ProductStatusPricesIndicatorStyled>
+              <StarsOutlined fontSize="small" opacity={0.2} />
+            </ProductStatusPricesIndicatorStyled>
+          ) : (
+            <ProductStatusPricesIndicatorStyled>
+              <span>{props.product.status_prices.length}</span>
+              <span>×</span>
+              <StarsOutlined fontSize="small" opacity={0.8} />
+              <ProductStatusPricesPopoverStyled>
+                <Paper elevation={4}>
+                  <Table aria-label="Price table" size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>{t("layout.accountStatus")}</TableCell>
+                        <TableCell>{t("product.price")}</TableCell>
+                        <TableCell>{t("product.bonus")}</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {props.product.status_prices.map((p) => (
+                        <TableRow key={p.status.id}>
+                          <TableCell>{p.status.name}</TableCell>
+                          <TableCell>
+                            <CoinAmountView coins={p.price} />
+                          </TableCell>
+                          <TableCell>
+                            <CoinAmountView coins={p.bonus} />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Paper>
+              </ProductStatusPricesPopoverStyled>
+            </ProductStatusPricesIndicatorStyled>
+          )}
         </TableCell>
         <TableCell width={128}>
           <ProductActionButton product={props.product} showNavigationOption />
