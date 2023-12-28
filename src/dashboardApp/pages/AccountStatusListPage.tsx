@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useTheme,
 } from "@mui/material";
 import {
   accountStatusApi,
@@ -29,6 +30,7 @@ import { AccountStatusActionButton } from "../components/accountStatus/AccountSt
 import { DefaultTablePagination } from "../components/DefaultTablePagination";
 import { useDashboardDispatch } from "../redux/dashboardStore";
 import { PullToRefreshWrapper } from "../components/PullToRefresh";
+import { getStatusColor } from "../../common/statusColors";
 
 export const AccountStatusListPage = () => {
   const { t } = useTranslation();
@@ -88,7 +90,13 @@ export const AccountStatusListPage = () => {
   }
 
   let sortedAccountStatus: AccountStatusDto[] = [...accountStatus];
-  sortedAccountStatus.sort((a, b) => a.name.localeCompare(b.name));
+  sortedAccountStatus.sort((a, b) => {
+    let priorityDiff = a.priority - b.priority;
+    if (priorityDiff != 0) {
+      return priorityDiff;
+    }
+    return a.name.localeCompare(b.name);
+  });
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -171,6 +179,7 @@ export const AccountStatusListPage = () => {
 };
 
 const AccountStatusListRow = (props: { accountStatus: AccountStatusDto }) => {
+  const theme = useTheme();
   return (
     <>
       <TableRow style={{ height: 78 }}>
@@ -178,6 +187,12 @@ const AccountStatusListRow = (props: { accountStatus: AccountStatusDto }) => {
           <Avatar
             alt={props.accountStatus.priority.toString()}
             variant="rounded"
+            sx={{
+              bgcolor: getStatusColor(
+                props.accountStatus.color,
+                theme.palette.mode
+              ),
+            }}
             {...stringWithoutColorAvatar(
               props.accountStatus.priority.toString()
             )}

@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  MenuItem,
   TextField,
   Typography,
   useMediaQuery,
@@ -17,6 +18,7 @@ import { useCreateAccountStatusMutation } from "../../redux/api/accountStatusApi
 import { SaveAccountStatusDto } from "../../../common/contracts";
 import { Close } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { getStatusColors } from "../../../common/statusColors";
 
 export const CreateAccountStatusDialog = (props: {
   open: boolean;
@@ -30,6 +32,7 @@ export const CreateAccountStatusDialog = (props: {
     useCreateAccountStatusMutation();
 
   const [name, setName] = React.useState("");
+  const [color, setColor] = React.useState("");
   const [priority, setPriority] = React.useState(0);
 
   useEffect(() => {
@@ -38,6 +41,7 @@ export const CreateAccountStatusDialog = (props: {
       props.setOpen(false);
 
       setName("");
+      setColor("");
       setPriority(0);
     } else if (isError) {
       toast.error("AccountStatus could not be created!");
@@ -50,6 +54,7 @@ export const CreateAccountStatusDialog = (props: {
     let saveAccountStatus: SaveAccountStatusDto = {
       name,
       priority,
+      color,
     };
     createAccountStatus(saveAccountStatus);
   };
@@ -98,6 +103,18 @@ export const CreateAccountStatusDialog = (props: {
               )
             }
           />
+          <TextField
+            label={t("accountStatus.color")}
+            fullWidth
+            select
+            sx={{ mb: "1rem" }}
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+          >
+            {getStatusColors().map((c) => (
+              <MenuItem value={c}>{c}</MenuItem>
+            ))}
+          </TextField>
         </Box>
       </DialogContent>
       <DialogActions>

@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  MenuItem,
   TextField,
   Typography,
   useMediaQuery,
@@ -20,6 +21,7 @@ import {
 } from "../../../common/contracts";
 import { Close } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
+import { getStatusColors } from "../../../common/statusColors";
 
 export const UpdateAccountStatusDialog = (props: {
   accountStatus: AccountStatusDto;
@@ -34,10 +36,12 @@ export const UpdateAccountStatusDialog = (props: {
     useUpdateAccountStatusMutation();
 
   const [name, setName] = React.useState("");
+  const [color, setColor] = React.useState("");
   const [priority, setPriority] = React.useState(0);
 
   React.useEffect(() => {
     setName(props.accountStatus.name);
+    setColor(props.accountStatus.color);
     setPriority(props.accountStatus.priority);
   }, [props.accountStatus]);
 
@@ -56,6 +60,7 @@ export const UpdateAccountStatusDialog = (props: {
     let saveAccountStatus: SaveAccountStatusDto = {
       name,
       priority,
+      color,
     };
     updateAccountStatus({
       id: props.accountStatus.id,
@@ -107,6 +112,18 @@ export const UpdateAccountStatusDialog = (props: {
               )
             }
           />
+          <TextField
+            label={t("accountStatus.color")}
+            fullWidth
+            select
+            sx={{ mb: "1rem" }}
+            value={color}
+            onChange={(e) => setColor(e.target.value)}
+          >
+            {getStatusColors().map((c) => (
+              <MenuItem value={c}>{c}</MenuItem>
+            ))}
+          </TextField>
         </Box>
       </DialogContent>
       <DialogActions>

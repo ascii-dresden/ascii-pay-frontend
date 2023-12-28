@@ -44,6 +44,7 @@ import { PullToRefreshWrapper } from "../components/PullToRefresh";
 import styled from "@emotion/styled";
 import clsx from "clsx";
 import { UpdateMultiProductPriceDialog } from "../components/product/UpdateMultiProductPriceDialog";
+import { AccountStatusChip } from "../components/accountStatus/AccountStatusChip";
 
 const ProductStatusPricesPopoverStyled = styled.div`
   position: absolute;
@@ -458,7 +459,9 @@ const ProductListRow = (props: {
                     <TableBody>
                       {props.product.status_prices.map((p) => (
                         <TableRow key={p.status.id}>
-                          <TableCell>{p.status.name}</TableCell>
+                          <TableCell>
+                            <AccountStatusChip status={p.status} />
+                          </TableCell>
                           <TableCell>
                             <CoinAmountView coins={p.price} />
                           </TableCell>

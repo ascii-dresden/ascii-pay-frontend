@@ -116,6 +116,7 @@
   "accountStatus": {
     "name": "Name",
     "priority": "Priorität",
+    "color": "Farbe",
     "action": {
       "details": "Details",
       "edit": "Bearbeiten",

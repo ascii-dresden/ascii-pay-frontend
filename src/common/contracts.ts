@@ -35,11 +35,13 @@ export type AuthMethodDto =
 export type AccountStatusDto = {
   id: number;
   name: string;
+  color: string;
   priority: number;
 };
 
 export type SaveAccountStatusDto = {
   name: string;
+  color: string;
   priority: number;
 };
 

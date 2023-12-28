@@ -62,8 +62,8 @@
   },
   "payment": {
     "basket": {
-      "empty": "Basket empty!",
-      "emptyAction": "Empty basket",
+      "empty": "Cart empty!",
+      "emptyAction": "Empty cart",
       "keypadValuePositive": "Custom payment",
       "keypadValueNegative": "Recharge credit"
     },

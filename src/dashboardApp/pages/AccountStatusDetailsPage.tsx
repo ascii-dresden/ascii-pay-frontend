@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { useDashboardDispatch } from "../redux/dashboardStore";
 import { PullToRefreshWrapper } from "../components/PullToRefresh";
+import { getStatusColor } from "../../common/statusColors";
 
 export const AccountStatusDetailsPage = () => {
   const { t } = useTranslation();
@@ -101,6 +102,10 @@ export const AccountStatusDetailsPage = () => {
                   width: 128,
                   height: 128,
                   border: `solid 1px ${theme.palette.divider}`,
+                  bgcolor: getStatusColor(
+                    accountStatus.color,
+                    theme.palette.mode
+                  ),
                 }}
                 {...stringWithoutColorAvatar(accountStatus.priority.toString())}
               />
