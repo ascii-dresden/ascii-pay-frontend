@@ -332,6 +332,31 @@ const entries: QuickAccessEntry[][] = [
   ],
 ];
 
+const StyledPrice = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const StyledPriceOld = styled.div`
+  position: relative;
+  padding-top: 0.5em;
+  font-size: 0.6em;
+  color: var(--secondary-text-color);
+  margin-bottom: -0.2em;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: -0.2em;
+    right: -0.2em;
+    top: 50%;
+    margin-top: 0.12em;
+    border-bottom: solid 0.14em var(--secondary-text-color);
+  }
+`;
+
 export const QuickAccess = () => {
   const content = entries.map((row, rowIndex) => {
     let x = row.map((entry, entryIndex) => (
@@ -401,9 +426,18 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
 
   if (props.entry.price.Cent || props.entry.bonus.Cent) {
     center = (
-      <Money
-        value={(props.entry.price.Cent ?? 0) - (props.entry.bonus.Cent ?? 0)}
-      />
+      <StyledPrice>
+        <StyledPriceOld>
+          <Money
+            value={
+              (props.entry.price.Cent ?? 0) - (props.entry.bonus.Cent ?? 0)
+            }
+          />
+        </StyledPriceOld>
+        <Money
+          value={(props.entry.price.Cent ?? 0) - (props.entry.bonus.Cent ?? 0)}
+        />
+      </StyledPrice>
     );
     extra = stamp;
   } else {

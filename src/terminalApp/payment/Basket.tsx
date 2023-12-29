@@ -205,6 +205,24 @@ const StyledBasketEntryPrice = styled.div`
     font-size: 0.6em;
   }
 `;
+
+const StyledBasketEntryPriceOld = styled.div`
+  position: relative;
+  padding-top: 0.6em;
+  font-size: 0.7em;
+  color: var(--secondary-text-color);
+  margin-bottom: -0.25em;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: -0.2em;
+    right: -0.2em;
+    top: 50%;
+    margin-top: 0.15em;
+    border-bottom: solid 0.14em var(--secondary-text-color);
+  }
+`;
 const StyledBasketDeleteAll = styled.div`
   text-align: center;
   padding: 0.2em 0;
@@ -361,6 +379,9 @@ export const Basket = () => {
           </StyledBasketEntryContent>
           <StyledBasketEntryPrice>
             <span className="basket-entry-count">{count}</span>
+            <StyledBasketEntryPriceOld>
+              <Money value={value.effective_price.Cent ?? 0} />
+            </StyledBasketEntryPriceOld>
             <Money value={value.effective_price.Cent ?? 0} />
           </StyledBasketEntryPrice>
         </StyledBasketEntry>

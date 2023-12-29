@@ -210,6 +210,23 @@ const StyledProductListContent = styled.div`
       flex-direction: column;
     }
 
+    .product-entry-price-old {
+      position: relative;
+      padding-top: 0.7em;
+      font-size: 0.7em;
+      color: var(--secondary-text-color);
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: -0.2em;
+        right: -0.2em;
+        top: 50%;
+        margin-top: 0.19em;
+        border-bottom: solid 0.14em var(--secondary-text-color);
+      }
+    }
+
     .product-entry-name {
       display: flex;
       gap: 0.2em;
@@ -625,6 +642,14 @@ function ProductItem(props: { product: ProductDto }) {
           <div className="product-entry-stamps">{stamps}</div>
         </div>
         <div className="product-entry-price">
+          <div className="product-entry-price-old">
+            <Money
+              value={
+                (props.product.price.Cent ?? 0) -
+                (props.product.bonus.Cent ?? 0)
+              }
+            />
+          </div>
           <Money
             value={
               (props.product.price.Cent ?? 0) - (props.product.bonus.Cent ?? 0)
