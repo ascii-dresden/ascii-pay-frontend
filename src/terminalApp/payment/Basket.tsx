@@ -34,10 +34,6 @@ const StyledBasketEmpty = styled.div`
   border-left: solid 1px var(--border-color);
   background-color: var(--primary-background);
 
-  .basket-entry-count::after {
-    content: "×";
-  }
-
   &.hasStatus {
     top: 6em;
   }
@@ -61,6 +57,10 @@ const StyledBasket = styled.div`
 
   border-left: solid 1px var(--border-color);
   background-color: var(--primary-background);
+
+  //.basket-entry-count::after {
+  //  content: "×";
+  //}
 
   &.hasStatus {
     top: 6em;
@@ -151,7 +151,7 @@ const StyledBasketEntryContent = styled.div`
   top: 0;
   bottom: 0;
   left: 3.6em;
-  right: 3.6em;
+  right: 5.3em;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -161,9 +161,10 @@ const StyledBasketEntryContent = styled.div`
   justify-content: center;
 
   div {
-    white-space: normal;
-    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-overflow: "..";
     overflow: hidden;
+    font-size: 0.8em;
   }
 `;
 const StyledBasketEntryStamps = styled.div`
@@ -186,12 +187,23 @@ const StyledBasketEntryPrice = styled.div`
   top: 0;
   bottom: 0;
   right: 0.6em;
-  padding-left: 0.2em;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   background: var(--primary-background);
+  padding-left: 1.45em;
+
+  .basket-entry-count {
+    left: 0;
+    position: absolute;
+    line-height: 1.8em;
+    width: 2em;
+    text-align: center;
+    border-radius: 50%;
+    background-color: var(--tertiary-background);
+    font-size: 0.6em;
+  }
 `;
 const StyledBasketDeleteAll = styled.div`
   text-align: center;
@@ -348,9 +360,7 @@ export const Basket = () => {
             <StyledBasketEntryStamps>{stamps}</StyledBasketEntryStamps>
           </StyledBasketEntryContent>
           <StyledBasketEntryPrice>
-            {count > 1 ? (
-              <span className="basket-entry-count">{count}</span>
-            ) : null}
+            <span className="basket-entry-count">{count}</span>
             <Money value={value.effective_price.Cent ?? 0} />
           </StyledBasketEntryPrice>
         </StyledBasketEntry>
