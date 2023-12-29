@@ -35,6 +35,8 @@ import {
 } from "../client/AsciiPayAuthenticationClient";
 import { PaymentDialog } from "../payment/PaymentDialog";
 import { TerminalNavigateHandler } from "../TerminalApp";
+import { TerminalSettings } from "./TerminalSettingsPage";
+import { ScannedAccountStatus } from "../payment/ScannedAccountStatus";
 
 const StyledPaymentPageLeft = styled.div`
   position: absolute;
@@ -94,6 +96,7 @@ enum Page {
 export const TerminalPaymentPage = (props: {
   authClient: AsciiPayAuthenticationClient;
   deviceContext: TerminalDeviceContext;
+  settings: TerminalSettings;
   navigate: TerminalNavigateHandler;
 }) => {
   const { t } = useTranslation();
@@ -214,6 +217,7 @@ export const TerminalPaymentPage = (props: {
       <StyledPaymentPageLeft>{content}</StyledPaymentPageLeft>
       <StyledPaymentPageRight>
         <ScannedAccount authClient={props.authClient} />
+        <ScannedAccountStatus settings={props.settings} />
         <Basket />
         <StyledPaymentPageSummary>
           <Money value={paymentTotal.Cent ?? 0} />

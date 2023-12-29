@@ -345,6 +345,7 @@ export const TerminalApp = React.memo(
           <TerminalPaymentPage
             authClient={props.authClient}
             deviceContext={props.deviceContext}
+            settings={props.settings}
             navigate={props.navigate}
           />
         );

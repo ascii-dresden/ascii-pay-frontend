@@ -18,12 +18,13 @@ import Stamp from "../components/Stamp";
 import styled from "@emotion/styled";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { BASE_URL } from "../../const";
+import clsx from "clsx";
 
 const StyledBasketEmpty = styled.div`
   position: absolute;
   left: 0;
   width: 100%;
-  top: 4.4em;
+  top: 6em;
   bottom: 3.2em;
 
   display: flex;
@@ -37,6 +38,10 @@ const StyledBasketEmpty = styled.div`
     content: "×";
   }
 
+  &.hasStatus {
+    top: 6em;
+  }
+
   &.dark {
     .basket-entry-image-shadow * {
       filter: drop-shadow(0 0 0.7px var(--tertiary-background));
@@ -47,7 +52,7 @@ const StyledBasket = styled.div`
   position: absolute;
   left: 0;
   width: 100%;
-  top: 4.4em;
+  top: 6em;
   bottom: 3.2em;
 
   padding: 0.6em;
@@ -56,6 +61,10 @@ const StyledBasket = styled.div`
 
   border-left: solid 1px var(--border-color);
   background-color: var(--primary-background);
+
+  &.hasStatus {
+    top: 6em;
+  }
 
   & > div {
     display: flex;
@@ -251,8 +260,17 @@ export const Basket = () => {
   );
   const dispatch = useTerminalDispatch();
 
+  const scannedAccount = useTerminalSelector(
+    (state) => state.paymentState.scannedAccount
+  );
+  const hasStatus = (scannedAccount?.status ?? null) !== null;
+
   if (storedPaymentItems.length <= 0 && keypadValue === 0) {
-    return <StyledBasketEmpty>{t("payment.basket.empty")}</StyledBasketEmpty>;
+    return (
+      <StyledBasketEmpty className={clsx({ hasStatus: hasStatus })}>
+        {t("payment.basket.empty")}
+      </StyledBasketEmpty>
+    );
   }
 
   const paymentItemMap = groupPaymentItems(storedPaymentItems);
@@ -379,7 +397,7 @@ export const Basket = () => {
   }
 
   return (
-    <StyledBasket>
+    <StyledBasket className={clsx({ hasStatus: hasStatus })}>
       <div>{content}</div>
     </StyledBasket>
   );

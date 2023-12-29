@@ -16,8 +16,11 @@ import {
 } from "../redux/features/terminalSlice";
 
 const StyledScannedAccount = styled.div`
-  position: relative;
+  position: absolute;
   height: 4.4em;
+  top: 0;
+  left: 0;
+  right: 0;
   line-height: 4.4em;
   text-align: center;
 
