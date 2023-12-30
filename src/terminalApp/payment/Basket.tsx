@@ -11,7 +11,10 @@ import {
   removePaymentItemAtIndex,
   setKeypadValue,
 } from "../redux/features/paymentSlice";
-import { equalCoinAmount } from "../../common/transactionUtils";
+import {
+  equalCoinAmount,
+  getEffectivePrice,
+} from "../../common/transactionUtils";
 import { EuroSymbol, RedeemOutlined } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import Stamp from "../components/Stamp";
@@ -19,6 +22,10 @@ import styled from "@emotion/styled";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { BASE_URL } from "../../const";
 import clsx from "clsx";
+import {
+  getActivePrice,
+  getOriginalPriceIfStatusApplies,
+} from "../../common/statusPriceUtils";
 
 const StyledBasketEmpty = styled.div`
   position: absolute;
@@ -208,7 +215,7 @@ const StyledBasketEntryPrice = styled.div`
 
 const StyledBasketEntryPriceOld = styled.div`
   position: relative;
-  padding-top: 0.6em;
+  padding-top: 0.4em;
   font-size: 0.7em;
   color: var(--secondary-text-color);
   margin-bottom: -0.25em;
@@ -219,7 +226,7 @@ const StyledBasketEntryPriceOld = styled.div`
     left: -0.2em;
     right: -0.2em;
     top: 50%;
-    margin-top: 0.15em;
+    margin-top: 0.1em;
     border-bottom: solid 0.14em var(--secondary-text-color);
   }
 `;
@@ -243,7 +250,8 @@ function paymentItemEqual(
   if (a.product.name !== b.product.name) return false;
   if (!equalCoinAmount(a.product.price, b.product.price)) return false;
   if (!equalCoinAmount(a.product.bonus, b.product.bonus)) return false;
-  return equalCoinAmount(a.effective_price, b.effective_price);
+  return true;
+  // return equalCoinAmount(a.effective_price, b.effective_price);
 }
 
 function groupPaymentItems(
@@ -319,6 +327,7 @@ export const Basket = () => {
   for (let [value, count] of paymentItemMap) {
     let image;
 
+    let effective_price = getEffectivePrice(value, scannedAccount);
     if (value.product) {
       if (value.product.id !== undefined) {
         image = (
@@ -339,7 +348,7 @@ export const Basket = () => {
         );
       }
     } else {
-      if (value.effective_price.Cent && value.effective_price.Cent < 0) {
+      if (effective_price.Cent && effective_price.Cent < 0) {
         image = (
           <div className="basket-entry-image-shadow">
             <RedeemOutlined />
@@ -355,17 +364,17 @@ export const Basket = () => {
     }
 
     let stamps: any[] = [];
-    if (
-      value.effective_price.CoffeeStamp &&
-      value.effective_price.CoffeeStamp < 0
-    ) {
+    if (effective_price.CoffeeStamp && effective_price.CoffeeStamp < 0) {
       stamps.push(<Stamp key="coffee+1" value={1} type="CoffeeStamp" />);
-    } else if (
-      value.effective_price.BottleStamp &&
-      value.effective_price.BottleStamp < 0
-    ) {
+    } else if (effective_price.BottleStamp && effective_price.BottleStamp < 0) {
       stamps.push(<Stamp key="bottle+1" value={1} type="BottleStamp" />);
     }
+
+    let activePrice = getActivePrice(value.product, scannedAccount);
+    let originalPrice = getOriginalPriceIfStatusApplies(
+      value.product,
+      scannedAccount
+    );
 
     content.push(
       <div key={index} onClick={() => onRemove(value)}>
@@ -379,10 +388,17 @@ export const Basket = () => {
           </StyledBasketEntryContent>
           <StyledBasketEntryPrice>
             <span className="basket-entry-count">{count}</span>
-            <StyledBasketEntryPriceOld>
-              <Money value={value.effective_price.Cent ?? 0} />
-            </StyledBasketEntryPriceOld>
-            <Money value={value.effective_price.Cent ?? 0} />
+            {originalPrice === null ? null : (
+              <StyledBasketEntryPriceOld>
+                <Money
+                  value={
+                    (originalPrice.price.Cent ?? 0) -
+                    (originalPrice.bonus.Cent ?? 0)
+                  }
+                />
+              </StyledBasketEntryPriceOld>
+            )}
+            <Money value={effective_price.Cent ?? 0} />
           </StyledBasketEntryPrice>
         </StyledBasketEntry>
       </div>

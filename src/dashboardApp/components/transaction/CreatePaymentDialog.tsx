@@ -107,7 +107,7 @@ export const CreatePaymentDialog = (props: {
         ...items,
         {
           product: product,
-          effective_price: selectNextCoinAmount(product, {}),
+          effective_price: selectNextCoinAmount(product, props.account, {}),
         },
       ];
     });
@@ -128,6 +128,7 @@ export const CreatePaymentDialog = (props: {
         product: current.product,
         effective_price: selectNextCoinAmount(
           current.product,
+          props.account,
           current.effective_price
         ),
       };
@@ -241,6 +242,7 @@ export const CreatePaymentDialog = (props: {
 
           {isMobile ? (
             <MobileTable
+              account={props.account}
               paymentItems={paymentItems}
               handleNextPrice={handleNextPrice}
               handleRemoveItem={handleRemoveItem}
@@ -249,6 +251,7 @@ export const CreatePaymentDialog = (props: {
             />
           ) : (
             <DefaultTable
+              account={props.account}
               paymentItems={paymentItems}
               handleNextPrice={handleNextPrice}
               handleRemoveItem={handleRemoveItem}
@@ -275,6 +278,7 @@ export const CreatePaymentDialog = (props: {
 };
 
 const DefaultTable = (props: {
+  account: AccountDto;
   paymentItems: TransactionItemDto[];
   handleNextPrice: (index: number) => void;
   handleRemoveItem: (index: number) => void;
@@ -291,7 +295,7 @@ const DefaultTable = (props: {
             const isClickable =
               item.product !== undefined &&
               item.product !== null &&
-              getPossiblePrices(item.product).length > 1;
+              getPossiblePrices(item.product, props.account).length > 1;
             return (
               <TableRow key={index}>
                 <TableCell width={72}>
@@ -375,6 +379,7 @@ const DefaultTable = (props: {
 };
 
 const MobileTable = (props: {
+  account: AccountDto;
   paymentItems: TransactionItemDto[];
   handleNextPrice: (index: number) => void;
   handleRemoveItem: (index: number) => void;
@@ -391,7 +396,7 @@ const MobileTable = (props: {
             const isClickable =
               item.product !== undefined &&
               item.product !== null &&
-              getPossiblePrices(item.product).length > 1;
+              getPossiblePrices(item.product, props.account).length > 1;
             return (
               <>
                 <TableRow key={index + "-a"}>

@@ -1,11 +1,18 @@
-import { AccountDto, CoinAmountDto, TransactionDto } from "./contracts";
+import {
+  AccountDto,
+  CoinAmountDto,
+  ProductStatusPriceDto,
+  TransactionDto,
+} from "./contracts";
 import { PaymentTransactionItem } from "../terminalApp/redux/features/paymentSlice";
+import { getActivePrice } from "./statusPriceUtils";
 
 export type PseudoProductDto = {
   id?: number;
   name: string;
   price: CoinAmountDto;
   bonus: CoinAmountDto;
+  status_prices: ProductStatusPriceDto[];
 };
 
 export function getTransactionSum(transaction: TransactionDto): CoinAmountDto {
@@ -75,46 +82,39 @@ export function isCoinAmountEmpty(coins: CoinAmountDto): boolean {
   return !(coins.CoffeeStamp && coins.CoffeeStamp !== 0);
 }
 
-export function getPossiblePrices(product: PseudoProductDto): CoinAmountDto[] {
+export function getPossiblePrices(
+  product: PseudoProductDto,
+  account: AccountDto | null | undefined
+): CoinAmountDto[] {
   let prices: CoinAmountDto[] = [];
 
-  if (product.price.Cent && product.price.Cent !== 0) {
+  let { price, bonus } = getActivePrice(product, account);
+
+  if (price.Cent && price.Cent !== 0) {
     prices.push({
-      Cent: product.price.Cent - (product.bonus.Cent ?? 0),
-      BottleStamp: product.bonus.BottleStamp
-        ? -product.bonus.BottleStamp
-        : undefined,
-      CoffeeStamp: product.bonus.CoffeeStamp
-        ? -product.bonus.CoffeeStamp
-        : undefined,
+      Cent: price.Cent - (bonus.Cent ?? 0),
+      BottleStamp: bonus.BottleStamp ? -bonus.BottleStamp : undefined,
+      CoffeeStamp: bonus.CoffeeStamp ? -bonus.CoffeeStamp : undefined,
     });
   }
-  if (product.price.BottleStamp && product.price.BottleStamp !== 0) {
+  if (price.BottleStamp && price.BottleStamp !== 0) {
     prices.push({
-      BottleStamp: product.price.BottleStamp,
-      CoffeeStamp: product.bonus.CoffeeStamp
-        ? -product.bonus.CoffeeStamp
-        : undefined,
+      BottleStamp: price.BottleStamp,
+      CoffeeStamp: bonus.CoffeeStamp ? -bonus.CoffeeStamp : undefined,
     });
   }
-  if (product.price.CoffeeStamp && product.price.CoffeeStamp !== 0) {
+  if (price.CoffeeStamp && price.CoffeeStamp !== 0) {
     prices.push({
-      BottleStamp: product.bonus.BottleStamp
-        ? -product.bonus.BottleStamp
-        : undefined,
-      CoffeeStamp: product.price.CoffeeStamp,
+      BottleStamp: bonus.BottleStamp ? -bonus.BottleStamp : undefined,
+      CoffeeStamp: price.CoffeeStamp,
     });
   }
 
   if (prices.length === 0) {
     prices.push({
-      Cent: product.bonus.Cent ? -product.bonus.Cent : undefined,
-      BottleStamp: product.bonus.BottleStamp
-        ? -product.bonus.BottleStamp
-        : undefined,
-      CoffeeStamp: product.bonus.CoffeeStamp
-        ? -product.bonus.CoffeeStamp
-        : undefined,
+      Cent: bonus.Cent ? -bonus.Cent : undefined,
+      BottleStamp: bonus.BottleStamp ? -bonus.BottleStamp : undefined,
+      CoffeeStamp: bonus.CoffeeStamp ? -bonus.CoffeeStamp : undefined,
     });
   }
 
@@ -123,14 +123,20 @@ export function getPossiblePrices(product: PseudoProductDto): CoinAmountDto[] {
 
 export function selectNextCoinAmount(
   product: PseudoProductDto,
-  current: CoinAmountDto
+  account: AccountDto | null | undefined,
+  current: CoinAmountDto | number
 ): CoinAmountDto {
-  let prices = getPossiblePrices(product);
+  let prices = getPossiblePrices(product, account);
 
-  for (let i = 0; i < prices.length; i++) {
-    if (equalCoinAmount(current, prices[i])) {
-      let next = (i + 1) % prices.length;
-      return prices[next];
+  if (typeof current === "number") {
+    let next = (current + 1) % prices.length;
+    return prices[next];
+  } else {
+    for (let i = 0; i < prices.length; i++) {
+      if (equalCoinAmount(current, prices[i])) {
+        let next = (i + 1) % prices.length;
+        return prices[next];
+      }
     }
   }
 
@@ -138,24 +144,38 @@ export function selectNextCoinAmount(
 }
 
 export function getPaymentItemSum(
-  items: PaymentTransactionItem[]
+  items: PaymentTransactionItem[],
+  account: AccountDto | null | undefined
 ): CoinAmountDto {
   let total: CoinAmountDto = {};
   for (const item of items) {
-    total = addCoinAmount(total, item.effective_price);
+    let effective_price = getEffectivePrice(item, account);
+    total = addCoinAmount(total, effective_price);
   }
   return total;
 }
 
+export function getEffectivePrice(
+  item: PaymentTransactionItem,
+  account: AccountDto | null | undefined
+): CoinAmountDto {
+  return selectNextCoinAmount(item.product, account, {});
+}
+
 class TransactionHelper {
   total: CoinAmountDto;
+  account: AccountDto | null | undefined;
 
-  constructor(total?: CoinAmountDto) {
+  constructor(account: AccountDto | null | undefined, total?: CoinAmountDto) {
     this.total = total ?? {};
+    this.account = account;
   }
 
-  static fromItems(items: PaymentTransactionItem[]) {
-    let helper = new TransactionHelper();
+  static fromItems(
+    account: AccountDto | null | undefined,
+    items: PaymentTransactionItem[]
+  ) {
+    let helper = new TransactionHelper(account);
     for (let item of items) {
       helper.addItem(item);
     }
@@ -163,25 +183,28 @@ class TransactionHelper {
   }
 
   addItem(item: PaymentTransactionItem) {
-    this.total = addCoinAmount(this.total, item.effective_price);
+    let effective_price = getEffectivePrice(item, this.account);
+    this.total = addCoinAmount(this.total, effective_price);
   }
 
   removeItem(item: PaymentTransactionItem) {
-    this.total = subCoinAmount(this.total, item.effective_price);
+    let effective_price = getEffectivePrice(item, this.account);
+    this.total = subCoinAmount(this.total, effective_price);
   }
 
   clone(): TransactionHelper {
-    return new TransactionHelper(this.total);
+    return new TransactionHelper(this.account, this.total);
   }
 
   checkIfItemCouldBePaidWithStamps(
     balance: CoinAmountDto,
     item: PaymentTransactionItem
   ): boolean {
+    let effective_price = getEffectivePrice(item, this.account);
     if (
       item.product.price.CoffeeStamp &&
       item.product.price.CoffeeStamp > 0 &&
-      item.product.price.CoffeeStamp !== item.effective_price.CoffeeStamp
+      item.product.price.CoffeeStamp !== effective_price.CoffeeStamp
     ) {
       return (
         (balance.CoffeeStamp &&
@@ -192,7 +215,7 @@ class TransactionHelper {
     if (
       item.product.price.BottleStamp &&
       item.product.price.BottleStamp > 0 &&
-      item.product.price.BottleStamp !== item.effective_price.BottleStamp
+      item.product.price.BottleStamp !== effective_price.BottleStamp
     ) {
       return (
         (balance.BottleStamp &&
@@ -223,10 +246,11 @@ class TransactionHelper {
 }
 
 export function calculateStampPaymentTransactionItems(
+  account: AccountDto | null | undefined,
   balance: CoinAmountDto,
   items: PaymentTransactionItem[]
 ): PaymentTransactionItem[] | null {
-  let helper = TransactionHelper.fromItems(items);
+  let helper = TransactionHelper.fromItems(account, items);
 
   let removableItems = helper.findItemsThatCouldBePaidWithStamps(
     balance,
@@ -238,11 +262,9 @@ export function calculateStampPaymentTransactionItems(
 
   for (let i = 0; i < removableItems.length; i++) {
     let item = removableItems[i];
-    if (
-      item.effective_price.Cent &&
-      (item.effective_price.Cent ?? 0 > maxPrice)
-    ) {
-      maxPrice = item.effective_price.Cent;
+    let effective_price = getEffectivePrice(item, account);
+    if (effective_price.Cent && (effective_price.Cent ?? 0 > maxPrice)) {
+      maxPrice = effective_price.Cent;
       maxIndex = i;
     }
   }
@@ -258,16 +280,21 @@ export function calculateStampPaymentTransactionItems(
 
   let newPrice = selectNextCoinAmount(
     removeItem.product,
-    removeItem.effective_price
+    account,
+    removeItem.currentPriceIndex ?? 0
   );
 
   newItems.splice(removeIndex, 1, {
     ...removeItem,
-    effective_price: newPrice,
+    // effective_price: newPrice, TODO
   });
 
   let newBalance = subCoinAmount(balance, newPrice);
-  let recursive = calculateStampPaymentTransactionItems(newBalance, newItems);
+  let recursive = calculateStampPaymentTransactionItems(
+    account,
+    newBalance,
+    newItems
+  );
   return recursive ?? newItems;
 }
 
@@ -275,7 +302,7 @@ export function checkIfAccountBalanceIsSufficient(
   account: AccountDto,
   items: PaymentTransactionItem[]
 ): boolean {
-  let sum = getPaymentItemSum(items);
+  let sum = getPaymentItemSum(items, account);
   let balance = subCoinAmount(account.balance, sum);
 
   if (balance.Cent && balance.Cent < 0) {

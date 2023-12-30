@@ -10,9 +10,9 @@ import {
   addCoinAmount,
   calculateStampPaymentTransactionItems,
   checkIfAccountBalanceIsSufficient,
+  getEffectivePrice,
   getPaymentItemSum,
   PseudoProductDto,
-  selectNextCoinAmount,
 } from "../../../common/transactionUtils";
 import { TerminalDispatch, TerminalState } from "../terminalStore";
 import { ReceiveKeyboardEventKey } from "../../client/websocket";
@@ -26,8 +26,8 @@ const PAYMENT_SUCCESS_TIMEOUT = 2_000;
 
 export type PaymentTransactionItem = {
   product: PseudoProductDto;
-  effective_price: CoinAmountDto;
   colorHint?: string;
+  currentPriceIndex?: number;
 };
 
 export interface PaymentPaymentWaiting {
@@ -99,7 +99,7 @@ export const initialState: PaymentState = {
 function calculateTotal(state: PaymentState): CoinAmountDto {
   return addCoinAmount(
     { Cent: state.keypadValue },
-    getPaymentItemSum(state.storedPaymentItems)
+    getPaymentItemSum(state.storedPaymentItems, state.scannedAccount)
   );
 }
 
@@ -162,6 +162,7 @@ export const receiveAccountSessionToken = createAsyncThunk<
 
     if (payment && payment.type === "InProgress") {
       let stampPaymentItems = calculateStampPaymentTransactionItems(
+        account,
         account.balance,
         payment.items
       );
@@ -180,7 +181,7 @@ export const receiveAccountSessionToken = createAsyncThunk<
             items: payment.items,
             accountAccessToken: query,
             withStamps: {
-              total: getPaymentItemSum(stampPaymentItems),
+              total: getPaymentItemSum(stampPaymentItems, account),
               items: stampPaymentItems,
             },
           },
@@ -202,8 +203,9 @@ export const receiveAccountSessionToken = createAsyncThunk<
 
       let data = await accountPayment(account.id, query, {
         items: payment.items.map((item) => {
+          let effective_price = getEffectivePrice(item, account);
           return {
-            effective_price: item.effective_price,
+            effective_price: effective_price,
             product_id: item.product?.id,
           };
         }),
@@ -328,9 +330,7 @@ export const paymentSlice = createSlice({
             Cent: action.payload[0],
           },
           bonus: {},
-        },
-        effective_price: {
-          Cent: action.payload[0],
+          status_prices: [],
         },
       });
       state.keypadValue = 0;
@@ -339,7 +339,6 @@ export const paymentSlice = createSlice({
     addProduct: (state, action: PayloadAction<ProductDto>) => {
       state.storedPaymentItems.push({
         product: action.payload,
-        effective_price: selectNextCoinAmount(action.payload, {}),
       });
       state.paymentTotal = calculateTotal(state);
     },
@@ -357,6 +356,7 @@ export const paymentSlice = createSlice({
     },
     removeAccount: (state) => {
       state.scannedAccount = null;
+      state.paymentTotal = calculateTotal(state);
     },
     payment: (state, action: PayloadAction<[string, string]>) => {
       if (state.keypadValue !== 0) {
@@ -370,9 +370,7 @@ export const paymentSlice = createSlice({
               Cent: state.keypadValue,
             },
             bonus: {},
-          },
-          effective_price: {
-            Cent: state.keypadValue,
+            status_prices: [],
           },
         });
         state.keypadValue = 0;
@@ -440,6 +438,7 @@ export const paymentSlice = createSlice({
       state.scannedAccount = action.payload.account;
       state.scannedToken = action.payload.token;
       state.payment = action.payload.payment;
+      state.paymentTotal = calculateTotal(state);
 
       if (action.payload.payment) {
         state.payment = action.payload.payment;

@@ -101,6 +101,17 @@ export type ProductDto = {
   status_prices: ProductStatusPriceDto[];
 };
 
+export type ItemWithPriceDto = {
+  price: CoinAmountDto;
+  bonus: CoinAmountDto;
+  status_prices: ProductStatusPriceDto[];
+};
+
+export type PriceBonusDto = {
+  price: CoinAmountDto;
+  bonus: CoinAmountDto;
+};
+
 export type SaveProductStatusPriceDto = {
   status_id: number;
   price: CoinAmountDto;

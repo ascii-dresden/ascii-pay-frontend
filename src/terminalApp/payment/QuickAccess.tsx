@@ -1,12 +1,20 @@
 import React from "react";
 import { Money } from "../components/Money";
-import { CoinAmountDto } from "../../common/contracts";
-import { useTerminalDispatch } from "../redux/terminalStore";
+import {
+  useTerminalDispatch,
+  useTerminalSelector,
+} from "../redux/terminalStore";
 import { CoffeeStamp } from "../../assets/CoffeeStamp";
 import { BottleStamp } from "../../assets/BottleStamp";
 import { addPaymentItem } from "../redux/features/paymentSlice";
-import { selectNextCoinAmount } from "../../common/transactionUtils";
 import styled from "@emotion/styled";
+import {
+  getActivePrice,
+  getOriginalPriceIfStatusApplies,
+  parseQuickAccessPosition,
+} from "../../common/statusPriceUtils";
+import { useGetAllProductsQuery } from "../redux/api/productApi";
+import { ProductDto } from "../../common/contracts";
 
 const StyledQuickAccess = styled.div`
   position: relative;
@@ -174,164 +182,6 @@ const StyledQuickAccessEntryStamp = styled.div`
   }
 `;
 
-interface QuickAccessEntry {
-  name: string;
-  price: CoinAmountDto;
-  bonus: CoinAmountDto;
-  icon: React.ReactNode;
-  className?: string;
-  colorHint?: string;
-}
-
-const entries: QuickAccessEntry[][] = [
-  [
-    {
-      name: "Kaffee",
-      price: {
-        Cent: 100,
-        CoffeeStamp: 10,
-      },
-      bonus: {
-        CoffeeStamp: 1,
-      },
-      icon: <></>,
-      className: "group-coffee coffee",
-      colorHint: "coffee",
-    },
-    {
-      name: "Milch\u00ADkaffee\nKakao",
-      price: {
-        Cent: 150,
-        CoffeeStamp: 10,
-      },
-      bonus: {
-        CoffeeStamp: 1,
-      },
-      icon: <></>,
-      className: "group-coffee milk-coffee",
-      colorHint: "coffee",
-    },
-    {
-      name: "Großer Latte",
-      icon: <></>,
-      price: {
-        Cent: 200,
-        CoffeeStamp: 10,
-      },
-      bonus: {
-        CoffeeStamp: 1,
-      },
-      className: "group-coffee large-latte",
-      colorHint: "coffee",
-    },
-  ],
-  [
-    {
-      name: "Tassen\u00ADpfand",
-      price: {
-        Cent: 100,
-      },
-      bonus: {},
-      icon: <></>,
-      className: "group-cup",
-      colorHint: "cup",
-    },
-    {
-      name: "Tassen\u00ADrückgabe",
-      price: {},
-      bonus: {
-        Cent: 100,
-      },
-      icon: <></>,
-      className: "group-cup",
-      colorHint: "cup",
-    },
-    {
-      name: "Eigener Becher",
-      price: {},
-      bonus: {
-        Cent: 10,
-      },
-      icon: <></>,
-      className: "group-cup",
-      colorHint: "cup",
-    },
-  ],
-  [
-    {
-      name: "Flasche 0,33l BIO\nFlasche 0,5l",
-      price: {
-        Cent: 150,
-        BottleStamp: 10,
-      },
-      bonus: {},
-      icon: <></>,
-      className: "group-bottle bottle-150",
-      colorHint: "bottle",
-    },
-    {
-      name: "Flasche 0,33l",
-      price: {
-        Cent: 150,
-        BottleStamp: 10,
-      },
-      bonus: {},
-      icon: <></>,
-      className: "group-bottle bottle-110",
-      colorHint: "bottle",
-    },
-    {
-      name: "Flasche Fritz",
-      price: {
-        Cent: 200,
-        BottleStamp: 10,
-      },
-      bonus: {},
-      icon: <></>,
-      className: "group-bottle bottle-200",
-      colorHint: "bottle",
-    },
-  ],
-  [
-    {
-      name: "Flaschen\u00ADstempel",
-      price: {},
-      bonus: {
-        BottleStamp: 1,
-      },
-      icon: <></>,
-      className: "group-stamp bottle-stamp",
-    },
-    {
-      name: "Gratis Flasche",
-      price: {
-        BottleStamp: 10,
-      },
-      bonus: {},
-      icon: <></>,
-      className: "group-stamp bottle-free",
-    },
-    {
-      name: "Kaffee\u00ADstempel",
-      price: {},
-      bonus: {
-        CoffeeStamp: 1,
-      },
-      icon: <></>,
-      className: "group-stamp coffee-stamp",
-    },
-    {
-      name: "Gratis Kaffee",
-      price: {
-        CoffeeStamp: 10,
-      },
-      bonus: {},
-      icon: <></>,
-      className: "group-stamp coffee-free",
-    },
-  ],
-];
-
 const StyledPrice = styled.div`
   display: flex;
   justify-content: center;
@@ -341,10 +191,10 @@ const StyledPrice = styled.div`
 
 const StyledPriceOld = styled.div`
   position: relative;
-  padding-top: 0.5em;
   font-size: 0.6em;
   color: var(--secondary-text-color);
-  margin-bottom: -0.2em;
+  margin-top: -0.1em;
+  margin-bottom: -0.1em;
 
   &::after {
     content: "";
@@ -352,51 +202,97 @@ const StyledPriceOld = styled.div`
     left: -0.2em;
     right: -0.2em;
     top: 50%;
-    margin-top: 0.12em;
+    margin-top: -0.1em;
     border-bottom: solid 0.14em var(--secondary-text-color);
   }
 `;
 
 export const QuickAccess = () => {
-  const content = entries.map((row, rowIndex) => {
-    let x = row.map((entry, entryIndex) => (
-      <QuickAccessEntryView key={entryIndex} entry={entry} />
-    ));
-    return <StyledQuickAccessRow key={rowIndex}>{x}</StyledQuickAccessRow>;
-  });
+  const {
+    isLoading,
+    isError,
+    error,
+    data: products,
+  } = useGetAllProductsQuery();
+
+  if (isLoading) {
+    return <></>;
+  }
+
+  if (isError || !products) {
+    return <></>;
+  }
+
+  let quickAccessProducts = products.filter(
+    (p) => p.category === "QuickAccess"
+  );
+  quickAccessProducts.sort((a, b) => a.name.localeCompare(b.name));
+
+  const content: React.ReactElement[] = [];
+
+  let lastRow = 0;
+  let currentRowContent: React.ReactElement[] = [];
+  for (let product of quickAccessProducts) {
+    let { row, col } = parseQuickAccessPosition(product);
+
+    if (row !== lastRow) {
+      content.push(
+        <StyledQuickAccessRow key={lastRow}>
+          {currentRowContent}
+        </StyledQuickAccessRow>
+      );
+      lastRow = row;
+      currentRowContent = [];
+    }
+
+    currentRowContent.push(
+      <QuickAccessEntryView key={col} product={product} />
+    );
+  }
+
+  if (currentRowContent.length > 0) {
+    content.push(
+      <StyledQuickAccessRow key={lastRow}>
+        {currentRowContent}
+      </StyledQuickAccessRow>
+    );
+  }
 
   return <StyledQuickAccess>{content}</StyledQuickAccess>;
 };
 
-const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
+const QuickAccessEntryView = (props: { product: ProductDto }) => {
   const dispatch = useTerminalDispatch();
+  const scannedAccount = useTerminalSelector(
+    (state) => state.paymentState.scannedAccount
+  );
 
   let stamp: any | null = null;
-  if (props.entry.price.CoffeeStamp && props.entry.price.CoffeeStamp > 0) {
+  if (props.product.price.CoffeeStamp && props.product.price.CoffeeStamp > 0) {
     stamp = (
       <StyledQuickAccessEntryStamp
         key="coffee-10"
         className="quick-access-entry-stamp"
       >
-        <span>-{props.entry.price.CoffeeStamp}</span>
+        <span>-{props.product.price.CoffeeStamp}</span>
         <CoffeeStamp />
       </StyledQuickAccessEntryStamp>
     );
   } else if (
-    props.entry.price.BottleStamp &&
-    props.entry.price.BottleStamp > 0
+    props.product.price.BottleStamp &&
+    props.product.price.BottleStamp > 0
   ) {
     stamp = (
       <StyledQuickAccessEntryStamp
         key="bottle-10"
         className="quick-access-entry-stamp"
       >
-        <span>-{props.entry.price.BottleStamp}</span>
+        <span>-{props.product.price.BottleStamp}</span>
         <BottleStamp />
       </StyledQuickAccessEntryStamp>
     );
   }
-  if (props.entry.bonus.CoffeeStamp && props.entry.bonus.CoffeeStamp > 0) {
+  if (props.product.bonus.CoffeeStamp && props.product.bonus.CoffeeStamp > 0) {
     stamp = (
       <StyledQuickAccessEntryStamp
         key="coffee-1"
@@ -407,8 +303,8 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
       </StyledQuickAccessEntryStamp>
     );
   } else if (
-    props.entry.bonus.BottleStamp &&
-    props.entry.bonus.BottleStamp > 0
+    props.product.bonus.BottleStamp &&
+    props.product.bonus.BottleStamp > 0
   ) {
     stamp = (
       <StyledQuickAccessEntryStamp
@@ -424,18 +320,27 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
   let center: any | null;
   let extra: any | null = null;
 
-  if (props.entry.price.Cent || props.entry.bonus.Cent) {
+  let activePrice = getActivePrice(props.product, scannedAccount);
+  let originalPrice = getOriginalPriceIfStatusApplies(
+    props.product,
+    scannedAccount
+  );
+
+  if (props.product.price.Cent || props.product.bonus.Cent) {
     center = (
       <StyledPrice>
-        <StyledPriceOld>
-          <Money
-            value={
-              (props.entry.price.Cent ?? 0) - (props.entry.bonus.Cent ?? 0)
-            }
-          />
-        </StyledPriceOld>
+        {originalPrice === null ? null : (
+          <StyledPriceOld>
+            <Money
+              value={
+                (originalPrice.price.Cent ?? 0) -
+                (originalPrice.bonus.Cent ?? 0)
+              }
+            />
+          </StyledPriceOld>
+        )}
         <Money
-          value={(props.entry.price.Cent ?? 0) - (props.entry.bonus.Cent ?? 0)}
+          value={(activePrice.price.Cent ?? 0) - (activePrice.bonus.Cent ?? 0)}
         />
       </StyledPrice>
     );
@@ -448,20 +353,23 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
     dispatch(
       addPaymentItem({
         product: {
-          name: props.entry.name,
-          price: props.entry.price,
-          bonus: props.entry.bonus,
+          name: getName(props.product),
+          price: props.product.price,
+          bonus: props.product.bonus,
+          status_prices: props.product.status_prices,
         },
-        effective_price: selectNextCoinAmount(props.entry, {}),
-        colorHint: props.entry.colorHint,
+        colorHint: getColorHint(props.product),
       })
     );
   };
 
   return (
-    <StyledQuickAccessEntry className={props.entry.className} onClick={onClick}>
+    <StyledQuickAccessEntry
+      className={getClassName(props.product)}
+      onClick={onClick}
+    >
       <StyledQuickAccessEntryName className="quick-access-entry-name">
-        {props.entry.name}
+        {getName(props.product)}
       </StyledQuickAccessEntryName>
       {center ? (
         <StyledQuickAccessEntryCenter className="quick-access-entry-center">
@@ -476,3 +384,61 @@ const QuickAccessEntryView = (props: { entry: QuickAccessEntry }) => {
     </StyledQuickAccessEntry>
   );
 };
+
+function getColorHint(product: ProductDto): string {
+  if ((product.price.Cent ?? 0) === 0 && (product.bonus.Cent ?? 0) === 0) {
+    return "";
+  }
+  if (
+    (product.price.CoffeeStamp ?? 0) > 0 ||
+    (product.bonus.CoffeeStamp ?? 0) > 0
+  ) {
+    return "coffee";
+  }
+  if (
+    (product.price.BottleStamp ?? 0) > 0 ||
+    (product.bonus.BottleStamp ?? 0) > 0
+  ) {
+    return "bottle";
+  }
+
+  return "";
+}
+
+function getClassName(product: ProductDto): string {
+  if ((product.price.Cent ?? 0) === 0 && (product.bonus.Cent ?? 0) === 0) {
+    let suffix = "";
+    if ((product.price.CoffeeStamp ?? 0) > 0) {
+      suffix = " coffee-free";
+    }
+    if ((product.bonus.CoffeeStamp ?? 0) > 0) {
+      suffix = " coffee-stamp";
+    }
+    if ((product.price.BottleStamp ?? 0) > 0) {
+      suffix = " bottle-free";
+    }
+    if ((product.bonus.BottleStamp ?? 0) > 0) {
+      suffix = " bottle-stamp";
+    }
+
+    return "group-stamp" + suffix;
+  }
+  if (
+    (product.price.CoffeeStamp ?? 0) > 0 ||
+    (product.bonus.CoffeeStamp ?? 0) > 0
+  ) {
+    return "group-coffee";
+  }
+  if (
+    (product.price.BottleStamp ?? 0) > 0 ||
+    (product.bonus.BottleStamp ?? 0) > 0
+  ) {
+    return "group-bottle";
+  }
+
+  return "group-cup";
+}
+
+function getName(product: ProductDto): string {
+  return (product.nickname ?? "").replace("~", "\u00AD");
+}

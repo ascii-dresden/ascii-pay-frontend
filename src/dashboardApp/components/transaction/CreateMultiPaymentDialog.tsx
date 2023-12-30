@@ -135,7 +135,7 @@ export const CreateMultiPaymentDialog = (props: {
         ...items,
         {
           product: product,
-          effective_price: selectNextCoinAmount(product, {}),
+          effective_price: selectNextCoinAmount(product, null, {}),
         },
       ];
     });
@@ -156,6 +156,7 @@ export const CreateMultiPaymentDialog = (props: {
         product: current.product,
         effective_price: selectNextCoinAmount(
           current.product,
+          null,
           current.effective_price
         ),
       };
@@ -295,7 +296,7 @@ const DefaultTable = (props: {
             const isClickable =
               item.product !== undefined &&
               item.product !== null &&
-              getPossiblePrices(item.product).length > 1;
+              getPossiblePrices(item.product, null).length > 1;
             return (
               <TableRow key={index}>
                 <TableCell width={72}>
@@ -380,7 +381,7 @@ const MobileTable = (props: {
             const isClickable =
               item.product !== undefined &&
               item.product !== null &&
-              getPossiblePrices(item.product).length > 1;
+              getPossiblePrices(item.product, null).length > 1;
             return (
               <>
                 <TableRow key={index + "-a"}>

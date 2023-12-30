@@ -9,13 +9,21 @@ import {
   IcecreamOutlined,
   LiquorOutlined,
 } from "@mui/icons-material";
-import { useTerminalDispatch } from "../redux/terminalStore";
+import {
+  useTerminalDispatch,
+  useTerminalSelector,
+} from "../redux/terminalStore";
 import { addProduct } from "../redux/features/paymentSlice";
 import { Avatar } from "@mui/material";
 import { BASE_URL } from "../../const";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { Money } from "../components/Money";
 import styled from "@emotion/styled";
+import {
+  getActivePrice,
+  getOriginalPriceIfStatusApplies,
+  groupBy,
+} from "../../common/statusPriceUtils";
 
 const StyledProductList = styled.div`
   position: absolute;
@@ -356,6 +364,10 @@ const StyledProductListContent = styled.div`
       z-index: 10;
       bottom: 0;
       right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
 
       span {
         display: block;
@@ -377,22 +389,24 @@ const StyledProductListContent = styled.div`
         opacity: 0.7;
       }
     }
-  }
-`;
 
-const groupBy = function <T>(array: T[], selector: (x: T) => string | null) {
-  let map = new Map<string | null, T[]>();
-  for (let x of array) {
-    let key = selector(x);
-    let list = map.get(key);
-    if (list) {
-      list.push(x);
-    } else {
-      map.set(key, [x]);
+    .product-entry-price-old {
+      position: relative;
+      font-size: 0.7em;
+      color: var(--secondary-text-color);
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: -0.2em;
+        right: -0.2em;
+        top: 50%;
+        margin-top: -0.05em;
+        border-bottom: solid 0.14em var(--secondary-text-color);
+      }
     }
   }
-  return map;
-};
+`;
 
 export const ProductList = () => {
   const { t } = useTranslation();
@@ -416,6 +430,7 @@ export const ProductList = () => {
   }
 
   const productGroup = groupBy(products, (x) => x.category);
+  productGroup.delete("QuickAccess");
 
   const ordering = (name: string): number => {
     switch (name) {
@@ -520,6 +535,9 @@ export const ProductList = () => {
 function ProductItem(props: { product: ProductDto }) {
   const { t } = useTranslation();
   const dispatch = useTerminalDispatch();
+  const scannedAccount = useTerminalSelector(
+    (state) => state.paymentState.scannedAccount
+  );
 
   const clickHandler = useCallback(() => {
     dispatch(addProduct(props.product));
@@ -631,6 +649,12 @@ function ProductItem(props: { product: ProductDto }) {
 
   let name = <div className="product-entry-name">{nameArray}</div>;
 
+  let activePrice = getActivePrice(props.product, scannedAccount);
+  let originalPrice = getOriginalPriceIfStatusApplies(
+    props.product,
+    scannedAccount
+  );
+
   return (
     <div onClick={clickHandler}>
       <div className="product-entry" data-id={props.product.id}>
@@ -642,17 +666,20 @@ function ProductItem(props: { product: ProductDto }) {
           <div className="product-entry-stamps">{stamps}</div>
         </div>
         <div className="product-entry-price">
-          <div className="product-entry-price-old">
-            <Money
-              value={
-                (props.product.price.Cent ?? 0) -
-                (props.product.bonus.Cent ?? 0)
-              }
-            />
-          </div>
+          {originalPrice === null ? null : (
+            <div className="product-entry-price-old">
+              <Money
+                value={
+                  (originalPrice.price.Cent ?? 0) -
+                  (originalPrice.bonus.Cent ?? 0)
+                }
+              />
+            </div>
+          )}
+
           <Money
             value={
-              (props.product.price.Cent ?? 0) - (props.product.bonus.Cent ?? 0)
+              (activePrice.price.Cent ?? 0) - (activePrice.bonus.Cent ?? 0)
             }
           />
         </div>
