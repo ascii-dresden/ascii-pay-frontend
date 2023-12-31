@@ -5,6 +5,8 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  InputAdornment,
+  Popover,
   TextField,
   Typography,
   useMediaQuery,
@@ -20,12 +22,14 @@ import {
   SaveProductStatusPriceDto,
 } from "../../../common/contracts";
 import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
-import { Close } from "@mui/icons-material";
+import { Close, GridOn } from "@mui/icons-material";
 import { CategoryInput } from "./CategoryInput";
 import { TagsInput } from "./TagsInput";
 import { useProductMetadataHook } from "./useProductMetadataHook";
 import { useTranslation } from "react-i18next";
 import { ProductStatusPricesEdit } from "./ProductStatusPricesEdit";
+import { QuickAccessGridNamePicker } from "./QuickAccessGridNamePicker";
+import { QuickAccessGridNameIcon } from "./QuickAccessGridNameIcon";
 
 export const CreateProductDialog = (props: {
   open: boolean;
@@ -50,6 +54,9 @@ export const CreateProductDialog = (props: {
   const [statusPrices, setStatusPrices] = React.useState<
     SaveProductStatusPriceDto[]
   >([]);
+
+  const [gridPickerAnchorEl, setGridPickerAnchorEl] =
+    React.useState<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (isSuccess) {
@@ -89,6 +96,27 @@ export const CreateProductDialog = (props: {
     createProduct(saveProduct);
   };
 
+  const handleGridPickerChanged = (n: string) => {
+    setName(n);
+    setGridPickerAnchorEl(null);
+  };
+
+  let inputProps =
+    category !== "QuickAccess"
+      ? {}
+      : {
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                edge="end"
+                onClick={(e) => setGridPickerAnchorEl(e.currentTarget)}
+              >
+                <QuickAccessGridNameIcon name={name} />
+              </IconButton>
+            </InputAdornment>
+          ),
+        };
+
   return (
     <Dialog
       open={props.open}
@@ -118,7 +146,26 @@ export const CreateProductDialog = (props: {
             sx={{ mb: "1rem" }}
             value={name}
             onChange={(e) => setName(e.target.value)}
+            InputProps={inputProps}
           />
+          <Popover
+            open={gridPickerAnchorEl !== null}
+            anchorEl={gridPickerAnchorEl}
+            onClose={() => setGridPickerAnchorEl(null)}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+          >
+            <QuickAccessGridNamePicker
+              name={name}
+              onChange={handleGridPickerChanged}
+            />
+          </Popover>
           <TextField
             label={t("product.nickname")}
             fullWidth

@@ -1,4 +1,3 @@
-import React from "react";
 import { useGetAllAccountsQuery } from "../../redux/api/accountApi";
 import { useGetAllProductsQuery } from "../../redux/api/productApi";
 import { AccountDto, ProductDto } from "../../../common/contracts";
@@ -56,6 +55,7 @@ export const useSearchHook = (
       "account.name",
       "account.email",
       "account.role",
+      "account.status.name",
       "product.name",
       "product.nickname",
       "product.category",

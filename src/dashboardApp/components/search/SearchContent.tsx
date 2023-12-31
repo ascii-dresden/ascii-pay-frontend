@@ -26,6 +26,8 @@ import { useTranslation } from "react-i18next";
 import { HiddenField } from "../HiddenField";
 import { AccountActionButton } from "../account/AccountActionButton";
 import { ProductActionButton } from "../product/ProductActionButton";
+import { AccountStatusChip } from "../accountStatus/AccountStatusChip";
+import { QuickAccessGridNameIcon } from "../product/QuickAccessGridNameIcon";
 
 const StyledRow = styled("div")(({ theme }) => ({
   position: "relative",
@@ -252,6 +254,7 @@ const SearchAccountRow = (props: {
         <StyledRowContent>
           <Typography>{props.account.name}</Typography>
           <RoleChip role={props.account.role} />
+          <AccountStatusChip status={props.account.status} />
         </StyledRowContent>
         <StyledRowCoins>
           <HiddenField>
@@ -308,6 +311,23 @@ const SearchProductRow = (props: {
     }
   }, [handleKeyAction, isSelected]);
 
+  const avatar =
+    props.product.category === "QuickAccess" ? (
+      <Avatar
+        alt={props.product.name}
+        variant="rounded"
+        sx={{ bgcolor: "transparent" }}
+      >
+        <QuickAccessGridNameIcon name={props.product.name} size="large" />
+      </Avatar>
+    ) : (
+      <Avatar
+        alt={props.product.name}
+        src={`${BASE_URL}/product/${props.product.id}/image`}
+        variant="rounded"
+        {...stringWithoutColorAvatar(props.product.name)}
+      />
+    );
   return (
     <Link
       to={`/products/${productId}`}
@@ -322,14 +342,7 @@ const SearchProductRow = (props: {
           selected: props.isSelected,
         })}
       >
-        <StyledRowIcon>
-          <Avatar
-            alt={props.product.name}
-            src={`${BASE_URL}/product/${props.product.id}/image`}
-            variant="rounded"
-            {...stringWithoutColorAvatar(props.product.name)}
-          />
-        </StyledRowIcon>
+        <StyledRowIcon>{avatar}</StyledRowIcon>
         <StyledRowContent>
           <Typography>{props.product.name}</Typography>
           <Typography variant="caption">{props.product.nickname}</Typography>

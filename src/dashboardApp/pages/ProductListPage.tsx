@@ -45,6 +45,7 @@ import styled from "@emotion/styled";
 import clsx from "clsx";
 import { UpdateMultiProductPriceDialog } from "../components/product/UpdateMultiProductPriceDialog";
 import { AccountStatusChip } from "../components/accountStatus/AccountStatusChip";
+import { QuickAccessGridNameIcon } from "../components/product/QuickAccessGridNameIcon";
 
 const ProductStatusPricesPopoverStyled = styled.div`
   position: absolute;
@@ -396,6 +397,25 @@ const ProductListRow = (props: {
   selectionMode: boolean;
 }) => {
   const { t } = useTranslation();
+
+  const avatar =
+    props.product.category === "QuickAccess" ? (
+      <Avatar
+        alt={props.product.name}
+        variant="rounded"
+        sx={{ bgcolor: "transparent" }}
+      >
+        <QuickAccessGridNameIcon name={props.product.name} size="large" />
+      </Avatar>
+    ) : (
+      <Avatar
+        alt={props.product.name}
+        src={`${BASE_URL}/product/${props.product.id}/image`}
+        variant="rounded"
+        {...stringWithoutColorAvatar(props.product.name)}
+      />
+    );
+
   return (
     <>
       <TableRow style={{ height: 78 }}>
@@ -403,14 +423,7 @@ const ProductListRow = (props: {
           <StyledCheckableAvatar
             className={clsx({ active: props.selectionMode })}
           >
-            <div>
-              <Avatar
-                alt={props.product.name}
-                src={`${BASE_URL}/product/${props.product.id}/image`}
-                variant="rounded"
-                {...stringWithoutColorAvatar(props.product.name)}
-              />
-            </div>
+            <div>{avatar}</div>
             <div>
               <Checkbox
                 color="primary"

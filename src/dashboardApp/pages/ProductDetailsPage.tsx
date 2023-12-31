@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { useDashboardDispatch } from "../redux/dashboardStore";
 import { PullToRefreshWrapper } from "../components/PullToRefresh";
+import { QuickAccessGridNameIcon } from "../components/product/QuickAccessGridNameIcon";
 
 export const ProductDetailsPage = () => {
   const { t } = useTranslation();
@@ -75,6 +76,33 @@ export const ProductDetailsPage = () => {
     },
   ];
 
+  const avatar =
+    product.category === "QuickAccess" ? (
+      <Avatar
+        alt={product.name}
+        variant="rounded"
+        sx={{
+          width: 128,
+          height: 128,
+          bgcolor: "transparent",
+        }}
+      >
+        <QuickAccessGridNameIcon name={product.name} size="extralarge" />
+      </Avatar>
+    ) : (
+      <Avatar
+        alt={product.name}
+        src={`${BASE_URL}/product/${product.id}/image`}
+        variant="rounded"
+        sx={{
+          width: 128,
+          height: 128,
+          border: `solid 1px ${theme.palette.divider}`,
+        }}
+        {...stringWithoutColorAvatar(product.name)}
+      />
+    );
+
   return (
     <PullToRefreshWrapper onRefresh={handleRefresh}>
       <Container maxWidth="lg">
@@ -93,17 +121,7 @@ export const ProductDetailsPage = () => {
         <Box sx={{ mb: 4 }}>
           <Paper sx={{ display: { xs: "block", md: "flex" } }} elevation={4}>
             <Box sx={{ p: 2, display: "flex", justifyContent: "center" }}>
-              <Avatar
-                alt={product.name}
-                src={`${BASE_URL}/product/${product.id}/image`}
-                variant="rounded"
-                sx={{
-                  width: 128,
-                  height: 128,
-                  border: `solid 1px ${theme.palette.divider}`,
-                }}
-                {...stringWithoutColorAvatar(product.name)}
-              />
+              {avatar}
             </Box>
             <Box sx={{ p: 2, flexGrow: 1 }}>
               <Table size="small">
