@@ -22,10 +22,7 @@ import styled from "@emotion/styled";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { BASE_URL } from "../../const";
 import clsx from "clsx";
-import {
-  getActivePrice,
-  getOriginalPriceIfStatusApplies,
-} from "../../common/statusPriceUtils";
+import { getOriginalPriceIfStatusApplies } from "../../common/statusPriceUtils";
 
 const StyledBasketEmpty = styled.div`
   position: absolute;
@@ -364,13 +361,27 @@ export const Basket = () => {
     }
 
     let stamps: any[] = [];
-    if (effective_price.CoffeeStamp && effective_price.CoffeeStamp < 0) {
-      stamps.push(<Stamp key="coffee+1" value={1} type="CoffeeStamp" />);
-    } else if (effective_price.BottleStamp && effective_price.BottleStamp < 0) {
-      stamps.push(<Stamp key="bottle+1" value={1} type="BottleStamp" />);
+    if (effective_price.CoffeeStamp && effective_price.CoffeeStamp != 0) {
+      stamps.push(
+        <Stamp
+          key="coffee-1"
+          value={-effective_price.CoffeeStamp}
+          type="CoffeeStamp"
+        />
+      );
+    } else if (
+      effective_price.BottleStamp &&
+      effective_price.BottleStamp != 0
+    ) {
+      stamps.push(
+        <Stamp
+          key="bottle-1"
+          value={-effective_price.BottleStamp}
+          type="BottleStamp"
+        />
+      );
     }
 
-    let activePrice = getActivePrice(value.product, scannedAccount);
     let originalPrice = getOriginalPriceIfStatusApplies(
       value.product,
       scannedAccount
