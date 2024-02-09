@@ -197,17 +197,6 @@ const StyledBasketEntryPrice = styled.div`
   flex-direction: column;
   background: var(--primary-background);
   padding-left: 1.45em;
-
-  .basket-entry-count {
-    left: 0;
-    position: absolute;
-    line-height: 1.8em;
-    width: 2em;
-    text-align: center;
-    border-radius: 50%;
-    background-color: var(--tertiary-background);
-    font-size: 0.6em;
-  }
 `;
 
 const StyledBasketEntryPriceOld = styled.div`
@@ -236,6 +225,63 @@ const StyledBasketDeleteAll = styled.div`
     border: solid 1px var(--border-color);
     background-color: var(--secondary-background);
     padding: 0.4em 2em;
+  }
+`;
+
+const StyledAnimateCountFlash = styled.div`
+  left: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 50%;
+    margin-top: -0.6em;
+    height: 1.2em;
+    width: 1.4em;
+    border-radius: 50%;
+    background-color: var(--tertiary-background);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 50%;
+    margin-top: -0.6em;
+    height: 1.2em;
+    width: 1.4em;
+    border-radius: 50%;
+
+    visibility: hidden;
+    scale: 1;
+    background-color: var(--tertiary-background);
+    transition: opacity 500ms ease-in-out, visibility 500ms ease-in-out,
+      background-color 500ms ease-in-out, scale 500ms ease-in-out;
+  }
+
+  &.flash::after {
+    visibility: visible;
+    scale: 1.5;
+    background-color: var(--theme-color);
+    transition: opacity 150ms ease-out, visibility 150ms ease-out,
+      background-color 550ms ease-out, scale 150ms ease-out;
+  }
+
+  span {
+    z-index: 1;
+    display: block;
+    position: relative;
+    line-height: 1.8em;
+    width: 2em;
+    text-align: center;
+    font-size: 0.6em;
   }
 `;
 
@@ -388,31 +434,29 @@ export const Basket = () => {
     );
 
     content.push(
-      <div key={index} onClick={() => onRemove(value)}>
-        <StyledBasketEntry>
-          <StyledBasketEntryImage className={value.colorHint}>
-            <div>{image}</div>
-          </StyledBasketEntryImage>
-          <StyledBasketEntryContent>
-            <div>{value.product.name}</div>
-            <StyledBasketEntryStamps>{stamps}</StyledBasketEntryStamps>
-          </StyledBasketEntryContent>
-          <StyledBasketEntryPrice>
-            <span className="basket-entry-count">{count}</span>
-            {originalPrice === null ? null : (
-              <StyledBasketEntryPriceOld>
-                <Money
-                  value={
-                    (originalPrice.price.Cent ?? 0) -
-                    (originalPrice.bonus.Cent ?? 0)
-                  }
-                />
-              </StyledBasketEntryPriceOld>
-            )}
-            <Money value={effective_price.Cent ?? 0} />
-          </StyledBasketEntryPrice>
-        </StyledBasketEntry>
-      </div>
+      <StyledBasketEntry key={index} onClick={() => onRemove(value)}>
+        <StyledBasketEntryImage className={value.colorHint}>
+          <div>{image}</div>
+        </StyledBasketEntryImage>
+        <StyledBasketEntryContent>
+          <div>{value.product.name}</div>
+          <StyledBasketEntryStamps>{stamps}</StyledBasketEntryStamps>
+        </StyledBasketEntryContent>
+        <StyledBasketEntryPrice>
+          <AnimateCounter count={count} />
+          {originalPrice === null ? null : (
+            <StyledBasketEntryPriceOld>
+              <Money
+                value={
+                  (originalPrice.price.Cent ?? 0) -
+                  (originalPrice.bonus.Cent ?? 0)
+                }
+              />
+            </StyledBasketEntryPriceOld>
+          )}
+          <Money value={effective_price.Cent ?? 0} />
+        </StyledBasketEntryPrice>
+      </StyledBasketEntry>
     );
 
     index += 1;
@@ -458,5 +502,25 @@ export const Basket = () => {
     <StyledBasket className={clsx({ hasStatus: hasStatus })}>
       <div>{content}</div>
     </StyledBasket>
+  );
+};
+
+const AnimateCounter = (props: { count: number }) => {
+  const [flash, setFlash] = React.useState(false);
+
+  React.useEffect(() => {
+    setFlash(true);
+    let handler = setTimeout(() => setFlash(false), 150);
+
+    return () => {
+      clearTimeout(handler);
+      setFlash(false);
+    };
+  }, [props.count]);
+
+  return (
+    <StyledAnimateCountFlash className={clsx({ flash: flash })}>
+      <span className="basket-entry-count">{props.count}</span>
+    </StyledAnimateCountFlash>
   );
 };

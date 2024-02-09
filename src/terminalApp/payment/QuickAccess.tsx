@@ -15,6 +15,7 @@ import {
 } from "../../common/statusPriceUtils";
 import { useGetAllProductsQuery } from "../redux/api/productApi";
 import { ProductDto } from "../../common/contracts";
+import clsx from "clsx";
 
 const StyledQuickAccess = styled.div`
   position: relative;
@@ -116,6 +117,54 @@ const StyledQuickAccessEntry = styled.div`
   &.dark {
     img {
       filter: invert(1);
+    }
+  }
+`;
+
+const StyledQuickAccessArrow = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    right: 0.2em;
+    margin-top: -1em;
+    height: 2em;
+    width: 2em;
+    background-color: var(--theme-color);
+    opacity: 0;
+    scale: 0.7;
+    clip-path: polygon(
+      50% 0,
+      100% 50%,
+      30% 50%,
+      30% 100%,
+      70% 100%,
+      70% 50%,
+      0 50%
+    );
+  }
+
+  &.flash::before {
+    animation: move 500ms linear;
+  }
+
+  @keyframes move {
+    0% {
+      top: 80%;
+    }
+    20% {
+      top: 45%;
+      opacity: 0.4;
+    }
+    100% {
+      top: -5%;
+      opacity: 0;
     }
   }
 `;
@@ -267,6 +316,8 @@ const QuickAccessEntryView = (props: { product: ProductDto }) => {
     (state) => state.paymentState.scannedAccount
   );
 
+  const [flash, setFlash] = React.useState(false);
+
   let stamp: any | null = null;
   if (props.product.price.CoffeeStamp && props.product.price.CoffeeStamp > 0) {
     stamp = (
@@ -350,6 +401,9 @@ const QuickAccessEntryView = (props: { product: ProductDto }) => {
   }
 
   const onClick = () => {
+    setFlash(true);
+    setTimeout(() => setFlash(false), 500);
+
     dispatch(
       addPaymentItem({
         product: {
@@ -368,6 +422,7 @@ const QuickAccessEntryView = (props: { product: ProductDto }) => {
       className={getClassName(props.product)}
       onClick={onClick}
     >
+      <StyledQuickAccessArrow className={clsx({ flash: flash })} />
       <StyledQuickAccessEntryName className="quick-access-entry-name">
         {getName(props.product)}
       </StyledQuickAccessEntryName>
