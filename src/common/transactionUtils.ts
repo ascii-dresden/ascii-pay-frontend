@@ -143,6 +143,28 @@ export function selectNextCoinAmount(
   return prices[0];
 }
 
+export function selectCurrentCoinAmount(
+  product: PseudoProductDto,
+  account: AccountDto | null | undefined,
+  current: CoinAmountDto | number
+): CoinAmountDto {
+  let prices = getPossiblePrices(product, account);
+
+  if (typeof current === "number") {
+    let next = current % prices.length;
+    return prices[next];
+  } else {
+    for (let i = 0; i < prices.length; i++) {
+      if (equalCoinAmount(current, prices[i])) {
+        let next = i % prices.length;
+        return prices[next];
+      }
+    }
+  }
+
+  return prices[0];
+}
+
 export function getPaymentItemSum(
   items: PaymentTransactionItem[],
   account: AccountDto | null | undefined
@@ -159,7 +181,11 @@ export function getEffectivePrice(
   item: PaymentTransactionItem,
   account: AccountDto | null | undefined
 ): CoinAmountDto {
-  return selectNextCoinAmount(item.product, account, {});
+  return selectCurrentCoinAmount(
+    item.product,
+    account,
+    item.currentPriceIndex ?? 0
+  );
 }
 
 class TransactionHelper {
@@ -286,7 +312,7 @@ export function calculateStampPaymentTransactionItems(
 
   newItems.splice(removeIndex, 1, {
     ...removeItem,
-    // effective_price: newPrice, TODO
+    currentPriceIndex: (removeItem.currentPriceIndex ?? 0) + 1,
   });
 
   let newBalance = subCoinAmount(balance, newPrice);
