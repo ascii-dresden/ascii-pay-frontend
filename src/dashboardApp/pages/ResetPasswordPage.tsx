@@ -38,7 +38,7 @@ export const ResetPasswordPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Password successfully reseted!");
+      toast.success("Password successfully reset!");
       navigate("/");
     } else if (isError) {
       toast.error("Could not reset password!");
