@@ -234,6 +234,18 @@
       "updateImageClickHint": "oder klicken um Datei auszuwählen"
     }
   },
+  "purchase": {
+    "store": "Einkaufsladen",
+    "timestamp": "Datum",
+    "purchaser": "Einkäufer",
+    "item": {
+      "name": "Name",
+      "container_size": "Gebindegröße",
+      "container_count": "Gebindeanzahl",
+      "container_cents": "Gebindepreis",
+      "cents_per_item": "Einzelpreis"
+    }
+  },
   "payment": {
     "title": "Transaktion erstellen",
     "addItem": "Zu Transaktion hinzufügen",

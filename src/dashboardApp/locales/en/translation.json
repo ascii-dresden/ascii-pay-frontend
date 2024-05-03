@@ -233,6 +233,18 @@
       "updateImageClickHint": "or click to select file"
     }
   },
+  "purchase": {
+    "store": "Store",
+    "timestamp": "Date",
+    "purchaser": "Account",
+    "item": {
+      "name": "Name",
+      "container_size": "Container size",
+      "container_count": "Container count",
+      "container_cents": "Container price",
+      "cents_per_item": "Price per item"
+    }
+  },
   "payment": {
     "title": "Payment",
     "addItem": "Add additional transaction item",

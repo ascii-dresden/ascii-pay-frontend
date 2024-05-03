@@ -9,6 +9,7 @@ import userReducer from "./features/userSlice";
 import registerReducer from "./features/registerSlice";
 import { registerHistoryApi } from "./api/registerHistoryApi";
 import { accountStatusApi } from "./api/accountStatusApi";
+import { purchaseApi } from "./api/purchaseApi";
 
 export const dashboardStore = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const dashboardStore = configureStore({
     [accountStatusApi.reducerPath]: accountStatusApi.reducer,
     [accountApi.reducerPath]: accountApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
+    [purchaseApi.reducerPath]: purchaseApi.reducer,
     [registerHistoryApi.reducerPath]: registerHistoryApi.reducer,
     userState: userReducer,
     adminState: adminReducer,
@@ -30,6 +32,7 @@ export const dashboardStore = configureStore({
       accountStatusApi.middleware,
       accountApi.middleware,
       productApi.middleware,
+      purchaseApi.middleware,
       registerHistoryApi.middleware,
     ]),
 });

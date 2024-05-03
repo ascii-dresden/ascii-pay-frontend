@@ -216,3 +216,37 @@ export type SaveRegisterHistoryDto = {
   target_register: RegisterHistoryStateDto;
   envelope_register: RegisterHistoryStateDto;
 };
+
+export type PurchaseDto = {
+  id: number;
+  store: string;
+  timestamp: string;
+  purchased_by_account_id: number | null;
+  items: PurchaseItemDto[];
+};
+
+export type PurchaseItemDto = {
+  id: number;
+  name: string;
+  container_size: number;
+  container_count: number;
+  container_cents: number;
+  product: ProductDto | null;
+};
+
+export type SavePurchaseDto = {
+  id: number;
+  store: string;
+  timestamp: string;
+  purchased_by_account_id: number | null;
+  items: SavePurchaseItemDto[];
+};
+
+export type SavePurchaseItemDto = {
+  id: number;
+  name: string;
+  container_size: number;
+  container_count: number;
+  container_cents: number;
+  product_id: number | null;
+};
