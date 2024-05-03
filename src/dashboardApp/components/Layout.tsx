@@ -37,6 +37,7 @@ import {
   MenuOutlined,
   PriceChangeOutlined,
   PublicOutlined,
+  ShoppingCartOutlined,
   StarsOutlined,
   Store,
   TranslateOutlined,
@@ -219,6 +220,45 @@ export const Layout = () => {
               )}
             </NavLink>
           </ListItem>
+          <ListSubheader component="div">{t("layout.purchase")}</ListSubheader>
+          <ListItem disablePadding>
+            <NavLink
+              to="/products"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <Coffee />
+                  </ListItemIcon>
+                  <ListItemText primary={t("layout.products")} />
+                </ListItemButton>
+              )}
+            </NavLink>
+          </ListItem>
+          <ListItem disablePadding>
+            <NavLink
+              to="/purchases"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <ShoppingCartOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={t("layout.purchases")} />
+                </ListItemButton>
+              )}
+            </NavLink>
+          </ListItem>
           <ListSubheader component="div">
             {t("layout.administration")}
           </ListSubheader>
@@ -237,25 +277,6 @@ export const Layout = () => {
                     <AccountCircle />
                   </ListItemIcon>
                   <ListItemText primary={t("layout.accounts")} />
-                </ListItemButton>
-              )}
-            </NavLink>
-          </ListItem>
-          <ListItem disablePadding>
-            <NavLink
-              to="/products"
-              style={{
-                width: "100%",
-                textDecoration: "none",
-                color: theme.palette.text.primary,
-              }}
-            >
-              {({ isActive }) => (
-                <ListItemButton selected={isActive}>
-                  <ListItemIcon>
-                    <Coffee />
-                  </ListItemIcon>
-                  <ListItemText primary={t("layout.products")} />
                 </ListItemButton>
               )}
             </NavLink>

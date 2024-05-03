@@ -24,7 +24,9 @@
     "toggleLanguage": "Sprache wechseln",
     "preferences": "Einstellungen",
     "print": "Drucken",
-    "accountStatus": "ascii Status"
+    "accountStatus": "ascii Status",
+    "purchases": "Einkaufe",
+    "purchase": "Einkauf"
   },
   "setup": {
     "message": "ascii-pay einrichten",

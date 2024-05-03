@@ -24,7 +24,9 @@
     "toggleLanguage": "Toggle language",
     "preferences": "Preferences",
     "print": "Print",
-    "accountStatus": "ascii Status"
+    "accountStatus": "ascii Status",
+    "purchases": "Purchases",
+    "purchase": "Purchase"
   },
   "setup": {
     "message": "Setup ascii-pay",
