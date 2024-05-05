@@ -24,6 +24,7 @@ import { PurchaseItemsEdit } from "./PurchaseItemsEdit";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import enGB from "date-fns/locale/en-GB";
+import { useDashboardSelector } from "../../redux/dashboardStore";
 
 export const CreatePurchaseDialog = (props: {
   open: boolean;
@@ -33,6 +34,7 @@ export const CreatePurchaseDialog = (props: {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const currentUser = useDashboardSelector((state) => state.userState.user);
   const [createPurchase, { isLoading, isError, error, isSuccess }] =
     useCreatePurchaseMutation();
 
@@ -50,7 +52,7 @@ export const CreatePurchaseDialog = (props: {
 
       setStore("");
       setTimestamp(new Date(Date.now()));
-      setPurchaserId(null);
+      setPurchaserId(currentUser?.id ?? null);
       setItems([]);
     } else if (isError) {
       toast.error("Purchase could not be created!");
@@ -58,6 +60,10 @@ export const CreatePurchaseDialog = (props: {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading]);
+
+  useEffect(() => {
+    setPurchaserId(currentUser?.id ?? null);
+  }, [currentUser]);
 
   const handleSubmit = () => {
     let savePurchase: SavePurchaseDto = {
