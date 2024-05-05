@@ -25,6 +25,8 @@ import { PurchaseItemsEdit } from "./PurchaseItemsEdit";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import enGB from "date-fns/locale/en-GB";
+import { usePurchaseMetadataHook } from "./usePurchaseMetadataHook";
+import Autocomplete from "@mui/material/Autocomplete";
 
 export const UpdatePurchaseDialog = (props: {
   purchase: PurchaseDto;
@@ -37,6 +39,8 @@ export const UpdatePurchaseDialog = (props: {
 
   const [updatePurchase, { isLoading, isError, error, isSuccess }] =
     useUpdatePurchaseMutation();
+
+  const { stores } = usePurchaseMetadataHook();
 
   const [store, setStore] = React.useState("");
   const [timestamp, setTimestamp] = React.useState<Date | null>(
@@ -108,12 +112,19 @@ export const UpdatePurchaseDialog = (props: {
         </DialogTitle>
         <DialogContent dividers={true}>
           <Box pt={1}>
-            <TextField
-              label={t("purchase.store")}
-              fullWidth
-              sx={{ mb: "1rem" }}
+            <Autocomplete
               value={store}
-              onChange={(e) => setStore(e.target.value)}
+              onChange={(e, newValue) => setStore(newValue ?? "")}
+              freeSolo
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t("purchase.store")}
+                  fullWidth
+                  sx={{ mb: "1rem" }}
+                />
+              )}
+              options={stores}
             />
             <DateTimePicker
               label={t("purchase.timestamp")}

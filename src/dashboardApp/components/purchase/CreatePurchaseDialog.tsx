@@ -25,6 +25,8 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import enGB from "date-fns/locale/en-GB";
 import { useDashboardSelector } from "../../redux/dashboardStore";
+import { usePurchaseMetadataHook } from "./usePurchaseMetadataHook";
+import Autocomplete from "@mui/material/Autocomplete";
 
 export const CreatePurchaseDialog = (props: {
   open: boolean;
@@ -37,6 +39,8 @@ export const CreatePurchaseDialog = (props: {
   const currentUser = useDashboardSelector((state) => state.userState.user);
   const [createPurchase, { isLoading, isError, error, isSuccess }] =
     useCreatePurchaseMutation();
+
+  const { stores } = usePurchaseMetadataHook();
 
   const [store, setStore] = React.useState("");
   const [timestamp, setTimestamp] = React.useState<Date | null>(
@@ -99,12 +103,19 @@ export const CreatePurchaseDialog = (props: {
         </DialogTitle>
         <DialogContent dividers={true}>
           <Box pt={1}>
-            <TextField
-              label={t("purchase.store")}
-              fullWidth
-              sx={{ mb: "1rem" }}
+            <Autocomplete
               value={store}
-              onChange={(e) => setStore(e.target.value)}
+              onChange={(e, newValue) => setStore(newValue ?? "")}
+              freeSolo
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={t("purchase.store")}
+                  fullWidth
+                  sx={{ mb: "1rem" }}
+                />
+              )}
+              options={stores}
             />
             <DateTimePicker
               label={t("purchase.timestamp")}
