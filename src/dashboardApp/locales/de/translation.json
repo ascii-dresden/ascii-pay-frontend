@@ -244,6 +244,23 @@
       "container_count": "Gebindeanzahl",
       "container_cents": "Gebindepreis",
       "cents_per_item": "Einzelpreis"
+    },
+    "action": {
+      "details": "Details",
+      "edit": "Bearbeiten",
+      "createPurchase": "Einkauf erstellen",
+      "editPurchase": "Einkauf bearbeiten",
+      "deletePurchase": "Einkauf löschen",
+      "addItem": "Produkt hinzufügen"
+    },
+    "edit": {
+      "createTitle": "Einkauf erstellen",
+      "createAction": "Einkauf erstellen",
+      "updateTitle": "Einkauf bearbeiten",
+      "updateAction": "Änderungen speichern",
+      "deleteTitle": "Einkauf löschen?",
+      "deleteAction": "Einkauf löschen",
+      "deleteContent": "Möchten Sie den Einkauf <bold>{{name}}</bold> dauerhaft löschen? Diese Aktion kann nicht wiederrufen werden!"
     }
   },
   "payment": {

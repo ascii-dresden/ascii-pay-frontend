@@ -235,7 +235,6 @@ export type PurchaseItemDto = {
 };
 
 export type SavePurchaseDto = {
-  id: number;
   store: string;
   timestamp: string;
   purchased_by_account_id: number | null;
@@ -243,7 +242,6 @@ export type SavePurchaseDto = {
 };
 
 export type SavePurchaseItemDto = {
-  id: number;
   name: string;
   container_size: number;
   container_count: number;

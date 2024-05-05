@@ -61,13 +61,15 @@ export const CoinInput = React.forwardRef<
     onChange(validateValue(newValue));
   };
 
-  const onIncrement = () => {
-    let newValue = value + (increment ?? 1);
+  const onIncrement = (incrementOverride?: number) => {
+    let offset = incrementOverride ?? increment ?? 1;
+    let newValue = value + offset;
     onChange(validateValue(newValue));
   };
 
-  const onDecrement = () => {
-    let newValue = value - (increment ?? 1);
+  const onDecrement = (incrementOverride?: number) => {
+    let offset = incrementOverride ?? increment ?? 1;
+    let newValue = value - offset;
     onChange(validateValue(newValue));
   };
 
@@ -116,6 +118,12 @@ export const CoinInput = React.forwardRef<
       case "ArrowDown":
       case "ArrowLeft":
         onDecrement();
+        break;
+      case "PageUp":
+        onIncrement(10);
+        break;
+      case "PageDown":
+        onDecrement(10);
         break;
     }
   };

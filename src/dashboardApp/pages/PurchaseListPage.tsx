@@ -13,9 +13,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { Add, KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { stringAvatar } from "../../common/stringAvatar";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -32,9 +32,14 @@ import { purchaseApi, useGetAllPurchasesQuery } from "../redux/api/purchaseApi";
 import { PurchaseDto } from "../../common/contracts";
 import { TransactionListRowAccount } from "../components/transaction/TransactionListRowAccount";
 import { moneyToString } from "../../terminalApp/components/Money";
+import { ActionButtonAction } from "../components/ActionButton";
+import { CreatePurchaseDialog } from "../components/purchase/CreatePurchaseDialog";
+import { PurchaseActionButton } from "../components/purchase/PurchaseActionButton";
 
 export const PurchaseListPage = () => {
   const { t } = useTranslation();
+
+  const [openModal, setOpenModal] = useState(false);
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -68,8 +73,16 @@ export const PurchaseListPage = () => {
     },
   ];
 
+  const actions: ActionButtonAction[] = [
+    {
+      label: t("purchase.action.createPurchase"),
+      icon: <Add />,
+      action: () => setOpenModal(true),
+    },
+  ];
+
   const header = (
-    <PageHeader navigation={navigation}>
+    <PageHeader navigation={navigation} actions={actions}>
       <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
         {t("layout.purchases")}
       </Typography>
@@ -130,6 +143,7 @@ export const PurchaseListPage = () => {
                     <TableCell>{t("purchase.timestamp")}</TableCell>
                     <TableCell>{t("purchase.store")}</TableCell>
                     <TableCell>{t("purchase.purchaser")}</TableCell>
+                    <TableCell width={128}></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -138,7 +152,7 @@ export const PurchaseListPage = () => {
                   ))}
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 67 * emptyRows }}>
-                      <TableCell colSpan={3} />
+                      <TableCell colSpan={5} />
                     </TableRow>
                   )}
                 </TableBody>
@@ -152,6 +166,8 @@ export const PurchaseListPage = () => {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+
+          <CreatePurchaseDialog open={openModal} setOpen={setOpenModal} />
         </Container>
       </PullToRefreshWrapper>
     </LocalizationProvider>
@@ -194,9 +210,15 @@ const PurchaseListRow = (props: { purchase: PurchaseDto }) => {
             />
           ) : null}
         </TableCell>
+        <TableCell width={128}>
+          <PurchaseActionButton
+            purchase={props.purchase}
+            showNavigationOption
+          />
+        </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Table size="small" aria-label="purchases">

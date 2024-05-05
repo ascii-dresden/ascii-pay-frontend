@@ -243,6 +243,23 @@
       "container_count": "Container count",
       "container_cents": "Container price",
       "cents_per_item": "Price per item"
+    },
+    "action": {
+      "details": "Details",
+      "edit": "Edit",
+      "createPurchase": "Create purchase",
+      "editPurchase": "Edit purchase details",
+      "deletePurchase": "Delete purchase",
+      "addItem": "Add item"
+    },
+    "edit": {
+      "createTitle": "Create a new purchase",
+      "createAction": "Create purchase",
+      "updateTitle": "Edit purchase",
+      "updateAction": "Save changes",
+      "deleteTitle": "Delete purchase?",
+      "deleteAction": "Delete purchase",
+      "deleteContent": "Do you want to permanently delete the purchase <bold>{{name}}</bold>? This action cannot be undone!"
     }
   },
   "payment": {
