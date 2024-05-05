@@ -35,6 +35,7 @@ import { moneyToString } from "../../terminalApp/components/Money";
 import { ActionButtonAction } from "../components/ActionButton";
 import { CreatePurchaseDialog } from "../components/purchase/CreatePurchaseDialog";
 import { PurchaseActionButton } from "../components/purchase/PurchaseActionButton";
+import { PurchaseItemTable } from "../components/purchase/PurchaseItemTable";
 
 export const PurchaseListPage = () => {
   const { t } = useTranslation();
@@ -142,6 +143,7 @@ export const PurchaseListPage = () => {
                     <TableCell width={72}></TableCell>
                     <TableCell>{t("purchase.timestamp")}</TableCell>
                     <TableCell>{t("purchase.store")}</TableCell>
+                    <TableCell>{t("purchase.total")}</TableCell>
                     <TableCell>{t("purchase.purchaser")}</TableCell>
                     <TableCell width={128}></TableCell>
                   </TableRow>
@@ -184,6 +186,10 @@ const PurchaseListRow = (props: { purchase: PurchaseDto }) => {
 
   const [open, setOpen] = React.useState(false);
 
+  let total = props.purchase.items
+    .map((i) => i.container_count * i.container_cents)
+    .reduce((a, b) => a + b, 0);
+
   return (
     <>
       <TableRow
@@ -203,6 +209,7 @@ const PurchaseListRow = (props: { purchase: PurchaseDto }) => {
           {format.format(new Date(props.purchase.timestamp))}
         </TableCell>
         <TableCell>{props.purchase.store}</TableCell>
+        <TableCell>{moneyToString(total)}</TableCell>
         <TableCell>
           {props.purchase.purchased_by_account_id ? (
             <TransactionListRowAccount
@@ -218,51 +225,10 @@ const PurchaseListRow = (props: { purchase: PurchaseDto }) => {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={5}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell width={72}></TableCell>
-                    <TableCell>{t("purchase.item.name")}</TableCell>
-                    <TableCell>{t("purchase.item.container_size")}</TableCell>
-                    <TableCell>{t("purchase.item.container_count")}</TableCell>
-                    <TableCell>{t("purchase.item.container_cents")}</TableCell>
-                    <TableCell>{t("purchase.item.cents_per_item")}</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {props.purchase.items.map((item, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{ "& > *": { borderBottom: "unset !important" } }}
-                    >
-                      <TableCell>
-                        {item.product ? (
-                          <Avatar
-                            alt={item.product.name}
-                            src={`${BASE_URL}/product/${item.product.id}/image`}
-                            variant="rounded"
-                            {...stringAvatar(item.product.name)}
-                          />
-                        ) : null}
-                      </TableCell>
-                      <TableCell>{item.product?.name ?? item.name}</TableCell>
-                      <TableCell>{item.container_size}</TableCell>
-                      <TableCell>{item.container_count}</TableCell>
-                      <TableCell>
-                        {moneyToString(item.container_cents)}
-                      </TableCell>
-                      <TableCell>
-                        {moneyToString(
-                          item.container_cents / item.container_size
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <PurchaseItemTable purchase={props.purchase} size="small" />
             </Box>
           </Collapse>
         </TableCell>

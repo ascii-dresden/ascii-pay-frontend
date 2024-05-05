@@ -95,6 +95,11 @@ const PurchaseListPage = React.lazy(() =>
     default: module.PurchaseListPage,
   }))
 );
+const PurchaseDetailsPage = React.lazy(() =>
+  import("./pages/PurchaseDetailsPage").then((module) => ({
+    default: module.PurchaseDetailsPage,
+  }))
+);
 
 const StyledDashboardApp = styled.div`
   min-height: 100vh;
@@ -183,6 +188,10 @@ export function DashboardApp() {
                         element={<ProductDetailsPage />}
                       />
                       <Route path="purchases" element={<PurchaseListPage />} />
+                      <Route
+                        path="purchases/:purchaseId"
+                        element={<PurchaseDetailsPage />}
+                      />
                       <Route
                         path="accountStatus"
                         element={<AccountStatusListPage />}

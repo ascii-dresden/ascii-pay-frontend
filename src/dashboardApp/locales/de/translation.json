@@ -238,6 +238,7 @@
     "store": "Einkaufsladen",
     "timestamp": "Datum",
     "purchaser": "Einkäufer",
+    "total": "Summe",
     "item": {
       "name": "Name",
       "container_size": "Gebindegröße",

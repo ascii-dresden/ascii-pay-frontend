@@ -237,6 +237,7 @@
     "store": "Store",
     "timestamp": "Date",
     "purchaser": "Account",
+    "total": "Total",
     "item": {
       "name": "Name",
       "container_size": "Container size",
