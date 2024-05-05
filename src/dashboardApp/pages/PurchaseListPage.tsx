@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Collapse,
   Container,
@@ -16,13 +15,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Add, KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { stringAvatar } from "../../common/stringAvatar";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import enGB from "date-fns/locale/en-GB";
 import { usePageTitle } from "../components/usePageTitle";
-import { BASE_URL } from "../../const";
 import { useTranslation } from "react-i18next";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { DefaultTablePagination } from "../components/DefaultTablePagination";

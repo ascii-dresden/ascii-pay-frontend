@@ -29,6 +29,7 @@ import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { useDashboardDispatch } from "../redux/dashboardStore";
 import { PullToRefreshWrapper } from "../components/PullToRefresh";
 import { QuickAccessGridNameIcon } from "../components/product/QuickAccessGridNameIcon";
+import { PurchaseItemTable } from "../components/purchase/PurchaseProductTable";
 
 export const ProductDetailsPage = () => {
   const { t } = useTranslation();
@@ -236,6 +237,14 @@ export const ProductDetailsPage = () => {
                   ))}
                 </TableBody>
               </Table>
+            </TableContainer>
+          </Paper>
+          <Paper
+            sx={{ display: { xs: "block", md: "flex" }, mt: { xs: 2, sm: 4 } }}
+            elevation={4}
+          >
+            <TableContainer>
+              <PurchaseItemTable product={product} />
             </TableContainer>
           </Paper>
         </Box>
