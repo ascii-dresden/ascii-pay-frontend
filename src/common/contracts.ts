@@ -6,7 +6,7 @@ export type CoinAmountDto = {
   BottleStamp?: number;
 };
 
-export type RoleDto = "Basic" | "Member" | "Admin";
+export type RoleDto = "Basic" | "Member" | "Purchaser" | "Admin";
 
 export type CardTypeDto = "NfcId" | "AsciiMifare" | "HostCardEmulation";
 

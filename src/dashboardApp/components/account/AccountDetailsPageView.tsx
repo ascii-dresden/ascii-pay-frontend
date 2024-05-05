@@ -95,14 +95,16 @@ export const AccountDetailsPageView = (props: {
       <>
         <Typography sx={{ flex: "1 1 100%" }} variant="h5" component="div">
           <span style={{ marginRight: "0.6rem" }}>{account.name}</span>
-          {props.isRoot && account.role !== "Admin" ? null : (
+          {props.isRoot &&
+          account.role !== "Admin" &&
+          account.role !== "Purchaser" ? null : (
             <RoleChip role={account.role} />
           )}
           <AccountStatusChip status={account.status} />
         </Typography>
 
         {props.isRoot ? (
-          account.role !== "Admin" ? (
+          account.role !== "Admin" && account.role !== "Purchaser" ? (
             <RoleChip role={account.role} />
           ) : null
         ) : null}

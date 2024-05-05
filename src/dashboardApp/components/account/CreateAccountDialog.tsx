@@ -122,6 +122,7 @@ export const CreateAccountDialog = (props: {
           >
             <MenuItem value="Basic">{t("account.role.basic")}</MenuItem>
             <MenuItem value="Member">{t("account.role.member")}</MenuItem>
+            <MenuItem value="Purchaser">{t("account.role.purchaser")}</MenuItem>
             <MenuItem value="Admin">{t("account.role.admin")}</MenuItem>
           </TextField>
           <TextField

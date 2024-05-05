@@ -172,16 +172,14 @@ export function DashboardApp() {
                   <Route path="/" element={<Layout />}>
                     <Route index element={<ProfilePage />} />
                     <Route path="register" element={<RegisterPage />} />
+
                     <Route
                       element={
-                        <RequireUserUnauthorized allowedRoles={["Admin"]} />
+                        <RequireUserUnauthorized
+                          allowedRoles={["Admin", "Purchaser"]}
+                        />
                       }
                     >
-                      <Route path="accounts" element={<AccountListPage />} />
-                      <Route
-                        path="accounts/:accountId"
-                        element={<AccountDetailsPage />}
-                      />
                       <Route path="products" element={<ProductListPage />} />
                       <Route
                         path="products/:productId"
@@ -191,6 +189,18 @@ export function DashboardApp() {
                       <Route
                         path="purchases/:purchaseId"
                         element={<PurchaseDetailsPage />}
+                      />
+                    </Route>
+
+                    <Route
+                      element={
+                        <RequireUserUnauthorized allowedRoles={["Admin"]} />
+                      }
+                    >
+                      <Route path="accounts" element={<AccountListPage />} />
+                      <Route
+                        path="accounts/:accountId"
+                        element={<AccountDetailsPage />}
                       />
                       <Route
                         path="accountStatus"

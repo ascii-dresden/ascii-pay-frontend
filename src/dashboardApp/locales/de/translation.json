@@ -76,6 +76,7 @@
     "role": {
       "basic": "Standard",
       "member": "Mitglied",
+      "purchaser": "Einkäufer",
       "admin": "Admin"
     },
     "edit": {

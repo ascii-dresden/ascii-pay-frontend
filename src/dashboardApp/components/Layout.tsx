@@ -124,7 +124,7 @@ export const Layout = () => {
     dispatch(toggleRevealAllHiddenFields());
   };
 
-  if (user?.role !== "Admin") {
+  if (user?.role !== "Admin" && user?.role !== "Purchaser") {
     return (
       <Box sx={{ display: "flex", minHeight: "100vh" }}>
         <AppBar
@@ -259,107 +259,112 @@ export const Layout = () => {
               )}
             </NavLink>
           </ListItem>
-          <ListSubheader component="div">
-            {t("layout.administration")}
-          </ListSubheader>
-          <ListItem disablePadding>
-            <NavLink
-              to="/accounts"
-              style={{
-                width: "100%",
-                textDecoration: "none",
-                color: theme.palette.text.primary,
-              }}
-            >
-              {({ isActive }) => (
-                <ListItemButton selected={isActive}>
-                  <ListItemIcon>
-                    <AccountCircle />
-                  </ListItemIcon>
-                  <ListItemText primary={t("layout.accounts")} />
-                </ListItemButton>
-              )}
-            </NavLink>
-          </ListItem>
-          <ListItem disablePadding>
-            <NavLink
-              to="/accountStatus"
-              style={{
-                width: "100%",
-                textDecoration: "none",
-                color: theme.palette.text.primary,
-              }}
-            >
-              {({ isActive }) => (
-                <ListItemButton selected={isActive}>
-                  <ListItemIcon>
-                    <StarsOutlined />
-                  </ListItemIcon>
-                  <ListItemText primary={t("layout.accountStatus")} />
-                </ListItemButton>
-              )}
-            </NavLink>
-          </ListItem>
-          <ListItem disablePadding>
-            <NavLink
-              to="/transactions"
-              style={{
-                width: "100%",
-                textDecoration: "none",
-                color: theme.palette.text.primary,
-              }}
-            >
-              {({ isActive }) => (
-                <ListItemButton selected={isActive}>
-                  <ListItemIcon>
-                    <PublicOutlined />
-                  </ListItemIcon>
-                  <ListItemText primary={t("layout.transactions")} />
-                </ListItemButton>
-              )}
-            </NavLink>
-          </ListItem>
-          <ListItem disablePadding>
-            <NavLink
-              to="/registerHistory"
-              style={{
-                width: "100%",
-                textDecoration: "none",
-                color: theme.palette.text.primary,
-              }}
-            >
-              {({ isActive }) => (
-                <ListItemButton selected={isActive}>
-                  <ListItemIcon>
-                    <PriceChangeOutlined />
-                  </ListItemIcon>
-                  <ListItemText primary={t("layout.registerHistory")} />
-                </ListItemButton>
-              )}
-            </NavLink>
-          </ListItem>
-          <ListSubheader component="div">
-            {t("layout.deployment")}
-          </ListSubheader>
-          <ListItem disablePadding>
-            <NavLink
-              to="/terminal"
-              style={{
-                width: "100%",
-                textDecoration: "none",
-                color: theme.palette.text.primary,
-              }}
-            >
-              {({ isActive }) => (
-                <ListItemButton selected={isActive}>
-                  <ListItemIcon>
-                    <Store />
-                  </ListItemIcon>
-                  <ListItemText primary={t("layout.terminal")} />
-                </ListItemButton>
-              )}
-            </NavLink>
-          </ListItem>
+          {user.role === "Admin" ? (
+            <>
+              <ListSubheader component="div">
+                {t("layout.administration")}
+              </ListSubheader>
+              <ListItem disablePadding>
+                <NavLink
+                  to="/accounts"
+                  style={{
+                    width: "100%",
+                    textDecoration: "none",
+                    color: theme.palette.text.primary,
+                  }}
+                >
+                  {({ isActive }) => (
+                    <ListItemButton selected={isActive}>
+                      <ListItemIcon>
+                        <AccountCircle />
+                      </ListItemIcon>
+                      <ListItemText primary={t("layout.accounts")} />
+                    </ListItemButton>
+                  )}
+                </NavLink>
+              </ListItem>
+              <ListItem disablePadding>
+                <NavLink
+                  to="/accountStatus"
+                  style={{
+                    width: "100%",
+                    textDecoration: "none",
+                    color: theme.palette.text.primary,
+                  }}
+                >
+                  {({ isActive }) => (
+                    <ListItemButton selected={isActive}>
+                      <ListItemIcon>
+                        <StarsOutlined />
+                      </ListItemIcon>
+                      <ListItemText primary={t("layout.accountStatus")} />
+                    </ListItemButton>
+                  )}
+                </NavLink>
+              </ListItem>
+              <ListItem disablePadding>
+                <NavLink
+                  to="/transactions"
+                  style={{
+                    width: "100%",
+                    textDecoration: "none",
+                    color: theme.palette.text.primary,
+                  }}
+                >
+                  {({ isActive }) => (
+                    <ListItemButton selected={isActive}>
+                      <ListItemIcon>
+                        <PublicOutlined />
+                      </ListItemIcon>
+                      <ListItemText primary={t("layout.transactions")} />
+                    </ListItemButton>
+                  )}
+                </NavLink>
+              </ListItem>
+              <ListItem disablePadding>
+                <NavLink
+                  to="/registerHistory"
+                  style={{
+                    width: "100%",
+                    textDecoration: "none",
+                    color: theme.palette.text.primary,
+                  }}
+                >
+                  {({ isActive }) => (
+                    <ListItemButton selected={isActive}>
+                      <ListItemIcon>
+                        <PriceChangeOutlined />
+                      </ListItemIcon>
+                      <ListItemText primary={t("layout.registerHistory")} />
+                    </ListItemButton>
+                  )}
+                </NavLink>
+              </ListItem>
+              <ListSubheader component="div">
+                {t("layout.deployment")}
+              </ListSubheader>
+              <ListItem disablePadding>
+                <NavLink
+                  to="/terminal"
+                  style={{
+                    width: "100%",
+                    textDecoration: "none",
+                    color: theme.palette.text.primary,
+                  }}
+                >
+                  {({ isActive }) => (
+                    <ListItemButton selected={isActive}>
+                      <ListItemIcon>
+                        <Store />
+                      </ListItemIcon>
+                      <ListItemText primary={t("layout.terminal")} />
+                    </ListItemButton>
+                  )}
+                </NavLink>
+              </ListItem>
+            </>
+          ) : null}
+
           <ListSubheader component="div">
             {t("layout.preferences")}
           </ListSubheader>
@@ -414,18 +419,20 @@ export const Layout = () => {
               )}
             </Menu>
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton onClick={toggleRevealAllHiddenFieldsHandler}>
-              <ListItemIcon>
-                {revealAllHiddenFields ? (
-                  <AdminPanelSettings />
-                ) : (
-                  <AdminPanelSettingsOutlined />
-                )}
-              </ListItemIcon>
-              <ListItemText primary={t("layout.hiddenFieldToggle")} />
-            </ListItemButton>
-          </ListItem>
+          {user.role === "Admin" ? (
+            <ListItem disablePadding>
+              <ListItemButton onClick={toggleRevealAllHiddenFieldsHandler}>
+                <ListItemIcon>
+                  {revealAllHiddenFields ? (
+                    <AdminPanelSettings />
+                  ) : (
+                    <AdminPanelSettingsOutlined />
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={t("layout.hiddenFieldToggle")} />
+              </ListItemButton>
+            </ListItem>
+          ) : null}
         </List>
       </Box>
     </>

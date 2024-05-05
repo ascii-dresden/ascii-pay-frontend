@@ -25,6 +25,10 @@ export const RoleChip = (props: { role: RoleDto }) => {
       label = t("account.role.member");
       color = "primary";
       break;
+    case "Purchaser":
+      label = t("account.role.purchaser");
+      color = "secondary";
+      break;
     case "Admin":
       label = t("account.role.admin");
       color = "error";
