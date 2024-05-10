@@ -120,9 +120,11 @@ export const CoinInput = React.forwardRef<
         onDecrement();
         break;
       case "PageUp":
+        e.preventDefault();
         onIncrement(10);
         break;
       case "PageDown":
+        e.preventDefault();
         onDecrement(10);
         break;
     }

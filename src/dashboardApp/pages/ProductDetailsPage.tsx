@@ -30,6 +30,7 @@ import { useDashboardDispatch } from "../redux/dashboardStore";
 import { PullToRefreshWrapper } from "../components/PullToRefresh";
 import { QuickAccessGridNameIcon } from "../components/product/QuickAccessGridNameIcon";
 import { PurchaseItemTable } from "../components/purchase/PurchaseProductTable";
+import { PurchaseItemOverview } from "../components/purchase/PurchaseProductOverview";
 
 export const ProductDetailsPage = () => {
   const { t } = useTranslation();
@@ -238,6 +239,12 @@ export const ProductDetailsPage = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+          </Paper>
+          <Paper
+            sx={{ display: { xs: "block", md: "flex" }, mt: { xs: 2, sm: 4 } }}
+            elevation={4}
+          >
+            <PurchaseItemOverview product={product} />
           </Paper>
           <Paper
             sx={{ display: { xs: "block", md: "flex" }, mt: { xs: 2, sm: 4 } }}

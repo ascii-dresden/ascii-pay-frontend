@@ -16,6 +16,16 @@ export function moneyToString(value: number, suffix?: string): string {
   return formatFloatString((value / 100).toFixed(2)) + s;
 }
 
+export function percentToString(value: number): string {
+  if (isNaN(value)) {
+    return "0 %";
+  }
+  if (!isFinite(value)) {
+    return "∞ %";
+  }
+  return formatFloatString((value * 100).toFixed(0)) + " %";
+}
+
 export const Money = (props: { value: number; compact?: boolean }) => {
   if (props.compact) {
     let abs = Math.abs(props.value);

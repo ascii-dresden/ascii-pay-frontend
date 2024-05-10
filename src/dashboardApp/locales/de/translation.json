@@ -244,7 +244,7 @@
       "name": "Name",
       "container_size": "Gebindegröße",
       "container_count": "Gebindeanzahl",
-      "container_cents": "Gebindepreis",
+      "container_cents": "Gebindepreis (netto)",
       "cents_per_item": "Einzelpreis"
     },
     "action": {
@@ -263,6 +263,18 @@
       "deleteTitle": "Einkauf löschen?",
       "deleteAction": "Einkauf löschen",
       "deleteContent": "Möchten Sie den Einkauf <bold>{{name}}</bold> dauerhaft löschen? Diese Aktion kann nicht wiederrufen werden!"
+    },
+    "productOverview": {
+      "purchasePrice": "Einkaufspreis (netto)",
+      "purchasePriceTax": "Einkaufspreis (Steuer)",
+      "purchasePriceWithTax": "Einkaufspreis (brutto)",
+      "currentPrice": "Verkaufspreis (brutto)",
+      "currentPriceWithoutTax": "Verkaufspreis (netto)",
+      "currentProfit": "Gewinn",
+      "targetProfit": "Zielgewinn",
+      "suggestedPrice": "Preisempfehlung (brutto)",
+      "suggestedPriceWithoutTax": "Preisempfehlung (netto)",
+      "suggestedProfit": "Gewinn"
     }
   },
   "payment": {

@@ -243,7 +243,7 @@
       "name": "Name",
       "container_size": "Container size",
       "container_count": "Container count",
-      "container_cents": "Container price",
+      "container_cents": "Container price (net)",
       "cents_per_item": "Price per item"
     },
     "action": {
@@ -262,6 +262,18 @@
       "deleteTitle": "Delete purchase?",
       "deleteAction": "Delete purchase",
       "deleteContent": "Do you want to permanently delete the purchase <bold>{{name}}</bold>? This action cannot be undone!"
+    },
+    "productOverview": {
+      "purchasePrice": "Purchase price (net)",
+      "purchasePriceTax": "Purchase price (tax)",
+      "purchasePriceWithTax": "Purchase price (gross)",
+      "currentPrice": "Selling price (gross)",
+      "currentPriceWithoutTax": "Selling price (net)",
+      "currentProfit": "Profit",
+      "targetProfit": "Target profit",
+      "suggestedPrice": "Suggested price (gross)",
+      "suggestedPriceWithoutTax": "Suggested price (net)",
+      "suggestedProfit": "Profit"
     }
   },
   "payment": {
