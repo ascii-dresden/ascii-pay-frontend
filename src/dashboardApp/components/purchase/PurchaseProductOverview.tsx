@@ -96,7 +96,8 @@ const PercentInputRef = React.forwardRef<HTMLInputElement, CustomProps>(
 );
 
 type PriceOverviewResult = {
-  tax: number;
+  sellingTax: number;
+  purchaseTax: number;
   purchasePrice: number;
   purchasePriceTax: number;
   purchasePriceWithTax: number;
@@ -113,26 +114,29 @@ type PriceOverviewResult = {
 export function calculateProductPriceOverview(
   currentPrice: number,
   purchasePrice: number,
-  targetProfitPercent?: number
+  targetProfitPercent?: number | undefined,
+  productPurchaseTax?: number | undefined
 ): PriceOverviewResult {
-  const tax = 1.19;
+  const sellingTax = 1.19;
+  const purchaseTax = (productPurchaseTax ?? 0.19) + 1;
   const targetProfit = 1 + (targetProfitPercent ?? 0.15);
 
-  const purchasePriceWithTax = purchasePrice * tax;
+  const purchasePriceWithTax = purchasePrice * purchaseTax;
   const purchasePriceTax = purchasePriceWithTax - purchasePrice;
 
-  const currentPriceWithoutTax = currentPrice / tax;
+  const currentPriceWithoutTax = currentPrice / sellingTax;
   const currentProfit = currentPriceWithoutTax - purchasePrice;
   const currentProfitPercent = currentProfit / purchasePrice;
 
   const suggestedPrice =
-    Math.round((purchasePrice * targetProfit * tax) / 10) * 10;
-  const suggestedPriceWithoutTax = suggestedPrice / tax;
+    Math.round((purchasePrice * targetProfit * sellingTax) / 10) * 10;
+  const suggestedPriceWithoutTax = suggestedPrice / sellingTax;
   const suggestedProfit = suggestedPriceWithoutTax - purchasePrice;
   const suggestedProfitPercent = suggestedProfit / purchasePrice;
 
   return {
-    tax: tax - 1,
+    sellingTax: sellingTax - 1,
+    purchaseTax: purchaseTax - 1,
     purchasePrice,
     purchasePriceTax,
     purchasePriceWithTax,
@@ -207,7 +211,8 @@ export const PurchaseItemOverview = (props: { product: ProductDto }) => {
   const result = calculateProductPriceOverview(
     inputCurrentPrice,
     inputPurchasePrice,
-    inputTargetProfitPercent / 100
+    inputTargetProfitPercent / 100,
+    props.product.purchase_tax / 100
   );
 
   return (
@@ -236,7 +241,7 @@ export const PurchaseItemOverview = (props: { product: ProductDto }) => {
           <tr>
             <td>{t("purchase.productOverview.purchasePriceTax")}</td>
             <td>
-              <small>{percentToString(result.tax)}</small>
+              <small>{percentToString(result.purchaseTax)}</small>
               {moneyToString(result.purchasePriceTax)}
             </td>
           </tr>

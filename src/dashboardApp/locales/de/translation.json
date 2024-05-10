@@ -204,6 +204,7 @@
     "bonus": "Bonus",
     "category": "Kategorie",
     "tags": "Tags",
+    "purchaseTax": "Steuer",
     "barcode": "Barcode",
     "addToTransaction": "Produkt zu Transaktion hinzufgen",
     "noProducts": "Keine Produkte",

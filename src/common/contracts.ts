@@ -94,6 +94,7 @@ export type ProductDto = {
   name: string;
   price: CoinAmountDto;
   bonus: CoinAmountDto;
+  purchase_tax: number;
   nickname?: string | null;
   barcode?: string | null;
   category: string;
@@ -122,6 +123,7 @@ export type SaveProductDto = {
   name: string;
   price: CoinAmountDto;
   bonus: CoinAmountDto;
+  purchase_tax: number;
   nickname?: string | null;
   barcode?: string | null;
   category: string;

@@ -203,6 +203,7 @@
     "bonus": "Bonus",
     "category": "Category",
     "tags": "Tags",
+    "purchaseTax": "Tax",
     "barcode": "Barcode",
     "addToTransaction": "Add product to transaction",
     "noProducts": "No products",

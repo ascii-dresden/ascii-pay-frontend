@@ -22,7 +22,7 @@ import {
   SaveProductStatusPriceDto,
 } from "../../../common/contracts";
 import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
-import { Close, GridOn } from "@mui/icons-material";
+import { Close, PercentOutlined } from "@mui/icons-material";
 import { CategoryInput } from "./CategoryInput";
 import { TagsInput } from "./TagsInput";
 import { useProductMetadataHook } from "./useProductMetadataHook";
@@ -30,6 +30,27 @@ import { useTranslation } from "react-i18next";
 import { ProductStatusPricesEdit } from "./ProductStatusPricesEdit";
 import { QuickAccessGridNamePicker } from "./QuickAccessGridNamePicker";
 import { QuickAccessGridNameIcon } from "./QuickAccessGridNameIcon";
+import { CoinInput } from "../transaction/CoinInput";
+
+interface CustomProps {
+  value: number;
+  onChange: (value: number) => void;
+}
+
+const PercentInputRef = React.forwardRef<HTMLInputElement, CustomProps>(
+  function NumericFormatCustom(props, ref) {
+    const { value, onChange, ...other } = props;
+    return (
+      <CoinInput
+        ref={ref}
+        value={value}
+        onChange={onChange}
+        increment={1}
+        {...other}
+      />
+    );
+  }
+);
 
 export const CreateProductDialog = (props: {
   open: boolean;
@@ -48,12 +69,23 @@ export const CreateProductDialog = (props: {
   const [nickname, setNickname] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [barcode, setBarcode] = React.useState("");
+  const [purchaseTax, setPurchaseTax] = React.useState(19);
   const [pTags, setPTags] = React.useState<string[]>([]);
   const [price, setPrice] = React.useState<CoinAmountDto>({});
   const [bonus, setBonus] = React.useState<CoinAmountDto>({});
   const [statusPrices, setStatusPrices] = React.useState<
     SaveProductStatusPriceDto[]
   >([]);
+
+  const toggleTax = React.useCallback(() => {
+    setPurchaseTax((tax) => {
+      if (tax === 19) {
+        return 7;
+      } else {
+        return 19;
+      }
+    });
+  }, [setPurchaseTax]);
 
   const [gridPickerAnchorEl, setGridPickerAnchorEl] =
     React.useState<HTMLButtonElement | null>(null);
@@ -70,6 +102,7 @@ export const CreateProductDialog = (props: {
       setPTags([]);
       setPrice({});
       setBonus({});
+      setPurchaseTax(19);
       setStatusPrices([]);
     } else if (isError) {
       toast.error("Product could not be created!");
@@ -84,6 +117,7 @@ export const CreateProductDialog = (props: {
       price,
       bonus,
       category,
+      purchase_tax: purchaseTax,
       tags: pTags,
       status_prices: statusPrices,
     };
@@ -189,6 +223,21 @@ export const CreateProductDialog = (props: {
             values={pTags}
             setValues={setPTags}
             possibleValues={tags}
+          />
+          <TextField
+            fullWidth
+            sx={{ mb: "1rem" }}
+            value={purchaseTax}
+            onChange={setPurchaseTax as any}
+            label={t("product.purchaseTax")}
+            InputProps={{
+              inputComponent: PercentInputRef as any,
+              endAdornment: (
+                <InputAdornment position="end" onClick={toggleTax}>
+                  <PercentOutlined />
+                </InputAdornment>
+              ),
+            }}
           />
           <CoinAmountEdit
             label={t("product.price")}

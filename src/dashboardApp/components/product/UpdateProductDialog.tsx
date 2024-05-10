@@ -23,7 +23,7 @@ import {
   SaveProductStatusPriceDto,
 } from "../../../common/contracts";
 import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
-import { Close } from "@mui/icons-material";
+import { Close, PercentOutlined } from "@mui/icons-material";
 import { CategoryInput } from "./CategoryInput";
 import { TagsInput } from "./TagsInput";
 import { useProductMetadataHook } from "./useProductMetadataHook";
@@ -31,6 +31,27 @@ import { useTranslation } from "react-i18next";
 import { ProductStatusPricesEdit } from "./ProductStatusPricesEdit";
 import { QuickAccessGridNamePicker } from "./QuickAccessGridNamePicker";
 import { QuickAccessGridNameIcon } from "./QuickAccessGridNameIcon";
+import { CoinInput } from "../transaction/CoinInput";
+
+interface CustomProps {
+  value: number;
+  onChange: (value: number) => void;
+}
+
+const PercentInputRef = React.forwardRef<HTMLInputElement, CustomProps>(
+  function NumericFormatCustom(props, ref) {
+    const { value, onChange, ...other } = props;
+    return (
+      <CoinInput
+        ref={ref}
+        value={value}
+        onChange={onChange}
+        increment={1}
+        {...other}
+      />
+    );
+  }
+);
 
 export const UpdateProductDialog = (props: {
   product: ProductDto;
@@ -53,9 +74,20 @@ export const UpdateProductDialog = (props: {
   const [pTags, setPTags] = React.useState<string[]>([]);
   const [price, setPrice] = React.useState<CoinAmountDto>({});
   const [bonus, setBonus] = React.useState<CoinAmountDto>({});
+  const [purchaseTax, setPurchaseTax] = React.useState(19);
   const [statusPrices, setStatusPrices] = React.useState<
     SaveProductStatusPriceDto[]
   >([]);
+
+  const toggleTax = React.useCallback(() => {
+    setPurchaseTax((tax) => {
+      if (tax === 19) {
+        return 7;
+      } else {
+        return 19;
+      }
+    });
+  }, [setPurchaseTax]);
 
   const [gridPickerAnchorEl, setGridPickerAnchorEl] =
     React.useState<HTMLButtonElement | null>(null);
@@ -68,6 +100,7 @@ export const UpdateProductDialog = (props: {
     setPTags(props.product.tags);
     setPrice(props.product.price);
     setBonus(props.product.bonus);
+    setPurchaseTax(props.product.purchase_tax);
     setStatusPrices(
       props.product.status_prices.map((p) => ({
         status_id: p.status.id,
@@ -95,6 +128,7 @@ export const UpdateProductDialog = (props: {
       bonus,
       category,
       tags: pTags,
+      purchase_tax: purchaseTax,
       status_prices: statusPrices,
     };
     if (nickname.length > 0) {
@@ -202,6 +236,21 @@ export const UpdateProductDialog = (props: {
             values={pTags}
             setValues={setPTags}
             possibleValues={tags}
+          />
+          <TextField
+            fullWidth
+            sx={{ mb: "1rem" }}
+            value={purchaseTax}
+            onChange={setPurchaseTax as any}
+            label={t("product.purchaseTax")}
+            InputProps={{
+              inputComponent: PercentInputRef as any,
+              endAdornment: (
+                <InputAdornment position="end" onClick={toggleTax}>
+                  <PercentOutlined />
+                </InputAdornment>
+              ),
+            }}
           />
           <CoinAmountEdit
             label={t("product.price")}

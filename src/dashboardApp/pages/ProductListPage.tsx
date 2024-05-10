@@ -321,7 +321,7 @@ export const ProductListPage = () => {
                   </TableCell>
                   {selected.length > 0 ? (
                     <TableCell
-                      colSpan={5}
+                      colSpan={6}
                       padding="none"
                       height={56.5}
                       style={{

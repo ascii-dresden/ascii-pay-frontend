@@ -31,6 +31,7 @@ import { PullToRefreshWrapper } from "../components/PullToRefresh";
 import { QuickAccessGridNameIcon } from "../components/product/QuickAccessGridNameIcon";
 import { PurchaseItemTable } from "../components/purchase/PurchaseProductTable";
 import { PurchaseItemOverview } from "../components/purchase/PurchaseProductOverview";
+import { percentToString } from "../../terminalApp/components/Money";
 
 export const ProductDetailsPage = () => {
   const { t } = useTranslation();
@@ -178,6 +179,20 @@ export const ProductDetailsPage = () => {
                       {product.tags.map((t) => (
                         <TagChip key={t} tag={t} />
                       ))}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
+                  >
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.purchaseTax")}
+                    </TableCell>
+                    <TableCell>
+                      {percentToString(product.purchase_tax / 100)}
                     </TableCell>
                   </TableRow>
                   <TableRow
