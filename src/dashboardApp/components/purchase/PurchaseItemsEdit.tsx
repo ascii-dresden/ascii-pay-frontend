@@ -131,55 +131,39 @@ const PurchaseItemRowEdit = (props: {
 
   const setName = (name: string) => {
     props.setItem({
+      ...props.item,
       name: name,
-      container_size: props.item.container_size,
-      container_count: props.item.container_count,
-      container_cents: props.item.container_cents,
-      product_id: props.item.product_id,
     });
   };
   const setContainerSize = (value: number) => {
     props.setItem({
-      name: props.item.name,
+      ...props.item,
       container_size: value,
-      container_count: props.item.container_count,
-      container_cents: props.item.container_cents,
-      product_id: props.item.product_id,
     });
   };
   const setContainerCount = (value: number) => {
     props.setItem({
-      name: props.item.name,
-      container_size: props.item.container_size,
+      ...props.item,
       container_count: value,
-      container_cents: props.item.container_cents,
-      product_id: props.item.product_id,
     });
   };
   const setContainerCents = (value: number) => {
     props.setItem({
-      name: props.item.name,
-      container_size: props.item.container_size,
-      container_count: props.item.container_count,
+      ...props.item,
       container_cents: value,
-      product_id: props.item.product_id,
     });
   };
   const handleSelectProduct = (product: ProductDto) => {
     props.setItem({
+      ...props.item,
       name: product.name,
-      container_size: props.item.container_size,
-      container_count: props.item.container_count,
-      container_cents: props.item.container_count,
       product_id: product.id,
     });
   };
   const removeProduct = () => {
     props.setItem({
+      ...props.item,
       name: "",
-      container_size: props.item.container_size,
-      container_count: props.item.container_count,
-      container_cents: props.item.container_count,
       product_id: null,
     });
   };
