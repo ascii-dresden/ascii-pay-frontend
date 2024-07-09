@@ -9,9 +9,12 @@ import {
   KeyboardHide,
   KeyboardReturn,
   SpaceBar,
+  VisibilityOffOutlined,
+  VisibilityOutlined,
 } from "@mui/icons-material";
 import React, { useState } from "react";
 import styled from "@emotion/styled";
+import clsx from "clsx";
 
 const StyledKeyboard = styled.div`
   position: absolute;
@@ -58,6 +61,24 @@ const StyledKeyboard = styled.div`
       margin-left: -0.8px;
       margin-right: -0.2px;
       animation: cursor-blink 0.8s step-end infinite;
+    }
+
+    .reveal-toggle {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 3em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0.4;
+      padding-right: 2em;
+      font-size: 0.8em;
+
+      svg {
+        width: 0.8em;
+      }
     }
   }
 
@@ -122,6 +143,19 @@ const StyledKeyboard = styled.div`
     svg {
       width: 0.7em;
       height: 0.7em;
+    }
+
+    &.flash {
+      animation: flash-background 500ms ease;
+    }
+
+    @keyframes flash-background {
+      0% {
+        background-color: var(--tertiary-background);
+      }
+      100% {
+        background-color: var(--secondary-background);
+      }
     }
   }
 
@@ -212,9 +246,14 @@ export const Keyboard = () => {
   const [keyboardSet, setKeyboardSet] = useState("default");
   const [isCaps, setIsCups] = useState(false);
   const [value, setValue] = useState({ value: "", cursor: 0 });
+  const [revealPassword, setRevealPassword] = useState(false);
   const [focusedElement, setFocusedElement] = useState(
     null as HTMLInputElement | null
   );
+
+  React.useEffect(() => {
+    setRevealPassword(false);
+  }, [focusedElement]);
 
   const bodyOnFocusHandler = () => {
     let activeElement = document.activeElement;
@@ -422,15 +461,31 @@ export const Keyboard = () => {
   let set = getKeyboardSet();
 
   let v = value.value;
-  if (focusedElement?.type === "password") {
+  if (focusedElement?.type === "password" && !revealPassword) {
     v = "•".repeat(v.length);
   }
   let placeholder = v.length > 0 ? "" : focusedElement?.placeholder ?? "";
+
+  let revealToggle;
+  if (focusedElement?.type === "password") {
+    revealToggle = (
+      <div
+        onClick={() => setRevealPassword((v) => !v)}
+        className="reveal-toggle"
+      >
+        {revealPassword ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
+      </div>
+    );
+  } else {
+    revealToggle = null;
+  }
+
   return (
     <StyledKeyboard onMouseDown={(e) => e.preventDefault()}>
       <div className="keyboard-display" data-placeholder={placeholder}>
         <span>{v.substring(0, value.cursor)}</span>
         <span>{v.substring(value.cursor)}</span>
+        {revealToggle}
       </div>
       <div className="keyboard-box">
         <div
@@ -466,13 +521,24 @@ const Key = (props: {
   rowIndex: number;
   charIndex: number;
   onPress: () => void;
-}) => (
-  <div
-    className={
-      "keyboard-key keyboard-key-" + props.rowIndex + "-" + props.charIndex
-    }
-    onClick={() => props.onPress()}
-  >
-    {props.children}
-  </div>
-);
+}) => {
+  const [flash, setFlash] = React.useState(false);
+
+  const clickHandler = React.useCallback(() => {
+    setFlash(true);
+    setTimeout(() => setFlash(false), 500);
+    props.onPress();
+  }, [setFlash, props.onPress]);
+
+  return (
+    <div
+      className={clsx(
+        "keyboard-key keyboard-key-" + props.rowIndex + "-" + props.charIndex,
+        { flash: flash }
+      )}
+      onClick={clickHandler}
+    >
+      {props.children}
+    </div>
+  );
+};
