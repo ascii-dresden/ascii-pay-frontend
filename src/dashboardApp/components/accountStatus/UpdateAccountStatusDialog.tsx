@@ -121,7 +121,9 @@ export const UpdateAccountStatusDialog = (props: {
             onChange={(e) => setColor(e.target.value)}
           >
             {getStatusColors().map((c) => (
-              <MenuItem value={c}>{c}</MenuItem>
+              <MenuItem key={c} value={c}>
+                {c}
+              </MenuItem>
             ))}
           </TextField>
         </Box>

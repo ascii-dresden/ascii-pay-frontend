@@ -20,6 +20,7 @@ import { Dialog } from "../components/Dialog";
 import { base64ToHex } from "../../common/nfcUtils";
 import { DeleteOutline } from "@mui/icons-material";
 import { CoinAmountView } from "../../dashboardApp/components/transaction/CoinAmountView";
+import clsx from "clsx";
 
 const StyledAccountDetails = styled.div`
   position: absolute;
@@ -29,6 +30,10 @@ const StyledAccountDetails = styled.div`
   bottom: 0;
   padding: 0.5em 1em 0.5em 0.5em;
   overflow-y: auto;
+
+  &.fullWidth {
+    left: 0;
+  }
 `;
 
 function registerNfcCard(
@@ -120,6 +125,7 @@ function deleteNfcCard(
 export const AccountDetails = (props: {
   accountId: number;
   authClient: AsciiPayAuthenticationClient;
+  fullWidth?: boolean;
 }) => {
   const dispatch = useTerminalDispatch();
   const { t } = useTranslation();
@@ -260,7 +266,9 @@ export const AccountDetails = (props: {
     });
 
   return (
-    <StyledAccountDetails className="form">
+    <StyledAccountDetails
+      className={clsx("form", { fullWidth: props.fullWidth })}
+    >
       <div>
         <label>{t("account.name")}</label>
         <input readOnly={true} value={account.name || ""} />

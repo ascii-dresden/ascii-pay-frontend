@@ -11,7 +11,12 @@ import {
   useTerminalDispatch,
   useTerminalSelector,
 } from "../redux/terminalStore";
-import { ExitToApp, People, ShowChartOutlined } from "@mui/icons-material";
+import {
+  ExitToApp,
+  ManageAccountsOutlined,
+  People,
+  ShowChartOutlined,
+} from "@mui/icons-material";
 import { AccountOverview } from "../accounts/AccountOverview";
 import { AccountList } from "../accounts/AccountList";
 import { AccountDetails } from "../accounts/AccountDetails";
@@ -35,11 +40,11 @@ const StyledLoggedAccountHeader = styled.div`
     display: block;
     line-height: 1.2em;
 
-    &:nth-child(1) {
+    &:nth-of-type(1) {
       font-weight: bold;
     }
 
-    &:nth-child(2) {
+    &:nth-of-type(2) {
       line-height: 1.4em;
       font-size: 0.9em;
     }
@@ -63,8 +68,9 @@ const StyledLoggedAccountHeader = styled.div`
 `;
 
 enum Mode {
-  SELF,
-  LIST,
+  BALANCE,
+  SELF_MANAGE,
+  ACCOUNT_LIST,
 }
 
 export const TerminalAccountPage = (props: {
@@ -80,7 +86,7 @@ export const TerminalAccountPage = (props: {
 
   const account = useTerminalSelector((state) => state.accountState.account);
 
-  const [mode, setMode] = React.useState(Mode.SELF);
+  const [mode, setMode] = React.useState(Mode.BALANCE);
 
   const handleGoBack = () => {
     dispatch(accountApi.util.resetApiState());
@@ -117,20 +123,29 @@ export const TerminalAccountPage = (props: {
     {
       title: t("account.overview"),
       element: <ShowChartOutlined />,
-      action: () => setMode(Mode.SELF),
-      active: mode === Mode.SELF,
+      action: () => setMode(Mode.BALANCE),
+      active: mode === Mode.BALANCE,
     },
     {
-      title: t("account.accountList"),
-      element: <People />,
-      action: () => setMode(Mode.LIST),
-      active: mode === Mode.LIST,
+      title: t("account.selfManage"),
+      element: <ManageAccountsOutlined />,
+      action: () => setMode(Mode.SELF_MANAGE),
+      active: mode === Mode.SELF_MANAGE,
     },
   ];
 
+  if (account.role === "Admin") {
+    actions.push({
+      title: t("account.accountList"),
+      element: <People />,
+      action: () => setMode(Mode.ACCOUNT_LIST),
+      active: mode === Mode.ACCOUNT_LIST,
+    });
+  }
+
   let content;
   switch (mode) {
-    case Mode.SELF:
+    case Mode.BALANCE:
       content = (
         <AccountOverview
           account={account}
@@ -140,7 +155,16 @@ export const TerminalAccountPage = (props: {
         />
       );
       break;
-    case Mode.LIST:
+    case Mode.SELF_MANAGE:
+      content = (
+        <AccountDetails
+          fullWidth
+          accountId={account.id}
+          authClient={props.authClient}
+        />
+      );
+      break;
+    case Mode.ACCOUNT_LIST:
       content = (
         <>
           <AccountList id={accountId} onSelect={(id) => setAccountId(id)} />

@@ -4,6 +4,12 @@ import { AsciiPayAuthenticationClient } from "../client/AsciiPayAuthenticationCl
 import styled from "@emotion/styled";
 import { ContactlessPayment } from "../../assets/ContactlessPayment";
 import { BASE_URL } from "../../const";
+import {
+  NotificationColor,
+  NotificationType,
+  showNotification,
+} from "../redux/features/terminalSlice";
+import { useTerminalDispatch } from "../redux/terminalStore";
 
 const StyledLogin = styled.div`
   & > span {
@@ -66,6 +72,8 @@ const StyledLoginSplit = styled.div`
 
 export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
   const { t } = useTranslation();
+  const dispatch = useTerminalDispatch();
+
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -89,9 +97,29 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
         setLoading(false);
         if (response.token) {
           props.authClient.receiveSessionToken(response.token ?? "");
+        } else {
+          dispatch(
+            showNotification({
+              type: NotificationType.GENERAL,
+              color: NotificationColor.ERROR,
+              title: "Login failed!",
+              description: response.error,
+            })
+          );
         }
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setLoading(false);
+
+        dispatch(
+          showNotification({
+            type: NotificationType.GENERAL,
+            color: NotificationColor.ERROR,
+            title: "Login failed!",
+            description: "Could not access login service",
+          })
+        );
+      });
   };
 
   const usernameInput = React.useRef<HTMLInputElement>(null);

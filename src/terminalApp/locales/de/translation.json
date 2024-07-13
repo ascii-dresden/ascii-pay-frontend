@@ -85,6 +85,7 @@
   },
   "account": {
     "overview": "Übersicht",
+    "selfManage": "Kontoeinstellungen",
     "accountList": "Kontolist",
     "registerNfcToken": "NFC-Token registrieren",
     "registerNfcTokenInProgress": "Bitte warten ...",
