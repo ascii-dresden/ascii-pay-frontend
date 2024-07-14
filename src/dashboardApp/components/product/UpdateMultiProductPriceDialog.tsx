@@ -144,6 +144,7 @@ export const UpdateMultiProductPriceDialog = (props: {
         bonus: newBonus,
         category: product.category,
         tags: product.tags,
+        print_lists: product.print_lists,
         purchase_tax: product.purchase_tax,
         status_prices: newStatusPrices.map((sp) => ({
           status_id: sp.status.id,

@@ -202,6 +202,7 @@
     "price": "Price",
     "bonus": "Bonus",
     "category": "Category",
+    "printLists": "Print lists",
     "tags": "Tags",
     "purchaseTax": "Tax",
     "barcode": "Barcode",
@@ -215,11 +216,12 @@
       "createProduct": "Create product",
       "editProduct": "Edit product details",
       "deleteProduct": "Delete product",
-      "printSnacks": "Print snacks",
+      "printSnacks": "Print list {{name}}",
       "addStatusPrice": "Add special price",
       "multiSelectMessage_one": "{{count}} product selected",
       "multiSelectMessage_other": "{{count}} products selected",
-      "multiSelectSetPrice": "Set price"
+      "multiSelectSetPrice": "Set price",
+      "multiSelectSetPrintLists": "Set print lists"
     },
     "edit": {
       "createTitle": "Create a new product",

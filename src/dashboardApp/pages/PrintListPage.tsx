@@ -9,6 +9,7 @@ import { moneyToString } from "../../terminalApp/components/Money";
 import { PrintOutlined } from "@mui/icons-material";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 const Logo = styled.img`
   height: 4rem;
@@ -106,13 +107,16 @@ const PrintButton = styled.div`
 `;
 
 const COLUMN_COUNT = 2;
-const TEA_ID = 77;
 const dateFormat = new Intl.DateTimeFormat("de-DE", {
   dateStyle: "long",
 });
 
-export const PrintSnacksPage = () => {
+export const PrintListPage = () => {
   const { t } = useTranslation();
+
+  let params = useParams();
+  let listName = params.listName ?? "";
+
   const {
     isLoading,
     isError,
@@ -142,7 +146,11 @@ export const PrintSnacksPage = () => {
   }
 
   const snacks = products
-    .filter((product) => product.category === "Snacks" && product.id !== TEA_ID)
+    .filter((product) =>
+      listName === ""
+        ? product.category === "Snacks" && product.id
+        : product.print_lists.includes(listName)
+    )
     .sort((a, b) => a.name.localeCompare(b.name));
 
   const onPrintDocument = () => {

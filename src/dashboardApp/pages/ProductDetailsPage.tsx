@@ -32,6 +32,7 @@ import { QuickAccessGridNameIcon } from "../components/product/QuickAccessGridNa
 import { PurchaseItemTable } from "../components/purchase/PurchaseProductTable";
 import { PurchaseItemOverview } from "../components/purchase/PurchaseProductOverview";
 import { percentToString } from "../../terminalApp/components/Money";
+import { PrintListChip } from "../components/product/PrintListChip";
 
 export const ProductDetailsPage = () => {
   const { t } = useTranslation();
@@ -164,6 +165,22 @@ export const ProductDetailsPage = () => {
                       {t("product.category")}
                     </TableCell>
                     <TableCell>{product.category}</TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
+                  >
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.printLists")}
+                    </TableCell>
+                    <TableCell>
+                      {product.print_lists.map((t) => (
+                        <PrintListChip key={t} tag={t} />
+                      ))}
+                    </TableCell>
                   </TableRow>
                   <TableRow
                     sx={{ "& > *": { borderBottom: "unset !important" } }}

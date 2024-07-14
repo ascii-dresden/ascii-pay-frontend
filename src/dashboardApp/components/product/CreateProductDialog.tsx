@@ -31,6 +31,7 @@ import { ProductStatusPricesEdit } from "./ProductStatusPricesEdit";
 import { QuickAccessGridNamePicker } from "./QuickAccessGridNamePicker";
 import { QuickAccessGridNameIcon } from "./QuickAccessGridNameIcon";
 import { CoinInput } from "../transaction/CoinInput";
+import { PrintListsInput } from "./PrintListsInput";
 
 interface CustomProps {
   value: number;
@@ -63,14 +64,19 @@ export const CreateProductDialog = (props: {
   const [createProduct, { isLoading, isError, error, isSuccess }] =
     useCreateProductMutation();
 
-  const { tags, categories } = useProductMetadataHook();
+  const {
+    tags: availableTags,
+    categories: availableCategories,
+    printLists: availablePrintLists,
+  } = useProductMetadataHook();
 
   const [name, setName] = React.useState("");
   const [nickname, setNickname] = React.useState("");
   const [category, setCategory] = React.useState("");
   const [barcode, setBarcode] = React.useState("");
   const [purchaseTax, setPurchaseTax] = React.useState(19);
-  const [pTags, setPTags] = React.useState<string[]>([]);
+  const [printLists, setPrintLists] = React.useState<string[]>([]);
+  const [tags, setTags] = React.useState<string[]>([]);
   const [price, setPrice] = React.useState<CoinAmountDto>({});
   const [bonus, setBonus] = React.useState<CoinAmountDto>({});
   const [statusPrices, setStatusPrices] = React.useState<
@@ -99,7 +105,8 @@ export const CreateProductDialog = (props: {
       setNickname("");
       setCategory("");
       setBarcode("");
-      setPTags([]);
+      setPrintLists([]);
+      setTags([]);
       setPrice({});
       setBonus({});
       setPurchaseTax(19);
@@ -118,7 +125,8 @@ export const CreateProductDialog = (props: {
       bonus,
       category,
       purchase_tax: purchaseTax,
-      tags: pTags,
+      tags,
+      print_lists: printLists,
       status_prices: statusPrices,
     };
     if (nickname.length > 0) {
@@ -210,7 +218,7 @@ export const CreateProductDialog = (props: {
           <CategoryInput
             value={category}
             setValue={setCategory}
-            possibleValues={categories}
+            possibleValues={availableCategories}
           />
           <TextField
             label={t("product.barcode")}
@@ -220,9 +228,14 @@ export const CreateProductDialog = (props: {
             onChange={(e) => setBarcode(e.target.value)}
           />
           <TagsInput
-            values={pTags}
-            setValues={setPTags}
-            possibleValues={tags}
+            values={tags}
+            setValues={setTags}
+            possibleValues={availableTags}
+          />
+          <PrintListsInput
+            values={printLists}
+            setValues={setPrintLists}
+            possibleValues={availablePrintLists}
           />
           <TextField
             fullWidth

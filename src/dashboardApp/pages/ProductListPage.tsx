@@ -56,6 +56,8 @@ import {
   filterPurchasesByProduct,
   PurchaseProductPriceHighlight,
 } from "../components/purchase/PurchaseProductOverview";
+import { UpdateMultiProductPrintListsDialog } from "../components/product/UpdateMultiProductPrintListsDialog";
+import { useProductMetadataHook } from "../components/product/useProductMetadataHook";
 
 const ProductStatusPricesPopoverStyled = styled.div`
   position: absolute;
@@ -122,6 +124,8 @@ export const ProductListPage = () => {
 
   const [selected, setSelected] = React.useState<readonly number[]>([]);
 
+  const [openUpdatePrintListsModal, setOpenUpdatePrintListsModal] =
+    useState(false);
   const [openUpdatePriceModal, setOpenUpdatePriceModal] = useState(false);
 
   const {
@@ -133,6 +137,8 @@ export const ProductListPage = () => {
 
   const { isLoading: purchasesIsLoading, data: purchases } =
     useGetAllPurchasesQuery();
+
+  const { printLists: availablePrintLists } = useProductMetadataHook();
 
   const dispatch = useDashboardDispatch();
 
@@ -163,12 +169,15 @@ export const ProductListPage = () => {
       icon: <Add />,
       action: () => setOpenModal(true),
     },
-    {
-      label: t("product.action.printSnacks"),
-      icon: <PrintOutlined />,
-      href: "/printSnacks",
-    },
   ];
+
+  for (let printList of availablePrintLists) {
+    actions.push({
+      label: t("product.action.printSnacks", { name: printList }),
+      icon: <PrintOutlined />,
+      href: "/print/" + printList,
+    });
+  }
 
   if (isLoading || purchasesIsLoading || products === undefined) {
     return (
@@ -344,6 +353,14 @@ export const ProductListPage = () => {
                         <div>
                           <ButtonGroup variant="outlined" size="small">
                             <Button
+                              startIcon={<PrintOutlined />}
+                              variant="outlined"
+                              size="small"
+                              onClick={() => setOpenUpdatePrintListsModal(true)}
+                            >
+                              {t("product.action.multiSelectSetPrintLists")}
+                            </Button>
+                            <Button
                               startIcon={<EuroSymbolOutlined />}
                               variant="outlined"
                               size="small"
@@ -398,6 +415,11 @@ export const ProductListPage = () => {
         </Paper>
         <CreateProductDialog open={openModal} setOpen={setOpenModal} />
 
+        <UpdateMultiProductPrintListsDialog
+          products={selectedProducts}
+          open={openUpdatePrintListsModal}
+          setOpen={setOpenUpdatePrintListsModal}
+        />
         <UpdateMultiProductPriceDialog
           products={selectedProducts}
           open={openUpdatePriceModal}

@@ -55,9 +55,9 @@ const TerminalPage = React.lazy(() =>
     default: module.TerminalPage,
   }))
 );
-const PrintSnacksPage = React.lazy(() =>
-  import("./pages/PrintSnacksPage").then((module) => ({
-    default: module.PrintSnacksPage,
+const PrintListPage = React.lazy(() =>
+  import("./pages/PrintListPage").then((module) => ({
+    default: module.PrintListPage,
   }))
 );
 const ProductDetailsPage = React.lazy(() =>
@@ -165,8 +165,8 @@ export function DashboardApp() {
             <React.Suspense fallback={<FullScreenLoader />}>
               <Routes>
                 <Route
-                  path="/printSnacks"
-                  element={<PrintSnacksPage />}
+                  path="/print/:listName"
+                  element={<PrintListPage />}
                 ></Route>
                 <Route element={<RequireUserLogin />}>
                   <Route path="/" element={<Layout />}>

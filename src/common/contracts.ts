@@ -98,6 +98,7 @@ export type ProductDto = {
   nickname?: string | null;
   barcode?: string | null;
   category: string;
+  print_lists: string[];
   tags: string[];
   status_prices: ProductStatusPriceDto[];
 };
@@ -127,6 +128,7 @@ export type SaveProductDto = {
   nickname?: string | null;
   barcode?: string | null;
   category: string;
+  print_lists: string[];
   tags: string[];
   status_prices: SaveProductStatusPriceDto[];
 };
