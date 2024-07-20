@@ -4,7 +4,14 @@ import Autocomplete, {
   AutocompleteCloseReason,
 } from "@mui/material/Autocomplete";
 import { ProductDto } from "../../../common/contracts";
-import { Box, IconButton, Popover, TextField, Tooltip } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Popover,
+  TextField,
+  Tooltip,
+} from "@mui/material";
 import { Coffee } from "@mui/icons-material";
 import { useGetAllProductsQuery } from "../../redux/api/productApi";
 import { toast } from "react-toastify";
@@ -26,6 +33,7 @@ const PaperComponent = (props: any) => {
 
 export const SelectProductPopup = (props: {
   selectProduct: (product: ProductDto) => void;
+  fullSizeButton?: boolean;
 }) => {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -79,11 +87,18 @@ export const SelectProductPopup = (props: {
 
   return (
     <>
-      <Tooltip title={t("product.addToTransaction")}>
-        <IconButton sx={{ height: "40px" }} onClick={handleClick}>
-          <Coffee />
-        </IconButton>
-      </Tooltip>
+      {props.fullSizeButton ? (
+        <Button variant="outlined" onClick={handleClick}>
+          {t("purchase.action.addItem")}
+        </Button>
+      ) : (
+        <Tooltip title={t("product.addToTransaction")}>
+          <IconButton sx={{ height: "40px" }} onClick={handleClick}>
+            <Coffee />
+          </IconButton>
+        </Tooltip>
+      )}
+
       <Popover
         id={id}
         open={open}

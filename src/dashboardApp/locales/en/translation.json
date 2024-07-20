@@ -255,7 +255,7 @@
       "createPurchase": "Create purchase",
       "editPurchase": "Edit purchase details",
       "deletePurchase": "Delete purchase",
-      "addItem": "Add item"
+      "addItem": "Add product"
     },
     "edit": {
       "createTitle": "Create a new purchase",

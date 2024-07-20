@@ -1,15 +1,28 @@
 import styled from "@emotion/styled";
 
-import { useGetAllProductsQuery } from "../redux/api/productApi";
+import {
+  useGetAllProductsQuery,
+  useUpdateProductMutation,
+} from "../redux/api/productApi";
 import assetLogo from "../../assets/ascii-logo-text.svg";
 
 import "../../assets/fonts/jetbrains-mono.css";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, ButtonGroup, CircularProgress } from "@mui/material";
 import { moneyToString } from "../../terminalApp/components/Money";
-import { PrintOutlined } from "@mui/icons-material";
-import React from "react";
+import { DeleteOutlined, PrintOutlined } from "@mui/icons-material";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { useDashboardSelector } from "../redux/dashboardStore";
+import {
+  AccountDto,
+  ProductDto,
+  RoleDto,
+  SaveProductDto,
+} from "../../common/contracts";
+import { toast } from "react-toastify";
+import { useGetMeQuery } from "../redux/api/userApi";
+import { SelectProductPopup } from "../components/product/SelectProductPopup";
 
 const Logo = styled.img`
   height: 4rem;
@@ -53,6 +66,7 @@ const Text = styled.div`
   font-weight: 500;
   font-size: 16.4384px;
   line-height: 20px;
+  position: relative;
 
   &::before {
     content: "";
@@ -96,6 +110,27 @@ const PageWrapper = styled.div`
   }
 `;
 
+const ProductRemoveWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: -2.4em;
+  bottom: 0;
+  width: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.2;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  @media print {
+    display: none;
+  }
+`;
+
 const PrintButton = styled.div`
   position: absolute;
   top: 1em;
@@ -111,11 +146,66 @@ const dateFormat = new Intl.DateTimeFormat("de-DE", {
   dateStyle: "long",
 });
 
+function hasUserPermissions(
+  user: AccountDto | null,
+  permissions: RoleDto[]
+): boolean {
+  if (!user) {
+    return false;
+  }
+
+  return permissions.includes(user?.role);
+}
+
 export const PrintListPage = () => {
   const { t } = useTranslation();
 
+  const token = useDashboardSelector((state) => state.userState.token);
+  const user = useDashboardSelector((state) => state.userState.user);
+
+  useGetMeQuery(token);
+
+  const hasEditPermission = hasUserPermissions(user, ["Admin", "Purchaser"]);
+
   let params = useParams();
   let listName = params.listName ?? "";
+
+  const [
+    updateProduct,
+    {
+      isLoading: isMutationLoading,
+      isError: isMutationError,
+      error: mutationError,
+      isSuccess: isMutationSuccess,
+    },
+  ] = useUpdateProductMutation();
+
+  const togglePrintListForProduct = React.useCallback(
+    async (product: ProductDto, listName: string) => {
+      let newPrintList = [...product.print_lists];
+
+      let index = newPrintList.indexOf(listName);
+      if (index >= 0) {
+        newPrintList.splice(index, 1);
+      } else {
+        newPrintList.push(listName);
+      }
+
+      let saveProduct: SaveProductDto = {
+        ...product,
+        print_lists: newPrintList,
+        status_prices: product.status_prices.map((sp) => ({
+          ...sp,
+          status_id: sp.status.id,
+        })),
+      };
+      await updateProduct({
+        id: product.id,
+        product: saveProduct,
+      });
+    },
+    [updateProduct]
+  );
 
   const {
     isLoading,
@@ -123,6 +213,15 @@ export const PrintListPage = () => {
     error,
     data: products,
   } = useGetAllProductsQuery();
+
+  useEffect(() => {
+    if (isMutationSuccess) {
+      toast.success("Product updated successfully!");
+    } else if (isMutationError) {
+      toast.error("Product could not be updated!");
+      console.error(error);
+    }
+  }, [isMutationLoading]);
 
   if (isLoading) {
     return (
@@ -145,10 +244,10 @@ export const PrintListPage = () => {
     return <></>;
   }
 
-  const snacks = products
+  const printProducts = products
     .filter((product) =>
       listName === ""
-        ? product.category === "Snacks" && product.id
+        ? product.category === "Snacks"
         : product.print_lists.includes(listName)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -161,13 +260,23 @@ export const PrintListPage = () => {
     <PageWrapper>
       <Page>
         <PrintButton>
-          <Button
-            variant="contained"
-            startIcon={<PrintOutlined />}
-            onClick={onPrintDocument}
-          >
-            {t("layout.print")}
-          </Button>
+          <ButtonGroup>
+            {hasEditPermission && (
+              <SelectProductPopup
+                fullSizeButton
+                selectProduct={(product) =>
+                  togglePrintListForProduct(product, listName)
+                }
+              />
+            )}
+            <Button
+              variant="contained"
+              startIcon={<PrintOutlined />}
+              onClick={onPrintDocument}
+            >
+              {t("layout.print")}
+            </Button>
+          </ButtonGroup>
         </PrintButton>
         <Logo src={assetLogo} alt="Logo" />
         <Text style={{ justifySelf: "end", alignSelf: "end" }}>
@@ -176,16 +285,27 @@ export const PrintListPage = () => {
         <List>
           {Array.from({ length: COLUMN_COUNT }).map((_, column) => (
             <Grid key={column}>
-              {snacks
+              {printProducts
                 .slice(
-                  column * Math.ceil(snacks.length / COLUMN_COUNT),
-                  (column + 1) * Math.ceil(snacks.length / COLUMN_COUNT)
+                  column * Math.ceil(printProducts.length / COLUMN_COUNT),
+                  (column + 1) * Math.ceil(printProducts.length / COLUMN_COUNT)
                 )
-                .map((snack) => (
-                  <React.Fragment key={snack.id}>
-                    <Text key={`${snack.id}-name`}>{snack.name}</Text>
-                    <Text key={`${snack.id}-price`}>
-                      {moneyToString(snack.price.Cent ?? 0)}
+                .map((printProduct) => (
+                  <React.Fragment key={printProduct.id}>
+                    <Text key={`${printProduct.id}-name`}>
+                      {printProduct.name}
+                      {hasEditPermission && (
+                        <ProductRemoveWrapper
+                          onClick={() =>
+                            togglePrintListForProduct(printProduct, listName)
+                          }
+                        >
+                          <DeleteOutlined />
+                        </ProductRemoveWrapper>
+                      )}
+                    </Text>
+                    <Text key={`${printProduct.id}-price`}>
+                      {moneyToString(printProduct.price.Cent ?? 0)}
                     </Text>
                   </React.Fragment>
                 ))}
