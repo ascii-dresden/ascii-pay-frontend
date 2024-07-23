@@ -74,8 +74,8 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
   const { t } = useTranslation();
   const dispatch = useTerminalDispatch();
 
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const usernameInput = React.useRef<HTMLInputElement>(null);
+  const passwordInput = React.useRef<HTMLInputElement>(null);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -88,8 +88,8 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username,
-        password,
+        username: usernameInput.current?.value ?? "",
+        password: passwordInput.current?.value ?? "",
       }),
     })
       .then((response) => response.json())
@@ -122,9 +122,6 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
       });
   };
 
-  const usernameInput = React.useRef<HTMLInputElement>(null);
-  const passwordInput = React.useRef<HTMLInputElement>(null);
-
   return (
     <StyledLogin>
       <span>{t("account.loginMessage")}</span>
@@ -136,7 +133,6 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
               ref={usernameInput}
               placeholder={t("account.username") ?? undefined}
               inputMode="none"
-              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div>
@@ -146,7 +142,6 @@ export const Login = (props: { authClient: AsciiPayAuthenticationClient }) => {
               placeholder={t("account.password") ?? undefined}
               inputMode="none"
               type="password"
-              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <button disabled={loading} onClick={login}>
