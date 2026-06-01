@@ -75,7 +75,7 @@
       "payable": "Payable with"
     },
     "redeemStamps": "Redeem stamps",
-    "proceedWithoutStamps": "Continue",
+    "proceedWithoutStamps": "Don't redeem",
     "proceedWithStamps": "Redeem stamps",
     "pay": "Pay",
     "quickAccess": "Overview",

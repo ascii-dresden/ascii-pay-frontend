@@ -75,7 +75,7 @@
       "payable": "Bezahlbar mit"
     },
     "redeemStamps": "Stempel einlösen",
-    "proceedWithoutStamps": "Fortsetzen",
+    "proceedWithoutStamps": "Nicht einlösen",
     "proceedWithStamps": "Stempel einlösen",
     "pay": "Bezahlen",
     "quickAccess": "Übersicht",
