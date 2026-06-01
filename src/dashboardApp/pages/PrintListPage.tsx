@@ -5,6 +5,7 @@ import {
   useUpdateProductMutation,
 } from "../redux/api/productApi";
 import assetLogo from "../../assets/ascii-logo-text.svg";
+import assetVegan from "../../assets/vegan.svg";
 
 import "../../assets/fonts/jetbrains-mono.css";
 import { Button, ButtonGroup, CircularProgress } from "@mui/material";
@@ -113,7 +114,7 @@ const PageWrapper = styled.div`
 const ProductRemoveWrapper = styled.div`
   position: absolute;
   top: 0;
-  left: -2.4em;
+  left: -4em;
   bottom: 0;
   width: 2em;
   display: flex;
@@ -131,6 +132,18 @@ const ProductRemoveWrapper = styled.div`
   }
 `;
 
+const VeganIcon = styled.img`
+  position: absolute;
+  left: -1.8em;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1em;
+  width: 1em;
+
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+`;
+
 const PrintButton = styled.div`
   position: absolute;
   top: 1em;
@@ -145,6 +158,10 @@ const COLUMN_COUNT = 2;
 const dateFormat = new Intl.DateTimeFormat("de-DE", {
   dateStyle: "long",
 });
+
+function isVegan(product: ProductDto): boolean {
+  return product.tags.some((tag) => tag.toLowerCase() === "vegan");
+}
 
 function hasUserPermissions(
   user: AccountDto | null,
@@ -293,6 +310,9 @@ export const PrintListPage = () => {
                 .map((printProduct) => (
                   <React.Fragment key={printProduct.id}>
                     <Text key={`${printProduct.id}-name`}>
+                      {isVegan(printProduct) && (
+                        <VeganIcon src={assetVegan} alt="Vegan" title="Vegan" />
+                      )}
                       {printProduct.name}
                       {hasEditPermission && (
                         <ProductRemoveWrapper
