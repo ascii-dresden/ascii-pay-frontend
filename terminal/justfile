@@ -62,8 +62,19 @@ release: sync
       --keystorealias "{{keystore_alias}}" \
       --keystorealiaspass "{{keystore_pass}}"
 
-    cp android/app/build/outputs/apk/release/app-release-signed.apk {{release_apk}}
-    echo ">> {{release_apk}} ready"
+    # `cap build` signs with jarsigner (v1 only). Android 11+ rejects a v1-only
+    # APK that targets API >= 30 (we target 32) with INSTALL_PARSE_FAILED_NO_
+    # CERTIFICATES, so re-align and re-sign with the v2/v3 schemes here.
+    bt="$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)"
+    src=android/app/build/outputs/apk/release/app-release-signed.apk
+    "$bt/zipalign" -f -p 4 "$src" {{release_apk}}.aligned
+    "$bt/apksigner" sign \
+      --ks "{{keystore}}" --ks-pass "pass:{{keystore_pass}}" \
+      --ks-key-alias "{{keystore_alias}}" --key-pass "pass:{{keystore_pass}}" \
+      --v2-signing-enabled true --v3-signing-enabled true \
+      --out {{release_apk}} {{release_apk}}.aligned
+    rm -f {{release_apk}}.aligned {{release_apk}}.idsig
+    echo ">> {{release_apk}} ready (v1/v2/v3 signed)"
 
 # Install a given APK: wait for device, install/replace, grant the overlay
 # permission the NFC foreground-wake needs, launch, and stream this app's logs.
