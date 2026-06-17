@@ -81,6 +81,8 @@
     "quickAccess": "Overview",
     "keypad": "Keypad",
     "productList": "Products",
+    "sumup": "SumUp card payment",
+    "sumupError": "Could not open SumUp",
     "noAccount": "No account scanned!"
   },
   "account": {

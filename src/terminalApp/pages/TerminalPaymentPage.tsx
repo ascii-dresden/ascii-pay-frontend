@@ -6,9 +6,19 @@ import {
   useTerminalSelector,
 } from "../redux/terminalStore";
 import { SidebarAction, SidebarLayout } from "../components/SidebarLayout";
-import { Apps, CalculateOutlined, ManageSearch } from "@mui/icons-material";
+import {
+  Apps,
+  CalculateOutlined,
+  CreditCard,
+  ManageSearch,
+} from "@mui/icons-material";
 import { ClockIcon } from "../components/ClockIcon";
-import { setScreensaver } from "../redux/features/terminalSlice";
+import {
+  NotificationColor,
+  NotificationType,
+  setScreensaver,
+  showNotification,
+} from "../redux/features/terminalSlice";
 import {
   cancelPayment,
   payment,
@@ -175,6 +185,23 @@ export const TerminalPaymentPage = (props: {
       element: <ManageSearch />,
       action: () => setActivePage(Page.PRODUCTS),
       active: activePage === Page.PRODUCTS,
+    },
+    {
+      title: t("payment.sumup"),
+      element: <CreditCard />,
+      action: () => {
+        Promise.resolve(props.deviceContext.openSumUp()).catch((e) => {
+          dispatch(
+            showNotification({
+              type: NotificationType.GENERAL,
+              color: NotificationColor.ERROR,
+              title: t("payment.sumupError"),
+              description: e?.message ?? String(e),
+              key: "sumup-error",
+            })
+          );
+        });
+      },
     },
     {
       title: t("general.enableScreensaver"),

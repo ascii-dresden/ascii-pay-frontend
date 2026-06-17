@@ -22,8 +22,23 @@ export const AppNotifications = React.memo(
 
     React.useEffect(() => {
       const handler: TerminalClientMessageHandler = {
-        onMessage() {
-          props.deviceContext.wakeUp();
+        onMessage(message) {
+          // Only pull the terminal to the foreground for a *valid* card or a
+          // deliberate input — never for a raw NFC read. A random/unregistered tag
+          // produces these protocol messages but never authenticates, so it must not
+          // force the app over whatever is currently on screen. A valid card finishes
+          // the handshake with a ReceiveSessionToken, which still wakes the app via
+          // the default branch (and the per-page handlers).
+          switch (message.type) {
+            case "NfcIdentifyRequest":
+            case "NfcChallengeRequest":
+            case "NfcResponseRequest":
+            case "NfcCardRemoved":
+            case "ReceiveUnregisteredNfcCard":
+              return;
+            default:
+              props.deviceContext.wakeUp();
+          }
         },
         onBarcodeIdentifyRequest(barcode: string): void | boolean {
           dispatch(

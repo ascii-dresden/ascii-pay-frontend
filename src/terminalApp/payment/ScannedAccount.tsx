@@ -68,6 +68,11 @@ const StyledScannedAccountEmpty = styled.div`
     white-space: nowrap;
   }
 `;
+// A long account name would wrap onto a second line and overflow the fixed-height
+// header; cap it at 20 chars + an ellipsis so it always stays on one line.
+const truncateName = (value: string, max = 20) =>
+  value.length > max ? value.slice(0, max) + "…" : value;
+
 const StyledScannedAccountRefresh = styled.div`
   width: 4.5em;
   display: flex;
@@ -112,7 +117,9 @@ export const ScannedAccount = (props: {
 
   return (
     <StyledScannedAccount>
-      <StyledScannedAccountName>{scannedAccount.name}</StyledScannedAccountName>
+      <StyledScannedAccountName>
+        {truncateName(scannedAccount.name)}
+      </StyledScannedAccountName>
       <StyledScannedAccountTags>
         <CoinAmountView coins={scannedAccount.balance} negativeIsError={true} />
       </StyledScannedAccountTags>

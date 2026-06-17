@@ -23,4 +23,5 @@ export interface AsciiPayAuthenticationClient {
 
 export interface TerminalDeviceContext {
   wakeUp: () => void;
+  openSumUp: () => Promise<void>;
 }

@@ -123,6 +123,7 @@ export const TerminalPage = () => {
   const deviceContext = React.useMemo(() => {
     let context: TerminalDeviceContext = {
       wakeUp: () => {},
+      openSumUp: () => Promise.resolve(),
     };
     return context;
   }, []);

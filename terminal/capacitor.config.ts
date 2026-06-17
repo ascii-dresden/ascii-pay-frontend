@@ -1,8 +1,8 @@
 import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "coffee.ascii.pay.terminal.2",
-  appName: "ascii-pay-terminal v2",
+  appId: "com.ascii.terminal",
+  appName: "Ascii-Pay",
   webDir: "dist",
   bundledWebRuntime: false,
 };

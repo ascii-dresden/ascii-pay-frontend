@@ -81,6 +81,8 @@
     "quickAccess": "Übersicht",
     "keypad": "Handeingabe",
     "productList": "Produkte",
+    "sumup": "SumUp Kartenzahlung",
+    "sumupError": "SumUp konnte nicht geöffnet werden",
     "noAccount": "Kein Konto erkannt!"
   },
   "account": {

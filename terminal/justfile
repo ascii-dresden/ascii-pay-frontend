@@ -1,0 +1,95 @@
+# Ascii-Pay terminal — build & install recipes.
+#
+# Usage:
+#   just            # list recipes
+#   just debug      # web build + sync + signed-less debug APK  -> ./app-debug.apk
+#   just release    # web build + sync + signed release APK     -> ./app-release-signed.apk
+#   just install    # adb install the debug APK, grant overlay perm, launch + stream logs
+#   just install-release
+#
+# Requires: node/npm, JDK 17, the Android SDK at ~/android-sdk, and (for install*) adb on PATH.
+
+set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
+
+# Toolchain — exported into every recipe so gradle/cap can find Java + the SDK.
+java_home := "/usr/lib/jvm/java-17-openjdk-amd64"
+android_home := env_var('HOME') / "android-sdk"
+export JAVA_HOME := java_home
+export ANDROID_HOME := android_home
+export ANDROID_SDK_ROOT := android_home
+export PATH := java_home / "bin" + ":" + env_var('PATH')
+
+pkg := "com.ascii.terminal"
+activity := pkg + "/.MainActivity"
+debug_apk := "app-debug.apk"
+release_apk := "app-release-signed.apk"
+
+# Release signing. The keystore is a PKCS12 store next to this justfile, so the
+# key (alias) password equals the store password. `cap build` resolves a relative
+# --keystorepath against android/, hence the absolute justfile_directory() path.
+keystore := justfile_directory() / "ascii-pay.keystore"
+keystore_alias := "ascii-pay"
+keystore_pass := "ascii-dresden"
+
+# Show available recipes.
+default:
+    @just --list
+
+# Build the web bundle (vite; tsc is skipped — repo has unrelated strict errors).
+web:
+    npx vite build
+
+# Sync the freshly built web assets + native project/plugins (Capacitor copy + update).
+sync: web
+    npx cap sync android
+
+# Build the debug APK and drop it next to this justfile.
+debug: sync
+    cd android && ./gradlew assembleDebug
+    cp android/app/build/outputs/apk/debug/app-debug.apk {{debug_apk}}
+    @echo ">> {{debug_apk}} ready"
+
+# PKCS12 store, so the key/alias password equals the store password. Set
+# KEYSTORE_PASS in the environment to skip the prompt (non-interactive/CI).
+# Build the signed release APK (prompts for the keystore password).
+release: sync
+    #!/usr/bin/env bash
+    set -euo pipefail
+    npx cap build android \
+      --androidreleasetype APK \
+      --keystorepath "{{keystore}}" \
+      --keystorepass "{{keystore_pass}}" \
+      --keystorealias "{{keystore_alias}}" \
+      --keystorealiaspass "{{keystore_pass}}"
+
+    cp android/app/build/outputs/apk/release/app-release-signed.apk {{release_apk}}
+    echo ">> {{release_apk}} ready"
+
+# Install a given APK: wait for device, install/replace, grant the overlay
+# permission the NFC foreground-wake needs, launch, and stream this app's logs.
+_install apk:
+    @command -v adb >/dev/null || { echo "adb not found on PATH" >&2; exit 1; }
+    @test -f "{{apk}}" || { echo "{{apk}} not found — run 'just debug' or 'just release' first" >&2; exit 1; }
+    adb wait-for-device
+    adb install -r -g "{{apk}}"
+    # Android 10+ blocks background activity starts; this is the exemption that
+    # lets a valid NFC card pull the terminal to the foreground.
+    adb shell appops set {{pkg}} SYSTEM_ALERT_WINDOW allow || true
+    adb shell am start -n {{activity}}
+    adb logcat -c
+    @echo ">> streaming logs for {{pkg}} (Ctrl-C to stop)"
+    adb logcat --pid=$(adb shell pidof -s {{pkg}} | tr -d '\r')
+
+# Install + run the debug APK.
+install: (_install debug_apk)
+
+# Install + run the release APK.
+install-release: (_install release_apk)
+
+# Full debug cycle: build then install.
+run: debug install
+
+# Remove build outputs.
+clean:
+    rm -f {{debug_apk}} {{release_apk}}
+    cd android && ./gradlew clean
