@@ -31,6 +31,9 @@ repositories {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // Native websocket client for NfcWakeService (reader connection independent
+    // of the WebView).
+    implementation "org.java-websocket:Java-WebSocket:1.5.6"
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"

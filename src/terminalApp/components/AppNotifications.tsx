@@ -35,6 +35,10 @@ export const AppNotifications = React.memo(
             case "NfcResponseRequest":
             case "NfcCardRemoved":
             case "ReceiveUnregisteredNfcCard":
+            // A reconnect (e.g. the heartbeat replacing a half-open socket) is
+            // plumbing, not a user interaction, and must not pull the app to the
+            // foreground on its own.
+            case "ConnectionStateChange":
               return;
             default:
               props.deviceContext.wakeUp();

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.PowerManager;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.getcapacitor.JSArray;
@@ -35,13 +37,20 @@ import java.util.List;
 @CapacitorPlugin(name = "Kiosk")
 public class KioskPlugin extends Plugin {
 
+    private static final String TAG = "Kiosk";
+
     @PluginMethod
     public void wake(PluginCall call) {
         final Activity activity = getActivity();
         if (activity == null) {
+            Log.w(TAG, "wake() rejected: no activity");
             call.reject("No activity");
             return;
         }
+
+        boolean canOverlay = Build.VERSION.SDK_INT < Build.VERSION_CODES.M
+                || Settings.canDrawOverlays(activity);
+        Log.i(TAG, "wake() called; canDrawOverlays=" + canOverlay);
 
         activity.runOnUiThread(() -> {
             // Show this activity over the (non-secure) lock screen and turn the screen on.
@@ -80,7 +89,14 @@ public class KioskPlugin extends Plugin {
                 launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
                         Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
                         Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                activity.startActivity(launch);
+                try {
+                    activity.startActivity(launch);
+                    Log.i(TAG, "wake() startActivity invoked (foreground requested)");
+                } catch (Exception e) {
+                    Log.e(TAG, "wake() startActivity threw", e);
+                }
+            } else {
+                Log.w(TAG, "wake() no launch intent for package");
             }
 
             // Dismiss a non-secure keyguard (swipe-to-unlock). A secure lock cannot be

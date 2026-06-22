@@ -11,6 +11,7 @@ const authClient = new WebSocketClient("ws://10.3.141.1:9001/");
 // const authClient = new SimulationClient();
 const deviceContext: TerminalDeviceContext = {
   wakeUp: () => {
+    console.log("[wake] wakeUp() invoked from JS");
     // Native wake/unlock (works on Android 10+/One UI). BackgroundMode.wakeUp()
     // is kept as a best-effort fallback for older devices.
     Kiosk.wake().catch((e) => console.error("Kiosk.wake failed", e));
