@@ -26,7 +26,9 @@
     "print": "Print",
     "accountStatus": "ascii Status",
     "purchases": "Purchases",
-    "purchase": "Purchase"
+    "inventory": "Inventory",
+    "purchase": "Purchase",
+    "shoppingList": "Shopping list"
   },
   "setup": {
     "message": "Setup ascii-pay",
@@ -202,10 +204,18 @@
     "price": "Price",
     "bonus": "Bonus",
     "category": "Category",
+    "categoryHint": "Pick one or type a new category",
     "printLists": "Print lists",
+    "printListsHint": "Pick one or type a new print list and press Enter",
     "tags": "Tags",
+    "tagsHint": "Pick one or type a new tag and press Enter",
     "purchaseTax": "Tax",
     "barcode": "Barcode",
+    "stocked": "Stocked (part of inventory)",
+    "stockedShort": "Stocked",
+    "notStocked": "Not stocked",
+    "targetQuantity": "Target quantity",
+    "targetQuantityHint": "Par level in single units",
     "addToTransaction": "Add product to transaction",
     "noProducts": "No products",
     "selectPaymentProduct": "Select payment product",
@@ -226,6 +236,16 @@
     "edit": {
       "createTitle": "Create a new product",
       "createAction": "Create product",
+      "steps": {
+        "basics": "Basics",
+        "lists": "Lists",
+        "pricing": "Pricing"
+      },
+      "stepOf": "Step {{step}} of {{total}}: {{title}}",
+      "next": "Next",
+      "back": "Back",
+      "nameRequired": "Please enter a name",
+      "inventorySection": "Inventory",
       "updateTitle": "Edit product",
       "updateAction": "Save changes",
       "deleteTitle": "Delete product?",
@@ -234,7 +254,15 @@
       "updateImageTitle": "Edit product image",
       "updateImageRemove": "Remove image",
       "updateImageDragHint": "Drag and drop your file here",
-      "updateImageClickHint": "or click to select file"
+      "updateImageClickHint": "or click to select file",
+      "cancel": "Cancel",
+      "notFound": "Product not found.",
+      "createSuccess": "Product created!",
+      "createError": "Product could not be created!",
+      "updateSuccess": "Product updated!",
+      "updateError": "Product could not be updated!",
+      "deleteSuccess": "Product deleted!",
+      "deleteError": "Product could not be deleted!"
     }
   },
   "purchase": {
@@ -247,7 +275,11 @@
       "container_size": "Container size",
       "container_count": "Container count",
       "container_cents": "Container price (net)",
-      "cents_per_item": "Price per item"
+      "cents_per_item": "Price per item",
+      "best_before": "Best before",
+      "planned": "Planned",
+      "collected": "Collected",
+      "subtotal": "Subtotal"
     },
     "action": {
       "details": "Details",
@@ -255,7 +287,14 @@
       "createPurchase": "Create purchase",
       "editPurchase": "Edit purchase details",
       "deletePurchase": "Delete purchase",
-      "addItem": "Add product"
+      "addItem": "Add product",
+      "newShoppingTrip": "New shopping trip",
+      "continueShopping": "Continue shopping",
+      "shoppingMode": "Shopping mode",
+      "finalize": "Finalize",
+      "reopen": "Reopen",
+      "cancel": "Cancel",
+      "back": "Back"
     },
     "edit": {
       "createTitle": "Create a new purchase",
@@ -277,6 +316,203 @@
       "suggestedPrice": "Suggested price (gross)",
       "suggestedPriceWithoutTax": "Suggested price (net)",
       "suggestedProfit": "Profit"
+    },
+    "name": "Name",
+    "finalizedAt": "Finalized at",
+    "state": {
+      "draft": "Draft",
+      "finalized": "Finalized"
+    },
+    "filter": {
+      "all": "All",
+      "drafts": "Drafts",
+      "finalized": "Finalized"
+    },
+    "details": {
+      "editLocked": "This purchase is finalized. Only an admin can reopen it."
+    },
+    "notFound": "Purchase not found.",
+    "stateLabel": "State",
+    "newTrip": {
+      "title": "New shopping trip",
+      "name": "Name (optional)",
+      "action": "Start shopping",
+      "success": "Shopping trip created!",
+      "error": "Shopping trip could not be created!"
+    },
+    "finalize": {
+      "title": "Finalize purchase?",
+      "content": "The purchase will be locked with a total of <bold>{{total}}</bold>.",
+      "uncollected_one": "{{count}} item on the list was not collected and will be removed.",
+      "uncollected_other": "{{count}} items on the list were not collected and will be removed.",
+      "action": "Finalize",
+      "success": "Purchase finalized!",
+      "error": "Purchase could not be finalized!",
+      "alreadyFinalized": "This purchase is already finalized."
+    },
+    "reopen": {
+      "title": "Reopen purchase?",
+      "content": "The purchase <bold>{{name}}</bold> becomes a draft again and can be edited.",
+      "action": "Reopen",
+      "success": "Purchase reopened!",
+      "error": "Purchase could not be reopened!",
+      "alreadyDraft": "This purchase is a draft and can be edited."
+    },
+    "shop": {
+      "title": "Shopping mode",
+      "tabs": {
+        "scan": "Scan",
+        "cart": "Cart",
+        "list": "List"
+      },
+      "finish": "Finish",
+      "items_one": "{{count}} item",
+      "items_other": "{{count}} items",
+      "finalizedNotice": "This purchase is finalized and can no longer be edited.",
+      "toDetails": "Show details",
+      "manualCode": "Barcode",
+      "manualCodeHelp": "Type a barcode and press Enter, or use a hardware scanner",
+      "searchProduct": "Search product",
+      "lookupFailed": "Barcode lookup failed!",
+      "notRegistered": "Not registered",
+      "notRegisteredHint": "No product with barcode <bold>{{code}}</bold> exists yet.",
+      "createProduct": "Create product",
+      "addFreeItem": "Add as free item",
+      "freeItemName": "Item name",
+      "addToCart": "Add to cart",
+      "saveItem": "Save",
+      "removeItem": "Remove",
+      "editItem": "Edit item",
+      "lastPurchase": "Last purchase: {{price}} · size {{size}}",
+      "noLastPurchase": "No previous purchase",
+      "target": "Target stock: {{count}}",
+      "notStocked": "Not in assortment",
+      "onList": "On list: {{count}}",
+      "cartEmpty": "The cart is empty. Scan an article to add it.",
+      "listEmpty": "Nothing left on the list.",
+      "increased": "{{name}}: count increased to {{count}}",
+      "undo": "Undo",
+      "added": "{{name}} added to cart",
+      "updated": "Item saved",
+      "removed": "Item removed",
+      "collectedAll": "All items on the list are collected.",
+      "error": "Change could not be saved!",
+      "loadError": "Could not load purchase!",
+      "productCreated": "Product created. Add it to the cart now.",
+      "uncollectedHint_one": "{{count}} item still on the list",
+      "uncollectedHint_other": "{{count}} items still on the list",
+      "backToShopping": "Back to shopping",
+      "scanResultTitle": "Scanned article",
+      "resolving": "Looking up barcode…",
+      "retry": "Retry",
+      "itemNotFound": "This item no longer exists in the purchase.",
+      "productNotFound": "Product not found.",
+      "removeFromList": "Remove from list",
+      "removedFromList": "Removed from list"
+    }
+  },
+  "inventory": {
+    "title": "Inventory",
+    "loadError": "Could not load inventory!",
+    "saveError": "Could not save changes!",
+    "saveSuccess": "Changes saved!",
+    "empty": "No stocked products yet. Use “Manage assortment” to add products to the inventory.",
+    "noMatches": "No products match the current filter.",
+    "filter": {
+      "belowTarget": "Below target only"
+    },
+    "column": {
+      "product": "Product",
+      "category": "Category",
+      "target": "Target",
+      "lastCounted": "Last counted",
+      "estimated": "Estimated stock",
+      "lastPurchase": "Last purchase",
+      "unitPrice": "per unit"
+    },
+    "neverCounted": "Never counted",
+    "estimate": "Estimate",
+    "estimateHint": "Last count plus units bought in finalized purchases minus units sold since then.",
+    "belowTargetHint": "Below target ({{missing}} missing)",
+    "units_one": "{{count}} unit",
+    "units_other": "{{count}} units",
+    "action": {
+      "manageAssortment": "Manage assortment",
+      "startCheck": "Start inventory check",
+      "continueCheck": "Continue inventory check",
+      "openCheck": "Open check",
+      "openPurchase": "Open shopping list",
+      "deleteCheck": "Delete check",
+      "complete": "Complete",
+      "refresh": "Refresh",
+      "cancel": "Cancel"
+    },
+    "draftNotice": "An inventory check started on {{date}} is in progress ({{counted}}/{{total}} counted). A new check can be started once it has been completed or deleted.",
+    "assortment": {
+      "title": "Manage assortment",
+      "search": "Filter assortment",
+      "addProduct": "Add product to assortment",
+      "addProductHint": "Search by name, nickname or barcode",
+      "allAdded": "All products are already in the assortment",
+      "stockedCount_one": "{{count}} product in assortment",
+      "stockedCount_other": "{{count}} products in assortment",
+      "addedToast": "{{name}} added to the assortment",
+      "removedToast": "{{name}} removed from the assortment",
+      "undo": "Undo",
+      "remove": "Remove from assortment",
+      "done": "Done",
+      "empty": "No products in the assortment yet. Use the search box above to add products.",
+      "noProducts": "No products found",
+      "uncategorized": "Uncategorized"
+    },
+    "history": {
+      "title": "Check history",
+      "empty": "No inventory checks yet.",
+      "counted": "{{counted}} of {{total}} counted",
+      "purchase": "Shopping list #{{id}}"
+    },
+    "state": {
+      "draft": "In progress",
+      "completed": "Completed"
+    },
+    "check": {
+      "title": "Inventory check",
+      "titleWithDate": "Inventory check {{date}}",
+      "loadError": "Could not load inventory check!",
+      "createError": "Could not start inventory check!",
+      "itemSaveError": "Could not save count!",
+      "progress": "{{counted}} of {{total}} counted",
+      "uncountedOnly": "Uncounted only",
+      "allCounted": "All products have been counted.",
+      "notCounted": "Not counted",
+      "counted": "Counted",
+      "target": "Target",
+      "completedNotice": "Completed on {{date}}.",
+      "completedNoPurchase": "No shopping list was generated.",
+      "readOnly": "This check is completed and can no longer be edited.",
+      "decrease": "Decrease",
+      "increase": "Increase",
+      "deleteTitle": "Delete inventory check?",
+      "deleteContent": "Do you want to permanently delete this inventory check? All counted quantities will be lost.",
+      "deleteAction": "Delete check",
+      "deleteSuccess": "Inventory check deleted!",
+      "deleteError": "Inventory check could not be deleted!",
+      "notFound": "Inventory check not found."
+    },
+    "complete": {
+      "title": "Complete inventory check",
+      "action": "Complete",
+      "belowTarget": "Products below target",
+      "needed": "{{count}} needed",
+      "none": "No product is below target.",
+      "uncountedWarning_one": "{{count}} product has not been counted and will be skipped.",
+      "uncountedWarning_other": "{{count}} products have not been counted and will be skipped.",
+      "generatePurchase": "Generate shopping list",
+      "name": "Name",
+      "defaultName": "Inventory {{date}}",
+      "noPurchaseHint": "No shopping list will be generated because no product is below target.",
+      "success": "Inventory check completed!",
+      "error": "Could not complete inventory check!"
     }
   },
   "payment": {
@@ -285,5 +521,63 @@
     "total": "Total",
     "balance": "Estimated balance",
     "action": "Pay"
+  },
+  "shoppingList": {
+    "title": "Shopping list",
+    "add": "Add to list",
+    "empty": "The shopping list is empty. Add what is missing so it comes along on the next trip.",
+    "loadError": "Could not load the shopping list!",
+    "quantity": "{{count}} ×",
+    "requestedBy": "requested by {{name}}",
+    "boughtOn": "bought {{date}}",
+    "recentlyBought": "Recently bought",
+    "recentlyBoughtEmpty": "Nothing has been ticked off yet.",
+    "markDone": "Mark as bought",
+    "reopen": "Put back on the list",
+    "remove": "Remove from list",
+    "undo": "Undo",
+    "removed": "{{name}} removed from the shopping list",
+    "done": "{{name}} marked as bought",
+    "reopened": "{{name}} is back on the shopping list",
+    "error": "Change could not be saved!",
+    "form": {
+      "newTitle": "Add to shopping list",
+      "editTitle": "Edit entry",
+      "product": "Product or free text",
+      "productHelp": "Pick a product from the assortment or type anything else",
+      "linkedProduct": "Product: {{name}}",
+      "freeText": "Free text, no product linked",
+      "quantity": "Quantity",
+      "note": "Note (optional)",
+      "add": "Add to list",
+      "save": "Save",
+      "cancel": "Cancel",
+      "remove": "Remove",
+      "created": "{{name}} added to the shopping list",
+      "updated": "Entry saved",
+      "saveError": "Entry could not be saved!",
+      "notFound": "This entry no longer exists.",
+      "forbidden": "Only the person who added this entry (or a purchaser) can change it.",
+      "alreadyDone": "This entry has already been bought and can no longer be edited."
+    },
+    "shop": {
+      "subheader": "Shopping list",
+      "tripHint_one": "{{count}} entry on the shopping list will be shown in the list tab.",
+      "tripHint_other": "{{count}} entries on the shopping list will be shown in the list tab."
+    }
+  },
+  "scanner": {
+    "start": "Start camera",
+    "stop": "Stop camera",
+    "scanning": "Point the camera at a barcode",
+    "scanButton": "Scan barcode",
+    "dialogTitle": "Scan barcode",
+    "engineNative": "Native detector",
+    "engineZxing": "ZXing",
+    "errorInsecure": "Camera access requires HTTPS (or localhost).",
+    "errorUnsupported": "This browser does not support camera scanning. Please enter the barcode manually.",
+    "errorDenied": "Camera access was denied. Allow it in the browser settings and try again.",
+    "errorNotFound": "No camera found.",
+    "errorUnknown": "The camera could not be started."
   }
 }

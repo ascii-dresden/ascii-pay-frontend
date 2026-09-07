@@ -78,6 +78,15 @@ export const productApi = createApi({
       },
       providesTags: (result, error, id) => [{ type: "Products", id }],
     }),
+    getProductByBarcode: builder.query<ProductDto, string>({
+      query(barcode) {
+        return {
+          url: `/products/by-barcode/${encodeURIComponent(barcode.trim())}`,
+        };
+      },
+      providesTags: (result) =>
+        result ? [{ type: "Products", id: result.id }] : [],
+    }),
     getAllProducts: builder.query<ProductDto[], void>({
       query() {
         return {
@@ -114,5 +123,7 @@ export const {
   useUpdateProductImageMutation,
   useDeleteProductImageMutation,
   useGetAllProductsQuery,
+  useGetProductByBarcodeQuery,
+  useLazyGetProductByBarcodeQuery,
   useGetProductQuery,
 } = productApi;

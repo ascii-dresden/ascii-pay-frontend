@@ -130,6 +130,8 @@ export const UpdateMultiProductPrintListsDialog = (props: {
         tags: product.tags,
         print_lists: newPrintLists,
         purchase_tax: product.purchase_tax,
+        stocked: product.stocked,
+        target_quantity: product.target_quantity,
         status_prices: product.status_prices.map((sp) => ({
           status_id: sp.status.id,
           price: sp.price,

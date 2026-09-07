@@ -20,7 +20,6 @@ import { Link, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import { Terminal } from "@mui/icons-material";
 import { CreateAccountDialog } from "../account/CreateAccountDialog";
-import { CreateProductDialog } from "../product/CreateProductDialog";
 import { BASE_URL } from "../../../const";
 import { useTranslation } from "react-i18next";
 import { HiddenField } from "../HiddenField";
@@ -416,12 +415,16 @@ const SearchActionNewProductRow = (props: {
   onClose: () => void;
   isSelected: boolean;
 }) => {
-  const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
+  const onClose = props.onClose;
   const isSelected = props.isSelected;
   const handleAction = React.useMemo(
-    () => () => setOpenModal(true),
-    [setOpenModal]
+    () => () => {
+      onClose();
+      navigate("/products/new");
+    },
+    [onClose, navigate]
   );
 
   const handleKeyAction = React.useMemo(
@@ -457,7 +460,6 @@ const SearchActionNewProductRow = (props: {
           <Typography>Action: Create new product</Typography>
         </StyledRowContent>
       </StyledRow>
-      <CreateProductDialog open={openModal} setOpen={setOpenModal} />
     </>
   );
 };

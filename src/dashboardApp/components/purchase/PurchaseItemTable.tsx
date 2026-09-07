@@ -2,6 +2,7 @@ import { PurchaseDto } from "../../../common/contracts";
 import { useTranslation } from "react-i18next";
 import {
   Avatar,
+  Chip,
   IconButton,
   Table,
   TableBody,
@@ -13,8 +14,9 @@ import React from "react";
 import { BASE_URL } from "../../../const";
 import { stringAvatar } from "../../../common/stringAvatar";
 import { moneyToString } from "../../../terminalApp/components/Money";
-import { OpenInNewOutlined } from "@mui/icons-material";
+import { OpenInNewOutlined, PlaylistAddOutlined } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { formatBestBefore } from "./purchaseUtils";
 
 export const PurchaseItemTable = (props: {
   purchase: PurchaseDto;
@@ -33,13 +35,17 @@ export const PurchaseItemTable = (props: {
           <TableCell>{t("purchase.total")}</TableCell>
           <TableCell>{t("purchase.item.container_size")}</TableCell>
           <TableCell>{t("purchase.item.cents_per_item")}</TableCell>
+          <TableCell>{t("purchase.item.best_before")}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {props.purchase.items.map((item, index) => (
           <TableRow
-            key={index}
-            sx={{ "& > *": { borderBottom: "unset !important" } }}
+            key={item.id ?? index}
+            sx={{
+              "& > *": { borderBottom: "unset !important" },
+              opacity: item.collected ? 1 : 0.6,
+            }}
           >
             <TableCell>
               {item.product ? (
@@ -60,6 +66,16 @@ export const PurchaseItemTable = (props: {
                   </IconButton>
                 </Link>
               ) : null}
+              {!item.collected ? (
+                <Chip
+                  size="small"
+                  color="info"
+                  variant="outlined"
+                  icon={<PlaylistAddOutlined />}
+                  label={t("purchase.item.planned")}
+                  sx={{ ml: 1 }}
+                />
+              ) : null}
             </TableCell>
             <TableCell>{item.container_count}</TableCell>
             <TableCell>{moneyToString(item.container_cents)}</TableCell>
@@ -68,8 +84,11 @@ export const PurchaseItemTable = (props: {
             </TableCell>
             <TableCell>{item.container_size}</TableCell>
             <TableCell>
-              {moneyToString(item.container_cents / item.container_size)}
+              {item.container_size > 0
+                ? moneyToString(item.container_cents / item.container_size)
+                : "–"}
             </TableCell>
+            <TableCell>{formatBestBefore(item.best_before)}</TableCell>
           </TableRow>
         ))}
       </TableBody>

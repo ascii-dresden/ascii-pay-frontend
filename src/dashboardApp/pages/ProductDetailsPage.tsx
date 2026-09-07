@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Chip,
   Container,
   Paper,
   Table,
@@ -210,6 +211,47 @@ export const ProductDetailsPage = () => {
                     </TableCell>
                     <TableCell>
                       {percentToString(product.purchase_tax / 100)}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
+                  >
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.stockedShort")}
+                    </TableCell>
+                    <TableCell>
+                      {product.stocked ? (
+                        <Chip
+                          size="small"
+                          color="primary"
+                          variant="outlined"
+                          label={t("product.stockedShort")}
+                        />
+                      ) : (
+                        <Chip
+                          size="small"
+                          variant="outlined"
+                          label={t("product.notStocked")}
+                        />
+                      )}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow
+                    sx={{ "& > *": { borderBottom: "unset !important" } }}
+                  >
+                    <TableCell
+                      width={100}
+                      align="right"
+                      sx={{ fontWeight: "bold" }}
+                    >
+                      {t("product.targetQuantity")}
+                    </TableCell>
+                    <TableCell>
+                      {product.stocked ? product.target_quantity : "-"}
                     </TableCell>
                   </TableRow>
                   <TableRow

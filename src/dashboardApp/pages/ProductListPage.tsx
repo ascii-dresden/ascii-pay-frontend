@@ -4,6 +4,7 @@ import {
   Button,
   ButtonGroup,
   Checkbox,
+  Chip,
   Container,
   Paper,
   Tab,
@@ -23,10 +24,10 @@ import { toast } from "react-toastify";
 import {
   Add,
   EuroSymbolOutlined,
+  Inventory2Outlined,
   PrintOutlined,
   StarsOutlined,
 } from "@mui/icons-material";
-import { CreateProductDialog } from "../components/product/CreateProductDialog";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
 import { ProductDto, PurchaseDto } from "../../common/contracts";
@@ -116,7 +117,6 @@ export const ProductListPage = () => {
   const theme = useTheme();
   const { t } = useTranslation();
 
-  const [openModal, setOpenModal] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
 
   const [page, setPage] = React.useState(0);
@@ -167,7 +167,7 @@ export const ProductListPage = () => {
     {
       label: t("product.action.createProduct"),
       icon: <Add />,
-      action: () => setOpenModal(true),
+      href: "/products/new",
     },
   ];
 
@@ -413,8 +413,6 @@ export const ProductListPage = () => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <CreateProductDialog open={openModal} setOpen={setOpenModal} />
-
         <UpdateMultiProductPrintListsDialog
           products={selectedProducts}
           open={openUpdatePrintListsModal}
@@ -479,6 +477,16 @@ const ProductListRow = (props: {
           <Typography variant="caption">{props.product.nickname}</Typography>
 
           <div style={{ marginBottom: -3 }}>
+            {props.product.stocked ? (
+              <Chip
+                size="small"
+                variant="outlined"
+                color="primary"
+                icon={<Inventory2Outlined />}
+                label={t("product.stockedShort")}
+                sx={{ mr: 0.5, mb: 0.5 }}
+              />
+            ) : null}
             {props.product.tags.map((tag) => (
               <TagChip key={tag} tag={tag} />
             ))}

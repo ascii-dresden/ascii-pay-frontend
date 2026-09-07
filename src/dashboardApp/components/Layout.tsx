@@ -32,9 +32,11 @@ import {
   AdminPanelSettingsOutlined,
   Coffee,
   Home,
+  Inventory2Outlined,
   LanguageOutlined,
   LocalAtm,
   MenuOutlined,
+  PlaylistAddCheckOutlined,
   PriceChangeOutlined,
   PublicOutlined,
   ShoppingCartOutlined,
@@ -144,7 +146,17 @@ export const Layout = () => {
                 />
               </Box>
               <Box sx={{ flexGrow: 1 }} />
-              <Box display="flex" sx={{ ml: "auto" }}>
+              <Box display="flex" sx={{ ml: "auto", gap: 1 }}>
+                {user && (
+                  <Button
+                    component={Link}
+                    to="/shopping-list"
+                    color="inherit"
+                    startIcon={<PlaylistAddCheckOutlined />}
+                  >
+                    {t("layout.shoppingList")}
+                  </Button>
+                )}
                 {user && (
                   <Button onClick={onLogoutHandler} color="inherit">
                     {t("layout.logout")}
@@ -242,6 +254,25 @@ export const Layout = () => {
           </ListItem>
           <ListItem disablePadding>
             <NavLink
+              to="/inventory"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <Inventory2Outlined />
+                  </ListItemIcon>
+                  <ListItemText primary={t("layout.inventory")} />
+                </ListItemButton>
+              )}
+            </NavLink>
+          </ListItem>
+          <ListItem disablePadding>
+            <NavLink
               to="/purchases"
               style={{
                 width: "100%",
@@ -255,6 +286,25 @@ export const Layout = () => {
                     <ShoppingCartOutlined />
                   </ListItemIcon>
                   <ListItemText primary={t("layout.purchases")} />
+                </ListItemButton>
+              )}
+            </NavLink>
+          </ListItem>
+          <ListItem disablePadding>
+            <NavLink
+              to="/shopping-list"
+              style={{
+                width: "100%",
+                textDecoration: "none",
+                color: theme.palette.text.primary,
+              }}
+            >
+              {({ isActive }) => (
+                <ListItemButton selected={isActive}>
+                  <ListItemIcon>
+                    <PlaylistAddCheckOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={t("layout.shoppingList")} />
                 </ListItemButton>
               )}
             </NavLink>

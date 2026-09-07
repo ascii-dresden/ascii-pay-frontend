@@ -137,7 +137,9 @@ export const SearchDialog = (props: { setOpen: (open: boolean) => void }) => {
           <StyledSearchBar>
             <StyledSearchBarInput
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearch(e.target.value)
+              }
               onKeyDown={preventUpDown}
               placeholder={t("search.prompt") ?? undefined}
               autoFocus

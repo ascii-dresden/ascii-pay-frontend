@@ -26,7 +26,9 @@
     "print": "Drucken",
     "accountStatus": "ascii Status",
     "purchases": "Einkaufe",
-    "purchase": "Einkauf"
+    "inventory": "Inventar",
+    "purchase": "Einkauf",
+    "shoppingList": "Einkaufsliste"
   },
   "setup": {
     "message": "ascii-pay einrichten",
@@ -203,10 +205,18 @@
     "price": "Preis",
     "bonus": "Bonus",
     "category": "Kategorie",
+    "categoryHint": "Auswählen oder neue Kategorie eingeben",
     "printLists": "Drucklisten",
+    "printListsHint": "Auswählen oder neue Druckliste eingeben und Enter drücken",
     "tags": "Tags",
+    "tagsHint": "Auswählen oder neuen Tag eingeben und Enter drücken",
     "purchaseTax": "Steuer",
     "barcode": "Barcode",
+    "stocked": "Im Sortiment (Teil des Inventars)",
+    "stockedShort": "Im Sortiment",
+    "notStocked": "Nicht im Sortiment",
+    "targetQuantity": "Zielbestand",
+    "targetQuantityHint": "Sollbestand in Einzelstücken",
     "addToTransaction": "Produkt zu Transaktion hinzufgen",
     "noProducts": "Keine Produkte",
     "selectPaymentProduct": "Produkt auswählen",
@@ -227,6 +237,16 @@
     "edit": {
       "createTitle": "Produkt erstellen",
       "createAction": "Produkt erstellen",
+      "steps": {
+        "basics": "Grunddaten",
+        "lists": "Listen",
+        "pricing": "Preise"
+      },
+      "stepOf": "Schritt {{step}} von {{total}}: {{title}}",
+      "next": "Weiter",
+      "back": "Zurück",
+      "nameRequired": "Bitte einen Namen eingeben",
+      "inventorySection": "Inventar",
       "updateTitle": "Produkt bearbeiten",
       "updateAction": "Änderungen speichern",
       "deleteTitle": "Produkt löschen?",
@@ -235,7 +255,15 @@
       "updateImageTitle": "Produktbild bearbeiten",
       "updateImageRemove": "Produktbild entfernen",
       "updateImageDragHint": "Produktbild hier einfügen",
-      "updateImageClickHint": "oder klicken um Datei auszuwählen"
+      "updateImageClickHint": "oder klicken um Datei auszuwählen",
+      "cancel": "Abbrechen",
+      "notFound": "Produkt nicht gefunden.",
+      "createSuccess": "Produkt erstellt!",
+      "createError": "Produkt konnte nicht erstellt werden!",
+      "updateSuccess": "Produkt gespeichert!",
+      "updateError": "Produkt konnte nicht gespeichert werden!",
+      "deleteSuccess": "Produkt gelöscht!",
+      "deleteError": "Produkt konnte nicht gelöscht werden!"
     }
   },
   "purchase": {
@@ -248,7 +276,11 @@
       "container_size": "Gebindegröße",
       "container_count": "Gebindeanzahl",
       "container_cents": "Gebindepreis (netto)",
-      "cents_per_item": "Einzelpreis"
+      "cents_per_item": "Einzelpreis",
+      "best_before": "MHD",
+      "planned": "Geplant",
+      "collected": "Gesammelt",
+      "subtotal": "Zwischensumme"
     },
     "action": {
       "details": "Details",
@@ -256,7 +288,14 @@
       "createPurchase": "Einkauf erstellen",
       "editPurchase": "Einkauf bearbeiten",
       "deletePurchase": "Einkauf löschen",
-      "addItem": "Produkt hinzufügen"
+      "addItem": "Produkt hinzufügen",
+      "newShoppingTrip": "Neuer Einkauf",
+      "continueShopping": "Weiter einkaufen",
+      "shoppingMode": "Einkaufsmodus",
+      "finalize": "Abschließen",
+      "reopen": "Wieder öffnen",
+      "cancel": "Abbrechen",
+      "back": "Zurück"
     },
     "edit": {
       "createTitle": "Einkauf erstellen",
@@ -278,6 +317,203 @@
       "suggestedPrice": "Preisempfehlung (brutto)",
       "suggestedPriceWithoutTax": "Preisempfehlung (netto)",
       "suggestedProfit": "Gewinn"
+    },
+    "name": "Bezeichnung",
+    "finalizedAt": "Abgeschlossen am",
+    "state": {
+      "draft": "Entwurf",
+      "finalized": "Abgeschlossen"
+    },
+    "filter": {
+      "all": "Alle",
+      "drafts": "Entwürfe",
+      "finalized": "Abgeschlossen"
+    },
+    "details": {
+      "editLocked": "Dieser Einkauf ist abgeschlossen. Nur ein Admin kann ihn wieder öffnen."
+    },
+    "notFound": "Einkauf nicht gefunden.",
+    "stateLabel": "Status",
+    "newTrip": {
+      "title": "Neuer Einkauf",
+      "name": "Bezeichnung (optional)",
+      "action": "Einkauf starten",
+      "success": "Einkauf angelegt!",
+      "error": "Einkauf konnte nicht angelegt werden!"
+    },
+    "finalize": {
+      "title": "Einkauf abschließen?",
+      "content": "Der Einkauf wird mit einer Summe von <bold>{{total}}</bold> abgeschlossen.",
+      "uncollected_one": "{{count}} Artikel der Einkaufsliste wurde nicht gesammelt und wird entfernt.",
+      "uncollected_other": "{{count}} Artikel der Einkaufsliste wurden nicht gesammelt und werden entfernt.",
+      "action": "Abschließen",
+      "success": "Einkauf abgeschlossen!",
+      "error": "Einkauf konnte nicht abgeschlossen werden!",
+      "alreadyFinalized": "Dieser Einkauf ist bereits abgeschlossen."
+    },
+    "reopen": {
+      "title": "Einkauf wieder öffnen?",
+      "content": "Der Einkauf <bold>{{name}}</bold> wird wieder zum Entwurf und kann bearbeitet werden.",
+      "action": "Wieder öffnen",
+      "success": "Einkauf wieder geöffnet!",
+      "error": "Einkauf konnte nicht wieder geöffnet werden!",
+      "alreadyDraft": "Dieser Einkauf ist ein Entwurf und kann bearbeitet werden."
+    },
+    "shop": {
+      "title": "Einkaufsmodus",
+      "tabs": {
+        "scan": "Scannen",
+        "cart": "Warenkorb",
+        "list": "Einkaufsliste"
+      },
+      "finish": "Abschließen",
+      "items_one": "{{count}} Artikel",
+      "items_other": "{{count}} Artikel",
+      "finalizedNotice": "Dieser Einkauf ist abgeschlossen und kann nicht mehr bearbeitet werden.",
+      "toDetails": "Details anzeigen",
+      "manualCode": "Barcode",
+      "manualCodeHelp": "Barcode eingeben und Enter drücken oder Handscanner verwenden",
+      "searchProduct": "Produkt suchen",
+      "lookupFailed": "Barcode konnte nicht nachgeschlagen werden!",
+      "notRegistered": "Nicht registriert",
+      "notRegisteredHint": "Es gibt noch kein Produkt mit dem Barcode <bold>{{code}}</bold>.",
+      "createProduct": "Produkt erstellen",
+      "addFreeItem": "Als freien Artikel hinzufügen",
+      "freeItemName": "Artikelname",
+      "addToCart": "In den Warenkorb",
+      "saveItem": "Speichern",
+      "removeItem": "Entfernen",
+      "editItem": "Artikel bearbeiten",
+      "lastPurchase": "Letzter Einkauf: {{price}} · Gebinde {{size}}",
+      "noLastPurchase": "Noch nie eingekauft",
+      "target": "Sollbestand: {{count}}",
+      "notStocked": "Nicht im Sortiment",
+      "onList": "Auf der Liste: {{count}}",
+      "cartEmpty": "Der Warenkorb ist leer. Scanne einen Artikel, um ihn hinzuzufügen.",
+      "listEmpty": "Nichts mehr auf der Liste.",
+      "increased": "{{name}}: Anzahl auf {{count}} erhöht",
+      "undo": "Rückgängig",
+      "added": "{{name}} in den Warenkorb gelegt",
+      "updated": "Artikel gespeichert",
+      "removed": "Artikel entfernt",
+      "collectedAll": "Alle Artikel der Einkaufsliste sind gesammelt.",
+      "error": "Änderung konnte nicht gespeichert werden!",
+      "loadError": "Einkauf konnte nicht geladen werden!",
+      "productCreated": "Produkt erstellt. Jetzt in den Warenkorb legen.",
+      "uncollectedHint_one": "{{count}} Artikel noch auf der Liste",
+      "uncollectedHint_other": "{{count}} Artikel noch auf der Liste",
+      "backToShopping": "Zurück zum Einkauf",
+      "scanResultTitle": "Gescannter Artikel",
+      "resolving": "Barcode wird nachgeschlagen…",
+      "retry": "Erneut versuchen",
+      "itemNotFound": "Dieser Artikel existiert nicht mehr im Einkauf.",
+      "productNotFound": "Produkt nicht gefunden.",
+      "removeFromList": "Von der Liste entfernen",
+      "removedFromList": "Von der Liste entfernt"
+    }
+  },
+  "inventory": {
+    "title": "Inventar",
+    "loadError": "Inventar konnte nicht geladen werden!",
+    "saveError": "Änderungen konnten nicht gespeichert werden!",
+    "saveSuccess": "Änderungen gespeichert!",
+    "empty": "Noch keine Produkte im Sortiment. Über „Sortiment verwalten“ können Produkte zum Inventar hinzugefügt werden.",
+    "noMatches": "Keine Produkte entsprechen dem aktuellen Filter.",
+    "filter": {
+      "belowTarget": "Nur unter Zielbestand"
+    },
+    "column": {
+      "product": "Produkt",
+      "category": "Kategorie",
+      "target": "Zielbestand",
+      "lastCounted": "Zuletzt gezählt",
+      "estimated": "Geschätzter Bestand",
+      "lastPurchase": "Letzter Einkauf",
+      "unitPrice": "pro Stück"
+    },
+    "neverCounted": "Noch nie gezählt",
+    "estimate": "Schätzung",
+    "estimateHint": "Letzte Zählung plus in abgeschlossenen Einkäufen gekaufte Stück minus seitdem verkaufte Stück.",
+    "belowTargetHint": "Unter Zielbestand ({{missing}} fehlen)",
+    "units_one": "{{count}} Stück",
+    "units_other": "{{count}} Stück",
+    "action": {
+      "manageAssortment": "Sortiment verwalten",
+      "startCheck": "Inventur starten",
+      "continueCheck": "Inventur fortsetzen",
+      "openCheck": "Inventur öffnen",
+      "openPurchase": "Einkaufsliste öffnen",
+      "deleteCheck": "Inventur löschen",
+      "complete": "Abschließen",
+      "refresh": "Aktualisieren",
+      "cancel": "Abbrechen"
+    },
+    "draftNotice": "Eine am {{date}} gestartete Inventur ist noch in Bearbeitung ({{counted}}/{{total}} gezählt). Eine neue Inventur kann gestartet werden, sobald sie abgeschlossen oder gelöscht wurde.",
+    "assortment": {
+      "title": "Sortiment verwalten",
+      "search": "Sortiment filtern",
+      "addProduct": "Produkt zum Sortiment hinzufügen",
+      "addProductHint": "Suche nach Name, Nickname oder Barcode",
+      "allAdded": "Alle Produkte sind bereits im Sortiment",
+      "stockedCount_one": "{{count}} Produkt im Sortiment",
+      "stockedCount_other": "{{count}} Produkte im Sortiment",
+      "addedToast": "{{name}} zum Sortiment hinzugefügt",
+      "removedToast": "{{name}} aus dem Sortiment entfernt",
+      "undo": "Rückgängig",
+      "remove": "Aus dem Sortiment entfernen",
+      "done": "Fertig",
+      "empty": "Noch keine Produkte im Sortiment. Nutze die Suche oben, um Produkte hinzuzufügen.",
+      "noProducts": "Keine Produkte gefunden",
+      "uncategorized": "Ohne Kategorie"
+    },
+    "history": {
+      "title": "Inventur-Verlauf",
+      "empty": "Noch keine Inventuren.",
+      "counted": "{{counted}} von {{total}} gezählt",
+      "purchase": "Einkaufsliste #{{id}}"
+    },
+    "state": {
+      "draft": "In Bearbeitung",
+      "completed": "Abgeschlossen"
+    },
+    "check": {
+      "title": "Inventur",
+      "titleWithDate": "Inventur {{date}}",
+      "loadError": "Inventur konnte nicht geladen werden!",
+      "createError": "Inventur konnte nicht gestartet werden!",
+      "itemSaveError": "Zählung konnte nicht gespeichert werden!",
+      "progress": "{{counted}} von {{total}} gezählt",
+      "uncountedOnly": "Nur ungezählte",
+      "allCounted": "Alle Produkte wurden gezählt.",
+      "notCounted": "Nicht gezählt",
+      "counted": "Gezählt",
+      "target": "Zielbestand",
+      "completedNotice": "Abgeschlossen am {{date}}.",
+      "completedNoPurchase": "Es wurde keine Einkaufsliste erzeugt.",
+      "readOnly": "Diese Inventur ist abgeschlossen und kann nicht mehr bearbeitet werden.",
+      "decrease": "Verringern",
+      "increase": "Erhöhen",
+      "deleteTitle": "Inventur löschen?",
+      "deleteContent": "Soll diese Inventur endgültig gelöscht werden? Alle gezählten Mengen gehen verloren.",
+      "deleteAction": "Inventur löschen",
+      "deleteSuccess": "Inventur gelöscht!",
+      "deleteError": "Inventur konnte nicht gelöscht werden!",
+      "notFound": "Inventur nicht gefunden."
+    },
+    "complete": {
+      "title": "Inventur abschließen",
+      "action": "Abschließen",
+      "belowTarget": "Produkte unter Zielbestand",
+      "needed": "{{count}} benötigt",
+      "none": "Kein Produkt liegt unter dem Zielbestand.",
+      "uncountedWarning_one": "{{count}} Produkt wurde nicht gezählt und wird übersprungen.",
+      "uncountedWarning_other": "{{count}} Produkte wurden nicht gezählt und werden übersprungen.",
+      "generatePurchase": "Einkaufsliste erzeugen",
+      "name": "Name",
+      "defaultName": "Inventur {{date}}",
+      "noPurchaseHint": "Es wird keine Einkaufsliste erzeugt, da kein Produkt unter dem Zielbestand liegt.",
+      "success": "Inventur abgeschlossen!",
+      "error": "Inventur konnte nicht abgeschlossen werden!"
     }
   },
   "payment": {
@@ -286,5 +522,63 @@
     "total": "Summe",
     "balance": "Neues Guthaben",
     "action": "Bezahlen"
+  },
+  "shoppingList": {
+    "title": "Einkaufsliste",
+    "add": "Auf die Liste",
+    "empty": "Die Einkaufsliste ist leer. Trage ein, was fehlt, damit es beim nächsten Einkauf mitkommt.",
+    "loadError": "Einkaufsliste konnte nicht geladen werden!",
+    "quantity": "{{count}} ×",
+    "requestedBy": "gewünscht von {{name}}",
+    "boughtOn": "gekauft am {{date}}",
+    "recentlyBought": "Zuletzt gekauft",
+    "recentlyBoughtEmpty": "Es wurde noch nichts abgehakt.",
+    "markDone": "Als gekauft abhaken",
+    "reopen": "Wieder auf die Liste setzen",
+    "remove": "Von der Liste entfernen",
+    "undo": "Rückgängig",
+    "removed": "{{name}} von der Einkaufsliste entfernt",
+    "done": "{{name}} als gekauft abgehakt",
+    "reopened": "{{name}} ist wieder auf der Einkaufsliste",
+    "error": "Änderung konnte nicht gespeichert werden!",
+    "form": {
+      "newTitle": "Auf die Einkaufsliste setzen",
+      "editTitle": "Eintrag bearbeiten",
+      "product": "Produkt oder Freitext",
+      "productHelp": "Produkt aus dem Sortiment wählen oder etwas anderes eintippen",
+      "linkedProduct": "Produkt: {{name}}",
+      "freeText": "Freitext, kein Produkt verknüpft",
+      "quantity": "Anzahl",
+      "note": "Notiz (optional)",
+      "add": "Auf die Liste",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "remove": "Entfernen",
+      "created": "{{name}} auf die Einkaufsliste gesetzt",
+      "updated": "Eintrag gespeichert",
+      "saveError": "Eintrag konnte nicht gespeichert werden!",
+      "notFound": "Dieser Eintrag existiert nicht mehr.",
+      "forbidden": "Nur wer den Eintrag angelegt hat (oder ein Einkäufer) kann ihn ändern.",
+      "alreadyDone": "Dieser Eintrag wurde bereits gekauft und kann nicht mehr bearbeitet werden."
+    },
+    "shop": {
+      "subheader": "Einkaufsliste",
+      "tripHint_one": "{{count}} Eintrag der Einkaufsliste wird im Tab „Einkaufsliste“ angezeigt.",
+      "tripHint_other": "{{count}} Einträge der Einkaufsliste werden im Tab „Einkaufsliste“ angezeigt."
+    }
+  },
+  "scanner": {
+    "start": "Kamera starten",
+    "stop": "Kamera stoppen",
+    "scanning": "Kamera auf einen Barcode richten",
+    "scanButton": "Barcode scannen",
+    "dialogTitle": "Barcode scannen",
+    "engineNative": "Nativer Detektor",
+    "engineZxing": "ZXing",
+    "errorInsecure": "Kamerazugriff benötigt HTTPS (oder localhost).",
+    "errorUnsupported": "Dieser Browser unterstützt kein Kamera-Scannen. Bitte den Barcode manuell eingeben.",
+    "errorDenied": "Kamerazugriff wurde verweigert. In den Browser-Einstellungen erlauben und erneut versuchen.",
+    "errorNotFound": "Keine Kamera gefunden.",
+    "errorUnknown": "Die Kamera konnte nicht gestartet werden."
   }
 }

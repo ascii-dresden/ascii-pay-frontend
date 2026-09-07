@@ -11,8 +11,11 @@ import {
 } from "@mui/icons-material";
 import React from "react";
 import styled from "@emotion/styled";
+import { DatePicker } from "@mui/x-date-pickers";
 import { CoinInput } from "../transaction/CoinInput";
 import { SelectProductPopup } from "../product/SelectProductPopup";
+import { parseBestBefore, serializeBestBefore } from "./purchaseUtils";
+import { NO_MODAL_PICKER_QUERY } from "./shop/CartItemForm";
 
 const StyledEditRow = styled.div`
   display: flex;
@@ -32,6 +35,19 @@ const StyledEditRow = styled.div`
   & > div {
     margin-left: 0.5em;
     position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+`;
+
+const StyledNameRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-bottom: 0.7rem;
+
+  & > *:first-of-type {
+    flex: 1 1 12rem;
   }
 `;
 
@@ -64,6 +80,9 @@ export const PurchaseItemsEdit = (props: {
       container_size: 0,
       container_count: 0,
       container_cents: 0,
+      best_before: null,
+      barcode: null,
+      collected: true,
       product_id: null,
     });
     props.setItems(newPrices);
@@ -153,6 +172,12 @@ const PurchaseItemRowEdit = (props: {
       container_cents: value,
     });
   };
+  const setBestBefore = (value: Date | null) => {
+    props.setItem({
+      ...props.item,
+      best_before: serializeBestBefore(value),
+    });
+  };
   const handleSelectProduct = (product: ProductDto) => {
     props.setItem({
       ...props.item,
@@ -170,29 +195,43 @@ const PurchaseItemRowEdit = (props: {
 
   return (
     <div>
-      <TextField
-        label={t("purchase.item.name")}
-        fullWidth
-        sx={{ mb: "0.7rem" }}
-        size="small"
-        value={props.item.name}
-        onChange={(e) => setName(e.target.value)}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <div style={{ marginRight: "-0.6em" }}>
-                {props.item.product_id === null ? (
-                  <SelectProductPopup selectProduct={handleSelectProduct} />
-                ) : (
-                  <IconButton sx={{ height: "40px" }} onClick={removeProduct}>
-                    <Close />
-                  </IconButton>
-                )}
-              </div>
-            </InputAdornment>
-          ),
-        }}
-      />
+      <StyledNameRow>
+        <TextField
+          label={t("purchase.item.name")}
+          fullWidth
+          size="small"
+          value={props.item.name}
+          onChange={(e) => setName(e.target.value)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <div style={{ marginRight: "-0.6em" }}>
+                  {props.item.product_id === null ? (
+                    <SelectProductPopup selectProduct={handleSelectProduct} />
+                  ) : (
+                    <IconButton sx={{ height: "40px" }} onClick={removeProduct}>
+                      <Close />
+                    </IconButton>
+                  )}
+                </div>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <DatePicker
+          label={t("purchase.item.best_before")}
+          value={parseBestBefore(props.item.best_before)}
+          onChange={(v) => setBestBefore(v)}
+          desktopModeMediaQuery={NO_MODAL_PICKER_QUERY}
+          slotProps={{
+            textField: {
+              size: "small",
+              sx: { flex: "1 1 10rem", minWidth: "10rem" },
+            },
+            actionBar: { actions: ["clear", "today", "accept"] },
+          }}
+        />
+      </StyledNameRow>
       <StyledContainerRow>
         <TextField
           value={props.item.container_count ?? 0}

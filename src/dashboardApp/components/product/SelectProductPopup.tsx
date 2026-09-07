@@ -2,6 +2,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import Autocomplete, {
   AutocompleteCloseReason,
+  createFilterOptions,
 } from "@mui/material/Autocomplete";
 import { ProductDto } from "../../../common/contracts";
 import {
@@ -31,9 +32,16 @@ const PaperComponent = (props: any) => {
   return <div {...props} />;
 };
 
+const filterOptions = createFilterOptions<ProductDto>({
+  stringify: (option) =>
+    [option.name, option.nickname ?? "", option.barcode ?? ""].join(" "),
+});
+
 export const SelectProductPopup = (props: {
   selectProduct: (product: ProductDto) => void;
   fullSizeButton?: boolean;
+  /** Button label when `fullSizeButton` is set. */
+  label?: string;
 }) => {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -89,7 +97,7 @@ export const SelectProductPopup = (props: {
     <>
       {props.fullSizeButton ? (
         <Button variant="outlined" onClick={handleClick}>
-          {t("purchase.action.addItem")}
+          {props.label ?? t("purchase.action.addItem")}
         </Button>
       ) : (
         <Tooltip title={t("product.addToTransaction")}>
@@ -134,6 +142,7 @@ export const SelectProductPopup = (props: {
             PopperComponent={PopperComponent}
             noOptionsText={t("product.noProducts")}
             options={sortedProducts}
+            filterOptions={filterOptions}
             getOptionLabel={(option) => option?.name ?? "---"}
             groupBy={(option) => option.category}
             renderOption={(props, option) => (

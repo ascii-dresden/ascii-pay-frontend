@@ -153,7 +153,7 @@ export const ActionButton = (props: {
                   {menuItems.map((item, index) => {
                     if (item.href) {
                       return (
-                        <MenuItem component="a" href={item.href} key={index}>
+                        <MenuItem component={Link} to={item.href} key={index}>
                           <ListItemIcon
                             sx={{
                               "& > svg": { fontSize: "1.25rem !important" },

@@ -100,6 +100,113 @@ const PurchaseDetailsPage = React.lazy(() =>
     default: module.PurchaseDetailsPage,
   }))
 );
+const ShoppingModePage = React.lazy(() =>
+  import("./pages/ShoppingModePage").then((module) => ({
+    default: module.ShoppingModePage,
+  }))
+);
+const InventoryPage = React.lazy(() =>
+  import("./pages/InventoryPage").then((module) => ({
+    default: module.InventoryPage,
+  }))
+);
+const InventoryCheckPage = React.lazy(() =>
+  import("./pages/InventoryCheckPage").then((module) => ({
+    default: module.InventoryCheckPage,
+  }))
+);
+const CreateProductPage = React.lazy(() =>
+  import("./pages/CreateProductPage").then((module) => ({
+    default: module.CreateProductPage,
+  }))
+);
+const UpdateProductPage = React.lazy(() =>
+  import("./pages/UpdateProductPage").then((module) => ({
+    default: module.UpdateProductPage,
+  }))
+);
+const DeleteProductPage = React.lazy(() =>
+  import("./pages/DeleteProductPage").then((module) => ({
+    default: module.DeleteProductPage,
+  }))
+);
+const ManageAssortmentPage = React.lazy(() =>
+  import("./pages/ManageAssortmentPage").then((module) => ({
+    default: module.ManageAssortmentPage,
+  }))
+);
+const CompleteInventoryCheckPage = React.lazy(() =>
+  import("./pages/CompleteInventoryCheckPage").then((module) => ({
+    default: module.CompleteInventoryCheckPage,
+  }))
+);
+const DeleteInventoryCheckPage = React.lazy(() =>
+  import("./pages/DeleteInventoryCheckPage").then((module) => ({
+    default: module.DeleteInventoryCheckPage,
+  }))
+);
+
+const NewShoppingTripPage = React.lazy(() =>
+  import("./pages/purchase/NewShoppingTripPage").then((module) => ({
+    default: module.NewShoppingTripPage,
+  }))
+);
+const CreatePurchasePage = React.lazy(() =>
+  import("./pages/purchase/CreatePurchasePage").then((module) => ({
+    default: module.CreatePurchasePage,
+  }))
+);
+const UpdatePurchasePage = React.lazy(() =>
+  import("./pages/purchase/UpdatePurchasePage").then((module) => ({
+    default: module.UpdatePurchasePage,
+  }))
+);
+const FinalizePurchasePage = React.lazy(() =>
+  import("./pages/purchase/FinalizePurchasePage").then((module) => ({
+    default: module.FinalizePurchasePage,
+  }))
+);
+const ReopenPurchasePage = React.lazy(() =>
+  import("./pages/purchase/ReopenPurchasePage").then((module) => ({
+    default: module.ReopenPurchasePage,
+  }))
+);
+const DeletePurchasePage = React.lazy(() =>
+  import("./pages/purchase/DeletePurchasePage").then((module) => ({
+    default: module.DeletePurchasePage,
+  }))
+);
+const ScanResultPage = React.lazy(() =>
+  import("./pages/purchase/ScanResultPage").then((module) => ({
+    default: module.ScanResultPage,
+  }))
+);
+const AddProductPage = React.lazy(() =>
+  import("./pages/purchase/AddProductPage").then((module) => ({
+    default: module.AddProductPage,
+  }))
+);
+const FreeItemPage = React.lazy(() =>
+  import("./pages/purchase/FreeItemPage").then((module) => ({
+    default: module.FreeItemPage,
+  }))
+);
+const EditCartItemPage = React.lazy(() =>
+  import("./pages/purchase/EditCartItemPage").then((module) => ({
+    default: module.EditCartItemPage,
+  }))
+);
+
+const ShoppingListPage = React.lazy(() =>
+  import("./pages/shoppingList/ShoppingListPage").then((module) => ({
+    default: module.ShoppingListPage,
+  }))
+);
+const ShoppingListItemPage = React.lazy(() =>
+  import("./pages/shoppingList/ShoppingListItemPage").then((module) => ({
+    default: module.ShoppingListItemPage,
+  }))
+);
 
 const StyledDashboardApp = styled.div`
   min-height: 100vh;
@@ -172,6 +279,18 @@ export function DashboardApp() {
                   <Route path="/" element={<Layout />}>
                     <Route index element={<ProfilePage />} />
                     <Route path="register" element={<RegisterPage />} />
+                    <Route
+                      path="shopping-list"
+                      element={<ShoppingListPage />}
+                    />
+                    <Route
+                      path="shopping-list/new"
+                      element={<ShoppingListItemPage />}
+                    />
+                    <Route
+                      path="shopping-list/:itemId/edit"
+                      element={<ShoppingListItemPage />}
+                    />
 
                     <Route
                       element={
@@ -185,11 +304,90 @@ export function DashboardApp() {
                         path="products/:productId"
                         element={<ProductDetailsPage />}
                       />
+                      <Route
+                        path="products/new"
+                        element={<CreateProductPage />}
+                      />
+                      <Route
+                        path="products/:productId/edit"
+                        element={<UpdateProductPage />}
+                      />
+                      <Route
+                        path="products/:productId/delete"
+                        element={<DeleteProductPage />}
+                      />
+                      <Route path="inventory" element={<InventoryPage />} />
+                      <Route
+                        path="inventory/checks/:checkId"
+                        element={<InventoryCheckPage />}
+                      />
+                      <Route
+                        path="inventory/assortment"
+                        element={<ManageAssortmentPage />}
+                      />
+                      <Route
+                        path="inventory/checks/:checkId/complete"
+                        element={<CompleteInventoryCheckPage />}
+                      />
+                      <Route
+                        path="inventory/checks/:checkId/delete"
+                        element={<DeleteInventoryCheckPage />}
+                      />
                       <Route path="purchases" element={<PurchaseListPage />} />
                       <Route
                         path="purchases/:purchaseId"
                         element={<PurchaseDetailsPage />}
                       />
+                      <Route
+                        path="purchases/:purchaseId/shop"
+                        element={<ShoppingModePage />}
+                      />
+                      <Route
+                        path="purchases/new"
+                        element={<NewShoppingTripPage />}
+                      />
+                      <Route
+                        path="purchases/receipt/new"
+                        element={<CreatePurchasePage />}
+                      />
+                      <Route
+                        path="purchases/:purchaseId/edit"
+                        element={<UpdatePurchasePage />}
+                      />
+                      <Route
+                        path="purchases/:purchaseId/finalize"
+                        element={<FinalizePurchasePage />}
+                      />
+                      <Route
+                        path="purchases/:purchaseId/delete"
+                        element={<DeletePurchasePage />}
+                      />
+                      <Route
+                        path="purchases/:purchaseId/shop/scan/:code"
+                        element={<ScanResultPage />}
+                      />
+                      <Route
+                        path="purchases/:purchaseId/shop/product/:productId"
+                        element={<AddProductPage />}
+                      />
+                      <Route
+                        path="purchases/:purchaseId/shop/free"
+                        element={<FreeItemPage />}
+                      />
+                      <Route
+                        path="purchases/:purchaseId/shop/item/:itemId"
+                        element={<EditCartItemPage />}
+                      />
+                      <Route
+                        element={
+                          <RequireUserUnauthorized allowedRoles={["Admin"]} />
+                        }
+                      >
+                        <Route
+                          path="purchases/:purchaseId/reopen"
+                          element={<ReopenPurchasePage />}
+                        />
+                      </Route>
                     </Route>
 
                     <Route
