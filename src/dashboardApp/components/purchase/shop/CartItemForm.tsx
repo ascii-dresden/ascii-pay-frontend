@@ -20,6 +20,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { useTranslation } from "react-i18next";
 import {
+  ProductBarcodeDto,
   ProductDto,
   PurchaseItemDto,
   SavePurchaseItemDto,
@@ -29,7 +30,11 @@ import { stringAvatar } from "../../../../common/stringAvatar";
 import { moneyToString } from "../../../../terminalApp/components/Money";
 import { CoinInput } from "../../transaction/CoinInput";
 import { LastPurchaseInfo } from "../usePurchaseHistory";
-import { parseBestBefore, serializeBestBefore } from "../purchaseUtils";
+import {
+  parseBestBefore,
+  serializeBestBefore,
+  unitPriceCents,
+} from "../purchaseUtils";
 
 /** Always render the popper variant of the date picker (no modal dialog). */
 export const NO_MODAL_PICKER_QUERY = "@media (min-width: 0px)";
@@ -160,6 +165,8 @@ export const CartItemHeader = (props: {
   title: string;
   barcode?: string | null;
   lastPurchase: LastPurchaseInfo | null;
+  /** The scanned purchasing variant, when the code belongs to the product. */
+  variant?: ProductBarcodeDto | null;
   /** Count of planned containers for the product (shown as "on list"). */
   plannedCount?: number;
 }) => {
@@ -200,6 +207,23 @@ export const CartItemHeader = (props: {
           spacing={1}
           sx={{ mt: 1.5, flexWrap: "wrap", gap: 1 }}
         >
+          {props.variant ? (
+            <Chip
+              size="small"
+              color="primary"
+              variant="outlined"
+              icon={<StraightenOutlined />}
+              label={
+                props.variant.label
+                  ? `${props.variant.label} · ${t("purchase.shop.variantUnits", {
+                      count: props.variant.container_size,
+                    })}`
+                  : t("purchase.shop.variantUnits", {
+                      count: props.variant.container_size,
+                    })
+              }
+            />
+          ) : null}
           <Chip
             size="small"
             label={
@@ -207,7 +231,17 @@ export const CartItemHeader = (props: {
                 ? t("purchase.shop.lastPurchase", {
                     price: moneyToString(props.lastPurchase.container_cents),
                     size: props.lastPurchase.container_size,
-                  })
+                  }) +
+                  (props.lastPurchase.container_size > 1
+                    ? ` · ${t("purchase.item.unitPriceShort", {
+                        price: moneyToString(
+                          unitPriceCents(
+                            props.lastPurchase.container_cents,
+                            props.lastPurchase.container_size
+                          )
+                        ),
+                      })}`
+                    : "")
                 : t("purchase.shop.noLastPurchase")
             }
           />
@@ -326,6 +360,23 @@ export const CartItemForm = (props: {
           actionBar: { actions: ["clear", "today", "accept"] },
         }}
       />
+      {value.size > 1 ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            mt: -1,
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            {t("purchase.item.unitPrice")}
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            {moneyToString(unitPriceCents(value.cents, value.size))}
+          </Typography>
+        </Box>
+      ) : null}
       <Box
         sx={{
           display: "flex",

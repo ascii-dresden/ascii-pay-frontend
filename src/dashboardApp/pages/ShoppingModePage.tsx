@@ -61,7 +61,9 @@ import {
   shoppingListSecondary,
 } from "../components/shoppingList/shoppingListUtils";
 import { useRemoveShoppingListItem } from "../components/shoppingList/useShoppingListActions";
+import { useShoppingListCheckoff } from "../components/shoppingList/useShoppingListWish";
 import {
+  unitPriceCents,
   collectedItems,
   formatBestBefore,
   plannedItems,
@@ -69,6 +71,7 @@ import {
   purchaseLabel,
   purchaseTotal,
 } from "../components/purchase/purchaseUtils";
+import { barcodeSearchText, barcodeSummary } from "../components/product/productBarcodeUtils";
 
 const BarcodeScanner = React.lazy(
   () => import("../components/scanner/BarcodeScanner")
@@ -78,7 +81,7 @@ type ShopTab = "scan" | "cart" | "list";
 
 const productFilter = createFilterOptions<ProductDto>({
   stringify: (option) =>
-    [option.name, option.nickname ?? "", option.barcode ?? ""].join(" "),
+    [option.name, option.nickname ?? "", barcodeSearchText(option)].join(" "),
 });
 
 /**
@@ -106,6 +109,7 @@ export const ShoppingModePage = () => {
   const [updateItem, updateState] = useUpdatePurchaseItemMutation();
   const removeItem = useRemoveCartItem(purchaseId);
   const removeWish = useRemoveShoppingListItem();
+  const checkOffWishes = useShoppingListCheckoff();
   const [removingId, setRemovingId] = React.useState<number | null>(null);
   const [removingWishId, setRemovingWishId] = React.useState<number | null>(
     null
@@ -175,7 +179,10 @@ export const ShoppingModePage = () => {
   };
 
   const handleCollectPlanned = async (item: PurchaseItemDto) => {
-    const last = getLastPurchase(item.product?.id);
+    const last = getLastPurchase(item.product?.id, {
+      code: item.barcode,
+      size: item.container_size,
+    });
     try {
       await updateItem({
         id: purchaseId,
@@ -192,6 +199,11 @@ export const ShoppingModePage = () => {
         t("purchase.shop.added", { name: item.product?.name ?? item.name }),
         { autoClose: 1500 }
       );
+      // The article is in the basket, so nobody else needs to buy it.
+      checkOffWishes(purchaseId, {
+        productId: item.product?.id ?? null,
+        name: item.product?.name ?? item.name,
+      });
     } catch (e) {
       toast.error(t("purchase.shop.error"));
       console.error(e);
@@ -308,6 +320,13 @@ export const ShoppingModePage = () => {
     const secondary = [
       `${item.container_count} × ${moneyToString(item.container_cents)}`,
       `${t("purchase.item.container_size")} ${item.container_size}`,
+      item.container_size > 1
+        ? t("purchase.item.unitPriceShort", {
+            price: moneyToString(
+              unitPriceCents(item.container_cents, item.container_size)
+            ),
+          })
+        : null,
       item.best_before
         ? `${t("purchase.item.best_before")} ${formatBestBefore(
             item.best_before
@@ -566,9 +585,9 @@ export const ShoppingModePage = () => {
               }}
             >
               <span>{option.name}</span>
-              {option.barcode ? (
+              {barcodeSummary(option) ? (
                 <Typography variant="caption" color="text.secondary">
-                  {option.barcode}
+                  {barcodeSummary(option)}
                 </Typography>
               ) : null}
             </Box>

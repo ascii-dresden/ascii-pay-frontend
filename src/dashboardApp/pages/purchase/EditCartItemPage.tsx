@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { useUpdatePurchaseItemMutation } from "../../redux/api/purchaseApi";
 import { usePageTitle } from "../../components/usePageTitle";
 import { usePurchaseHistory } from "../../components/purchase/usePurchaseHistory";
+import { findBarcode } from "../../components/product/productBarcodeUtils";
 import {
   ShopFormPage,
   ShopLocationState,
@@ -26,6 +27,7 @@ import {
   CartItemHeader,
 } from "../../components/purchase/shop/CartItemForm";
 import { useRemoveCartItem } from "../../components/purchase/shop/useCartItemActions";
+import { useShoppingListCheckoff } from "../../components/shoppingList/useShoppingListWish";
 
 /**
  * Edits an existing row of the purchase. Planned rows (shopping list) are
@@ -45,10 +47,14 @@ export const EditCartItemPage = () => {
   const product = item?.product ?? null;
 
   const { getLastPurchase } = usePurchaseHistory();
-  const last = getLastPurchase(product?.id);
+  const last = getLastPurchase(product?.id, {
+    code: item?.barcode,
+    size: item?.container_size,
+  });
 
   const [updateItem, { isLoading }] = useUpdatePurchaseItemMutation();
   const removeItem = useRemoveCartItem(purchaseId);
+  const checkOffWishes = useShoppingListCheckoff();
   const [removing, setRemoving] = React.useState(false);
 
   const [form, setForm] = React.useState<CartItemFormState | null>(null);
@@ -106,6 +112,13 @@ export const EditCartItemPage = () => {
           : t("purchase.shop.updated"),
         { autoClose: 1500 }
       );
+      if (markCollected) {
+        // Only the move into the cart ticks the list off, not a later edit.
+        checkOffWishes(purchaseId, {
+          productId: product?.id ?? null,
+          name: values.name,
+        });
+      }
       navigate(shopPath, { replace: true, state: cartState });
     } catch (e) {
       toast.error(t("purchase.shop.error"));
@@ -167,6 +180,7 @@ export const EditCartItemPage = () => {
         title={product?.name ?? item.name}
         barcode={product ? null : item.barcode}
         lastPurchase={last}
+        variant={product ? findBarcode(product, item.barcode) : null}
         plannedCount={item.collected ? 0 : item.container_count}
       />
       <CartItemForm

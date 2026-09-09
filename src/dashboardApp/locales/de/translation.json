@@ -264,7 +264,20 @@
       "updateError": "Produkt konnte nicht gespeichert werden!",
       "deleteSuccess": "Produkt gelöscht!",
       "deleteError": "Produkt konnte nicht gelöscht werden!"
-    }
+    },
+    "barcodes": "Barcodes",
+    "barcodesEmpty": "Noch kein Barcode. Lege für jede Gebindegröße einen an.",
+    "barcodeAdd": "Barcode hinzufügen",
+    "barcodeRemove": "Barcode entfernen",
+    "barcodeContainerSize": "Stück pro Gebinde",
+    "barcodeContainerSizeHelp": "Für wie viele Einzelstücke dieser Code steht: 1 für eine Flasche, 20 für einen Kasten mit 20.",
+    "barcodeLabel": "Bezeichnung",
+    "barcodeLabelPlaceholder": "z. B. Kasten 20x0,5l",
+    "barcodeUnits_one": "{{count}} Stück",
+    "barcodeUnits_other": "{{count}} Stück",
+    "barcodeDuplicate": "Wird bereits verwendet von: {{names}}",
+    "barcodeContainerSizeShort": "Stück",
+    "barcodesHint": "Ein Code pro Gebinde: Flasche und Kasten desselben Artikels haben jeweils einen eigenen Code und eine eigene Stückzahl."
   },
   "purchase": {
     "store": "Einkaufsladen",
@@ -280,7 +293,9 @@
       "best_before": "MHD",
       "planned": "Geplant",
       "collected": "Gesammelt",
-      "subtotal": "Zwischensumme"
+      "subtotal": "Zwischensumme",
+      "unitPrice": "Preis pro Stück",
+      "unitPriceShort": "{{price}}/Stück"
     },
     "action": {
       "details": "Details",
@@ -409,7 +424,14 @@
       "itemNotFound": "Dieser Artikel existiert nicht mehr im Einkauf.",
       "productNotFound": "Produkt nicht gefunden.",
       "removeFromList": "Von der Liste entfernen",
-      "removedFromList": "Von der Liste entfernt"
+      "removedFromList": "Von der Liste entfernt",
+      "variantUnits_one": "{{count}} Stück",
+      "variantUnits_other": "{{count}} Stück",
+      "assignToProduct": "Zu vorhandenem Produkt",
+      "assignAction": "Barcode speichern",
+      "assignHint": "Der Code {{code}} ist nicht registriert. Wähle das Produkt aus, zu dem er gehört, und gib an, für wie viele Einzelstücke er steht.",
+      "assignSuccess": "Barcode zu {{name}} hinzugefügt",
+      "assignError": "Barcode konnte nicht hinzugefügt werden!"
     }
   },
   "inventory": {
@@ -508,12 +530,16 @@
       "none": "Kein Produkt liegt unter dem Zielbestand.",
       "uncountedWarning_one": "{{count}} Produkt wurde nicht gezählt und wird übersprungen.",
       "uncountedWarning_other": "{{count}} Produkte wurden nicht gezählt und werden übersprungen.",
-      "generatePurchase": "Einkaufsliste erzeugen",
-      "name": "Name",
       "defaultName": "Inventur {{date}}",
-      "noPurchaseHint": "Es wird keine Einkaufsliste erzeugt, da kein Produkt unter dem Zielbestand liegt.",
       "success": "Inventur abgeschlossen!",
-      "error": "Inventur konnte nicht abgeschlossen werden!"
+      "error": "Inventur konnte nicht abgeschlossen werden!",
+      "addToShoppingList_zero": "Nichts für die Einkaufsliste",
+      "addToShoppingList_one": "1 fehlenden Artikel auf die Einkaufsliste setzen",
+      "addToShoppingList_other": "{{count}} fehlende Artikel auf die Einkaufsliste setzen",
+      "addToShoppingListHint": "Der Einkauf selbst wird später aus der Einkaufsliste gestartet, wenn wirklich jemand losfährt.",
+      "alreadyOnList": "schon auf der Liste",
+      "addedToList_one": "1 Artikel auf die Einkaufsliste gesetzt",
+      "addedToList_other": "{{count}} Artikel auf die Einkaufsliste gesetzt"
     }
   },
   "payment": {
@@ -539,6 +565,7 @@
     "undo": "Rückgängig",
     "removed": "{{name}} von der Einkaufsliste entfernt",
     "done": "{{name}} als gekauft abgehakt",
+    "checkedOff": "{{names}} von der Einkaufsliste gestrichen",
     "reopened": "{{name}} ist wieder auf der Einkaufsliste",
     "error": "Änderung konnte nicht gespeichert werden!",
     "form": {

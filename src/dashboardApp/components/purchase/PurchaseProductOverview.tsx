@@ -1,12 +1,8 @@
-import {
-  ProductDto,
-  PurchaseDto,
-  PurchaseItemDto,
-} from "../../../common/contracts";
+import { ProductDto } from "../../../common/contracts";
 import React, { useEffect } from "react";
-import { useGetAllPurchasesQuery } from "../../redux/api/purchaseApi";
-import { toast } from "react-toastify";
 import { PaperScreenLoader } from "../PaperScreenLoader";
+import { usePurchaseHistory } from "./usePurchaseHistory";
+import { unitPriceCents } from "./purchaseUtils";
 import { useTranslation } from "react-i18next";
 import {
   moneyToString,
@@ -17,31 +13,6 @@ import { EuroSymbol, PercentOutlined } from "@mui/icons-material";
 import { CoinInput } from "../transaction/CoinInput";
 import styled from "@emotion/styled";
 import { amber, green, lightGreen, orange, red } from "@mui/material/colors";
-
-type PurchaseWithProduct = {
-  purchase: PurchaseDto;
-  item: PurchaseItemDto;
-};
-
-export function filterPurchasesByProduct(
-  purchases: PurchaseDto[],
-  productId: number
-): PurchaseWithProduct[] {
-  const filtered: PurchaseWithProduct[] = [];
-
-  for (let p of purchases) {
-    let item = p.items.find((i) => i.product?.id === productId);
-
-    if (item) {
-      filtered.push({
-        purchase: p,
-        item,
-      });
-    }
-  }
-
-  return filtered;
-}
 
 interface CustomProps {
   value: number;
@@ -159,52 +130,22 @@ export const PurchaseItemOverview = (props: { product: ProductDto }) => {
   const [inputTargetProfitPercent, setInputTargetProfitPercent] =
     React.useState(15);
 
-  const {
-    isLoading,
-    isError,
-    error,
-    data: purchases,
-  } = useGetAllPurchasesQuery();
+  const { isLoading, getLastPurchase } = usePurchaseHistory();
+  const lastPurchase = getLastPurchase(props.product.id);
 
   useEffect(() => {
-    if (isError) {
-      toast.error("Could not load purchases!");
-      console.error(error);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (purchases === undefined) {
-      return;
-    }
-
-    let sortedPurchases = [...purchases];
-    sortedPurchases.reverse();
-    const filtered = filterPurchasesByProduct(
-      sortedPurchases,
-      props.product.id
-    );
-
-    if (filtered.length === 0) {
-      return;
-    }
-
-    const latestPurchase = filtered.length > 0 ? filtered[0].item : null;
-
-    if (latestPurchase) {
-      const latestPricePerItem = Math.round(
-        latestPurchase.container_cents / latestPurchase.container_size
+    if (lastPurchase) {
+      setInputPurchasePrice(
+        unitPriceCents(lastPurchase.container_cents, lastPurchase.container_size)
       );
-      setInputPurchasePrice(latestPricePerItem);
     }
-  }, [purchases, setInputPurchasePrice]);
+  }, [lastPurchase?.purchaseId, setInputPurchasePrice]);
 
   useEffect(() => {
     setInputCurrentPrice(props.product.price.Cent ?? 0);
   }, [props.product, setInputCurrentPrice]);
 
-  if (isLoading || purchases === undefined) {
+  if (isLoading) {
     return <PaperScreenLoader />;
   }
 

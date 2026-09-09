@@ -262,12 +262,24 @@ export const ProductDetailsPage = () => {
                       align="right"
                       sx={{ fontWeight: "bold" }}
                     >
-                      {t("product.barcode")}
+                      {t("product.barcodes")}
                     </TableCell>
                     <TableCell>
-                      {product.barcode ? (
-                        <BarcodeView value={product.barcode} />
-                      ) : null}
+                      {product.barcodes.map((barcode) => (
+                        <Box key={barcode.id} sx={{ mb: 1 }}>
+                          <BarcodeView value={barcode.code} />
+                          <Typography variant="caption" color="text.secondary">
+                            {barcode.label
+                              ? `${barcode.label} · ${t(
+                                  "product.barcodeUnits",
+                                  { count: barcode.container_size }
+                                )}`
+                              : t("product.barcodeUnits", {
+                                  count: barcode.container_size,
+                                })}
+                          </Typography>
+                        </Box>
+                      ))}
                     </TableCell>
                   </TableRow>
                 </TableBody>

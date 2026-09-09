@@ -191,6 +191,11 @@ const FreeItemPage = React.lazy(() =>
     default: module.FreeItemPage,
   }))
 );
+const AssignBarcodePage = React.lazy(() =>
+  import("./pages/purchase/AssignBarcodePage").then((module) => ({
+    default: module.AssignBarcodePage,
+  }))
+);
 const EditCartItemPage = React.lazy(() =>
   import("./pages/purchase/EditCartItemPage").then((module) => ({
     default: module.EditCartItemPage,
@@ -373,6 +378,10 @@ export function DashboardApp() {
                       <Route
                         path="purchases/:purchaseId/shop/free"
                         element={<FreeItemPage />}
+                      />
+                      <Route
+                        path="purchases/:purchaseId/shop/assign/:code"
+                        element={<AssignBarcodePage />}
                       />
                       <Route
                         path="purchases/:purchaseId/shop/item/:itemId"

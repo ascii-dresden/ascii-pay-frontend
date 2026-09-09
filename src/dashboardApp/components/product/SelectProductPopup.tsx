@@ -18,6 +18,7 @@ import { useGetAllProductsQuery } from "../../redux/api/productApi";
 import { toast } from "react-toastify";
 import { CoinAmountView } from "../transaction/CoinAmountView";
 import { useTranslation } from "react-i18next";
+import { barcodeSearchText } from "./productBarcodeUtils";
 
 const PopperComponent = (props: {
   anchorEl?: any;
@@ -34,7 +35,7 @@ const PaperComponent = (props: any) => {
 
 const filterOptions = createFilterOptions<ProductDto>({
   stringify: (option) =>
-    [option.name, option.nickname ?? "", option.barcode ?? ""].join(" "),
+    [option.name, option.nickname ?? "", barcodeSearchText(option)].join(" "),
 });
 
 export const SelectProductPopup = (props: {

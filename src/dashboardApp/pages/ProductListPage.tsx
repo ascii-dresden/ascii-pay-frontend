@@ -30,7 +30,7 @@ import {
 } from "@mui/icons-material";
 import { stringWithoutColorAvatar } from "../../common/stringAvatar";
 import { CoinAmountView } from "../components/transaction/CoinAmountView";
-import { ProductDto, PurchaseDto } from "../../common/contracts";
+import { ProductDto } from "../../common/contracts";
 import { PaperScreenLoader } from "../components/PaperScreenLoader";
 import { TagChip } from "../components/product/TagChip";
 import { usePageTitle } from "../components/usePageTitle";
@@ -51,10 +51,13 @@ import {
   moneyToString,
   percentToString,
 } from "../../terminalApp/components/Money";
-import { useGetAllPurchasesQuery } from "../redux/api/purchaseApi";
+import {
+  GetLastPurchase,
+  usePurchaseHistory,
+} from "../components/purchase/usePurchaseHistory";
+import { unitPriceCents } from "../components/purchase/purchaseUtils";
 import {
   calculateProductPriceOverview,
-  filterPurchasesByProduct,
   PurchaseProductPriceHighlight,
 } from "../components/purchase/PurchaseProductOverview";
 import { UpdateMultiProductPrintListsDialog } from "../components/product/UpdateMultiProductPrintListsDialog";
@@ -135,8 +138,8 @@ export const ProductListPage = () => {
     data: products,
   } = useGetAllProductsQuery();
 
-  const { isLoading: purchasesIsLoading, data: purchases } =
-    useGetAllPurchasesQuery();
+  const { isLoading: purchasesIsLoading, getLastPurchase } =
+    usePurchaseHistory();
 
   const { printLists: availablePrintLists } = useProductMetadataHook();
 
@@ -394,7 +397,7 @@ export const ProductListPage = () => {
                     selected={isSelected(product)}
                     toggleSelected={toggleSelected}
                     selectionMode={selected.length > 0}
-                    purchases={purchases}
+                    getLastPurchase={getLastPurchase}
                   />
                 ))}
                 {emptyRows > 0 && (
@@ -433,7 +436,7 @@ const ProductListRow = (props: {
   selected: boolean;
   toggleSelected: (product: ProductDto) => void;
   selectionMode: boolean;
-  purchases: PurchaseDto[] | undefined;
+  getLastPurchase: GetLastPurchase;
 }) => {
   const { t } = useTranslation();
 
@@ -499,7 +502,10 @@ const ProductListRow = (props: {
           <CoinAmountView coins={props.product.bonus} />
         </TableCell>
         <TableCell width={80} align="right">
-          <ProductProfit product={props.product} purchases={props.purchases} />
+          <ProductProfit
+            product={props.product}
+            getLastPurchase={props.getLastPurchase}
+          />
         </TableCell>
         <TableCell width={80}>
           {props.product.status_prices.length <= 0 ? (
@@ -552,24 +558,16 @@ const ProductListRow = (props: {
 
 const ProductProfit = (props: {
   product: ProductDto;
-  purchases: PurchaseDto[] | undefined;
+  getLastPurchase: GetLastPurchase;
 }) => {
-  if (!props.purchases) {
+  const lastPurchase = props.getLastPurchase(props.product.id);
+  if (!lastPurchase) {
     return null;
   }
-
-  const filtered = filterPurchasesByProduct(props.purchases, props.product.id);
-  if (filtered.length === 0) {
-    return null;
-  }
-
-  const lastPurchase = filtered[filtered.length - 1];
 
   const result = calculateProductPriceOverview(
     props.product.price.Cent ?? 0,
-    Math.round(
-      lastPurchase.item.container_cents / lastPurchase.item.container_size
-    )
+    unitPriceCents(lastPurchase.container_cents, lastPurchase.container_size)
   );
 
   return (

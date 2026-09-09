@@ -28,7 +28,8 @@ export const FreeItemPage = () => {
   const [searchParams] = useSearchParams();
   const barcode = (searchParams.get("barcode") ?? "").trim() || null;
   // Opened from a shopping list entry (`?wish=&name=`): prefill name and
-  // quantity and tick the entry off after the article has been added.
+  // quantity. After the article has been added, that entry and every open
+  // entry of the same name are ticked off the shared shopping list.
   const presetName = (searchParams.get("name") ?? "").trim();
   const { wish, completeWish } = useShoppingListWish();
 
@@ -80,7 +81,7 @@ export const FreeItemPage = () => {
       toast.success(t("purchase.shop.added", { name: values.name }), {
         autoClose: 1500,
       });
-      completeWish(purchase.id);
+      completeWish(purchase.id, { name: values.name });
       const state: ShopLocationState = { tab: "cart" };
       navigate(shopPath, { replace: true, state });
     } catch (e) {

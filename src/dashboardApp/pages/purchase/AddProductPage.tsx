@@ -52,11 +52,16 @@ export const AddProductPage = () => {
     );
   }
 
+  // Picked from search, not scanned: only a product with exactly one code
+  // identifies a packaging. With several variants the purchase history decides.
+  const variant = product.barcodes.length === 1 ? product.barcodes[0] : null;
+
   return (
     <AddProductToCart
       purchase={purchase}
       product={product}
-      barcode={product.barcode ?? null}
+      barcode={variant?.code ?? null}
+      variant={variant}
     />
   );
 };

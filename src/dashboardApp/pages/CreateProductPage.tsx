@@ -24,6 +24,7 @@ import {
   ProductPricingFields,
   productFormValueToSaveDto,
 } from "../components/product/ProductForm";
+import { emptyProductBarcode } from "../components/product/ProductBarcodesInput";
 
 const STEP_KEYS = ["basics", "lists", "pricing"] as const;
 const STEP_COUNT = STEP_KEYS.length;
@@ -46,7 +47,7 @@ export const CreateProductPage = () => {
   const [value, setValue] = React.useState<ProductFormValue>(() => {
     const initial = emptyProductFormValue();
     if (initialBarcode) {
-      initial.barcode = initialBarcode;
+      initial.barcodes = [emptyProductBarcode(initialBarcode)];
       initial.stocked = true;
     }
     return initial;

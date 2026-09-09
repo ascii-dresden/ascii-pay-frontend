@@ -26,12 +26,13 @@ import { FormPage } from "../components/FormPage";
 import { PageHeaderNavigation } from "../components/PageHeader";
 import { ProductAvatar } from "../components/product/ProductAvatar";
 import { QuantityField } from "../components/inventory/QuantityField";
+import { barcodeSearchText } from "../components/product/productBarcodeUtils";
 
 type AssortmentState = { stocked: boolean; target_quantity: number };
 
 const addFilterOptions = createFilterOptions<ProductDto>({
   stringify: (option) =>
-    [option.name, option.nickname ?? "", option.barcode ?? ""].join(" "),
+    [option.name, option.nickname ?? "", barcodeSearchText(option)].join(" "),
 });
 
 const byName = (a: ProductDto, b: ProductDto) => a.name.localeCompare(b.name);
@@ -201,7 +202,7 @@ export const ManageAssortmentPage = () => {
           (p) =>
             p.name.toLowerCase().includes(needle) ||
             (p.nickname ?? "").toLowerCase().includes(needle) ||
-            (p.barcode ?? "").toLowerCase().includes(needle) ||
+            barcodeSearchText(p).toLowerCase().includes(needle) ||
             p.category.toLowerCase().includes(needle)
         );
 

@@ -13,6 +13,18 @@ export function purchaseTotal(purchase: Pick<PurchaseDto, "items">): number {
     .reduce((a, b) => a + b, 0);
 }
 
+/**
+ * Price of a single unit in cents: what a container costs divided by how many
+ * units are in it. This is the number that makes a 20-crate comparable to a
+ * single bottle, so it is what price comparisons and profit use.
+ */
+export function unitPriceCents(
+  containerCents: number,
+  containerSize: number
+): number {
+  return Math.round(containerCents / Math.max(1, containerSize));
+}
+
 export function collectedItems(
   purchase: Pick<PurchaseDto, "items">
 ): PurchaseItemDto[] {

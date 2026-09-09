@@ -263,7 +263,20 @@
       "updateError": "Product could not be updated!",
       "deleteSuccess": "Product deleted!",
       "deleteError": "Product could not be deleted!"
-    }
+    },
+    "barcodes": "Barcodes",
+    "barcodesEmpty": "No barcode yet. Add one for every packaging you buy.",
+    "barcodeAdd": "Add barcode",
+    "barcodeRemove": "Remove barcode",
+    "barcodeContainerSize": "Units per container",
+    "barcodeContainerSizeHelp": "How many single units this code stands for: 1 for a bottle, 20 for a crate of 20.",
+    "barcodeLabel": "Label",
+    "barcodeLabelPlaceholder": "e.g. crate of 20",
+    "barcodeUnits_one": "{{count}} unit",
+    "barcodeUnits_other": "{{count}} units",
+    "barcodeDuplicate": "Already used by: {{names}}",
+    "barcodeContainerSizeShort": "Units",
+    "barcodesHint": "One code per packaging: the bottle and the crate of the same article have their own code and their own number of units."
   },
   "purchase": {
     "store": "Store",
@@ -279,7 +292,9 @@
       "best_before": "Best before",
       "planned": "Planned",
       "collected": "Collected",
-      "subtotal": "Subtotal"
+      "subtotal": "Subtotal",
+      "unitPrice": "Price per unit",
+      "unitPriceShort": "{{price}}/unit"
     },
     "action": {
       "details": "Details",
@@ -408,7 +423,14 @@
       "itemNotFound": "This item no longer exists in the purchase.",
       "productNotFound": "Product not found.",
       "removeFromList": "Remove from list",
-      "removedFromList": "Removed from list"
+      "removedFromList": "Removed from list",
+      "variantUnits_one": "{{count}} unit",
+      "variantUnits_other": "{{count}} units",
+      "assignToProduct": "Add to existing product",
+      "assignAction": "Save barcode",
+      "assignHint": "The code {{code}} is not registered. Pick the product it belongs to and say how many single units it stands for.",
+      "assignSuccess": "Barcode added to {{name}}",
+      "assignError": "Could not add the barcode!"
     }
   },
   "inventory": {
@@ -507,12 +529,16 @@
       "none": "No product is below target.",
       "uncountedWarning_one": "{{count}} product has not been counted and will be skipped.",
       "uncountedWarning_other": "{{count}} products have not been counted and will be skipped.",
-      "generatePurchase": "Generate shopping list",
-      "name": "Name",
       "defaultName": "Inventory {{date}}",
-      "noPurchaseHint": "No shopping list will be generated because no product is below target.",
       "success": "Inventory check completed!",
-      "error": "Could not complete inventory check!"
+      "error": "Could not complete inventory check!",
+      "addToShoppingList_zero": "Nothing to add to the shopping list",
+      "addToShoppingList_one": "Put 1 missing article on the shopping list",
+      "addToShoppingList_other": "Put {{count}} missing articles on the shopping list",
+      "addToShoppingListHint": "The shopping trip itself is started later, from the shopping list, when someone actually goes to the shop.",
+      "alreadyOnList": "already on the list",
+      "addedToList_one": "1 article added to the shopping list",
+      "addedToList_other": "{{count}} articles added to the shopping list"
     }
   },
   "payment": {
@@ -538,6 +564,7 @@
     "undo": "Undo",
     "removed": "{{name}} removed from the shopping list",
     "done": "{{name}} marked as bought",
+    "checkedOff": "{{names}} ticked off the shopping list",
     "reopened": "{{name}} is back on the shopping list",
     "error": "Change could not be saved!",
     "form": {

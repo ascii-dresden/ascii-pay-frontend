@@ -17,7 +17,12 @@ import {
 } from "../../../common/contracts";
 import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
 import { CoinInput } from "../transaction/CoinInput";
-import { BarcodeTextField } from "../scanner/BarcodeTextField";
+import {
+  ProductBarcodeFormValue,
+  ProductBarcodesInput,
+  productBarcodesFromDto,
+  productBarcodesToSaveDto,
+} from "./ProductBarcodesInput";
 import { CategoryInput } from "./CategoryInput";
 import { TagsInput } from "./TagsInput";
 import { PrintListsInput } from "./PrintListsInput";
@@ -31,7 +36,7 @@ export type ProductFormValue = {
   name: string;
   nickname: string;
   category: string;
-  barcode: string;
+  barcodes: ProductBarcodeFormValue[];
   purchaseTax: number;
   printLists: string[];
   tags: string[];
@@ -46,7 +51,7 @@ export const emptyProductFormValue = (): ProductFormValue => ({
   name: "",
   nickname: "",
   category: "",
-  barcode: "",
+  barcodes: [],
   purchaseTax: 19,
   printLists: [],
   tags: [],
@@ -63,7 +68,7 @@ export const productFormValueFromDto = (
   name: product.name,
   nickname: product.nickname ?? "",
   category: product.category,
-  barcode: product.barcode ?? "",
+  barcodes: productBarcodesFromDto(product),
   purchaseTax: product.purchase_tax,
   printLists: product.print_lists,
   tags: product.tags,
@@ -92,15 +97,41 @@ export const productFormValueToSaveDto = (
     status_prices: value.statusPrices,
     stocked: value.stocked,
     target_quantity: value.stocked ? value.targetQuantity : 0,
+    barcodes: productBarcodesToSaveDto(value.barcodes),
   };
   if (value.nickname.length > 0) {
     saveProduct.nickname = value.nickname;
   }
-  if (value.barcode.length > 0) {
-    saveProduct.barcode = value.barcode;
-  }
   return saveProduct;
 };
+
+/**
+ * A product as a save request, unchanged. Bulk edits patch the result of this
+ * instead of listing the fields themselves, so a field added to the product
+ * cannot silently get dropped by an editor that does not know about it.
+ */
+export const productDtoToSaveDto = (product: ProductDto): SaveProductDto => ({
+  name: product.name,
+  price: product.price,
+  bonus: product.bonus,
+  purchase_tax: product.purchase_tax,
+  nickname: product.nickname,
+  category: product.category,
+  print_lists: product.print_lists,
+  tags: product.tags,
+  status_prices: product.status_prices.map((statusPrice) => ({
+    status_id: statusPrice.status.id,
+    price: statusPrice.price,
+    bonus: statusPrice.bonus,
+  })),
+  stocked: product.stocked,
+  target_quantity: product.target_quantity,
+  barcodes: product.barcodes.map((barcode) => ({
+    code: barcode.code,
+    container_size: barcode.container_size,
+    label: barcode.label,
+  })),
+});
 
 interface PercentInputProps {
   value: number;
@@ -131,11 +162,13 @@ export type ProductFormSectionProps = {
   autoFocus?: boolean;
   /** Error text shown below the name field (basics section only). */
   nameError?: string;
+  /** Id of the product being edited, so its own codes are not flagged as duplicates. */
+  productId?: number;
 };
 
 /**
  * Section 1: name (with the QuickAccess grid picker), nickname, category and
- * barcode.
+ * the barcodes (one row per purchasing variant).
  */
 export const ProductBasicsFields = (props: ProductFormSectionProps) => {
   const { t } = useTranslation();
@@ -205,12 +238,10 @@ export const ProductBasicsFields = (props: ProductFormSectionProps) => {
         possibleValues={availableCategories}
         disabled={props.disabled}
       />
-      <BarcodeTextField
-        label={t("product.barcode")}
-        fullWidth
-        sx={{ mb: "1rem" }}
-        value={value.barcode}
-        onChange={(barcode) => onChange({ barcode })}
+      <ProductBarcodesInput
+        values={value.barcodes}
+        onChange={(barcodes) => onChange({ barcodes })}
+        productId={props.productId}
         disabled={props.disabled}
       />
     </>
@@ -311,6 +342,8 @@ export const ProductForm = (props: {
   value: ProductFormValue;
   onChange: (patch: Partial<ProductFormValue>) => void;
   disabled?: boolean;
+  /** Id of the product being edited, so its own codes are not flagged as duplicates. */
+  productId?: number;
 }) => {
   return (
     <Box pt={1}>

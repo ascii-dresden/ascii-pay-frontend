@@ -31,6 +31,7 @@ import {
   SaveProductDto,
   SaveProductStatusPriceDto,
 } from "../../../common/contracts";
+import { productDtoToSaveDto } from "./ProductForm";
 import { CoinAmountEdit } from "../transaction/CoinAmountEdit";
 import { Close, ExpandMore, StarsOutlined } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
@@ -136,18 +137,11 @@ export const UpdateMultiProductPriceDialog = (props: {
         statusPrices: newStatusPrices,
       } = calculatePrices(product, mode, price, bonus, extendedStatusPrices);
 
+      // Only the prices change; everything else is carried over unchanged.
       let saveProduct: SaveProductDto = {
-        name: product.name,
-        nickname: product.nickname,
-        barcode: product.barcode,
+        ...productDtoToSaveDto(product),
         price: newPrice,
         bonus: newBonus,
-        category: product.category,
-        tags: product.tags,
-        print_lists: product.print_lists,
-        purchase_tax: product.purchase_tax,
-        stocked: product.stocked,
-        target_quantity: product.target_quantity,
         status_prices: newStatusPrices.map((sp) => ({
           status_id: sp.status.id,
           price: sp.price,

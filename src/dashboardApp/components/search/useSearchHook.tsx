@@ -58,7 +58,7 @@ export const useSearchHook = (
       "account.status.name",
       "product.name",
       "product.nickname",
-      "product.barcode",
+      "product.barcodes.code",
       "product.category",
       "product.tags",
       "label",

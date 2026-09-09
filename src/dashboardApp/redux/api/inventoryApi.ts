@@ -2,6 +2,7 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 import { customFetchBase } from "./customFetchBase";
 import { productApi } from "./productApi";
 import { purchaseApi } from "./purchaseApi";
+import { shoppingListApi } from "./shoppingListApi";
 import {
   CompleteInventoryCheckDto,
   CompleteInventoryCheckResponseDto,
@@ -172,6 +173,15 @@ export const inventoryApi = createApi({
             dispatch(
               purchaseApi.util.invalidateTags([
                 { type: "Purchases", id: "LIST" },
+              ])
+            );
+          }
+          // The missing articles land on the shared shopping list, which lives
+          // in its own slice and would otherwise still show the stale list.
+          if (data.shopping_list_items.length > 0) {
+            dispatch(
+              shoppingListApi.util.invalidateTags([
+                { type: "ShoppingList", id: "LIST" },
               ])
             );
           }

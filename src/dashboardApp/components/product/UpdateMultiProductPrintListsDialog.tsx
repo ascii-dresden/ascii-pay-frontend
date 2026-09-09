@@ -16,6 +16,7 @@ import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useUpdateProductMutation } from "../../redux/api/productApi";
 import { ProductDto, SaveProductDto } from "../../../common/contracts";
+import { productDtoToSaveDto } from "./ProductForm";
 import { Close } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useProductMetadataHook } from "./useProductMetadataHook";
@@ -120,23 +121,10 @@ export const UpdateMultiProductPrintListsDialog = (props: {
         }
       }
 
+      // Only the print lists change; everything else is carried over unchanged.
       let saveProduct: SaveProductDto = {
-        name: product.name,
-        nickname: product.nickname,
-        barcode: product.barcode,
-        price: product.price,
-        bonus: product.bonus,
-        category: product.category,
-        tags: product.tags,
+        ...productDtoToSaveDto(product),
         print_lists: newPrintLists,
-        purchase_tax: product.purchase_tax,
-        stocked: product.stocked,
-        target_quantity: product.target_quantity,
-        status_prices: product.status_prices.map((sp) => ({
-          status_id: sp.status.id,
-          price: sp.price,
-          bonus: sp.bonus,
-        })),
       };
       await updateProduct({
         id: product.id,

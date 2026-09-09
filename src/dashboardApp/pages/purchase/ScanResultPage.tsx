@@ -19,11 +19,12 @@ import {
   useShopPurchase,
 } from "../../components/purchase/shop/ShopFormPage";
 import { AddProductToCart } from "../../components/purchase/shop/AddProductToCart";
+import { findBarcode } from "../../components/product/productBarcodeUtils";
 
 /**
  * Resolves a scanned or typed barcode (server lookup, then the cached
- * product list) and shows either the add-to-cart form or the
- * "not registered" options.
+ * product list) and shows either the add-to-cart form for the scanned
+ * variant or the "not registered" options.
  */
 export const ScanResultPage = () => {
   const { t } = useTranslation();
@@ -49,7 +50,11 @@ export const ScanResultPage = () => {
 
   let product: ProductDto | null = lookup.data ?? null;
   if (!product && lookup.isError) {
-    product = products?.find((p) => (p.barcode ?? "").trim() === code) ?? null;
+    // Offline / server hiccup: the cached product list knows the codes too.
+    product =
+      products?.find((p) =>
+        p.barcodes.some((barcode) => barcode.code === code)
+      ) ?? null;
   }
 
   if (fallback) {
@@ -60,8 +65,15 @@ export const ScanResultPage = () => {
   }
 
   if (product) {
+    // Which packaging was scanned decides the container size and which price
+    // from the history is the relevant one.
     return (
-      <AddProductToCart purchase={purchase} product={product} barcode={code} />
+      <AddProductToCart
+        purchase={purchase}
+        product={product}
+        barcode={code}
+        variant={findBarcode(product, code)}
+      />
     );
   }
 
@@ -124,6 +136,13 @@ export const ScanResultPage = () => {
             to={`${shopPath}/free?barcode=${encodeURIComponent(code)}`}
           >
             {t("purchase.shop.addFreeItem")}
+          </Button>
+          <Button
+            variant="outlined"
+            component={Link}
+            to={`${shopPath}/assign/${encodeURIComponent(code)}`}
+          >
+            {t("purchase.shop.assignToProduct")}
           </Button>
           <Button
             variant="contained"

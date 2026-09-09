@@ -89,6 +89,34 @@ export type ProductStatusPriceDto = {
   bonus: CoinAmountDto;
 };
 
+/**
+ * One barcode of a product: a purchasing variant with its own container size. The code on the
+ * single bottle and the code on the crate belong to the same product but stand for a different
+ * number of single units. Alias codes simply use `container_size: 1`.
+ */
+export type ProductBarcodeDto = {
+  id: number;
+  code: string;
+  /** Single units this code stands for (crate of 20 => 20). */
+  container_size: number;
+  /** Free text shown next to the code, e.g. "Kasten 20x0,5l". */
+  label: string;
+};
+
+export type SaveProductBarcodeDto = {
+  code: string;
+  /** Defaults to 1. */
+  container_size?: number;
+  /** Defaults to "". */
+  label?: string;
+};
+
+/** A product that already uses a barcode, for the duplicate warning in the product form. */
+export type BarcodeConflictDto = {
+  product_id: number;
+  product_name: string;
+};
+
 export type ProductDto = {
   id: number;
   name: string;
@@ -96,7 +124,9 @@ export type ProductDto = {
   bonus: CoinAmountDto;
   purchase_tax: number;
   nickname?: string | null;
+  /** @deprecated Primary (first) code, read only. Use `barcodes`. */
   barcode?: string | null;
+  barcodes: ProductBarcodeDto[];
   category: string;
   print_lists: string[];
   tags: string[];
@@ -130,7 +160,16 @@ export type SaveProductDto = {
   bonus: CoinAmountDto;
   purchase_tax: number;
   nickname?: string | null;
+  /**
+   * @deprecated Legacy single code. Only read on create and only when `barcodes` is absent;
+   * ignored on update. Send `barcodes` instead.
+   */
   barcode?: string | null;
+  /**
+   * Replaces the whole barcode list (`[]` clears it). When absent the product keeps the
+   * barcodes it has, so a partial update can never drop variants it does not know about.
+   */
+  barcodes?: SaveProductBarcodeDto[];
   category: string;
   print_lists: string[];
   tags: string[];
@@ -343,7 +382,16 @@ export type UpdateInventoryCheckItemDto = {
 };
 
 export type CompleteInventoryCheckDto = {
-  generate_purchase: boolean;
+  /**
+   * Put every counted product below its target on the shared shopping list.
+   * Defaults to true on the server: counting stock and going shopping are
+   * separate moments, and the list is what carries the result between them.
+   */
+  add_to_shopping_list?: boolean;
+  /** Note prefix of the generated entries; "<counted>/<target>" is appended. */
+  note?: string;
+  /** Additionally create a draft purchase. Off by default. */
+  generate_purchase?: boolean;
   store?: string;
   name?: string;
 };
@@ -351,6 +399,12 @@ export type CompleteInventoryCheckDto = {
 export type CompleteInventoryCheckResponseDto = {
   check: InventoryCheckDto;
   purchase: PurchaseDto | null;
+  /**
+   * Entries created on the shopping list. Products that already have an open
+   * entry are skipped, so this can be shorter than the list of articles below
+   * target.
+   */
+  shopping_list_items: ShoppingListItemDto[];
 };
 
 export type ShoppingListStateDto = "open" | "done" | "all";

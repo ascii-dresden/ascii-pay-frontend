@@ -43,10 +43,11 @@ import {
 } from "../../components/shoppingList/shoppingListUtils";
 import { useRemoveShoppingListItem } from "../../components/shoppingList/useShoppingListActions";
 import { shoppingListNavigation } from "./ShoppingListPage";
+import { barcodeSearchText, barcodeSummary } from "../../components/product/productBarcodeUtils";
 
 const productFilter = createFilterOptions<ProductDto>({
   stringify: (option) =>
-    [option.name, option.nickname ?? "", option.barcode ?? ""].join(" "),
+    [option.name, option.nickname ?? "", barcodeSearchText(option)].join(" "),
 });
 
 type FormState = {
@@ -318,9 +319,9 @@ export const ShoppingListItemPage = () => {
                       </Typography>
                     ) : null}
                   </Box>
-                  {option.barcode ? (
+                  {barcodeSummary(option) ? (
                     <Typography variant="caption" color="text.secondary">
-                      {option.barcode}
+                      {barcodeSummary(option)}
                     </Typography>
                   ) : null}
                 </Box>

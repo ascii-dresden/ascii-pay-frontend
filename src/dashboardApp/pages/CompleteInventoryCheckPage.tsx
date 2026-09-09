@@ -1,7 +1,5 @@
 import {
   Alert,
-  Autocomplete,
-  Box,
   Button,
   Chip,
   Divider,
@@ -11,7 +9,6 @@ import {
   ListItemAvatar,
   ListItemText,
   Switch,
-  TextField,
   Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
@@ -23,7 +20,7 @@ import {
   useCompleteInventoryCheckMutation,
   useGetInventoryCheckQuery,
 } from "../redux/api/inventoryApi";
-import { useGetAllPurchasesQuery } from "../redux/api/purchaseApi";
+import { useGetShoppingListQuery } from "../redux/api/shoppingListApi";
 import { CompleteInventoryCheckDto } from "../../common/contracts";
 import { usePageTitle } from "../components/usePageTitle";
 import { FullScreenLoader } from "../components/FullScreenLoader";
@@ -47,16 +44,14 @@ export const CompleteInventoryCheckPage = () => {
   } = useGetInventoryCheckQuery(checkId);
   const [completeCheck, { isLoading: isCompleting }] =
     useCompleteInventoryCheckMutation();
-  const { data: purchases } = useGetAllPurchasesQuery();
+  // Open entries are needed to show which articles are already on the list;
+  // the server skips those instead of creating a duplicate.
+  const { data: openWishes } = useGetShoppingListQuery({ state: "open" });
 
-  const [generatePurchase, setGeneratePurchase] = React.useState(true);
-  const [store, setStore] = React.useState("");
-  const [name, setName] = React.useState(
-    () =>
-      t("inventory.complete.defaultName", {
-        date: inventoryDateFormat.format(new Date()),
-      }) ?? ""
-  );
+  const [addToShoppingList, setAddToShoppingList] = React.useState(true);
+  const note = t("inventory.complete.defaultName", {
+    date: inventoryDateFormat.format(new Date()),
+  });
 
   usePageTitle([
     t("layout.inventory"),
@@ -126,10 +121,6 @@ export const CompleteInventoryCheckPage = () => {
     );
   }
 
-  const stores = Array.from(
-    new Set((purchases ?? []).map((p) => p.store).filter((s) => s.length > 0))
-  ).sort((a, b) => a.localeCompare(b));
-
   const belowTarget = check.items
     .filter(
       (i) =>
@@ -139,25 +130,28 @@ export const CompleteInventoryCheckPage = () => {
     .map((i) => ({
       item: i,
       needed: i.target_quantity - (i.counted_quantity ?? 0),
+      alreadyOnList: (openWishes ?? []).some(
+        (wish) => wish.product?.id === i.product.id
+      ),
     }));
+  const willBeAdded = belowTarget.filter((row) => !row.alreadyOnList).length;
   const uncountedCount = check.items.filter(
     (i) => i.counted_quantity === null
   ).length;
 
   const handleSubmit = async () => {
     const body: CompleteInventoryCheckDto = {
-      generate_purchase: generatePurchase,
+      add_to_shopping_list: addToShoppingList,
+      note: note ?? undefined,
     };
-    if (generatePurchase) {
-      body.store = store;
-      body.name = name;
-    }
     try {
       const result = await completeCheck({ id: checkId, body }).unwrap();
-      toast.success(t("inventory.complete.success"));
-      if (result.purchase) {
-        navigate(`/purchases/${result.purchase.id}/shop`);
+      const added = result.shopping_list_items.length;
+      if (added > 0) {
+        toast.success(t("inventory.complete.addedToList", { count: added }));
+        navigate("/shopping-list");
       } else {
+        toast.success(t("inventory.complete.success"));
         navigate("/inventory");
       }
     } catch (e) {
@@ -205,15 +199,20 @@ export const CompleteInventoryCheckPage = () => {
         </Typography>
       ) : (
         <List dense disablePadding sx={{ mb: 1 }}>
-          {belowTarget.map(({ item, needed }) => (
+          {belowTarget.map(({ item, needed, alreadyOnList }) => (
             <ListItem
               key={item.product.id}
               disableGutters
               secondaryAction={
                 <Chip
                   size="small"
-                  color="warning"
-                  label={t("inventory.complete.needed", { count: needed })}
+                  color={alreadyOnList ? "default" : "warning"}
+                  variant={alreadyOnList ? "outlined" : "filled"}
+                  label={
+                    alreadyOnList
+                      ? t("inventory.complete.alreadyOnList")
+                      : t("inventory.complete.needed", { count: needed })
+                  }
                 />
               }
             >
@@ -235,42 +234,21 @@ export const CompleteInventoryCheckPage = () => {
       <FormControlLabel
         control={
           <Switch
-            checked={generatePurchase}
-            onChange={(e) => setGeneratePurchase(e.target.checked)}
+            checked={addToShoppingList && willBeAdded > 0}
+            disabled={willBeAdded === 0}
+            onChange={(e) => setAddToShoppingList(e.target.checked)}
           />
         }
-        label={t("inventory.complete.generatePurchase")}
+        label={t("inventory.complete.addToShoppingList", {
+          count: willBeAdded,
+        })}
       />
-
-      {generatePurchase ? (
-        <Box sx={{ mt: 2 }}>
-          {belowTarget.length === 0 ? (
-            <Alert severity="info" sx={{ mb: 2 }}>
-              {t("inventory.complete.noPurchaseHint")}
-            </Alert>
-          ) : null}
-          <Autocomplete
-            freeSolo
-            options={stores}
-            inputValue={store}
-            onInputChange={(_, value) => setStore(value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={t("purchase.store")}
-                fullWidth
-                sx={{ mb: "1rem" }}
-              />
-            )}
-          />
-          <TextField
-            label={t("inventory.complete.name")}
-            fullWidth
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </Box>
+      {willBeAdded > 0 ? (
+        <Typography variant="body2" color="text.secondary">
+          {t("inventory.complete.addToShoppingListHint")}
+        </Typography>
       ) : null}
+
     </FormPage>
   );
 };

@@ -130,6 +130,7 @@ export const UpdateProductPage = () => {
       <ProductForm
         value={value}
         onChange={(patch) => setValue((v) => (v ? { ...v, ...patch } : v))}
+        productId={product.id}
       />
     </FormPage>
   );
