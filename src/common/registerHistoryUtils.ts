@@ -77,25 +77,25 @@ function getCashProblemWeight(
       weight = 4.0;
       break;
     case 1000:
-      weight = 1.1;
+      weight = 1.2;
       break;
     case 500:
-      weight = 1.1;
+      weight = 1.2;
       break;
     case 200:
-      weight = 1.0;
+      weight = 1.1;
       break;
     case 100:
-      weight = 0.9;
+      weight = 1.0;
       break;
     case 50:
       weight = 0.9;
       break;
     case 20:
-      weight = 1.2;
+      weight = 0.8;
       break;
     case 10:
-      weight = 1.5;
+      weight = 0.9;
       break;
     case 5:
       weight = 6.0;
