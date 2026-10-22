@@ -1,17 +1,40 @@
-{ mkYarnPackage, ascii-pay-server, yarn, iproute, src }:
+{
+  lib,
+  stdenv,
+  fetchYarnDeps,
+  yarnConfigHook,
+  yarnBuildHook,
+  nodejs,
+  iproute2,
+  ascii-pay-server,
+  src,
+}:
 
-mkYarnPackage {
-  name = "ascii-pay-frontend";
+stdenv.mkDerivation (finalAttrs: {
+  pname = "ascii-pay-frontend";
   version = "0.0.1";
 
   inherit src;
 
-  buildInputs = [ ascii-pay-server ] ++ [ yarn iproute ];
+  yarnOfflineCache = fetchYarnDeps {
+    yarnLock = "${finalAttrs.src}/yarn.lock";
+    hash = "sha256-n/5Q/1446+P6yEmx5pGpFauxI+7vWe6kyOrQrMwGTfU="; 
+  };
 
-  # yarn build wants to create a .cache dir in the node_modules folder, which fails with the standard yarn2nix directory management
-  # use a simplistic alternative
-  configurePhase = "cp -r $node_modules node_modules && chmod +w node_modules";
-  buildPhase = ''yarn build'';
-  installPhase = ''mv dist $out'';
-  distPhase = "true";
-}
+  nativeBuildInputs = [
+    yarnConfigHook
+    yarnBuildHook
+    nodejs
+    iproute2
+  ];
+
+  buildInputs = [ ascii-pay-server ];
+
+  # yarnBuildHook runs `yarn --offline build` by default (yarnBuildScript = "build")
+
+  installPhase = ''
+    runHook preInstall
+    mv dist $out
+    runHook postInstall
+  '';
+})

@@ -1,6 +1,6 @@
 {
-  inputs.nixpkgs.url = github:NixOS/nixpkgs/nixos-22.11;
-  inputs.ascii-pay-server.url = github:ascii-dresden/ascii-pay-server;
+  inputs.nixpkgs.url = github:NixOS/nixpkgs/nixos-26.05;
+  inputs.ascii-pay-server.url = github:ascii-dresden/ascii-pay-server/purchase_rework;
 
   outputs = { self, nixpkgs, ascii-pay-server, ... }@inputs: 
   let
