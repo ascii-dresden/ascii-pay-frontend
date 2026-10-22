@@ -34,6 +34,21 @@ import { PurchaseItemTable } from "../components/purchase/PurchaseProductTable";
 import { PurchaseItemOverview } from "../components/purchase/PurchaseProductOverview";
 import { percentToString } from "../../terminalApp/components/Money";
 import { PrintListChip } from "../components/product/PrintListChip";
+import { ProductBarcodeDto } from "../../common/contracts";
+
+const ProductBarcodeView = (props: { barcode: ProductBarcodeDto }) => {
+  const { t } = useTranslation();
+  const { barcode } = props;
+  const units = t("product.barcodeUnits", { count: barcode.container_size });
+  return (
+    <Box sx={{ mb: 1 }}>
+      <BarcodeView value={barcode.code} />
+      <Typography variant="caption" color="text.secondary">
+        {barcode.label ? `${barcode.label} · ${units}` : units}
+      </Typography>
+    </Box>
+  );
+};
 
 export const ProductDetailsPage = () => {
   const { t } = useTranslation();
@@ -265,23 +280,55 @@ export const ProductDetailsPage = () => {
                       {t("product.barcodes")}
                     </TableCell>
                     <TableCell>
-                      {product.barcodes.map((barcode) => (
-                        <Box key={barcode.id} sx={{ mb: 1 }}>
-                          <BarcodeView value={barcode.code} />
-                          <Typography variant="caption" color="text.secondary">
-                            {barcode.label
-                              ? `${barcode.label} · ${t(
-                                  "product.barcodeUnits",
-                                  { count: barcode.container_size }
-                                )}`
-                              : t("product.barcodeUnits", {
-                                  count: barcode.container_size,
-                                })}
-                          </Typography>
-                        </Box>
-                      ))}
+                      {product.barcodes
+                        .filter((barcode) => barcode.sub_product_id == null)
+                        .map((barcode) => (
+                          <ProductBarcodeView
+                            key={barcode.id}
+                            barcode={barcode}
+                          />
+                        ))}
                     </TableCell>
                   </TableRow>
+                  {product.sub_products.map((sub) => (
+                    <TableRow
+                      key={sub.id}
+                      sx={{ "& > *": { borderBottom: "unset !important" } }}
+                    >
+                      <TableCell
+                        width={100}
+                        align="right"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        {sub.name}
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          component="div"
+                        >
+                          {t("product.subProduct")} · {sub.purchase_tax}%
+                          {sub.active
+                            ? ""
+                            : ` · ${t("product.subProductInactive")}`}
+                          {sub.show_on_print_list
+                            ? ` · ${t("product.subProductOnPrintList")}`
+                            : ""}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {product.barcodes
+                          .filter(
+                            (barcode) => barcode.sub_product_id === sub.id
+                          )
+                          .map((barcode) => (
+                            <ProductBarcodeView
+                              key={barcode.id}
+                              barcode={barcode}
+                            />
+                          ))}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </Box>

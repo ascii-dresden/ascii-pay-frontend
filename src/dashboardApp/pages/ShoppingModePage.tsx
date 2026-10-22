@@ -55,10 +55,15 @@ import { PurchaseStateChip } from "../components/purchase/PurchaseStateChip";
 import { usePurchaseHistory } from "../components/purchase/usePurchaseHistory";
 import { useRemoveCartItem } from "../components/purchase/shop/useCartItemActions";
 import { ShopLocationState } from "../components/purchase/shop/ShopFormPage";
-import { ShoppingListItemRow } from "../components/shoppingList/ShoppingListItemRow";
+import {
+  ShoppingListGroupHeading,
+  ShoppingListItemRow,
+} from "../components/shoppingList/ShoppingListItemRow";
 import {
   shoppingListItemName,
   shoppingListSecondary,
+  groupShoppingList,
+  shoppingListLastUnitCents,
 } from "../components/shoppingList/shoppingListUtils";
 import { useRemoveShoppingListItem } from "../components/shoppingList/useShoppingListActions";
 import { useShoppingListCheckoff } from "../components/shoppingList/useShoppingListWish";
@@ -71,7 +76,11 @@ import {
   purchaseLabel,
   purchaseTotal,
 } from "../components/purchase/purchaseUtils";
-import { barcodeSearchText, barcodeSummary } from "../components/product/productBarcodeUtils";
+import {
+  barcodeSearchText,
+  barcodeSummary,
+} from "../components/product/productBarcodeUtils";
+import { purchaseItemDisplayName } from "../components/product/subProductUtils";
 
 const BarcodeScanner = React.lazy(
   () => import("../components/scanner/BarcodeScanner")
@@ -104,7 +113,8 @@ export const ShoppingModePage = () => {
     data: purchase,
   } = useGetPurchaseQuery(purchaseId);
   const { data: products } = useGetAllProductsQuery();
-  const { getLastPurchase } = usePurchaseHistory();
+  const { getLastPurchase, getLastPurchasesBySubProduct } =
+    usePurchaseHistory();
 
   const [updateItem, updateState] = useUpdatePurchaseItemMutation();
   const removeItem = useRemoveCartItem(purchaseId);
@@ -182,6 +192,7 @@ export const ShoppingModePage = () => {
     const last = getLastPurchase(item.product?.id, {
       code: item.barcode,
       size: item.container_size,
+      subProductId: item.sub_product_id ?? null,
     });
     try {
       await updateItem({
@@ -196,12 +207,13 @@ export const ShoppingModePage = () => {
         },
       }).unwrap();
       toast.success(
-        t("purchase.shop.added", { name: item.product?.name ?? item.name }),
+        t("purchase.shop.added", { name: purchaseItemDisplayName(item) }),
         { autoClose: 1500 }
       );
       // The article is in the basket, so nobody else needs to buy it.
       checkOffWishes(purchaseId, {
         productId: item.product?.id ?? null,
+        subProductId: item.sub_product_id ?? null,
         name: item.product?.name ?? item.name,
       });
     } catch (e) {
@@ -316,7 +328,7 @@ export const ShoppingModePage = () => {
   );
 
   const renderCartRow = (item: PurchaseItemDto) => {
-    const name = item.product?.name ?? item.name;
+    const name = purchaseItemDisplayName(item);
     const secondary = [
       `${item.container_count} × ${moneyToString(item.container_cents)}`,
       `${t("purchase.item.container_size")} ${item.container_size}`,
@@ -385,7 +397,7 @@ export const ShoppingModePage = () => {
   };
 
   const renderPlannedRow = (item: PurchaseItemDto) => {
-    const name = item.product?.name ?? item.name;
+    const name = purchaseItemDisplayName(item);
     return (
       <ListItem
         key={item.id}
@@ -489,19 +501,50 @@ export const ShoppingModePage = () => {
               <ListSubheader disableSticky>
                 {t("shoppingList.shop.subheader")}
               </ListSubheader>
-              {openWishes.map((item, index) => (
-                <React.Fragment key={`wish-${item.id}`}>
-                  {index > 0 ? <Divider component="li" /> : null}
+              {groupShoppingList(openWishes).map((row, index) => {
+                const renderWish = (
+                  item: ShoppingListItemDto,
+                  nested: boolean
+                ) => (
                   <ShoppingListItemRow
+                    key={item.id}
                     item={item}
+                    nested={nested}
                     secondary={shoppingListSecondary(t, item)}
+                    unitCents={
+                      nested
+                        ? shoppingListLastUnitCents(
+                            item,
+                            getLastPurchasesBySubProduct
+                          )
+                        : undefined
+                    }
                     to={wishTarget(item)}
                     onDone={() => navigate(wishTarget(item))}
                     onDelete={() => handleDeleteWish(item)}
                     busy={busy}
                   />
-                </React.Fragment>
-              ))}
+                );
+                return (
+                  <React.Fragment
+                    key={
+                      row.kind === "item"
+                        ? `wish-${row.item.id}`
+                        : `wish-group-${row.product.id}`
+                    }
+                  >
+                    {index > 0 ? <Divider component="li" /> : null}
+                    {row.kind === "item" ? (
+                      renderWish(row.item, false)
+                    ) : (
+                      <>
+                        <ShoppingListGroupHeading product={row.product} />
+                        {row.items.map((item) => renderWish(item, true))}
+                      </>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </>
           ) : null}
         </List>

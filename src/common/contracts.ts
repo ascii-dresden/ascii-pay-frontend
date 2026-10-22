@@ -101,6 +101,41 @@ export type ProductBarcodeDto = {
   container_size: number;
   /** Free text shown next to the code, e.g. "Kasten 20x0,5l". */
   label: string;
+  /** Sub product the code belongs to; null = the product itself. */
+  sub_product_id: number | null;
+};
+
+/**
+ * A purchasing variant that is tracked on its own (name, codes, purchase tax,
+ * price history) but sold as the parent product: "Haribo" is one product on
+ * the snack list, Goldbären and Tropifrutti are its sub products.
+ */
+export type SubProductDto = {
+  id: number;
+  name: string;
+  purchase_tax: number;
+  /** Inactive sub products keep their history but are no longer offered. */
+  active: boolean;
+  /** Listed below the product on every print list (snack list) the product is on. */
+  show_on_print_list: boolean;
+  /** Target stock in single units; the inventory is counted per sub product. */
+  target_quantity: number;
+};
+
+export type SaveSubProductDto = {
+  /** Existing sub product to update; absent creates a new one. */
+  id?: number | null;
+  /** Client chosen key that barcodes of the same save reference via `sub_product_key`. */
+  key?: string | null;
+  name: string;
+  /** Defaults to the purchase tax of the product. */
+  purchase_tax?: number | null;
+  /** Defaults to true. */
+  active?: boolean;
+  /** Defaults to false. */
+  show_on_print_list?: boolean;
+  /** Defaults to 0. */
+  target_quantity?: number;
 };
 
 export type SaveProductBarcodeDto = {
@@ -109,6 +144,10 @@ export type SaveProductBarcodeDto = {
   container_size?: number;
   /** Defaults to "". */
   label?: string;
+  /** Existing sub product of the product. */
+  sub_product_id?: number | null;
+  /** `key` of an entry in `sub_products` of the same save; wins over `sub_product_id`. */
+  sub_product_key?: string | null;
 };
 
 /** A product that already uses a barcode, for the duplicate warning in the product form. */
@@ -127,6 +166,8 @@ export type ProductDto = {
   /** @deprecated Primary (first) code, read only. Use `barcodes`. */
   barcode?: string | null;
   barcodes: ProductBarcodeDto[];
+  /** Sub products, oldest first (inactive ones included). */
+  sub_products: SubProductDto[];
   category: string;
   print_lists: string[];
   tags: string[];
@@ -170,6 +211,12 @@ export type SaveProductDto = {
    * barcodes it has, so a partial update can never drop variants it does not know about.
    */
   barcodes?: SaveProductBarcodeDto[];
+  /**
+   * Replaces the sub products (entries with `id` are updated, the others
+   * created). Missing ones are deleted, or only deactivated when something was
+   * bought as them. When absent the sub products stay as they are.
+   */
+  sub_products?: SaveSubProductDto[];
   category: string;
   print_lists: string[];
   tags: string[];
@@ -294,6 +341,8 @@ export type PurchaseItemDto = {
   /** false = planned item on the shopping list, true = in the cart. */
   collected: boolean;
   product: ProductDto | null;
+  /** Sub product of `product` that was bought (see `product.sub_products`). */
+  sub_product_id: number | null;
 };
 
 export type SavePurchaseDto = {
@@ -320,6 +369,8 @@ export type SavePurchaseItemDto = {
   /** Defaults to true. */
   collected?: boolean;
   product_id: number | null;
+  /** Sub product of `product_id` that was bought. */
+  sub_product_id?: number | null;
 };
 
 export type UpdateInventoryProductDto = {
@@ -335,6 +386,12 @@ export type InventoryLastPurchaseDto = {
   container_cents: number;
 };
 
+export type InventorySubProductRowDto = {
+  sub_product_id: number;
+  target_quantity: number;
+  last_counted_quantity: number | null;
+};
+
 export type InventoryRowDto = {
   product: ProductDto;
   target_quantity: number;
@@ -346,12 +403,19 @@ export type InventoryRowDto = {
    */
   estimated_quantity: number | null;
   last_purchase: InventoryLastPurchaseDto | null;
+  /**
+   * Per active sub product: target and last count. With sub products the row
+   * holds their sums and the product is only a heading.
+   */
+  sub_products: InventorySubProductRowDto[];
 };
 
 export type InventoryCheckStateDto = "draft" | "completed";
 
 export type InventoryCheckItemDto = {
   product: ProductDto;
+  /** Set when the product is counted per sub product (see `product.sub_products`). */
+  sub_product_id: number | null;
   target_quantity: number;
   counted_quantity: number | null;
 };
@@ -416,6 +480,8 @@ export type ShoppingListItemDto = {
   quantity: number;
   note: string;
   product: ProductDto | null;
+  /** Specific sub product of `product`; null = any of them. */
+  sub_product_id: number | null;
   created_by_account_id: number | null;
   created_by_name: string | null;
   created_at: string;
@@ -432,6 +498,8 @@ export type SaveShoppingListItemDto = {
   /** Defaults to "". */
   note?: string;
   product_id?: number | null;
+  /** Specific sub product of `product_id`. */
+  sub_product_id?: number | null;
 };
 
 export type MarkShoppingListItemDoneDto = {

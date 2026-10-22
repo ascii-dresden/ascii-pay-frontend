@@ -84,5 +84,6 @@ export function purchaseItemToSave(item: PurchaseItemDto): SavePurchaseItemDto {
     barcode: item.barcode,
     collected: item.collected,
     product_id: item.product?.id ?? null,
+    sub_product_id: item.sub_product_id ?? null,
   };
 }

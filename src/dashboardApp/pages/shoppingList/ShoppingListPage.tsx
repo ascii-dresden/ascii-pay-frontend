@@ -31,12 +31,18 @@ import { ActionButtonAction } from "../../components/ActionButton";
 import { usePageTitle } from "../../components/usePageTitle";
 import { PaperScreenLoader } from "../../components/PaperScreenLoader";
 import { PullToRefreshWrapper } from "../../components/PullToRefresh";
-import { ShoppingListItemRow } from "../../components/shoppingList/ShoppingListItemRow";
+import {
+  ShoppingListGroupHeading,
+  ShoppingListItemRow,
+} from "../../components/shoppingList/ShoppingListItemRow";
 import {
   canEditShoppingListItem,
   canManageShoppingList,
   shoppingListSecondary,
+  groupShoppingList,
+  shoppingListLastUnitCents,
 } from "../../components/shoppingList/shoppingListUtils";
+import { usePurchaseHistory } from "../../components/purchase/usePurchaseHistory";
 import {
   useMarkShoppingListItemDone,
   useRemoveShoppingListItem,
@@ -75,6 +81,8 @@ export const ShoppingListPage = () => {
   const removeItem = useRemoveShoppingListItem();
   const markDone = useMarkShoppingListItemDone();
   const reopenItem = useReopenShoppingListItem();
+  // Prices of the sub products listed below the entries.
+  const { getLastPurchasesBySubProduct } = usePurchaseHistory();
   const [busyId, setBusyId] = React.useState<number | null>(null);
 
   usePageTitle(t("shoppingList.title"));
@@ -148,16 +156,28 @@ export const ShoppingListPage = () => {
             </Box>
           ) : (
             <List disablePadding>
-              {openItems.map((item, index) => {
-                const editable = canEditShoppingListItem(user, item);
-                return (
-                  <React.Fragment key={item.id}>
-                    {index > 0 ? <Divider component="li" /> : null}
+              {groupShoppingList(openItems).map((row, index) => {
+                const renderItem = (
+                  item: ShoppingListItemDto,
+                  nested: boolean
+                ) => {
+                  const editable = canEditShoppingListItem(user, item);
+                  return (
                     <ShoppingListItemRow
+                      key={item.id}
                       item={item}
+                      nested={nested}
                       secondary={shoppingListSecondary(t, item, {
                         date: true,
                       })}
+                      unitCents={
+                        nested
+                          ? shoppingListLastUnitCents(
+                              item,
+                              getLastPurchasesBySubProduct
+                            )
+                          : undefined
+                      }
                       to={
                         editable ? `/shopping-list/${item.id}/edit` : undefined
                       }
@@ -167,6 +187,25 @@ export const ShoppingListPage = () => {
                       }
                       busy={busyId === item.id}
                     />
+                  );
+                };
+                return (
+                  <React.Fragment
+                    key={
+                      row.kind === "item"
+                        ? row.item.id
+                        : `group-${row.product.id}`
+                    }
+                  >
+                    {index > 0 ? <Divider component="li" /> : null}
+                    {row.kind === "item" ? (
+                      renderItem(row.item, false)
+                    ) : (
+                      <>
+                        <ShoppingListGroupHeading product={row.product} />
+                        {row.items.map((item) => renderItem(item, true))}
+                      </>
+                    )}
                   </React.Fragment>
                 );
               })}

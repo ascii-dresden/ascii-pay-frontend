@@ -9,6 +9,7 @@ import {
 } from "../../../redux/api/purchaseApi";
 import { purchaseItemToSave } from "../purchaseUtils";
 import { undoToast } from "../../undoToast";
+import { purchaseItemDisplayName } from "../../product/subProductUtils";
 
 /**
  * Increments the container count of a collected row by one and offers an
@@ -37,7 +38,7 @@ export const useIncrementCartItem = (purchaseId: number) => {
       }
       undoToast(
         t("purchase.shop.increased", {
-          name: item.product?.name ?? item.name,
+          name: purchaseItemDisplayName(item),
           count: next,
         }),
         t("purchase.shop.undo"),

@@ -277,7 +277,24 @@
     "barcodeUnits_other": "{{count}} Stück",
     "barcodeDuplicate": "Wird bereits verwendet von: {{names}}",
     "barcodeContainerSizeShort": "Stück",
-    "barcodesHint": "Ein Code pro Gebinde: Flasche und Kasten desselben Artikels haben jeweils einen eigenen Code und eine eigene Stückzahl."
+    "barcodesHint": "Ein Code pro Gebinde: Flasche und Kasten desselben Artikels haben jeweils einen eigenen Code und eine eigene Stückzahl.",
+    "subProduct": "Unterprodukt",
+    "subProducts": "Unterprodukte",
+    "subProductsHint": "Sorten, die einzeln eingekauft und getrackt, aber als dieses Produkt verkauft werden (z. B. Goldbären und Tropifrutti unter Haribo). Verkaufspreis, Bestand und Snackliste bleiben beim Produkt.",
+    "subProductName": "Name",
+    "subProductActive": "Aktiv",
+    "subProductActiveHint": "Inaktive Unterprodukte behalten ihre Einkaufshistorie, werden aber nicht mehr angeboten.",
+    "subProductRemove": "Unterprodukt entfernen",
+    "subProductAdd": "Unterprodukt hinzufügen",
+    "subProductUnnamed": "(ohne Namen)",
+    "subProductInactive": "inaktiv",
+    "subProductAny": "{{name}} (egal welches)",
+    "barcodeSubProduct": "Gehört zu",
+    "barcodeSubProductNone": "{{name}} selbst",
+    "subProductShowOnPrintList": "Auf Drucklisten unter dem Produkt anzeigen",
+    "subProductOnPrintList": "auf Druckliste",
+    "targetQuantitySubProductsHint": "Summe der Unterprodukte",
+    "subProductTarget": "Ziel"
   },
   "purchase": {
     "store": "Einkaufsladen",
@@ -331,7 +348,11 @@
       "targetProfit": "Zielgewinn",
       "suggestedPrice": "Preisempfehlung (brutto)",
       "suggestedPriceWithoutTax": "Preisempfehlung (netto)",
-      "suggestedProfit": "Gewinn"
+      "suggestedProfit": "Gewinn",
+      "subProductPrices": "Letzter Einkaufspreis je Stück: (netto) brutto",
+      "priceBasis": "Grundlage für die Kalkulation",
+      "priceBasisMax": "Teuerstes",
+      "priceBasisAverage": "Durchschnitt"
     },
     "name": "Bezeichnung",
     "finalizedAt": "Abgeschlossen am",
@@ -431,7 +452,12 @@
       "assignAction": "Barcode speichern",
       "assignHint": "Der Code {{code}} ist nicht registriert. Wähle das Produkt aus, zu dem er gehört, und gib an, für wie viele Einzelstücke er steht.",
       "assignSuccess": "Barcode zu {{name}} hinzugefügt",
-      "assignError": "Barcode konnte nicht hinzugefügt werden!"
+      "assignError": "Barcode konnte nicht hinzugefügt werden!",
+      "assignNewSubProduct": "Neues Unterprodukt…"
+    },
+    "productHistory": {
+      "all": "Alle",
+      "unassigned": "{{name}} (ohne Unterprodukt)"
     }
   },
   "inventory": {
@@ -520,7 +546,8 @@
       "deleteAction": "Inventur löschen",
       "deleteSuccess": "Inventur gelöscht!",
       "deleteError": "Inventur konnte nicht gelöscht werden!",
-      "notFound": "Inventur nicht gefunden."
+      "notFound": "Inventur nicht gefunden.",
+      "subProductSummary": "Gezählt {{counted}} von Ziel {{target}} (Summe der Unterprodukte)"
     },
     "complete": {
       "title": "Inventur abschließen",
@@ -540,7 +567,8 @@
       "alreadyOnList": "schon auf der Liste",
       "addedToList_one": "1 Artikel auf die Einkaufsliste gesetzt",
       "addedToList_other": "{{count}} Artikel auf die Einkaufsliste gesetzt"
-    }
+    },
+    "subProductTargetSum": "Summe der Ziele der Unterprodukte; das Ziel wird je Unterprodukt gesetzt."
   },
   "payment": {
     "title": "Transaktion erstellen",
@@ -586,13 +614,16 @@
       "saveError": "Eintrag konnte nicht gespeichert werden!",
       "notFound": "Dieser Eintrag existiert nicht mehr.",
       "forbidden": "Nur wer den Eintrag angelegt hat (oder ein Einkäufer) kann ihn ändern.",
-      "alreadyDone": "Dieser Eintrag wurde bereits gekauft und kann nicht mehr bearbeitet werden."
+      "alreadyDone": "Dieser Eintrag wurde bereits gekauft und kann nicht mehr bearbeitet werden.",
+      "anySubProduct": "Egal welche Sorte"
     },
     "shop": {
       "subheader": "Einkaufsliste",
       "tripHint_one": "{{count}} Eintrag der Einkaufsliste wird im Tab „Einkaufsliste“ angezeigt.",
       "tripHint_other": "{{count}} Einträge der Einkaufsliste werden im Tab „Einkaufsliste“ angezeigt."
-    }
+    },
+    "subProductNoPrice": "noch nicht gekauft",
+    "anySubProduct": "Egal welche Sorte"
   },
   "scanner": {
     "start": "Kamera starten",

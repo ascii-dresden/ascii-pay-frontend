@@ -100,17 +100,26 @@ export const inventoryApi = createApi({
     }),
     updateInventoryCheckItem: builder.mutation<
       InventoryCheckItemDto,
-      { id: number; productId: number; body: UpdateInventoryCheckItemDto }
+      {
+        id: number;
+        productId: number;
+        /** Set for products that are counted per sub product. */
+        subProductId?: number | null;
+        body: UpdateInventoryCheckItemDto;
+      }
     >({
-      query({ id, productId, body }) {
+      query({ id, productId, subProductId, body }) {
         return {
-          url: `/inventory/check/${id}/item/${productId}`,
+          url:
+            subProductId != null
+              ? `/inventory/check/${id}/item/${productId}/sub-product/${subProductId}`
+              : `/inventory/check/${id}/item/${productId}`,
           method: "PUT",
           body,
         };
       },
       async onQueryStarted(
-        { id, productId, body },
+        { id, productId, subProductId, body },
         { dispatch, queryFulfilled }
       ) {
         const patch = dispatch(
@@ -118,7 +127,11 @@ export const inventoryApi = createApi({
             "getInventoryCheck",
             id,
             (draft) => {
-              const item = draft.items.find((i) => i.product.id === productId);
+              const item = draft.items.find(
+                (i) =>
+                  i.product.id === productId &&
+                  (i.sub_product_id ?? null) === (subProductId ?? null)
+              );
               if (item) {
                 item.counted_quantity = body.counted_quantity;
               }

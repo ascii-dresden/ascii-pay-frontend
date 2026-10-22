@@ -27,6 +27,7 @@ import { FullScreenLoader } from "../components/FullScreenLoader";
 import { FormPage } from "../components/FormPage";
 import { PageHeaderNavigation } from "../components/PageHeader";
 import { ProductAvatar } from "../components/product/ProductAvatar";
+import { productDisplayName } from "../components/product/subProductUtils";
 import { inventoryDateFormat } from "../components/inventory/inventoryFormat";
 
 export const CompleteInventoryCheckPage = () => {
@@ -131,7 +132,9 @@ export const CompleteInventoryCheckPage = () => {
       item: i,
       needed: i.target_quantity - (i.counted_quantity ?? 0),
       alreadyOnList: (openWishes ?? []).some(
-        (wish) => wish.product?.id === i.product.id
+        (wish) =>
+          wish.product?.id === i.product.id &&
+          (wish.sub_product_id ?? null) === (i.sub_product_id ?? null)
       ),
     }));
   const willBeAdded = belowTarget.filter((row) => !row.alreadyOnList).length;
@@ -201,7 +204,7 @@ export const CompleteInventoryCheckPage = () => {
         <List dense disablePadding sx={{ mb: 1 }}>
           {belowTarget.map(({ item, needed, alreadyOnList }) => (
             <ListItem
-              key={item.product.id}
+              key={`${item.product.id}-${item.sub_product_id ?? "p"}`}
               disableGutters
               secondaryAction={
                 <Chip
@@ -220,7 +223,7 @@ export const CompleteInventoryCheckPage = () => {
                 <ProductAvatar product={item.product} size={32} />
               </ListItemAvatar>
               <ListItemText
-                primary={item.product.name}
+                primary={productDisplayName(item.product, item.sub_product_id)}
                 secondary={`${item.counted_quantity} / ${item.target_quantity}`}
                 primaryTypographyProps={{ noWrap: true }}
               />
@@ -248,7 +251,6 @@ export const CompleteInventoryCheckPage = () => {
           {t("inventory.complete.addToShoppingListHint")}
         </Typography>
       ) : null}
-
     </FormPage>
   );
 };

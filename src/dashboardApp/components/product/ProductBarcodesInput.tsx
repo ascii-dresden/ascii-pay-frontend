@@ -4,6 +4,7 @@ import {
   Button,
   IconButton,
   InputAdornment,
+  MenuItem,
   TextField,
   Tooltip,
   Typography,
@@ -17,6 +18,10 @@ import { useTranslation } from "react-i18next";
 import { ProductDto, SaveProductBarcodeDto } from "../../../common/contracts";
 import { BarcodeTextField } from "../scanner/BarcodeTextField";
 import { useGetAllProductsQuery } from "../../redux/api/productApi";
+import {
+  SubProductFormValue,
+  subProductKeyForId,
+} from "./ProductSubProductsInput";
 
 /** One row of the editor. `id` is only set for codes that are already stored. */
 export type ProductBarcodeFormValue = {
@@ -24,6 +29,8 @@ export type ProductBarcodeFormValue = {
   code: string;
   containerSize: number;
   label: string;
+  /** `key` of the sub product the code belongs to; null = the product itself. */
+  subProductKey: string | null;
 };
 
 export const emptyProductBarcode = (
@@ -32,6 +39,7 @@ export const emptyProductBarcode = (
   code,
   containerSize: 1,
   label: "",
+  subProductKey: null,
 });
 
 export const productBarcodesFromDto = (
@@ -42,11 +50,21 @@ export const productBarcodesFromDto = (
     code: barcode.code,
     containerSize: barcode.container_size,
     label: barcode.label,
+    subProductKey:
+      barcode.sub_product_id != null
+        ? subProductKeyForId(barcode.sub_product_id)
+        : null,
   }));
 
-/** Drops empty rows; the server trims, dedupes and clamps the rest. */
+/**
+ * Drops empty rows; the server trims, dedupes and clamps the rest. Links to
+ * sub products go by form key, so they also work for sub products that the
+ * same save creates; a key whose sub product was removed falls back to the
+ * product itself.
+ */
 export const productBarcodesToSaveDto = (
-  barcodes: ProductBarcodeFormValue[]
+  barcodes: ProductBarcodeFormValue[],
+  subProducts: SubProductFormValue[]
 ): SaveProductBarcodeDto[] =>
   barcodes
     .filter((barcode) => barcode.code.trim().length > 0)
@@ -54,6 +72,11 @@ export const productBarcodesToSaveDto = (
       code: barcode.code.trim(),
       container_size: Math.max(1, barcode.containerSize),
       label: barcode.label.trim(),
+      sub_product_key: subProducts.some(
+        (sub) => sub.key === barcode.subProductKey
+      )
+        ? barcode.subProductKey
+        : null,
     }));
 
 /**
@@ -97,12 +120,17 @@ const DuplicateHint = (props: { code: string; productId?: number }) => {
 export const ProductBarcodesInput = (props: {
   values: ProductBarcodeFormValue[];
   onChange: (values: ProductBarcodeFormValue[]) => void;
+  /** Sub products of the form; when present every code can be assigned to one. */
+  subProducts?: SubProductFormValue[];
+  /** Name of the product, for the "belongs to the product itself" option. */
+  productName?: string;
   /** Id of the product being edited, so it is not reported as its own duplicate. */
   productId?: number;
   disabled?: boolean;
 }) => {
   const { t } = useTranslation();
   const { values, onChange } = props;
+  const subProducts = props.subProducts ?? [];
 
   const update = (index: number, patch: Partial<ProductBarcodeFormValue>) =>
     onChange(
@@ -182,6 +210,38 @@ export const ProductBarcodesInput = (props: {
               sx={{ flex: 2 }}
             />
           </Box>
+          {subProducts.length > 0 ? (
+            <TextField
+              select
+              fullWidth
+              size="small"
+              label={t("product.barcodeSubProduct")}
+              disabled={props.disabled}
+              value={
+                subProducts.some((sub) => sub.key === value.subProductKey)
+                  ? value.subProductKey
+                  : ""
+              }
+              onChange={(e) =>
+                update(index, { subProductKey: e.target.value || null })
+              }
+              sx={{ mt: 1 }}
+            >
+              <MenuItem value="">
+                <em>
+                  {t("product.barcodeSubProductNone", {
+                    name: props.productName || t("product.name"),
+                  })}
+                </em>
+              </MenuItem>
+              {subProducts.map((sub) => (
+                <MenuItem key={sub.key} value={sub.key}>
+                  {sub.name.trim() || t("product.subProductUnnamed")}
+                  {sub.active ? "" : ` (${t("product.subProductInactive")})`}
+                </MenuItem>
+              ))}
+            </TextField>
+          ) : null}
           <DuplicateHint code={value.code} productId={props.productId} />
         </Box>
       ))}

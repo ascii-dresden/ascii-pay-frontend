@@ -16,7 +16,11 @@ import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { AddCircleOutline, RemoveCircleOutline, Search } from "@mui/icons-material";
+import {
+  AddCircleOutline,
+  RemoveCircleOutline,
+  Search,
+} from "@mui/icons-material";
 import { useGetAllProductsQuery } from "../redux/api/productApi";
 import { useUpdateInventoryProductsMutation } from "../redux/api/inventoryApi";
 import { ProductDto, UpdateInventoryProductDto } from "../../common/contracts";
@@ -27,6 +31,10 @@ import { PageHeaderNavigation } from "../components/PageHeader";
 import { ProductAvatar } from "../components/product/ProductAvatar";
 import { QuantityField } from "../components/inventory/QuantityField";
 import { barcodeSearchText } from "../components/product/productBarcodeUtils";
+import {
+  hasSubProducts,
+  selectableSubProducts,
+} from "../components/product/subProductUtils";
 
 type AssortmentState = { stocked: boolean; target_quantity: number };
 
@@ -271,7 +279,12 @@ export const ManageAssortmentPage = () => {
           renderOption={(optionProps, option) => (
             <li {...optionProps} key={option.id}>
               <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1.5, minWidth: 0 }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.5,
+                  minWidth: 0,
+                }}
               >
                 <ProductAvatar product={option} size={32} />
                 <Box sx={{ minWidth: 0 }}>
@@ -316,7 +329,9 @@ export const ManageAssortmentPage = () => {
             placeholder={t("inventory.assortment.search") ?? ""}
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            inputProps={{ "aria-label": t("inventory.assortment.search") ?? "" }}
+            inputProps={{
+              "aria-label": t("inventory.assortment.search") ?? "",
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -378,12 +393,27 @@ export const ManageAssortmentPage = () => {
                     ) : null}
                   </Box>
                   {isPending && <CircularProgress size={16} />}
-                  <QuantityField
-                    value={state.target_quantity}
-                    onChange={(n) => handleTargetChange(product, n)}
-                    width={84}
-                    ariaLabel={t("product.targetQuantity") ?? ""}
-                  />
+                  {hasSubProducts(product) ? (
+                    // Targets of sub products are set per sub product.
+                    <Tooltip title={t("inventory.subProductTargetSum")}>
+                      <Typography
+                        sx={{ width: 84, textAlign: "center", flexShrink: 0 }}
+                      >
+                        Σ{" "}
+                        {selectableSubProducts(product).reduce(
+                          (sum, sub) => sum + sub.target_quantity,
+                          0
+                        )}
+                      </Typography>
+                    </Tooltip>
+                  ) : (
+                    <QuantityField
+                      value={state.target_quantity}
+                      onChange={(n) => handleTargetChange(product, n)}
+                      width={84}
+                      ariaLabel={t("product.targetQuantity") ?? ""}
+                    />
+                  )}
                   <Tooltip title={t("inventory.assortment.remove")}>
                     <span>
                       <IconButton

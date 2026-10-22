@@ -1,6 +1,12 @@
 import { ProductDto, SavePurchaseItemDto } from "../../../common/contracts";
 import { useTranslation } from "react-i18next";
-import { Button, IconButton, InputAdornment, TextField } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 import {
   AddCircleOutline,
   Close,
@@ -16,6 +22,8 @@ import { CoinInput } from "../transaction/CoinInput";
 import { SelectProductPopup } from "../product/SelectProductPopup";
 import { parseBestBefore, serializeBestBefore } from "./purchaseUtils";
 import { NO_MODAL_PICKER_QUERY } from "./shop/CartItemForm";
+import { useGetAllProductsQuery } from "../../redux/api/productApi";
+import { SubProductSelect } from "../product/SubProductSelect";
 
 const StyledEditRow = styled.div`
   display: flex;
@@ -84,6 +92,7 @@ export const PurchaseItemsEdit = (props: {
       barcode: null,
       collected: true,
       product_id: null,
+      sub_product_id: null,
     });
     props.setItems(newPrices);
   };
@@ -147,6 +156,11 @@ const PurchaseItemRowEdit = (props: {
   setItem: (item: SavePurchaseItemDto) => void;
 }) => {
   const { t } = useTranslation();
+  const { data: products } = useGetAllProductsQuery();
+  const product =
+    props.item.product_id == null
+      ? null
+      : products?.find((p) => p.id === props.item.product_id) ?? null;
 
   const setName = (name: string) => {
     props.setItem({
@@ -183,6 +197,7 @@ const PurchaseItemRowEdit = (props: {
       ...props.item,
       name: product.name,
       product_id: product.id,
+      sub_product_id: null,
     });
   };
   const removeProduct = () => {
@@ -190,6 +205,7 @@ const PurchaseItemRowEdit = (props: {
       ...props.item,
       name: "",
       product_id: null,
+      sub_product_id: null,
     });
   };
 
@@ -232,6 +248,15 @@ const PurchaseItemRowEdit = (props: {
           }}
         />
       </StyledNameRow>
+      <SubProductSelect
+        product={product}
+        value={props.item.sub_product_id ?? null}
+        onChange={(subProductId) =>
+          props.setItem({ ...props.item, sub_product_id: subProductId })
+        }
+        size="small"
+        sx={{ mb: "0.7rem" }}
+      />
       <StyledContainerRow>
         <TextField
           value={props.item.container_count ?? 0}

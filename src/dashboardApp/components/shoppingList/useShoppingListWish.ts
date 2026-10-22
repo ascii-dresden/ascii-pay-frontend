@@ -18,6 +18,11 @@ import { shoppingListItemName } from "./shoppingListUtils";
 export type CheckedOffArticle = {
   /** Product of the cart row, when it has one. */
   productId?: number | null;
+  /**
+   * Sub product of the cart row. An entry that asks for a specific sub
+   * product is only ticked off by that one; entries without one by any.
+   */
+  subProductId?: number | null;
   /** Display name of the cart row (used for free-text entries). */
   name?: string | null;
   /** Entry the page was opened from (`?wish=`); ticked off regardless of name. */
@@ -53,8 +58,13 @@ export const useShoppingListCheckoff = () => {
         (item) =>
           (article.wishId != null && item.id === article.wishId) ||
           (article.productId != null &&
-            item.product?.id === article.productId) ||
-          (name.length > 0 && normalize(shoppingListItemName(item)) === name)
+            item.product?.id === article.productId &&
+            (item.sub_product_id == null ||
+              item.sub_product_id === (article.subProductId ?? null))) ||
+          (name.length > 0 &&
+            normalize(shoppingListItemName(item)) === name &&
+            (item.sub_product_id == null ||
+              item.sub_product_id === (article.subProductId ?? null)))
       );
       if (matches.length === 0) {
         return;

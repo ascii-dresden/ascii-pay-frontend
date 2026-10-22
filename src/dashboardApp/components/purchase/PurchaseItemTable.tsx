@@ -17,6 +17,7 @@ import { moneyToString } from "../../../terminalApp/components/Money";
 import { OpenInNewOutlined, PlaylistAddOutlined } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { formatBestBefore } from "./purchaseUtils";
+import { purchaseItemDisplayName } from "../product/subProductUtils";
 
 export const PurchaseItemTable = (props: {
   purchase: PurchaseDto;
@@ -58,7 +59,7 @@ export const PurchaseItemTable = (props: {
               ) : null}
             </TableCell>
             <TableCell>
-              {item.product?.name ?? item.name}
+              {purchaseItemDisplayName(item)}
               {item.product ? (
                 <Link to={`/products/${item.product.id}`}>
                   <IconButton size="small">

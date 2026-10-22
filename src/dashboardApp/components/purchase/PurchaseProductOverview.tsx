@@ -1,18 +1,29 @@
-import { ProductDto } from "../../../common/contracts";
+import { ProductDto, SubProductDto } from "../../../common/contracts";
 import React, { useEffect } from "react";
 import { PaperScreenLoader } from "../PaperScreenLoader";
-import { usePurchaseHistory } from "./usePurchaseHistory";
+import { LastPurchaseInfo, usePurchaseHistory } from "./usePurchaseHistory";
 import { unitPriceCents } from "./purchaseUtils";
 import { useTranslation } from "react-i18next";
 import {
   moneyToString,
   percentToString,
 } from "../../../terminalApp/components/Money";
-import { Grid, InputAdornment, TextField, useTheme } from "@mui/material";
+import {
+  Box,
+  Grid,
+  InputAdornment,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { EuroSymbol, PercentOutlined } from "@mui/icons-material";
 import { CoinInput } from "../transaction/CoinInput";
 import styled from "@emotion/styled";
 import { amber, green, lightGreen, orange, red } from "@mui/material/colors";
+
+const dateFormat = new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" });
 
 interface CustomProps {
   value: number;
@@ -122,6 +133,52 @@ export function calculateProductPriceOverview(
   };
 }
 
+/** Which sub product price the margin of a product with sub products is based on. */
+export type SubProductPriceBasis = "max" | "average";
+
+type SubProductPrice = {
+  sub: SubProductDto;
+  last: LastPurchaseInfo;
+  /** Unit price without tax, in cents. */
+  net: number;
+  /** Unit price including the sub product's purchase tax, in cents. */
+  gross: number;
+};
+
+/**
+ * The purchase price (net) and tax to calculate the margin with. With sub
+ * products this is either the most expensive one (by price including tax, so
+ * no variety is sold at a loss) or the average over all of them; the average
+ * tax is chosen so that net * (1 + tax) is the average gross price.
+ */
+export function subProductPriceBasis(
+  prices: SubProductPrice[],
+  basis: SubProductPriceBasis
+): { net: number; tax: number } | null {
+  if (prices.length === 0) {
+    return null;
+  }
+  if (basis === "max") {
+    const max = prices.reduce((a, b) => (b.gross > a.gross ? b : a));
+    return { net: max.net, tax: max.sub.purchase_tax / 100 };
+  }
+  const net = prices.reduce((sum, p) => sum + p.net, 0) / prices.length;
+  const gross = prices.reduce((sum, p) => sum + p.gross, 0) / prices.length;
+  return { net: Math.round(net), tax: net > 0 ? gross / net - 1 : 0 };
+}
+
+const PRICE_BASIS_STORAGE_KEY = "purchase.subProductPriceBasis";
+
+const loadPriceBasis = (): SubProductPriceBasis => {
+  try {
+    return localStorage.getItem(PRICE_BASIS_STORAGE_KEY) === "average"
+      ? "average"
+      : "max";
+  } catch {
+    return "max";
+  }
+};
+
 export const PurchaseItemOverview = (props: { product: ProductDto }) => {
   const { t } = useTranslation();
 
@@ -129,17 +186,41 @@ export const PurchaseItemOverview = (props: { product: ProductDto }) => {
   const [inputPurchasePrice, setInputPurchasePrice] = React.useState(0);
   const [inputTargetProfitPercent, setInputTargetProfitPercent] =
     React.useState(15);
+  const [priceBasis, setPriceBasis] =
+    React.useState<SubProductPriceBasis>(loadPriceBasis);
 
-  const { isLoading, getLastPurchase } = usePurchaseHistory();
+  const { isLoading, getLastPurchase, getLastPurchasesBySubProduct } =
+    usePurchaseHistory();
   const lastPurchase = getLastPurchase(props.product.id);
 
+  // Latest unit price of every active sub product that was bought already.
+  const lastBySub = getLastPurchasesBySubProduct(props.product.id);
+  const subProductPrices: SubProductPrice[] = props.product.sub_products
+    .filter((sub) => sub.active)
+    .flatMap((sub) => {
+      const last = lastBySub.get(sub.id);
+      if (!last) {
+        return [];
+      }
+      const net = unitPriceCents(last.container_cents, last.container_size);
+      return [{ sub, last, net, gross: net * (1 + sub.purchase_tax / 100) }];
+    });
+  const basis = subProductPriceBasis(subProductPrices, priceBasis);
+  const basisKey = basis ? `${priceBasis}:${basis.net}:${basis.tax}` : "";
+
   useEffect(() => {
-    if (lastPurchase) {
+    if (basis) {
+      setInputPurchasePrice(basis.net);
+    } else if (lastPurchase) {
       setInputPurchasePrice(
-        unitPriceCents(lastPurchase.container_cents, lastPurchase.container_size)
+        unitPriceCents(
+          lastPurchase.container_cents,
+          lastPurchase.container_size
+        )
       );
     }
-  }, [lastPurchase?.purchaseId, setInputPurchasePrice]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastPurchase?.purchaseId, basisKey, setInputPurchasePrice]);
 
   useEffect(() => {
     setInputCurrentPrice(props.product.price.Cent ?? 0);
@@ -149,15 +230,82 @@ export const PurchaseItemOverview = (props: { product: ProductDto }) => {
     return <PaperScreenLoader />;
   }
 
+  const changePriceBasis = (next: SubProductPriceBasis | null) => {
+    if (!next) {
+      return;
+    }
+    setPriceBasis(next);
+    try {
+      localStorage.setItem(PRICE_BASIS_STORAGE_KEY, next);
+    } catch {
+      // Only a convenience; the toggle works without remembering it.
+    }
+  };
+
   const result = calculateProductPriceOverview(
     inputCurrentPrice,
     inputPurchasePrice,
     inputTargetProfitPercent / 100,
-    props.product.purchase_tax / 100
+    basis ? basis.tax : props.product.purchase_tax / 100
   );
 
   return (
     <Grid container sx={{ p: 2 }} spacing={2}>
+      {subProductPrices.length > 0 ? (
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
+            <Typography variant="subtitle2">
+              {t("purchase.productOverview.subProductPrices")}
+            </Typography>
+            <ToggleButtonGroup
+              size="small"
+              exclusive
+              value={priceBasis}
+              onChange={(e, next) => changePriceBasis(next)}
+              aria-label={t("purchase.productOverview.priceBasis") ?? ""}
+            >
+              <ToggleButton value="max">
+                {t("purchase.productOverview.priceBasisMax")}
+              </ToggleButton>
+              <ToggleButton value="average">
+                {t("purchase.productOverview.priceBasisAverage")}
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+          <StyledTable>
+            <tbody>
+              {subProductPrices.map((price) => (
+                <tr key={price.sub.id}>
+                  <td>
+                    {price.sub.name}
+                    <Typography
+                      component="span"
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{ ml: 1 }}
+                    >
+                      {percentToString(price.sub.purchase_tax / 100)} ·{" "}
+                      {dateFormat.format(new Date(price.last.timestamp))}
+                    </Typography>
+                  </td>
+                  <td>
+                    <small>{moneyToString(price.net)}</small>
+                    {moneyToString(Math.round(price.gross))}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </StyledTable>
+        </Grid>
+      ) : null}
       <Grid item xs={12} md={4}>
         <TextField
           fullWidth
