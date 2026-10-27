@@ -28,6 +28,7 @@ import {
   purchaseTotal,
 } from "../../components/purchase/purchaseUtils";
 import { shopSummary } from "../../components/purchase/shop/ShopFormPage";
+import { purchaseItemDisplayName } from "../../components/product/subProductUtils";
 
 /** Confirmation page that locks a draft purchase. */
 export const FinalizePurchasePage = () => {
@@ -128,7 +129,7 @@ export const FinalizePurchasePage = () => {
             {uncollected.map((item) => (
               <ListItem key={item.id} disableGutters sx={{ py: 0 }}>
                 <ListItemText
-                  primary={item.product?.name ?? item.name}
+                  primary={purchaseItemDisplayName(item)}
                   secondary={`${item.container_count} × ${t(
                     "purchase.item.container_size"
                   )} ${item.container_size}`}

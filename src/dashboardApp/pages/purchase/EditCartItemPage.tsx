@@ -13,6 +13,7 @@ import { useUpdatePurchaseItemMutation } from "../../redux/api/purchaseApi";
 import { usePageTitle } from "../../components/usePageTitle";
 import { usePurchaseHistory } from "../../components/purchase/usePurchaseHistory";
 import { findBarcode } from "../../components/product/productBarcodeUtils";
+import { productDisplayName } from "../../components/product/subProductUtils";
 import {
   ShopFormPage,
   ShopLocationState,
@@ -50,6 +51,7 @@ export const EditCartItemPage = () => {
   const last = getLastPurchase(product?.id, {
     code: item?.barcode,
     size: item?.container_size,
+    subProductId: item?.sub_product_id ?? null,
   });
 
   const [updateItem, { isLoading }] = useUpdatePurchaseItemMutation();
@@ -94,12 +96,17 @@ export const EditCartItemPage = () => {
     if (busy || !canSubmit) {
       return;
     }
-    const values = cartItemFormToSave(form, {
-      productId: product?.id ?? null,
-      barcode: item.barcode,
-      collected: markCollected ? true : item.collected,
-      fallbackName: product?.name ?? item.name,
-    });
+    const values = cartItemFormToSave(
+      product
+        ? { ...form, name: productDisplayName(product, form.subProductId) }
+        : form,
+      {
+        productId: product?.id ?? null,
+        barcode: item.barcode,
+        collected: markCollected ? true : item.collected,
+        fallbackName: product?.name ?? item.name,
+      }
+    );
     try {
       await updateItem({
         id: purchaseId,
@@ -116,6 +123,7 @@ export const EditCartItemPage = () => {
         // Only the move into the cart ticks the list off, not a later edit.
         checkOffWishes(purchaseId, {
           productId: product?.id ?? null,
+          subProductId: product ? form.subProductId : null,
           name: values.name,
         });
       }
@@ -186,6 +194,7 @@ export const EditCartItemPage = () => {
       <CartItemForm
         value={form}
         onChange={setForm}
+        product={product}
         showName={requireName}
         disabled={busy}
         onSubmit={handleSubmit}

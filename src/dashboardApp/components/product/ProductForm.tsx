@@ -23,6 +23,12 @@ import {
   productBarcodesFromDto,
   productBarcodesToSaveDto,
 } from "./ProductBarcodesInput";
+import {
+  ProductSubProductsInput,
+  SubProductFormValue,
+  subProductsFromDto,
+  subProductsToSaveDto,
+} from "./ProductSubProductsInput";
 import { CategoryInput } from "./CategoryInput";
 import { TagsInput } from "./TagsInput";
 import { PrintListsInput } from "./PrintListsInput";
@@ -37,6 +43,7 @@ export type ProductFormValue = {
   nickname: string;
   category: string;
   barcodes: ProductBarcodeFormValue[];
+  subProducts: SubProductFormValue[];
   purchaseTax: number;
   printLists: string[];
   tags: string[];
@@ -52,6 +59,7 @@ export const emptyProductFormValue = (): ProductFormValue => ({
   nickname: "",
   category: "",
   barcodes: [],
+  subProducts: [],
   purchaseTax: 19,
   printLists: [],
   tags: [],
@@ -69,6 +77,7 @@ export const productFormValueFromDto = (
   nickname: product.nickname ?? "",
   category: product.category,
   barcodes: productBarcodesFromDto(product),
+  subProducts: subProductsFromDto(product),
   purchaseTax: product.purchase_tax,
   printLists: product.print_lists,
   tags: product.tags,
@@ -97,7 +106,8 @@ export const productFormValueToSaveDto = (
     status_prices: value.statusPrices,
     stocked: value.stocked,
     target_quantity: value.stocked ? value.targetQuantity : 0,
-    barcodes: productBarcodesToSaveDto(value.barcodes),
+    barcodes: productBarcodesToSaveDto(value.barcodes, value.subProducts),
+    sub_products: subProductsToSaveDto(value.subProducts),
   };
   if (value.nickname.length > 0) {
     saveProduct.nickname = value.nickname;
@@ -130,6 +140,7 @@ export const productDtoToSaveDto = (product: ProductDto): SaveProductDto => ({
     code: barcode.code,
     container_size: barcode.container_size,
     label: barcode.label,
+    sub_product_id: barcode.sub_product_id,
   })),
 });
 
@@ -167,8 +178,8 @@ export type ProductFormSectionProps = {
 };
 
 /**
- * Section 1: name (with the QuickAccess grid picker), nickname, category and
- * the barcodes (one row per purchasing variant).
+ * Section 1: name (with the QuickAccess grid picker), nickname, category, the
+ * sub products and the barcodes (one row per purchasing variant).
  */
 export const ProductBasicsFields = (props: ProductFormSectionProps) => {
   const { t } = useTranslation();
@@ -238,9 +249,18 @@ export const ProductBasicsFields = (props: ProductFormSectionProps) => {
         possibleValues={availableCategories}
         disabled={props.disabled}
       />
+      <ProductSubProductsInput
+        values={value.subProducts}
+        onChange={(subProducts) => onChange({ subProducts })}
+        defaultPurchaseTax={value.purchaseTax}
+        showTargets={value.stocked}
+        disabled={props.disabled}
+      />
       <ProductBarcodesInput
         values={value.barcodes}
         onChange={(barcodes) => onChange({ barcodes })}
+        subProducts={value.subProducts}
+        productName={value.name}
         productId={props.productId}
         disabled={props.disabled}
       />
@@ -282,6 +302,13 @@ export const ProductListsFields = (props: ProductFormSectionProps) => {
         setStocked={(stocked) => onChange({ stocked })}
         targetQuantity={value.targetQuantity}
         setTargetQuantity={(targetQuantity) => onChange({ targetQuantity })}
+        subProductTargetSum={
+          value.subProducts.some((sub) => sub.active)
+            ? value.subProducts
+                .filter((sub) => sub.active)
+                .reduce((sum, sub) => sum + sub.targetQuantity, 0)
+            : null
+        }
       />
     </>
   );

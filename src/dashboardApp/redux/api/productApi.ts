@@ -6,6 +6,8 @@ import {
   ProductDto,
   SaveProductBarcodeDto,
   SaveProductDto,
+  SaveSubProductDto,
+  SubProductDto,
 } from "../../../common/contracts";
 
 export const productApi = createApi({
@@ -120,6 +122,40 @@ export const productApi = createApi({
         { type: "Products", id: "LIST" },
       ],
     }),
+    /** Adds one sub product to an existing product without rewriting it. */
+    addSubProduct: builder.mutation<
+      SubProductDto,
+      { id: number; subProduct: SaveSubProductDto }
+    >({
+      query({ id, subProduct }) {
+        return {
+          url: `/product/${id}/sub-products`,
+          method: "POST",
+          body: subProduct,
+        };
+      },
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Products", id },
+        { type: "Products", id: "LIST" },
+      ],
+    }),
+    /** Updates one sub product (name, tax, flags, target) without rewriting the product. */
+    updateSubProduct: builder.mutation<
+      SubProductDto,
+      { id: number; subProductId: number; subProduct: SaveSubProductDto }
+    >({
+      query({ id, subProductId, subProduct }) {
+        return {
+          url: `/product/${id}/sub-product/${subProductId}`,
+          method: "PUT",
+          body: subProduct,
+        };
+      },
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Products", id },
+        { type: "Products", id: "LIST" },
+      ],
+    }),
     deleteProductBarcode: builder.mutation<
       void,
       { id: number; barcodeId: number }
@@ -177,5 +213,7 @@ export const {
   useLazyGetBarcodeConflictsQuery,
   useAddProductBarcodeMutation,
   useDeleteProductBarcodeMutation,
+  useAddSubProductMutation,
+  useUpdateSubProductMutation,
   useGetProductQuery,
 } = productApi;

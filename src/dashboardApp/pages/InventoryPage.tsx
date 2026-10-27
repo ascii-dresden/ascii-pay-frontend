@@ -50,7 +50,10 @@ import {
 import {
   InventoryCheckSummaryDto,
   InventoryRowDto,
+  InventorySubProductRowDto,
 } from "../../common/contracts";
+import { useUpdateSubProductMutation } from "../redux/api/productApi";
+import { findSubProduct } from "../components/product/subProductUtils";
 import { PageHeader, PageHeaderNavigation } from "../components/PageHeader";
 import { ActionButtonAction } from "../components/ActionButton";
 import { usePageTitle } from "../components/usePageTitle";
@@ -320,10 +323,74 @@ export const InventoryPage = () => {
   );
 };
 
+/**
+ * A sub product below its product: counted on its own with its own target.
+ * There is no estimate per sub product because sales are booked on the
+ * product.
+ */
+const InventorySubProductRow = (props: {
+  product: InventoryRowDto["product"];
+  sub: InventorySubProductRowDto;
+}) => {
+  const { t } = useTranslation();
+  const { product, sub } = props;
+  const dispatch = useDashboardDispatch();
+  const [updateSubProduct] = useUpdateSubProductMutation();
+  const subProduct = findSubProduct(product, sub.sub_product_id);
+  if (!subProduct) {
+    return null;
+  }
+  const below =
+    sub.last_counted_quantity !== null &&
+    sub.last_counted_quantity < sub.target_quantity;
+
+  const saveTarget = async (target: number) => {
+    await updateSubProduct({
+      id: product.id,
+      subProductId: subProduct.id,
+      subProduct: { ...subProduct, target_quantity: target },
+    }).unwrap();
+    dispatch(inventoryApi.util.invalidateTags(["Inventory"]));
+  };
+
+  return (
+    <TableRow sx={{ "& > td": { py: 0.5 } }}>
+      <TableCell />
+      <TableCell sx={{ pl: 4 }}>
+        <Typography variant="body2">• {subProduct.name}</Typography>
+      </TableCell>
+      <TableCell align="right">
+        <TargetQuantityField target={sub.target_quantity} onSave={saveTarget} />
+      </TableCell>
+      <TableCell align="right">
+        {sub.last_counted_quantity !== null ? (
+          <Typography
+            variant="body2"
+            color={below ? "warning.main" : undefined}
+            fontWeight={below ? "bold" : undefined}
+          >
+            {sub.last_counted_quantity}
+          </Typography>
+        ) : (
+          <Tooltip title={t("inventory.neverCounted")}>
+            <Typography color="text.secondary" component="span">
+              –
+            </Typography>
+          </Tooltip>
+        )}
+      </TableCell>
+      <TableCell />
+      <TableCell />
+    </TableRow>
+  );
+};
+
 const InventoryTableRow = (props: { row: InventoryRowDto }) => {
   const { t } = useTranslation();
   const { row } = props;
   const below = isBelowTarget(row);
+  const hasSubRows = row.sub_products.length > 0;
+  const [updateInventoryProducts] = useUpdateInventoryProductsMutation();
   const lastPurchase = row.last_purchase;
   const unitPrice = lastPurchase
     ? Math.round(
@@ -332,123 +399,150 @@ const InventoryTableRow = (props: { row: InventoryRowDto }) => {
     : null;
 
   return (
-    <TableRow hover style={{ height: 78 }}>
-      <TableCell>
-        <ProductAvatar product={row.product} />
-      </TableCell>
-      <TableCell>
-        <Link
-          component={RLink}
-          to={`/products/${row.product.id}`}
-          color="inherit"
-          underline="hover"
-        >
-          <Typography component="span">{row.product.name}</Typography>
-        </Link>
-        <Typography variant="caption" display="block" color="text.secondary">
-          {row.product.category.length > 0
-            ? row.product.category
-            : t("inventory.assortment.uncategorized")}
-        </Typography>
-      </TableCell>
-      <TableCell align="right">
-        <TargetQuantityField
-          productId={row.product.id}
-          target={row.target_quantity}
-        />
-      </TableCell>
-      <TableCell align="right">
-        {row.last_counted_quantity !== null && row.last_counted_at ? (
-          <>
-            <Typography>{row.last_counted_quantity}</Typography>
-            <Typography variant="caption" color="text.secondary">
-              {inventoryDateFormat.format(new Date(row.last_counted_at))}
-            </Typography>
-          </>
-        ) : (
-          <Tooltip title={t("inventory.neverCounted")}>
-            <Typography color="text.secondary" component="span">
-              –
-            </Typography>
-          </Tooltip>
-        )}
-      </TableCell>
-      <TableCell align="right">
-        {row.estimated_quantity === null ? (
-          <Tooltip title={t("inventory.neverCounted")}>
-            <Typography color="text.secondary" component="span">
-              –
-            </Typography>
-          </Tooltip>
-        ) : (
-          <>
-            <Tooltip
-              title={
-                below
-                  ? t("inventory.belowTargetHint", {
-                      missing: row.target_quantity - row.estimated_quantity,
-                    })
-                  : t("inventory.estimateHint")
-              }
-            >
-              <Box
-                sx={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 0.5,
-                  color: below ? "warning.main" : "inherit",
-                }}
-              >
-                {below ? <WarningAmber fontSize="small" /> : null}
-                <Typography fontWeight={below ? "bold" : undefined}>
-                  ≈ {row.estimated_quantity}
-                </Typography>
-              </Box>
+    <>
+      <TableRow hover style={{ height: 78 }}>
+        <TableCell>
+          <ProductAvatar product={row.product} />
+        </TableCell>
+        <TableCell>
+          <Link
+            component={RLink}
+            to={`/products/${row.product.id}`}
+            color="inherit"
+            underline="hover"
+          >
+            <Typography component="span">{row.product.name}</Typography>
+          </Link>
+          <Typography variant="caption" display="block" color="text.secondary">
+            {row.product.category.length > 0
+              ? row.product.category
+              : t("inventory.assortment.uncategorized")}
+          </Typography>
+        </TableCell>
+        <TableCell align="right">
+          {hasSubRows ? (
+            <Tooltip title={t("inventory.subProductTargetSum")}>
+              <Typography component="span" sx={{ pr: 1 }}>
+                Σ {row.target_quantity}
+              </Typography>
             </Tooltip>
-            <Typography
-              variant="caption"
-              display="block"
-              color="text.secondary"
-            >
-              {t("inventory.estimate")}
-            </Typography>
-          </>
-        )}
-      </TableCell>
-      <TableCell align="right">
-        {lastPurchase && unitPrice !== null ? (
-          <>
-            <Typography>
-              {moneyToString(unitPrice)}{" "}
+          ) : (
+            <TargetQuantityField
+              target={row.target_quantity}
+              onSave={(target) =>
+                updateInventoryProducts([
+                  {
+                    product_id: row.product.id,
+                    stocked: true,
+                    target_quantity: target,
+                  },
+                ]).unwrap()
+              }
+            />
+          )}
+        </TableCell>
+        <TableCell align="right">
+          {row.last_counted_quantity !== null && row.last_counted_at ? (
+            <>
+              <Typography>{row.last_counted_quantity}</Typography>
+              <Typography variant="caption" color="text.secondary">
+                {inventoryDateFormat.format(new Date(row.last_counted_at))}
+              </Typography>
+            </>
+          ) : (
+            <Tooltip title={t("inventory.neverCounted")}>
+              <Typography color="text.secondary" component="span">
+                –
+              </Typography>
+            </Tooltip>
+          )}
+        </TableCell>
+        <TableCell align="right">
+          {row.estimated_quantity === null ? (
+            <Tooltip title={t("inventory.neverCounted")}>
+              <Typography color="text.secondary" component="span">
+                –
+              </Typography>
+            </Tooltip>
+          ) : (
+            <>
+              <Tooltip
+                title={
+                  below
+                    ? t("inventory.belowTargetHint", {
+                        missing: row.target_quantity - row.estimated_quantity,
+                      })
+                    : t("inventory.estimateHint")
+                }
+              >
+                <Box
+                  sx={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 0.5,
+                    color: below ? "warning.main" : "inherit",
+                  }}
+                >
+                  {below ? <WarningAmber fontSize="small" /> : null}
+                  <Typography fontWeight={below ? "bold" : undefined}>
+                    ≈ {row.estimated_quantity}
+                  </Typography>
+                </Box>
+              </Tooltip>
               <Typography
-                component="span"
                 variant="caption"
+                display="block"
                 color="text.secondary"
               >
-                {t("inventory.column.unitPrice")}
+                {t("inventory.estimate")}
               </Typography>
+            </>
+          )}
+        </TableCell>
+        <TableCell align="right">
+          {lastPurchase && unitPrice !== null ? (
+            <>
+              <Typography>
+                {moneyToString(unitPrice)}{" "}
+                <Typography
+                  component="span"
+                  variant="caption"
+                  color="text.secondary"
+                >
+                  {t("inventory.column.unitPrice")}
+                </Typography>
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {lastPurchase.container_size} ×{" "}
+                {moneyToString(lastPurchase.container_cents)} ·{" "}
+                {inventoryDateFormat.format(new Date(lastPurchase.timestamp))}
+              </Typography>
+            </>
+          ) : (
+            <Typography color="text.secondary" component="span">
+              –
             </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {lastPurchase.container_size} ×{" "}
-              {moneyToString(lastPurchase.container_cents)} ·{" "}
-              {inventoryDateFormat.format(new Date(lastPurchase.timestamp))}
-            </Typography>
-          </>
-        ) : (
-          <Typography color="text.secondary" component="span">
-            –
-          </Typography>
-        )}
-      </TableCell>
-    </TableRow>
+          )}
+        </TableCell>
+      </TableRow>
+      {row.sub_products.map((sub) => (
+        <InventorySubProductRow
+          key={sub.sub_product_id}
+          product={row.product}
+          sub={sub}
+        />
+      ))}
+    </>
   );
 };
 
-const TargetQuantityField = (props: { productId: number; target: number }) => {
+const TargetQuantityField = (props: {
+  target: number;
+  onSave: (target: number) => Promise<unknown>;
+}) => {
   const { t } = useTranslation();
   const [text, setText] = useState(props.target.toString());
-  const [updateInventoryProducts, { isLoading }] =
-    useUpdateInventoryProductsMutation();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setText(props.target.toString());
@@ -460,14 +554,15 @@ const TargetQuantityField = (props: { productId: number; target: number }) => {
       setText(props.target.toString());
       return;
     }
+    setIsLoading(true);
     try {
-      await updateInventoryProducts([
-        { product_id: props.productId, stocked: true, target_quantity: parsed },
-      ]).unwrap();
+      await props.onSave(parsed);
     } catch (e) {
       toast.error(t("inventory.saveError"));
       console.error(e);
       setText(props.target.toString());
+    } finally {
+      setIsLoading(false);
     }
   };
 

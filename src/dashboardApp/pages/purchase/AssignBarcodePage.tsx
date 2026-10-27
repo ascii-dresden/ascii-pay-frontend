@@ -5,6 +5,7 @@ import {
   Box,
   createFilterOptions,
   InputAdornment,
+  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { ProductDto } from "../../../common/contracts";
 import {
   useAddProductBarcodeMutation,
+  useAddSubProductMutation,
   useGetAllProductsQuery,
 } from "../../redux/api/productApi";
 import { usePageTitle } from "../../components/usePageTitle";
@@ -27,6 +29,9 @@ import {
   barcodeSearchText,
   barcodeSummary,
 } from "../../components/product/productBarcodeUtils";
+import { selectableSubProducts } from "../../components/product/subProductUtils";
+
+const NEW_SUB_PRODUCT = "new";
 
 const productFilter = createFilterOptions<ProductDto>({
   stringify: (option) =>
@@ -50,11 +55,25 @@ export const AssignBarcodePage = () => {
 
   const { purchase, shopPath, fallback } = useShopPurchase(title);
   const { data: products } = useGetAllProductsQuery();
-  const [addBarcode, { isLoading }] = useAddProductBarcodeMutation();
+  const [addBarcode, { isLoading: addingBarcode }] =
+    useAddProductBarcodeMutation();
+  const [addSubProduct, { isLoading: addingSubProduct }] =
+    useAddSubProductMutation();
+  const isLoading = addingBarcode || addingSubProduct;
 
   const [product, setProduct] = React.useState<ProductDto | null>(null);
   const [containerSize, setContainerSize] = React.useState(1);
   const [label, setLabel] = React.useState("");
+  // Which sub product the code belongs to: none (the product itself), an
+  // existing one, or a new one created together with the code.
+  const [subProductChoice, setSubProductChoice] = React.useState<
+    number | typeof NEW_SUB_PRODUCT | null
+  >(null);
+  const [newSubProductName, setNewSubProductName] = React.useState("");
+  const subProductOptions = selectableSubProducts(product);
+  const needsNewName =
+    subProductChoice === NEW_SUB_PRODUCT &&
+    newSubProductName.trim().length === 0;
 
   const sortedProducts = React.useMemo(() => {
     const sorted = [...(products ?? [])];
@@ -73,16 +92,26 @@ export const AssignBarcodePage = () => {
   }
 
   const handleSubmit = async () => {
-    if (!product || isLoading || code.length === 0) {
+    if (!product || isLoading || code.length === 0 || needsNewName) {
       return;
     }
     try {
+      let subProductId: number | null =
+        subProductChoice === NEW_SUB_PRODUCT ? null : subProductChoice;
+      if (subProductChoice === NEW_SUB_PRODUCT) {
+        const created = await addSubProduct({
+          id: product.id,
+          subProduct: { name: newSubProductName.trim() },
+        }).unwrap();
+        subProductId = created.id;
+      }
       await addBarcode({
         id: product.id,
         barcode: {
           code,
           container_size: Math.max(1, containerSize),
           label: label.trim(),
+          sub_product_id: subProductId,
         },
       }).unwrap();
       toast.success(t("purchase.shop.assignSuccess", { name: product.name }), {
@@ -106,7 +135,7 @@ export const AssignBarcodePage = () => {
           variant="contained"
           onClick={handleSubmit}
           loading={isLoading}
-          disabled={!product}
+          disabled={!product || needsNewName}
           startIcon={<QrCode2Outlined />}
         >
           {t("purchase.shop.assignAction")}
@@ -124,7 +153,10 @@ export const AssignBarcodePage = () => {
         getOptionLabel={(option) => option.name}
         groupBy={(option) => option.category}
         noOptionsText={t("product.noProducts")}
-        onChange={(e, value) => setProduct(value)}
+        onChange={(e, value) => {
+          setProduct(value);
+          setSubProductChoice(null);
+        }}
         renderOption={(optionProps, option) => (
           <li {...optionProps} key={option.id}>
             <Box
@@ -153,6 +185,49 @@ export const AssignBarcodePage = () => {
           />
         )}
       />
+      {product ? (
+        <Box sx={{ display: "flex", gap: 1.5, mt: 2, flexWrap: "wrap" }}>
+          <TextField
+            select
+            label={t("product.barcodeSubProduct")}
+            value={subProductChoice ?? ""}
+            onChange={(e) => {
+              const raw = e.target.value as unknown as
+                | number
+                | typeof NEW_SUB_PRODUCT
+                | "";
+              setSubProductChoice(
+                raw === "" ? null : raw === NEW_SUB_PRODUCT ? raw : Number(raw)
+              );
+            }}
+            sx={{ flex: "1 1 12rem" }}
+          >
+            <MenuItem value="">
+              <em>
+                {t("product.barcodeSubProductNone", { name: product.name })}
+              </em>
+            </MenuItem>
+            {subProductOptions.map((sub) => (
+              <MenuItem key={sub.id} value={sub.id}>
+                {sub.name}
+              </MenuItem>
+            ))}
+            <MenuItem value={NEW_SUB_PRODUCT}>
+              {t("purchase.shop.assignNewSubProduct")}
+            </MenuItem>
+          </TextField>
+          {subProductChoice === NEW_SUB_PRODUCT ? (
+            <TextField
+              label={t("product.subProductName")}
+              value={newSubProductName}
+              onChange={(e) => setNewSubProductName(e.target.value)}
+              autoFocus
+              required
+              sx={{ flex: "1 1 12rem" }}
+            />
+          ) : null}
+        </Box>
+      ) : null}
       <Box sx={{ display: "flex", gap: 1.5, mt: 2 }}>
         <TextField
           label={t("product.barcodeContainerSizeShort")}

@@ -8,14 +8,17 @@ import {
   ListItemAvatar,
   ListItemButton,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import { DeleteOutline, RestoreOutlined } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ShoppingListItemDto } from "../../../common/contracts";
+import { ProductDto, ShoppingListItemDto } from "../../../common/contracts";
 import { stringAvatar } from "../../../common/stringAvatar";
 import { ProductAvatar } from "../product/ProductAvatar";
 import { shoppingListItemName } from "./shoppingListUtils";
+import { findSubProduct } from "../product/subProductUtils";
+import { moneyToString } from "../../../terminalApp/components/Money";
 
 export const ShoppingListItemAvatar = (props: {
   item: ShoppingListItemDto;
@@ -53,23 +56,45 @@ export const ShoppingListItemRow = (props: {
   busy?: boolean;
   /** Render the name struck through (bought entries). */
   done?: boolean;
+  /**
+   * Entry below a product heading: indented, without avatar, named after its
+   * sub product.
+   */
+  nested?: boolean;
+  /** Unit price of the last purchase, shown in front of the secondary line. */
+  unitCents?: number | null;
 }) => {
   const { t } = useTranslation();
   const { item } = props;
-  const name = shoppingListItemName(item);
+  const subProduct = findSubProduct(item.product, item.sub_product_id);
+  const name = props.nested
+    ? subProduct?.name ?? t("shoppingList.anySubProduct")
+    : shoppingListItemName(item);
   const actionCount = [props.onDone, props.onReopen, props.onDelete].filter(
     Boolean
   ).length;
   const pr = actionCount === 0 ? 2 : actionCount === 1 ? 7 : 12;
+  const secondary = [
+    props.unitCents != null ? moneyToString(props.unitCents) : null,
+    props.secondary || null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   const content = (
     <>
-      <ListItemAvatar>
-        <ShoppingListItemAvatar item={item} />
-      </ListItemAvatar>
+      {props.nested ? (
+        <Typography color="text.secondary" sx={{ width: 24, flexShrink: 0 }}>
+          •
+        </Typography>
+      ) : (
+        <ListItemAvatar>
+          <ShoppingListItemAvatar item={item} />
+        </ListItemAvatar>
+      )}
       <ListItemText
         primary={name}
-        secondary={props.secondary || undefined}
+        secondary={secondary || undefined}
         primaryTypographyProps={{
           noWrap: true,
           sx: props.done
@@ -82,6 +107,7 @@ export const ShoppingListItemRow = (props: {
   );
 
   const clickable = !!props.to || !!props.onClick;
+  const pl = props.nested ? { xs: 5, sm: 9 } : 2;
 
   return (
     <ListItem
@@ -127,11 +153,11 @@ export const ShoppingListItemRow = (props: {
     >
       {clickable ? (
         props.to ? (
-          <ListItemButton component={Link} to={props.to} sx={{ pr }}>
+          <ListItemButton component={Link} to={props.to} sx={{ pr, pl }}>
             {content}
           </ListItemButton>
         ) : (
-          <ListItemButton onClick={props.onClick} sx={{ pr }}>
+          <ListItemButton onClick={props.onClick} sx={{ pr, pl }}>
             {content}
           </ListItemButton>
         )
@@ -142,7 +168,7 @@ export const ShoppingListItemRow = (props: {
             alignItems: "center",
             width: "100%",
             py: 1,
-            pl: 2,
+            pl,
             pr,
           }}
         >
@@ -152,3 +178,20 @@ export const ShoppingListItemRow = (props: {
     </ListItem>
   );
 };
+
+/**
+ * Heading of a product with sub products on the shopping list: the product is
+ * only a category, its entries (one per wanted sub product) follow as nested
+ * rows.
+ */
+export const ShoppingListGroupHeading = (props: { product: ProductDto }) => (
+  <ListItem sx={{ pt: 1.5, pb: 0 }}>
+    <ListItemAvatar>
+      <ProductAvatar product={props.product} size={40} />
+    </ListItemAvatar>
+    <ListItemText
+      primary={props.product.name}
+      primaryTypographyProps={{ noWrap: true, fontWeight: 500 }}
+    />
+  </ListItem>
+);

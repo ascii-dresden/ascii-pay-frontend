@@ -30,6 +30,10 @@ import {
 import { ShopFormPage, ShopLocationState } from "./ShopFormPage";
 import { useIncrementCartItem, useRemoveCartItem } from "./useCartItemActions";
 import { useShoppingListWish } from "../../shoppingList/useShoppingListWish";
+import {
+  hasSubProducts,
+  productDisplayName,
+} from "../../product/subProductUtils";
 
 /** The scanned variant decides the container size, over anything from history. */
 const withVariantSize = (
@@ -65,29 +69,43 @@ export const AddProductToCart = (props: {
   const cartState: ShopLocationState = { tab: "cart" };
 
   const { getLastPurchase } = usePurchaseHistory();
-  // Price and size come from the last purchase of *this* variant when we know
-  // which one was scanned.
-  const last = getLastPurchase(product.id, {
-    code: barcode ?? variant?.code ?? null,
-    size: variant?.container_size ?? null,
-  });
   const variantSize = variant?.container_size ?? null;
+  // Price and size come from the last purchase of *this* variant (and sub
+  // product) when we know which one was scanned.
+  const lastFor = (subProductId: number | null) =>
+    getLastPurchase(product.id, {
+      code: barcode ?? variant?.code ?? null,
+      size: variantSize,
+      subProductId,
+    });
   // Opened from a shopping list entry (`?wish=`): prefill its quantity. Once
   // the article is in the cart, that entry and every other open entry for the
   // same product are ticked off the shared shopping list.
   const { wish, completeWish } = useShoppingListWish();
-  const checkedOffArticle = { productId: product.id, name: product.name };
 
   const plannedItem =
     purchase.items.find((i) => i.product?.id === product.id && !i.collected) ??
     null;
-  const existing =
-    purchase.items.find(
-      (i) =>
-        i.product?.id === product.id &&
-        i.collected &&
-        (variantSize === null || i.container_size === variantSize)
-    ) ?? null;
+  // The scanned code decides the sub product; otherwise the planned row or the
+  // shopping list entry may already name one.
+  const initialSubProductId =
+    variant?.sub_product_id ??
+    plannedItem?.sub_product_id ??
+    wish?.sub_product_id ??
+    null;
+  // Picked from the search without a sub product: let the purchaser choose
+  // instead of incrementing whichever sub product happens to be in the cart.
+  const subProductUnknown =
+    initialSubProductId === null && hasSubProducts(product);
+  const existing = subProductUnknown
+    ? null
+    : purchase.items.find(
+        (i) =>
+          i.product?.id === product.id &&
+          i.collected &&
+          (i.sub_product_id ?? null) === initialSubProductId &&
+          (variantSize === null || i.container_size === variantSize)
+      ) ?? null;
   const incrementExisting = !plannedItem && !!existing;
 
   const incrementItem = useIncrementCartItem(purchase.id);
@@ -112,34 +130,61 @@ export const AddProductToCart = (props: {
     }
   };
 
-  const [form, setForm] = React.useState<CartItemFormState>(() =>
-    withVariantSize(
-      cartItemFormFromItem(plannedItem, last, product.name),
+  const buildForm = (subProductId: number | null): CartItemFormState => ({
+    ...withVariantSize(
+      cartItemFormFromItem(plannedItem, lastFor(subProductId), product.name),
       variantSize
-    )
+    ),
+    subProductId,
+  });
+  const [form, setForm] = React.useState<CartItemFormState>(() =>
+    buildForm(initialSubProductId)
   );
+  const last = lastFor(form.subProductId);
   const dirtyRef = React.useRef(false);
   const handleChange = (value: CartItemFormState) => {
     dirtyRef.current = true;
+    if (value.subProductId !== form.subProductId) {
+      // Another sub product has its own price: take it over from its history.
+      const previous = lastFor(value.subProductId);
+      if (previous) {
+        value = {
+          ...value,
+          cents: previous.container_cents,
+          size: variantSize ?? previous.container_size,
+        };
+      }
+    }
     setForm(value);
   };
 
   // The purchase history may arrive after the first render; refresh the
   // prefilled price and size as long as the user has not typed anything.
-  const lastKey = last ? `${last.purchaseId}` : "";
+  const initialLast = lastFor(initialSubProductId);
+  const lastKey = initialLast ? `${initialLast.purchaseId}` : "";
   React.useEffect(() => {
     if (!dirtyRef.current) {
-      const next = withVariantSize(
-        cartItemFormFromItem(plannedItem, last, product.name),
-        variantSize
-      );
+      const next = buildForm(initialSubProductId);
       if (!plannedItem && wish && wish.quantity > 0) {
         next.count = wish.quantity;
       }
       setForm(next);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastKey, plannedItem?.id, product.id, wish?.id, variantSize]);
+  }, [
+    lastKey,
+    plannedItem?.id,
+    product.id,
+    wish?.id,
+    variantSize,
+    initialSubProductId,
+  ]);
+
+  const checkedOffArticle = {
+    productId: product.id,
+    subProductId: form.subProductId,
+    name: product.name,
+  };
 
   // Set as soon as the form is submitted: once we have written the row
   // ourselves, the refreshed cart contains a matching collected row and the
@@ -170,12 +215,15 @@ export const AddProductToCart = (props: {
       return;
     }
     submittedRef.current = true;
-    const values = cartItemFormToSave(form, {
-      productId: product.id,
-      barcode: barcode ?? variant?.code ?? plannedItem?.barcode ?? null,
-      collected: true,
-      fallbackName: product.name,
-    });
+    const values = cartItemFormToSave(
+      { ...form, name: productDisplayName(product, form.subProductId) },
+      {
+        productId: product.id,
+        barcode: barcode ?? variant?.code ?? plannedItem?.barcode ?? null,
+        collected: true,
+        fallbackName: product.name,
+      }
+    );
     try {
       if (plannedItem) {
         await updateItem({
@@ -240,6 +288,7 @@ export const AddProductToCart = (props: {
       <CartItemForm
         value={form}
         onChange={handleChange}
+        product={product}
         showName={false}
         disabled={busy}
         onSubmit={handleSubmit}

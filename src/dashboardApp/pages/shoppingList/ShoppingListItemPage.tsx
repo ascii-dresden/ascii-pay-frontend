@@ -23,6 +23,7 @@ import {
   ProductDto,
   SaveShoppingListItemDto,
   ShoppingListItemDto,
+  SubProductDto,
 } from "../../../common/contracts";
 import { useGetAllProductsQuery } from "../../redux/api/productApi";
 import {
@@ -43,34 +44,87 @@ import {
 } from "../../components/shoppingList/shoppingListUtils";
 import { useRemoveShoppingListItem } from "../../components/shoppingList/useShoppingListActions";
 import { shoppingListNavigation } from "./ShoppingListPage";
-import { barcodeSearchText, barcodeSummary } from "../../components/product/productBarcodeUtils";
+import {
+  findSubProduct,
+  productDisplayName,
+  selectableSubProducts,
+} from "../../components/product/subProductUtils";
+import {
+  barcodeSearchText,
+  barcodeSummary,
+} from "../../components/product/productBarcodeUtils";
 
-const productFilter = createFilterOptions<ProductDto>({
+/**
+ * What can be put on the list: a product, or one of its sub products. A
+ * product with active sub products is only a category and is not offered on
+ * its own.
+ */
+type ArticleOption = {
+  key: string;
+  product: ProductDto;
+  sub: SubProductDto | null;
+};
+
+const articleOptions = (products: ProductDto[]): ArticleOption[] =>
+  products.flatMap((product): ArticleOption[] => {
+    const subs = selectableSubProducts(product);
+    return subs.length === 0
+      ? [{ key: `p${product.id}`, product, sub: null }]
+      : subs.map((sub) => ({ key: `s${sub.id}`, product, sub }));
+  });
+
+const articleLabel = (option: ArticleOption): string =>
+  option.sub
+    ? `${option.product.name} › ${option.sub.name}`
+    : option.product.name;
+
+const articleFilter = createFilterOptions<ArticleOption>({
   stringify: (option) =>
-    [option.name, option.nickname ?? "", barcodeSearchText(option)].join(" "),
+    [
+      option.product.name,
+      option.sub?.name ?? "",
+      option.product.nickname ?? "",
+      option.sub
+        ? option.product.barcodes
+            .filter((b) => b.sub_product_id === option.sub?.id)
+            .map((b) => b.code)
+            .join(" ")
+        : barcodeSearchText(option.product),
+    ].join(" "),
 });
 
 type FormState = {
   product: ProductDto | null;
+  /** Specific sub product of `product`; null = any of them. */
+  subProductId: number | null;
   name: string;
   quantity: number;
   note: string;
 };
 
-const emptyForm: FormState = { product: null, name: "", quantity: 1, note: "" };
+const emptyForm: FormState = {
+  product: null,
+  subProductId: null,
+  name: "",
+  quantity: 1,
+  note: "",
+};
 
 const formFromItem = (item: ShoppingListItemDto): FormState => ({
   product: item.product,
+  subProductId: item.sub_product_id ?? null,
   name: item.name,
   quantity: Math.max(1, item.quantity),
   note: item.note,
 });
 
 const formToSave = (form: FormState): SaveShoppingListItemDto => ({
-  name: form.name.trim() || form.product?.name || "",
+  // Linked entries are named after the product; the sub product is its own field.
+  name: form.product ? form.product.name : form.name.trim(),
   quantity: Math.max(1, form.quantity),
   note: form.note.trim(),
   product_id: form.product?.id ?? null,
+  sub_product_id: form.product ? form.subProductId : null,
 });
 
 const canSubmit = (form: FormState): boolean =>
@@ -140,14 +194,27 @@ export const ShoppingListItemPage = () => {
     },
   ];
 
-  const sortedProducts = React.useMemo(() => {
+  const sortedOptions = React.useMemo(() => {
     const list = [...(products ?? [])];
     list.sort(
       (a, b) =>
         a.category.localeCompare(b.category) || a.name.localeCompare(b.name)
     );
-    return list;
+    return articleOptions(list);
   }, [products]);
+  // The current choice as an option (also for an entry whose sub product was
+  // deactivated or that names the product of an older entry).
+  const selectedOption: ArticleOption | null = form.product
+    ? sortedOptions.find(
+        (o) =>
+          o.product.id === form.product?.id &&
+          (o.sub?.id ?? null) === form.subProductId
+      ) ?? {
+        key: `current-${form.product.id}-${form.subProductId ?? "p"}`,
+        product: form.product,
+        sub: findSubProduct(form.product, form.subProductId),
+      }
+    : null;
 
   if (!isNew && (isLoading || (!item && !isError))) {
     return <FullScreenLoader />;
@@ -209,8 +276,12 @@ export const ShoppingListItemPage = () => {
           <ProductAvatar product={form.product} size={24} />
         </Box>
       }
-      label={t("shoppingList.form.linkedProduct", { name: form.product.name })}
-      onDelete={busy ? undefined : () => update({ product: null })}
+      label={t("shoppingList.form.linkedProduct", {
+        name: productDisplayName(form.product, form.subProductId),
+      })}
+      onDelete={
+        busy ? undefined : () => update({ product: null, subProductId: null })
+      }
       sx={{ maxWidth: "100%" }}
     />
   ) : form.name.trim().length > 0 ? (
@@ -263,39 +334,43 @@ export const ShoppingListItemPage = () => {
           <Alert severity="info">{t("shoppingList.form.alreadyDone")}</Alert>
         ) : null}
         <Box>
-          <Autocomplete<ProductDto, false, false, true>
+          <Autocomplete<ArticleOption, false, false, true>
             freeSolo
-            options={sortedProducts}
+            options={sortedOptions}
             loading={!products}
             disabled={busy || !editable || alreadyDone}
-            value={form.product}
+            value={selectedOption}
             inputValue={form.name}
-            filterOptions={productFilter}
+            filterOptions={articleFilter}
             getOptionLabel={(option) =>
-              typeof option === "string" ? option : option.name
+              typeof option === "string" ? option : articleLabel(option)
             }
-            isOptionEqualToValue={(option, value) => option.id === value.id}
-            groupBy={(option) => option.category}
+            isOptionEqualToValue={(option, value) => option.key === value.key}
+            groupBy={(option) => option.product.category}
             noOptionsText={t("product.noProducts")}
             onChange={(e, value) => {
               if (value === null) {
-                update({ product: null, name: "" });
+                update({ product: null, subProductId: null, name: "" });
               } else if (typeof value === "string") {
-                update({ product: null, name: value });
+                update({ product: null, subProductId: null, name: value });
               } else {
-                update({ product: value, name: value.name });
+                update({
+                  product: value.product,
+                  subProductId: value.sub?.id ?? null,
+                  name: articleLabel(value),
+                });
               }
             }}
             onInputChange={(e, value, reason) => {
               if (reason === "input") {
                 // Typing detaches the product; the text becomes the name.
-                update({ name: value, product: null });
+                update({ name: value, product: null, subProductId: null });
               } else if (reason === "clear") {
-                update({ name: "", product: null });
+                update({ name: "", product: null, subProductId: null });
               }
             }}
             renderOption={(optionProps, option) => (
-              <li {...optionProps} key={option.id}>
+              <li {...optionProps} key={option.key}>
                 <Box
                   sx={{
                     display: "flex",
@@ -305,23 +380,34 @@ export const ShoppingListItemPage = () => {
                     minWidth: 0,
                   }}
                 >
-                  <ProductAvatar product={option} size={32} />
+                  <ProductAvatar product={option.product} size={32} />
                   <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <Typography noWrap>{option.name}</Typography>
-                    {option.nickname ? (
+                    <Typography noWrap>
+                      {option.sub ? (
+                        <>
+                          <Typography component="span" color="text.secondary">
+                            {option.product.name} ›{" "}
+                          </Typography>
+                          {option.sub.name}
+                        </>
+                      ) : (
+                        option.product.name
+                      )}
+                    </Typography>
+                    {option.product.nickname ? (
                       <Typography
                         variant="caption"
                         color="text.secondary"
                         noWrap
                         component="div"
                       >
-                        {option.nickname}
+                        {option.product.nickname}
                       </Typography>
                     ) : null}
                   </Box>
-                  {barcodeSummary(option) ? (
+                  {!option.sub && barcodeSummary(option.product) ? (
                     <Typography variant="caption" color="text.secondary">
-                      {barcodeSummary(option)}
+                      {barcodeSummary(option.product)}
                     </Typography>
                   ) : null}
                 </Box>

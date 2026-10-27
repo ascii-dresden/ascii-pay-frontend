@@ -51,6 +51,7 @@ import {
 } from "../redux/dashboardStore";
 import { InventoryCheckStateChip } from "../components/inventory/InventoryCheckStateChip";
 import { ProductAvatar } from "../components/product/ProductAvatar";
+import { findSubProduct } from "../components/product/subProductUtils";
 import {
   inventoryDateFormat,
   inventoryDateTimeFormat,
@@ -272,14 +273,33 @@ export const InventoryCheckPage = () => {
                 </ListSubheader>
               }
             >
-              {group.items.map((item) => (
-                <CheckItemRow
-                  key={item.product.id}
-                  checkId={checkId}
-                  item={item}
-                  readOnly={readOnly}
-                />
-              ))}
+              {group.items.map((item, index) => {
+                const previous = group.items[index - 1];
+                // Sub products are counted below their product, which is
+                // only a heading then.
+                const heading =
+                  item.sub_product_id !== null &&
+                  (!previous || previous.product.id !== item.product.id) ? (
+                    <CheckProductHeading
+                      key={`${item.product.id}-heading`}
+                      items={check.items.filter(
+                        (i) => i.product.id === item.product.id
+                      )}
+                    />
+                  ) : null;
+                return (
+                  <React.Fragment
+                    key={`${item.product.id}-${item.sub_product_id ?? "p"}`}
+                  >
+                    {heading}
+                    <CheckItemRow
+                      checkId={checkId}
+                      item={item}
+                      readOnly={readOnly}
+                    />
+                  </React.Fragment>
+                );
+              })}
             </List>
           </Paper>
         ))
@@ -304,6 +324,34 @@ export const InventoryCheckPage = () => {
   );
 };
 
+/** Heading of a product that is counted per sub product, with the summed counts. */
+const CheckProductHeading = (props: { items: InventoryCheckItemDto[] }) => {
+  const { t } = useTranslation();
+  const product = props.items[0].product;
+  const target = props.items.reduce((sum, i) => sum + i.target_quantity, 0);
+  const counted = props.items.filter((i) => i.counted_quantity !== null);
+  const countedSum = counted.reduce(
+    (sum, i) => sum + (i.counted_quantity ?? 0),
+    0
+  );
+  return (
+    <ListItem sx={{ gap: 1, pt: 1, pb: 0 }}>
+      <ListItemAvatar>
+        <ProductAvatar product={product} />
+      </ListItemAvatar>
+      <ListItemText
+        primary={product.name}
+        secondary={t("inventory.check.subProductSummary", {
+          counted: counted.length > 0 ? countedSum : "–",
+          target,
+        })}
+        primaryTypographyProps={{ noWrap: true, fontWeight: 500 }}
+        sx={{ minWidth: 0 }}
+      />
+    </ListItem>
+  );
+};
+
 const CheckItemRow = (props: {
   checkId: number;
   item: InventoryCheckItemDto;
@@ -311,6 +359,7 @@ const CheckItemRow = (props: {
 }) => {
   const { t } = useTranslation();
   const { item } = props;
+  const subProduct = findSubProduct(item.product, item.sub_product_id);
   const [updateItem] = useUpdateInventoryCheckItemMutation();
 
   const [text, setText] = useState(
@@ -338,6 +387,7 @@ const CheckItemRow = (props: {
       await updateItem({
         id: props.checkId,
         productId: item.product.id,
+        subProductId: item.sub_product_id,
         body: { counted_quantity: value },
       }).unwrap();
     } catch (e) {
@@ -397,12 +447,17 @@ const CheckItemRow = (props: {
   }
 
   return (
-    <ListItem divider sx={{ gap: 1, py: 1 }}>
-      <ListItemAvatar>
-        <ProductAvatar product={item.product} />
-      </ListItemAvatar>
+    <ListItem
+      divider
+      sx={{ gap: 1, py: 1, pl: subProduct ? { xs: 4, sm: 9 } : undefined }}
+    >
+      {subProduct ? null : (
+        <ListItemAvatar>
+          <ProductAvatar product={item.product} />
+        </ListItemAvatar>
+      )}
       <ListItemText
-        primary={item.product.name}
+        primary={subProduct ? subProduct.name : item.product.name}
         secondary={`${t("inventory.check.target")}: ${item.target_quantity}`}
         primaryTypographyProps={{ noWrap: true }}
         sx={{ minWidth: 0 }}

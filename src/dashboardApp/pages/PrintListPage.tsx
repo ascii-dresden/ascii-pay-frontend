@@ -20,6 +20,7 @@ import {
   ProductDto,
   RoleDto,
   SaveProductDto,
+  SubProductDto,
 } from "../../common/contracts";
 import { toast } from "react-toastify";
 import { useGetMeQuery } from "../redux/api/userApi";
@@ -57,7 +58,6 @@ const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr max-content;
   grid-auto-rows: max-content;
-  row-gap: 1rem;
   align-items: start;
 `;
 
@@ -80,6 +80,39 @@ const Text = styled.div`
     margin-top: -0.2483em;
     display: table;
   }
+`;
+
+/**
+ * One cell of the price list. Rows are separated by a thin line so the eye can
+ * follow a name across to its price; the padding replaces the former row gap.
+ */
+const RowText = styled(Text)`
+  padding-block: 0.5rem;
+  border-bottom: 0.5pt solid #b0b0b0;
+`;
+
+const PriceText = styled(RowText)`
+  padding-left: 1rem;
+  text-align: right;
+`;
+
+/** Without the row line: a product followed by its sub products draws it below the list. */
+const groupedRowStyle: React.CSSProperties = {
+  borderBottom: "none",
+  paddingBottom: "0.25rem",
+};
+
+/** The sub products of a product (Kinder: Riegel, Pinguin, …), across both columns. */
+const SubProductList = styled.ul`
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0 0 0.5rem 1.6rem;
+  border-bottom: 0.5pt solid #b0b0b0;
+  list-style: disc;
+  font-family: JetBrains Mono, monospace;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
 `;
 
 const PageWrapper = styled.div`
@@ -161,6 +194,50 @@ const dateFormat = new Intl.DateTimeFormat("de-DE", {
 
 function isVegan(product: ProductDto): boolean {
   return product.tags.some((tag) => tag.toLowerCase() === "vegan");
+}
+
+/** Sub products listed below the product on its print lists. */
+function printedSubProducts(product: ProductDto): SubProductDto[] {
+  return product.sub_products
+    .filter((sub) => sub.active && sub.show_on_print_list)
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Rendered height of a product row in product rows (sub product lines are smaller). */
+function printWeight(product: ProductDto): number {
+  return 1 + printedSubProducts(product).length * 0.6;
+}
+
+/**
+ * Splits the (sorted) products into columns of about the same height, keeping
+ * the order: a product with many sub products counts as more than one row.
+ */
+function splitIntoColumns(
+  products: ProductDto[],
+  count: number
+): ProductDto[][] {
+  const total = products.reduce((sum, p) => sum + printWeight(p), 0);
+  const target = total / count;
+  const columns: ProductDto[][] = [[]];
+  let height = 0;
+  for (const product of products) {
+    const weight = printWeight(product);
+    // Start the next column when this product would end up mostly past the
+    // target height of the current one.
+    if (
+      columns.length < count &&
+      columns[columns.length - 1].length > 0 &&
+      height + weight / 2 > target * columns.length
+    ) {
+      columns.push([]);
+    }
+    columns[columns.length - 1].push(product);
+    height += weight;
+  }
+  while (columns.length < count) {
+    columns.push([]);
+  }
+  return columns;
 }
 
 function hasUserPermissions(
@@ -300,37 +377,53 @@ export const PrintListPage = () => {
           {dateFormat.format(new Date())}
         </Text>
         <List>
-          {Array.from({ length: COLUMN_COUNT }).map((_, column) => (
-            <Grid key={column}>
-              {printProducts
-                .slice(
-                  column * Math.ceil(printProducts.length / COLUMN_COUNT),
-                  (column + 1) * Math.ceil(printProducts.length / COLUMN_COUNT)
-                )
-                .map((printProduct) => (
-                  <React.Fragment key={printProduct.id}>
-                    <Text key={`${printProduct.id}-name`}>
-                      {isVegan(printProduct) && (
-                        <VeganIcon src={assetVegan} alt="Vegan" title="Vegan" />
-                      )}
-                      {printProduct.name}
-                      {hasEditPermission && (
-                        <ProductRemoveWrapper
-                          onClick={() =>
-                            togglePrintListForProduct(printProduct, listName)
-                          }
-                        >
-                          <DeleteOutlined />
-                        </ProductRemoveWrapper>
-                      )}
-                    </Text>
-                    <Text key={`${printProduct.id}-price`}>
-                      {moneyToString(printProduct.price.Cent ?? 0)}
-                    </Text>
-                  </React.Fragment>
-                ))}
-            </Grid>
-          ))}
+          {splitIntoColumns(printProducts, COLUMN_COUNT).map(
+            (columnProducts, column) => (
+              <Grid key={column}>
+                {columnProducts.map((printProduct) => {
+                  const subProducts = printedSubProducts(printProduct);
+                  const rowStyle =
+                    subProducts.length > 0 ? groupedRowStyle : undefined;
+                  return (
+                    <React.Fragment key={printProduct.id}>
+                      <RowText key={`${printProduct.id}-name`} style={rowStyle}>
+                        {isVegan(printProduct) && (
+                          <VeganIcon
+                            src={assetVegan}
+                            alt="Vegan"
+                            title="Vegan"
+                          />
+                        )}
+                        {printProduct.name}
+                        {hasEditPermission && (
+                          <ProductRemoveWrapper
+                            onClick={() =>
+                              togglePrintListForProduct(printProduct, listName)
+                            }
+                          >
+                            <DeleteOutlined />
+                          </ProductRemoveWrapper>
+                        )}
+                      </RowText>
+                      <PriceText
+                        key={`${printProduct.id}-price`}
+                        style={rowStyle}
+                      >
+                        {moneyToString(printProduct.price.Cent ?? 0)}
+                      </PriceText>
+                      {subProducts.length > 0 ? (
+                        <SubProductList key={`${printProduct.id}-subs`}>
+                          {subProducts.map((sub) => (
+                            <li key={sub.id}>{sub.name}</li>
+                          ))}
+                        </SubProductList>
+                      ) : null}
+                    </React.Fragment>
+                  );
+                })}
+              </Grid>
+            )
+          )}
         </List>
       </Page>
     </PageWrapper>

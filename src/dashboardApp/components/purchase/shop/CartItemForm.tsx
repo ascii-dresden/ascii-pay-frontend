@@ -30,6 +30,7 @@ import { stringAvatar } from "../../../../common/stringAvatar";
 import { moneyToString } from "../../../../terminalApp/components/Money";
 import { CoinInput } from "../../transaction/CoinInput";
 import { LastPurchaseInfo } from "../usePurchaseHistory";
+import { SubProductSelect } from "../../product/SubProductSelect";
 import {
   parseBestBefore,
   serializeBestBefore,
@@ -45,6 +46,8 @@ export type CartItemFormState = {
   cents: number;
   size: number;
   bestBefore: Date | null;
+  /** Sub product of the linked product; null = the product itself. */
+  subProductId: number | null;
 };
 
 /**
@@ -61,6 +64,7 @@ export const cartItemFormFromItem = (
   cents: item?.container_cents || last?.container_cents || 0,
   size: item?.container_size || last?.container_size || 1,
   bestBefore: parseBestBefore(item?.best_before),
+  subProductId: item?.sub_product_id ?? null,
 });
 
 export const cartItemFormToSave = (
@@ -80,6 +84,7 @@ export const cartItemFormToSave = (
   barcode: options.barcode,
   collected: options.collected,
   product_id: options.productId,
+  sub_product_id: options.productId === null ? null : form.subProductId,
 });
 
 export const canSubmitCartItemForm = (
@@ -215,9 +220,12 @@ export const CartItemHeader = (props: {
               icon={<StraightenOutlined />}
               label={
                 props.variant.label
-                  ? `${props.variant.label} · ${t("purchase.shop.variantUnits", {
-                      count: props.variant.container_size,
-                    })}`
+                  ? `${props.variant.label} · ${t(
+                      "purchase.shop.variantUnits",
+                      {
+                        count: props.variant.container_size,
+                      }
+                    )}`
                   : t("purchase.shop.variantUnits", {
                       count: props.variant.container_size,
                     })
@@ -278,6 +286,8 @@ export const CartItemForm = (props: {
   onChange: (value: CartItemFormState) => void;
   /** Show the free-text name field (items without a linked product). */
   showName: boolean;
+  /** Linked product; offers its sub products when it has any. */
+  product?: ProductDto | null;
   autoFocusName?: boolean;
   disabled?: boolean;
   onSubmit?: () => void;
@@ -289,6 +299,12 @@ export const CartItemForm = (props: {
 
   return (
     <Stack spacing={2} sx={{ mt: 2 }}>
+      <SubProductSelect
+        product={props.product}
+        value={value.subProductId}
+        disabled={props.disabled}
+        onChange={(subProductId) => update({ subProductId })}
+      />
       {props.showName ? (
         <TextField
           label={t("purchase.shop.freeItemName")}

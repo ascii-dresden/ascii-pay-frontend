@@ -276,7 +276,24 @@
     "barcodeUnits_other": "{{count}} units",
     "barcodeDuplicate": "Already used by: {{names}}",
     "barcodeContainerSizeShort": "Units",
-    "barcodesHint": "One code per packaging: the bottle and the crate of the same article have their own code and their own number of units."
+    "barcodesHint": "One code per packaging: the bottle and the crate of the same article have their own code and their own number of units.",
+    "subProduct": "Sub product",
+    "subProducts": "Sub products",
+    "subProductsHint": "Varieties that are bought and tracked separately but sold as this product (e.g. Goldbären and Tropifrutti under Haribo). Selling price, stock and the snack list stay with the product.",
+    "subProductName": "Name",
+    "subProductActive": "Active",
+    "subProductActiveHint": "Inactive sub products keep their purchase history but are no longer offered.",
+    "subProductRemove": "Remove sub product",
+    "subProductAdd": "Add sub product",
+    "subProductUnnamed": "(unnamed)",
+    "subProductInactive": "inactive",
+    "subProductAny": "{{name}} (any)",
+    "barcodeSubProduct": "Belongs to",
+    "barcodeSubProductNone": "{{name}} itself",
+    "subProductShowOnPrintList": "Show below the product on print lists",
+    "subProductOnPrintList": "on print list",
+    "targetQuantitySubProductsHint": "Sum of the sub products",
+    "subProductTarget": "Target"
   },
   "purchase": {
     "store": "Store",
@@ -330,7 +347,11 @@
       "targetProfit": "Target profit",
       "suggestedPrice": "Suggested price (gross)",
       "suggestedPriceWithoutTax": "Suggested price (net)",
-      "suggestedProfit": "Profit"
+      "suggestedProfit": "Profit",
+      "subProductPrices": "Last purchase price per unit: (net) gross",
+      "priceBasis": "Basis for the calculation",
+      "priceBasisMax": "Most expensive",
+      "priceBasisAverage": "Average"
     },
     "name": "Name",
     "finalizedAt": "Finalized at",
@@ -430,7 +451,12 @@
       "assignAction": "Save barcode",
       "assignHint": "The code {{code}} is not registered. Pick the product it belongs to and say how many single units it stands for.",
       "assignSuccess": "Barcode added to {{name}}",
-      "assignError": "Could not add the barcode!"
+      "assignError": "Could not add the barcode!",
+      "assignNewSubProduct": "New sub product…"
+    },
+    "productHistory": {
+      "all": "All",
+      "unassigned": "{{name}} (no sub product)"
     }
   },
   "inventory": {
@@ -519,7 +545,8 @@
       "deleteAction": "Delete check",
       "deleteSuccess": "Inventory check deleted!",
       "deleteError": "Inventory check could not be deleted!",
-      "notFound": "Inventory check not found."
+      "notFound": "Inventory check not found.",
+      "subProductSummary": "Counted {{counted}} of target {{target}} (sum of sub products)"
     },
     "complete": {
       "title": "Complete inventory check",
@@ -539,7 +566,8 @@
       "alreadyOnList": "already on the list",
       "addedToList_one": "1 article added to the shopping list",
       "addedToList_other": "{{count}} articles added to the shopping list"
-    }
+    },
+    "subProductTargetSum": "Sum of the sub product targets; the target is set per sub product."
   },
   "payment": {
     "title": "Payment",
@@ -585,13 +613,16 @@
       "saveError": "Entry could not be saved!",
       "notFound": "This entry no longer exists.",
       "forbidden": "Only the person who added this entry (or a purchaser) can change it.",
-      "alreadyDone": "This entry has already been bought and can no longer be edited."
+      "alreadyDone": "This entry has already been bought and can no longer be edited.",
+      "anySubProduct": "Any variety"
     },
     "shop": {
       "subheader": "Shopping list",
       "tripHint_one": "{{count}} entry on the shopping list will be shown in the list tab.",
       "tripHint_other": "{{count}} entries on the shopping list will be shown in the list tab."
-    }
+    },
+    "subProductNoPrice": "not bought yet",
+    "anySubProduct": "Any variety"
   },
   "scanner": {
     "start": "Start camera",
